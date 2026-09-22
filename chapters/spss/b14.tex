@@ -1,0 +1,540 @@
+\section{Literatür verisiyle yazılım uygulamaları}
+\label{sec:spss-b14}
+
+\textbf{Amaç ve veri.} \texttt{b14.csv}, aynı literatür verisiyle
+betimleme, aralık tahmini, test ve ilişki analizlerini bir raporda
+birleştirir \citep{cortez2008data}. Bu bir yöntem seçimi ve raporlama
+alıştırmasıdır; çok sayıda testten yalnız anlamlı olan seçilmez.
+Üç ayrı soru vardır: G3 ortalaması 10'dan farklı mı; kaynak cinsiyet
+kategorisi ile 10 puan eşiğini karşılama durumu ilişkili mi;
+G1 ve G3 arasında doğrusal ilişki var mı? Sıfır hipotezleri sırasıyla
+$\mu_{G3}=10$, kategorik değişkenlerin bağımsızlığı ve $\rho=0$'dır.
+Tek örneklem ve korelasyon testleri iki yönlüdür; kategorik analiz
+süreklilik düzeltmesiz Pearson ki-kare testidir. Her test için
+anlamlılık düzeyi 0,05'tir; çoklu test düzeltmesi yapılmamıştır.
+
+\textbf{Ortak veri.} Karşılaştırmanın dosyası
+\nolinkurl{companion/spss/csv/b14.csv} olup 395 satır ve 10 sütun
+içerir. Ana analizler tüm kayıtları kullanır; sıfır yıl sonu notu
+bulunan 38 kayıt eksik sayılmaz. \texttt{sex} için 1=F ve 2=M;
+\texttt{pass10} için 0: G3$<10$, 1: G3$\geq10$ tanımlıdır.
+B06'nın seçim göstergeleri ve ağırlığı kullanılmaz. Bu karşılaştırma
+Excel içe aktarmanın doğrulandığı anlamına gelmez. Kodları
+\texttt{companion} klasörünü içeren paket kökünden çalıştırın;
+veri sözlüğü için bkz. sayfa~\pageref{sec:spss-guide}.
+
+\subsection{IBM SPSS uygulaması}
+\textbf{Başlamadan önce.} Aşağıdaki veri açma bloğunu
+\texttt{EXECUTE} satırı dahil çalıştırın; sonra menü veya analiz
+komutlarıyla devam edin. Filtre, ağırlık ve dosya bölme kapalı
+olmalıdır. Dosya açılamazsa \texttt{/FILE} yolunu düzeltip yeniden
+açın; önceki bölümün etkin verisiyle devam etmeyin.
+
+\begin{spssadimlar}
+\spssadim{Önce temel araştırma sorusunu yazın. \emph{Analyze $\to$ Descriptive Statistics $\to$ Descriptives} yolunda \texttt{g1} ve \texttt{g3} için temel özetleri alın.}
+\spssadim{\emph{Analyze $\to$ Descriptive Statistics $\to$ Explore} yolunda \texttt{g3} için kutu grafiği ve yüzde 95 ortalama güven aralığını alın.}
+\spssadim{\emph{Analyze $\to$ Compare Means $\to$ One-Sample T Test} yolunda \texttt{g3} ve 10 referans değeriyle testi çalıştırın. Yüzde 95 güven düzeyini seçin; \emph{Two-Sided p} sütununu okuyun. Menü bazı sürümlerde \emph{Compare Means and Proportions} adını taşır.}
+\spssadim{\emph{Analyze $\to$ Descriptive Statistics $\to$ Crosstabs} yolunda \texttt{sex} satır, \texttt{pass10} sütun olsun; ki-kare, Cramér $V$, gözlenen/beklenen sayımlar ve satır yüzdelerini isteyin. Karşılaştırmada \emph{Pearson Chi-Square} satırını kullanın.}
+\spssadim{\emph{Analyze $\to$ Correlate $\to$ Bivariate} yolunda \texttt{g1} ve \texttt{g3} için \emph{Pearson}, \emph{Two-tailed} seçip çalıştırın.}
+\spssadim{Yalnız duyarlılık incelemesi için \emph{Data $\to$ Select Cases} yolunda \texttt{g3>0} koşuluyla kayıtları filtreleyin; silmeyin. \emph{Descriptives} ile \texttt{g3} özetini alın; ardından \emph{All cases} ile filtreyi kapatıp aynı özeti yeniden alın. Sırayla 357 ve 395 kayıt görünmelidir.}
+\end{spssadimlar}
+
+{\raggedright
+\noindent\textbf{Komutların görevi.} Ana analizler farklı soruların
+çıktılarıdır. \texttt{TEMPORARY} ve \texttt{SELECT IF}, yalnız ilk
+izleyen betimsel işlemde pozitif notları kullanır. İkinci
+\texttt{DESCRIPTIVES}, tüm kayıtlara dönüşü kontrol eder.\par}
+
+\par\noindent\begin{minipage}{\linewidth}
+\textbf{Uygulama kodu:} \texttt{b14}. Veri açma ve tanımlama:
+
+\begin{lstlisting}[style=prismSPSS]
+SET DECIMAL=DOT.
+GET DATA /TYPE=TXT
+ /FILE='companion/spss/csv/b14.csv'
+ /ENCODING='UTF8'
+ /ARRANGEMENT=DELIMITED /DELCASE=LINE
+ /DELIMITERS="," /QUALIFIER='"'
+ /FIRSTCASE=2
+ /VARIABLES=id F8.0 school F8.0 sex F8.0 age F8.0
+ studytime F8.0 absences F8.0 g1 F8.0 g2 F8.0
+ g3 F8.0 pass10 F8.0.
+FILTER OFF.
+WEIGHT OFF.
+SPLIT FILE OFF.
+VARIABLE LABELS
+ g1 'Ilk donem matematik notu'
+ g3 'Yil sonu matematik notu'
+ sex 'Kaynak verideki cinsiyet kategorisi'
+ pass10 'Yil sonu notu en az 10'.
+VALUE LABELS
+ sex 1 'F' 2 'M'
+ /pass10 0 '10 puanin alti' 1 '10 ve uzeri'.
+VARIABLE LEVEL
+ id school sex pass10 (NOMINAL)
+ studytime (ORDINAL)
+ age absences g1 g2 g3 (SCALE).
+FORMATS g1 g3 (F14.9).
+EXECUTE.
+\end{lstlisting}
+\end{minipage}\par
+
+\par\noindent\begin{minipage}{\linewidth}
+\textbf{Ana analizler.} Veri açıldıktan sonra çalıştırın.
+
+\begin{lstlisting}[style=prismSPSS]
+DESCRIPTIVES VARIABLES=g1 g3
+ /STATISTICS=MEAN STDDEV MIN MAX.
+EXAMINE VARIABLES=g3 /PLOT=BOXPLOT
+ /STATISTICS=DESCRIPTIVES /CINTERVAL=95.
+T-TEST /TESTVAL=10 /VARIABLES=g3
+ /CRITERIA=CI(.95).
+CROSSTABS /TABLES=sex BY pass10
+ /FORMAT=AVALUE TABLES
+ /STATISTICS=CHISQ PHI
+ /CELLS=COUNT EXPECTED ROW.
+CORRELATIONS /VARIABLES=g1 g3
+ /PRINT=TWOTAIL /MISSING=PAIRWISE.
+\end{lstlisting}
+\end{minipage}\par
+
+\par\noindent\begin{minipage}{\linewidth}
+\textbf{Ayrı duyarlılık özeti ve geri dönüş.} Bu bloğu bütün olarak
+çalıştırın. \texttt{TEMPORARY} ile ilk \texttt{DESCRIPTIVES}
+arasına \texttt{EXECUTE} veya başka bir analiz komutu eklemeyin.
+
+\begin{lstlisting}[style=prismSPSS]
+TEMPORARY.
+SELECT IF (g3>0).
+DESCRIPTIVES VARIABLES=g3
+ /STATISTICS=MEAN STDDEV MIN MAX.
+DESCRIPTIVES VARIABLES=g3
+ /STATISTICS=MEAN STDDEV MIN MAX.
+\end{lstlisting}
+\end{minipage}\par
+
+\begin{outputguidebox}
+\textbf{Paylaşılan SPSS çıktısıyla doğrulanan değerler.}
+G3 için 395 geçerli ve sıfır eksik kayıt vardır. Ortalama
+10,415189873 ve standart sapma 4,5814426110'dur. Explore'da
+ortalama için yüzde 95 aralık yaklaşık $[9{,}961992;\ 10{,}868388]$
+görülür. Tek örneklem testinde $t(394)=1{,}801$ ve iki yönlü
+$p=0{,}072$ vardır. Renkli yardım alanında tek yönlü 0,036'nın
+anlamlı gösterilmesi bu uygulamanın kararını değiştirmez;
+\emph{Two-Sided p} sütunu esas alınır. Test tablosundaki aralık,
+ortalamanın değil 10'dan farkın aralığıdır.
+
+Çapraz tabloda F için $(75,133)$, M için $(55,132)$ sayımları;
+Pearson satırında $\chi^2(1)=1{,}970$, $p=0{,}160$ ve
+\emph{Symmetric Measures} tablosunda Cramér $V=0{,}071$ vardır.
+En küçük beklenen sayım 61,54'tür; 5'in altında beklenen hücre
+yoktur. Süreklilik düzeltmesindeki 0,195 ve Fisher testindeki
+iki yönlü 0,165 farklı yöntemlerin $p$ değerleridir.
+Korelasyon tablosu $r=0{,}801$, $p<0{,}001$ ve $n=395$ verir.
+
+Son iki betimsel tablo sırayla 357 ve 395 kayıt gösterir.
+İlkinde ortalama 11,523809524, standart sapma 3,2277969402;
+ikincisinde yeniden ortalama 10,415189873 bulunmuştur.
+Böylece geçici seçimden tüm kayıtlara dönüş de kontrol edilmiştir.
+Ortalamadaki artış sıfırların silinmesini haklı çıkarmaz;
+pozitif notlu alt grup, bütün kayıtlardan farklı bir hedeftir.
+\end{outputguidebox}
+
+\par\noindent\begin{minipage}{\linewidth}
+\subsection{R uygulaması}
+\label{sec:r-gercek-b14}
+
+Blokları sırayla ve çok satırlı komutları bütünüyle çalıştırın.
+\texttt{pozitif}, yalnız duyarlılık incelemesinde kullanılacak ayrı
+alt gruptur; ana analizler \texttt{veri} üzerinden yapılır.
+
+\begin{lstlisting}[style=prismR]
+veri <- read.csv("companion/spss/csv/b14.csv")
+stopifnot(nrow(veri) == 395, ncol(veri) == 10,
+  !anyNA(veri), !anyDuplicated(veri$id),
+  all(veri$sex %in% c(1, 2)),
+  all(veri$pass10 %in% c(0, 1)),
+  all(veri$pass10 == as.integer(veri$g3 >= 10)))
+betimsel <- function(degerler) {
+  c(n=length(degerler), ortalama=mean(degerler),
+    ss=sd(degerler), minimum=min(degerler),
+    maksimum=max(degerler))
+}
+print(c(satir=nrow(veri), sutun=ncol(veri),
+  eksik=sum(is.na(veri)), sifir_not=sum(veri$g3 == 0)))
+print(rbind(G1=betimsel(veri$g1), G3=betimsel(veri$g3)),
+      digits=15)
+\end{lstlisting}
+\end{minipage}\par
+
+\textbf{Dosya yolu sorunu yaşarsanız.} İlk satır yerine aşağıdaki
+komutla \texttt{b14.csv} dosyasını seçin; sonra kontrol bloğundan
+devam edin.
+\begin{lstlisting}[style=prismR]
+veri <- read.csv(file.choose())
+\end{lstlisting}
+
+\par\noindent\begin{minipage}{\linewidth}
+\textbf{Ortalama, fark ve test.} İki aralığın etiketlerini ayırt edin.
+
+\begin{lstlisting}[style=prismR]
+test <- t.test(veri$g3, mu=10,
+  alternative="two.sided", conf.level=.95)
+print(c(t=unname(test$statistic),
+  df=unname(test$parameter), p_iki_yonlu=test$p.value,
+  ortalama_fark=mean(veri$g3)-10,
+  ortalama_alt=test$conf.int[1],
+  ortalama_ust=test$conf.int[2],
+  fark_alt=test$conf.int[1]-10,
+  fark_ust=test$conf.int[2]-10), digits=15)
+\end{lstlisting}
+
+\textbf{Çıktıyı okuma.} R ekranında iki yönlü
+$p=0{,}0724481981327951$ bulunmuştur. Ortalama aralığının
+her iki sınırından 10 çıkarılınca SPSS'in fark aralığı elde edilir.
+\end{minipage}\par
+
+\par\noindent\begin{minipage}{\linewidth}
+\textbf{Kategorik ilişki.} \texttt{correct=FALSE}, süreklilik
+düzeltmesini kapatır; satır ve sütun sıraları açıkça sabitlenir.
+
+\begin{lstlisting}[style=prismR]
+tablo <- table(
+  sex=factor(veri$sex, levels=c(1, 2),
+             labels=c("F", "M")),
+  pass10=factor(veri$pass10, levels=c(0, 1),
+                labels=c("10_alti", "10_ve_uzeri")))
+ki_kare <- chisq.test(tablo, correct=FALSE)
+print(addmargins(tablo))
+print(100*prop.table(tablo, margin=1), digits=15)
+print(ki_kare$expected, digits=15)
+print(c(ki_kare=unname(ki_kare$statistic),
+  df=unname(ki_kare$parameter), p=ki_kare$p.value,
+  cramer_v=sqrt(unname(ki_kare$statistic)/sum(tablo)),
+  min_beklenen=min(ki_kare$expected),
+  bes_alti_hucre=sum(ki_kare$expected < 5)), digits=15)
+\end{lstlisting}
+
+\textbf{Çıktıyı okuma.} Paylaşılan R ekranında
+$\chi^2=1{,}969808570687404$, $p=0{,}160468182571215$ ve
+$V=0{,}070617682919937$ vardır. Yüzdelerin paydaları satır
+toplamlarıdır: F için 208, M için 187.
+\end{minipage}\par
+
+\par\noindent\begin{minipage}{\linewidth}
+\textbf{Korelasyon, ayrı alt grup ve grafik.} Ana veri korunur.
+
+\begin{lstlisting}[style=prismR]
+korelasyon <- cor.test(veri$g1, veri$g3,
+  method="pearson", alternative="two.sided")
+print(c(n=nrow(veri), r=unname(korelasyon$estimate),
+  p_iki_yonlu=korelasyon$p.value), digits=15)
+pozitif <- veri[veri$g3 > 0, ]
+print(rbind(Pozitif_G3=betimsel(pozitif$g3),
+            Tum_G3=betimsel(veri$g3)), digits=15)
+stopifnot(nrow(veri) == 395, nrow(pozitif) == 357)
+par(mfrow=c(1, 1))
+boxplot(veri$g3, main="Tum kayitlarda yil sonu notu",
+        ylab="G3")
+\end{lstlisting}
+
+\textbf{Çıktıyı okuma.} R'de $r=0{,}801467932017414$,
+$p\approx9{,}00143\times10^{-90}$; pozitif notlarda 357 kayıt ve
+11,5238095238095 ortalama görülür. R'nin sayısal ekranları ve kutu
+grafiği incelenmiştir; R bu ortamda yeniden çalıştırılmamıştır.
+\end{minipage}\par
+
+\par\noindent\begin{minipage}{\linewidth}
+\subsection{Python uygulaması}
+\label{sec:python-b14}
+
+Blokları sırayla çalıştırın. \texttt{pozitif} ayrı bir kopyadır;
+bu seçim ana testlerden önce uygulanmaz. \texttt{ddof=1} örneklem
+standart sapmasını, \texttt{.15g} ise 15 anlamlı basamağı seçer.
+
+\begin{lstlisting}[style=prismPythonApp]
+import pandas as pd
+import numpy as np
+from scipy import stats
+
+veri = pd.read_csv("companion/spss/csv/b14.csv")
+assert veri.shape == (395, 10)
+assert not veri.isna().any().any()
+assert veri.id.is_unique
+assert veri.sex.isin([1, 2]).all()
+assert veri.pass10.isin([0, 1]).all()
+assert veri.pass10.eq((veri.g3 >= 10).astype(int)).all()
+
+def betimsel(degerler):
+    return dict(n=len(degerler), ortalama=degerler.mean(),
+        ss=degerler.std(ddof=1), minimum=degerler.min(),
+        maksimum=degerler.max())
+
+def yazdir(baslik, ozet):
+    print("\n" + baslik)
+    for ad, deger in ozet.items():
+        print(f"{ad}: {deger:.15g}")
+
+def tablo_yazdir(baslik, cerceve):
+    print("\n" + baslik)
+    print(cerceve.to_string(
+        float_format=lambda deger: f"{deger:.15g}"))
+\end{lstlisting}
+\end{minipage}\par
+
+\par\noindent\begin{minipage}{\linewidth}
+\textbf{Veri kontrolü ve ortalama testi.} Aralıkların yönü aynıdır.
+
+\begin{lstlisting}[style=prismPythonApp]
+yazdir("Veri kontrolu", dict(satir=len(veri),
+    sutun=veri.shape[1], eksik=int(veri.isna().sum().sum()),
+    sifir_not=int((veri.g3 == 0).sum())))
+yazdir("G1 betimsel", betimsel(veri.g1))
+yazdir("G3 betimsel", betimsel(veri.g3))
+test = stats.ttest_1samp(veri.g3, 10,
+                         alternative="two-sided")
+aralik = test.confidence_interval(.95)
+yazdir("Tek orneklem testi ve guven araliklari", dict(
+    t=test.statistic, df=len(veri)-1,
+    p_iki_yonlu=test.pvalue,
+    ortalama_fark=veri.g3.mean()-10,
+    ortalama_alt=aralik.low, ortalama_ust=aralik.high,
+    fark_alt=aralik.low-10, fark_ust=aralik.high-10))
+\end{lstlisting}
+
+\textbf{Çıktıyı okuma.} Python çıktısında 395 satır, 10 sütun,
+sıfır eksik değer ve 38 sıfır not vardır. Tek örneklem testinin
+iki yönlü $p$ değeri R ile aynı yuvarlanmış sonucu verir.
+\end{minipage}\par
+
+\par\noindent\begin{minipage}{\linewidth}
+\textbf{Çapraz tablo ve Pearson testi.} Düzeltme kapalıdır.
+
+\begin{lstlisting}[style=prismPythonApp]
+tablo = pd.crosstab(veri.sex, veri.pass10).reindex(
+    index=[1, 2], columns=[0, 1], fill_value=0)
+tablo.index = ["F", "M"]
+tablo.columns = ["10_alti", "10_ve_uzeri"]
+tablo_yazdir("Capraz tablo", tablo)
+print("Satir toplamlari:", tablo.sum(axis=1).to_dict())
+print("Sutun toplamlari:", tablo.sum(axis=0).to_dict())
+print("Genel toplam:", int(tablo.to_numpy().sum()))
+yuzdeler = 100*tablo.div(tablo.sum(axis=1), axis=0)
+tablo_yazdir("Satir yuzdeleri", yuzdeler)
+ki_kare, p_degeri, serbestlik, beklenen = (
+    stats.chi2_contingency(tablo, correction=False))
+tablo_yazdir("Beklenen sayimlar", pd.DataFrame(
+    beklenen, index=tablo.index, columns=tablo.columns))
+yazdir("Pearson ki-kare testi", dict(
+    ki_kare=ki_kare, df=serbestlik, p=p_degeri,
+    cramer_v=np.sqrt(ki_kare/tablo.to_numpy().sum()),
+    min_beklenen=beklenen.min(),
+    bes_alti_hucre=int((beklenen < 5).sum())))
+\end{lstlisting}
+\end{minipage}\par
+
+\par\noindent\begin{minipage}{\linewidth}
+\textbf{Korelasyon, ayrı alt grup ve grafik.} Tüm kayıtlar korunur.
+
+\begin{lstlisting}[style=prismPythonApp]
+korelasyon = stats.pearsonr(veri.g1, veri.g3)
+yazdir("Pearson korelasyonu", dict(n=len(veri),
+    r=korelasyon.statistic, p_iki_yonlu=korelasyon.pvalue))
+pozitif = veri.loc[veri.g3 > 0].copy()
+yazdir("Pozitif G3", betimsel(pozitif.g3))
+yazdir("Tum G3", betimsel(veri.g3))
+assert len(veri) == 395
+assert len(pozitif) == 357
+
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(6, 5))
+plt.boxplot(veri.g3)
+plt.title("Tum kayitlarda yil sonu notu")
+plt.ylabel("G3")
+plt.xticks([1], ["Tum kayitlar"])
+plt.tight_layout(); plt.show()
+\end{lstlisting}
+
+\textbf{Çıktıyı okuma.} Paylaşılan Python ekranlarında pozitif G3
+için $n=357$, ortalama 11,5238095238095; tüm G3 için $n=395$,
+ortalama 10,4151898734177 görülür. Pozitif alt grupta yeni bir
+anlamlılık testi yapılmamıştır; bu adım yalnız betimsel karşılaştırmadır.
+\end{minipage}\par
+
+\Needspace{12\baselineskip}
+\subsection{Sonuçların karşılaştırılması ve ortak rapor}
+13 Eylül 2026'da paylaşılan SPSS tabloları, R ekranları ve tamamlanan
+Python terminal çıktıları karşılaştırılmıştır. Betimsel özetler,
+tek örneklem testinin sonuçları ve aralıkları, çapraz tablonun sayımları,
+yüzdeleri ve beklenen sayımları, Pearson ki-kare ve korelasyon
+sonuçları ile pozitif alt grup özetleri uyumludur. Karşılaştırılan
+R ve Python değerlerinde $10^{-12}$ mutlak tolerans; yaklaşık
+$9\times10^{-90}$ büyüklüğündeki korelasyon $p$ değerinde ise
+$10^{-10}$ bağıl tolerans kullanılmıştır. Bütün basamaklarda
+eşitlik iddia edilmez. Python kodu proje CSV'siyle ayrıca
+çalıştırılmıştır; SPSS değerleri gösterilen yuvarlama hassasiyetlerinde
+uyumludur. Üç yazılımın G3 kutu grafikleri de incelenmiştir.
+Aşağıdaki tablolar paylaşılan çıktıların kitap düzenindeki özetidir;
+ekran görüntüsü değildir.
+
+\begin{table}[H]
+\centering
+\caption{B14'te tam veri ve pozitif notlu alt grubun özetleri}
+\label{tab:b14-dogrulanmis-betimsel}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Değişken/kapsam & $n$ & Ortalama & Standart sapma & Min--Maks \\
+\midrule
+G1 (tümü) & 395 & 10,908861 & 3,319195 & 3--19 \\
+G3 (tümü) & 395 & 10,415190 & 4,581443 & 0--20 \\
+G3 (pozitif) & 357 & 11,523810 & 3,227797 & 4--20 \\
+\bottomrule
+\end{tabular}
+\par\smallskip
+{\footnotesize Satırlar bağımsız örneklemler olarak toplanmaz.
+Pozitif G3, ana verinin alt grubudur. SPSS'in son tablosu tekrar
+395 kayıt ve 10,415190 ortalama göstererek geçici seçimin sona
+erdiğini doğrulamıştır; R ve Python ana veriyi değiştirmemiştir.\par}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{B14'te yıl sonu ortalaması ve 10 puana karşı test}
+\label{tab:b14-dogrulanmis-ortalama}
+\begin{tabular}{@{}lr@{}}
+\toprule
+Ölçü & Değer \\
+\midrule
+Ortalama & 10,415190 \\
+Ortalamanın standart hatası & 0,230517 \\
+Ortalama için \%95 güven aralığı & $[9{,}961992;\ 10{,}868388]$ \\
+10'dan ortalama fark & 0,415190 \\
+Fark için \%95 güven aralığı & $[-0{,}038008;\ 0{,}868388]$ \\
+$t$ istatistiği & 1,801122 \\
+Serbestlik derecesi & 394 \\
+İki yönlü $p$ değeri & 0,072448 \\
+\bottomrule
+\end{tabular}
+\par\smallskip
+{\footnotesize Her iki aralık aynı 395 kayda dayanır. Fark aralığı,
+ortalama aralığının iki sınırından 10 çıkarılarak elde edilir.
+Tek yönlü $p$ bu uygulamanın kararında kullanılmaz.\par}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{B14'te 10 puan eşiği için sayımlar ve satır yüzdeleri}
+\label{tab:b14-dogrulanmis-sayim}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Grup & $<10$ & $\geq10$ & Toplam & $\geq10$ yüzdesi \\
+\midrule
+F & 75 & 133 & 208 & 63,942308 \\
+M & 55 & 132 & 187 & 70,588235 \\
+\midrule
+Toplam & 130 & 265 & 395 & 67,088608 \\
+\bottomrule
+\end{tabular}
+\par\smallskip
+{\footnotesize Tam 10 puan eşiği karşılayan kategoriye dahildir.
+Bağımsızlık altında beklenen sayımlar F satırında
+$(68{,}455696;\ 139{,}544304)$, M satırında
+$(61{,}544304;\ 125{,}455696)$'dır.\par}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{B14'te iki ayrı ilişki sorusunun sonuçları}
+\label{tab:b14-dogrulanmis-iliski}
+\begin{tabular}{@{}lr@{}}
+\toprule
+Ölçü & Değer \\
+\midrule
+\texttt{sex}--\texttt{pass10}: Pearson $\chi^2(1)$ & 1,969809 \\
+Pearson ki-kare $p$ değeri & 0,160468 \\
+Cramér $V$ & 0,070618 \\
+En küçük beklenen sayım & 61,544304 \\
+Beklenen sayımı 5'in altındaki hücre & 0 \\
+\midrule
+G1--G3: Pearson $r$ & 0,801468 \\
+Korelasyonun iki yönlü $p$ değeri (yaklaşık) & $9{,}00143\times10^{-90}$ \\
+\bottomrule
+\end{tabular}
+\par\smallskip
+{\footnotesize İki analiz de 395 kayıt kullanır fakat farklı
+hipotezleri sınar. Ki-kare testinde süreklilik düzeltmesi yoktur.
+Çoğu değer altı ondalık basamakla gösterilmiştir; ara hesaplarda
+yuvarlanmamış değerler kullanılmıştır.\par}
+\end{table}
+
+\textbf{Grafik kontrolünün kapsamı.} SPSS, R ve Python'un tüm G3
+kayıtlarını içeren kutu grafiklerinde medyan 11, kutu sınırları
+8 ve 14, bıyıklar 0 ve 20'dir. Bu toplu grafikte sıfırlar ayrıca
+aykırı işaretlenmemiştir. Bu durum B11'de F ve M ayrı çizildiğinde
+sıfırların işaretlenmesiyle çelişmez: grup çeyrekleri ve kutu
+genişlikleri farklıdır. Aykırı etiketi verinin hatalı olduğunu
+göstermez; etiketin olmaması da normalliği veya bağımsızlığı kanıtlamaz.
+Kutudaki çizgi ortalamayı değil medyanı gösterir. B14'te incelenen
+grafikler kutu grafikleridir; bunlardan korelasyonun doğrusal
+örüntüsünün kontrol edildiği sonucu çıkarılmaz.
+
+\Needspace{12\baselineskip}
+\begin{outputguidebox}
+Tablo~\ref{tab:b14-dogrulanmis-ortalama} için $p=0{,}072448>0{,}05$
+olduğundan 10 puana eşit ortalama sıfır hipotezi reddedilmez;
+bu, ortalamanın kesinlikle 10 olduğu anlamına gelmez.
+Tablo~\ref{tab:b14-dogrulanmis-iliski} içindeki kategorik analizde
+de bağımsızlık hipotezi reddedilmez; bağımsızlık kanıtlanmış olmaz.
+Pozitif G1--G3 korelasyonu ise farklı bir sorunun bulgusudur.
+Anlamlı sonuçları seçip diğerlerini gizlemek yerine her sonucu
+kendi araştırma sorusuyla birlikte raporlayın.
+
+Tablo~\ref{tab:b14-dogrulanmis-betimsel} içindeki pozitif G3
+ortalamasının artması, sonuca göre seçimin etkisini gösterir.
+Bu dosyada 395 kaydın 38'inin notu sıfır olduğundan, tüm verinin
+ortalaması pozitif alt grubun ortalamasının $357/395$ katıdır.
+Bu aritmetik ilişki, dışlamanın doğruluğuna ilişkin kanıt değildir.
+Buradaki duyarlılık özeti aynı hedef için alternatif bir test
+değil, farklı bir alt grubun betimlemesidir; 357 ve 395 kayıt
+bağımsız iki grup gibi test edilmez. Sıfırların nasıl oluştuğu
+kaynak bilgisiyle değerlendirilmeden eksik değer oldukları varsayılmaz.
+
+Yazılımların uyumu gözlemlerin bağımsızlığını veya iki okulla
+sınırlı verinin temsil gücünü doğrulamaz. Testler okul ve diğer
+karıştırıcılar için düzeltme içermez. Korelasyon nedensel etki
+değildir; 0,05 düzeyindeki kararlar bilimsel önemle eş tutulmaz.
+B10, B12 ve B13 ile aynı kayıtların yeniden analizi bağımsız
+bir tekrar çalışma sayılmaz.
+\end{outputguidebox}
+
+\Needspace{10\baselineskip}
+\textbf{Raporlama örneği (doğrulanmış çıktılarla).}
+``Ana analizlerde 395 öğrencinin tüm kayıtları kullanılmış ve
+sıfır yıl sonu notu bulunan 38 kayıt korunmuştur. G3 ortalaması
+10,415190, standart sapması 4,581443'tür (ortalama için \%95 güven
+aralığı $[9{,}961992;\ 10{,}868388]$). 10 puana karşı iki yönlü
+testte sıfır hipotezi reddedilmemiştir
+($t(394)=1{,}801122$, $p=0{,}072448$). Kaynak cinsiyet kategorisi
+ile 10 puan eşiğini karşılama durumu için süreklilik düzeltmesiz
+Pearson testinde yeterli ilişki kanıtı elde edilmemiştir
+($\chi^2(1)=1{,}969809$, $p=0{,}160468$, Cramér $V=0{,}070618$).
+Ayrı doğrusal ilişki sorusunda G1--G3 korelasyonu 0,801468'dir
+($p\approx9{,}00143\times10^{-90}$). Her test ayrı 0,05 düzeyinde
+değerlendirilmiş; çoklu test düzeltmesi yapılmamıştır.
+Yalnız pozitif notları içeren betimsel duyarlılık özetinde
+357 kaydın ortalaması 11,523810 bulunmuştur; bu, ana analizlerin
+yerine geçmeyen farklı bir alt grup özetidir. Grafik ve yazılım
+uyumu varsayımları doğrulamamış; okul ve diğer karıştırıcılar
+denetlenmemiştir. Bulgular nedensel etki veya daha geniş bir evrene
+genellenebilirlik kanıtı olarak sunulmamıştır.''
+
+\textbf{Raporlama görevi.} Veri kaynağı ve lisansı, gözlem birimi,
+seçilen değişkenler, betimsel özet, soruya uygun tek temel analiz
+ve sınırlılıkları içeren bir sayfalık rapor yazın. Temel analizi
+$p$ değerine göre seçmeyin; diğer soruları ayrı ve açık biçimde
+belirtin. Sıfırların nasıl ele alındığını ve pozitif alt grubun
+neden farklı bir hedef olduğunu açıklayın. Ortalama aralığını
+fark aralığıyla, tek yönlü $p$ değerini iki yönlü değerle
+karıştırmayın. Küçük $p$ değerlerini sıfır olarak yazmayın.
+Çalıştırılan kodları ve yazılımların ürettiği çıktıları raporla saklayın.

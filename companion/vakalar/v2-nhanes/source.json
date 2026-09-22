@@ -1,0 +1,16 @@
+{
+  "source": "CDC/NCHS NHANES 2017–2018 DEMO_J",
+  "input": "prism-uploads/DEMO_J.zip",
+  "member": "DEMO_J.xpt",
+  "zip_sha256": "59729eceecff56b43bce8ce512bb15a3ff47ae96db6914fd9807e19391de4861",
+  "xpt_sha256": "c0b46e0345ea19404928656277c8b0d10b0cca348a9b2fe4fc3c67e8b7ee73ec",
+  "local_check_date": "2026-09-13",
+  "codebook": "https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2017/DataFiles/DEMO_J.htm",
+  "design": "https://wwwn.cdc.gov/nchs/nhanes/tutorials/sampledesign.aspx",
+  "weights": "https://wwwn.cdc.gov/nchs/nhanes/tutorials/weighting.aspx",
+  "variance": "https://wwwn.cdc.gov/nchs/nhanes/tutorials/varianceestimation.aspx",
+  "terms": "https://www.cdc.gov/nchs/policy/data-user-agreement.html",
+  "source_record_note": "Addresses retained from the existing V2 source protocol; this delivery does not claim a new web or legal review.",
+  "scope": "Aggregate statistical teaching adaptation; no identification or linkage to identified persons; not an official CDC estimate.",
+  "provenance_limit": "Hashes fix the uploaded bytes, not a fresh comparison with the CDC server. No new person-level copy is distributed here."
+}

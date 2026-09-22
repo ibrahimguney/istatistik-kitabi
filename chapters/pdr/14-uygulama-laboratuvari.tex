@@ -1,0 +1,1030 @@
+\chapter{Bütünleştirici Veri Analizi Laboratuvarı}
+\index{veri analizi iş akışı}
+\index{yeniden üretilebilir analiz}
+
+\begin{hedefler}
+Bu bölümün sonunda okuyucu:
+\begin{itemize}
+  \item araştırma sorularını hedef değişken, karşılaştırma ve uygun yöntemle eşleştirebilecek,
+  \item analizden önce veri sözlüğü, aralık, eksik değer, yinelenen kayıt ve tutarlılık kontrollerini yapabilecek,
+  \item betimsel istatistik, güven aralığı, eşleştirilmiş ve bağımsız karşılaştırma, korelasyon ve regresyonu tek bir projede birleştirebilecek,
+  \item varsayım incelemesini test sonucundan önce ve araştırma tasarımıyla birlikte yürütebilecek,
+  \item aynı veri üzerinde farklı yöntemlerin neden farklı soruları yanıtlayabileceğini açıklayabilecek,
+  \item etki büyüklüğü, güven aralığı ve $p$-değerini dengeli biçimde yorumlayabilecek,
+  \item Python ve SPSS ile yeniden üretilebilir bir analiz akışı kurabilecek,
+  \item bulguları tablo, grafik, yöntem paragrafı ve ölçülü sonuç diliyle bütünleştirebilecektir.
+\end{itemize}
+\end{hedefler}
+
+\begin{hazirlik}
+Bir veri dosyasını açtıktan sonra hipotez testine geçmeden önce yapılması
+gereken en az altı kontrolü listeleyin. Her kontrol atlanırsa oluşabilecek bir
+yanlış sonuca örnek verin.
+\end{hazirlik}
+
+\section{Laboratuvarın amacı}
+
+Önceki bölümlerde yöntemler ayrı başlıklar altında incelendi. Gerçek araştırma
+ise bir menüden test seçme işlemi değildir. Araştırma sorusunun tanımlanması,
+verinin yapısının anlaşılması, temizleme kararlarının kaydedilmesi, varsayım
+incelemesi, tahmin, görselleştirme ve raporlama birbirine bağlıdır.
+Uygulamalı istatistikte bu bütünlüklü proje yaklaşımı, tek tek yöntemlerin
+mekanik kullanımından daha belirleyicidir \cite{mccullagh2022,james2021}.
+
+Bu laboratuvarın temel ilkesi şudur:
+\[
+\text{Soru}\longrightarrow\text{Tasarım}\longrightarrow\text{Veri}
+\longrightarrow\text{Yöntem}\longrightarrow\text{Yorum}.
+\]
+
+Akışın yönü sonuç görüldükten sonra geriye çevrilmemelidir. Önce düşük
+$p$-değeri bulunup sonra buna uygun araştırma sorusu yazmak doğrulayıcı analiz
+değildir.
+
+\begin{figure}[htbp]
+\centering
+\resizebox{0.96\linewidth}{!}{%
+\begin{tikzpicture}[alt={Araştırma sorusundan tasarım, veri kalitesi, analiz ve raporlamaya uzanan; yeni araştırmaya geri bildirim veren veri analizi akışı},
+  box/.style={draw=PrismBlue,fill=PrismLight,rounded corners,minimum width=2.4cm,minimum height=0.85cm,align=center,font=\small},
+  arr/.style={->,thick,PrismBlue}
+]
+\node[box] (q) at (0,0) {Araştırma\\sorusu};
+\node[box] (d) at (3.1,0) {Tasarım ve\\örnekleme};
+\node[box] (c) at (6.2,0) {Veri kalitesi\\kontrolü};
+\node[box] (a) at (9.3,0) {Analiz ve\\tanılar};
+\node[box] (r) at (12.4,0) {Raporlama ve\\sınırlılıklar};
+\draw[arr] (q)--(d);
+\draw[arr] (d)--(c);
+\draw[arr] (c)--(a);
+\draw[arr] (a)--(r);
+\draw[->,dashed,PrismSubheadingBlue] (r.south) to[bend left=28]
+  node[below,font=\scriptsize,text=PrismGray]{şeffaf geri bildirim ve yeni araştırma} (q.south);
+\end{tikzpicture}%
+}
+\caption{Bütünleştirici ve tekrarlanabilir veri analizi akışı.}
+\end{figure}
+
+\section{Araştırma problemi}
+
+Bir eğitim birimi, iki öğretim yaklaşımının öğrenci başarısıyla ilişkisini ve
+haftalık çalışma süresinin son-test puanını ne ölçüde yordadığını incelemek
+istemektedir. On altı öğrencinin uygulama öncesi ve sonrası başarı puanları ile
+haftalık çalışma süreleri kaydedilmiştir. İlk sekiz öğrenci A, sonraki sekiz
+öğrenci B grubundadır.
+
+Bu küçük veri seti öğretim amacıyla tasarlanmıştır. Gerçek bir çalışmada
+örnekleme yöntemi, grup ataması, ölçme aracının geçerlik ve güvenirliği, etik
+izin, bilgilendirilmiş onam ve veri güvenliği ayrıca belgelenmelidir.
+
+\section{Veri sözlüğü ve analiz birimi}
+\index{veri sözlüğü}
+\index{analiz birimi}
+
+Her satır bir öğrenciyi temsil eder. Aynı öğrencinin ön-test ve son-test
+puanları aynı satırda tutulduğu için eşleştirme yapısı korunur.
+
+\begin{table}[htbp]
+\centering
+\caption{Laboratuvar veri setinin kısa veri sözlüğü.}
+\begin{tabular}{@{}p{0.16\textwidth}p{0.27\textwidth}p{0.18\textwidth}p{0.24\textwidth}@{}}
+\toprule
+Değişken & Açıklama & Tür & Kabul edilen değer \\
+\midrule
+\texttt{id} & Öğrencinin anonim kodu & Kimlik & 1--16, benzersiz \\
+\texttt{grup} & Öğretim yaklaşımı & Kategorik & A veya B \\
+\texttt{on} & Uygulama öncesi başarı & Nicel & 0--100 \\
+\texttt{son} & Uygulama sonrası başarı & Nicel & 0--100 \\
+\texttt{saat} & Haftalık çalışma süresi & Nicel & 0--40 saat \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Veri sözlüğü yalnız değişken adlarını açıklamaz; olanaksız değerleri, eksik
+kodlarını, ölçü birimini ve kategori referanslarını da tanımlar. Örneğin 999
+değeri eksik veri kodu olarak kullanılmışsa sıradan puan gibi analiz edilmeden
+önce dönüştürülmelidir.
+
+\section{Ham veri}
+
+\begin{table}[htbp]
+\centering
+\caption{Bütünleştirici laboratuvar veri seti.}
+\small
+\begin{tabular}{rrrrr@{\qquad}rrrrr}
+\toprule
+No & Grup & Ön & Son & Saat & No & Grup & Ön & Son & Saat \\
+\midrule
+1&A&52&60&5 & 9&B&54&57&4\\
+2&A&48&54&3 &10&B&57&61&5\\
+3&A&61&68&7 &11&B&49&52&3\\
+4&A&55&63&6 &12&B&60&64&7\\
+5&A&58&65&6 &13&B&51&55&3\\
+6&A&46&52&2 &14&B&56&60&5\\
+7&A&63&70&8 &15&B&47&50&2\\
+8&A&50&58&4 &16&B&59&63&6\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Analizden önce veri kalite planı}
+\index{veri kalitesi}
+\index{veri temizleme}
+\index{yinelenen kayıt}
+\index{olanaksız değer}
+
+Ham dosya açıldığında önce şu kontroller yapılır:
+
+\begin{enumerate}
+  \item Sütun adları ve veri türleri veri sözlüğüyle uyumlu mu?
+  \item Her öğrenci kodu benzersiz mi; yinelenen veya atlanan kayıt var mı?
+  \item Grup kodlarında boşluk, küçük harf veya bilinmeyen kategori var mı?
+  \item Ön-test ve son-test puanları 0--100 aralığında mı?
+  \item Çalışma süresi gerçekçi aralıkta ve doğru birimde mi?
+  \item Eksik değer kodları gerçek eksik değere dönüştürülmüş mü?
+  \item Ön-test ve son-test aynı öğrenciyle doğru eşleşmiş mi?
+  \item Aykırı görünen değer veri hatası mı, gerçek gözlem mi?
+\end{enumerate}
+
+Bu veri setinde 16 benzersiz öğrenci, sekizer kişilik iki grup ve eksiksiz
+kayıt vardır. En küçük ve en büyük değerler veri sözlüğündeki sınırlar
+içindedir. Bununla birlikte küçük örneklem ve yapay veri niteliği genelleme
+gücünü sınırlar.
+
+\begin{mistakebox}
+Veri temizleme, sonuçları daha anlamlı yapmak için gözlem silme işlemi değildir.
+Her düzeltme özgün kayıtla doğrulanmalı, kural sonuç görülmeden tanımlanmalı ve
+analiz günlüğünde saklanmalıdır.
+\end{mistakebox}
+
+\section{Araştırma soruları ve yöntem eşleştirmesi}
+\index{yöntem seçimi}
+\index{hedef büyüklük}
+
+\begin{table}[htbp]
+\centering
+\caption{Araştırma sorusu, hedef büyüklük ve analiz yöntemi.}
+\begingroup\scriptsize
+\begin{tabular}{@{}p{0.32\textwidth}p{0.23\textwidth}p{0.27\textwidth}@{}}
+\toprule
+Araştırma sorusu & Hedef büyüklük & Temel yöntem \\
+\midrule
+Son-test puanları nasıl dağılmaktadır? & Merkez, yayılım, biçim & Grafik ve betimsel istatistik \\
+Ortalama son-test puanı ne kadar hassastır? & Evren ortalaması & $t$ güven aralığı \\
+Öğrenciler uygulama sonrasında değişmiş midir? & Ortalama eşleştirilmiş fark & Eşleştirilmiş $t$ testi \\
+A ve B son-test ortalamaları farklı mıdır? & Bağımsız ortalama farkı & Welch $t$ testi \\
+Grupların ortalama değişimleri farklı mıdır? & Değişim farkı & Welch testi veya başlangıç ayarlı model \\
+Saat ile son-test ilişkili midir? & Pearson korelasyonu & Saçılım grafiği ve korelasyon \\
+Saat son-test puanını ne ölçüde yordamaktadır? & Regresyon eğimi & Basit doğrusal regresyon \\
+\bottomrule
+\end{tabular}
+\endgroup
+\end{table}
+
+Her yöntem farklı bir hedefi yanıtlar. Eşleştirilmiş testte bütün öğrencilerin
+ortalama değişimi, bağımsız testte iki grubun ortalama farkı, regresyonda ise
+çalışma saatine göre koşullu ortalama incelenir.
+
+\section{Analiz planını sonuçtan önce yazmak}
+\index{analiz planı}
+\index{ön kayıt}
+
+Kısa bir analiz planı şu kararları önceden belirtmelidir:
+
+\begin{itemize}
+  \item birincil ve ikincil araştırma soruları,
+  \item değişkenlerin kodlanması ve farkın yönü,
+  \item dışlama ve eksik veri kuralları,
+  \item temel grafik ve varsayım incelemeleri,
+  \item kullanılacak test, güven düzeyi ve etki büyüklüğü,
+  \item çoklu analizlerin keşfedici veya doğrulayıcı niteliği,
+  \item duyarlılık analizlerinin amacı.
+\end{itemize}
+
+Bu laboratuvarda fark $D=\text{son}-\text{ön}$ olarak tanımlanacaktır. Pozitif
+değer artışı gösterir. Bütün testler öğretim amacıyla çift yönlü ve yüzde 95
+güven düzeyinde ele alınacaktır.
+
+\begin{researchbox}
+Aynı küçük veri setinde çok sayıda soru sınanmaktadır. Bu nedenle sonuçlar
+bağımsız doğrulayıcı kanıtlar gibi sunulmamalıdır. Laboratuvarın amacı yöntem
+bağlantılarını göstermek; gerçek araştırmada birincil sonucu önceden
+belirlemek gerekir.
+\end{researchbox}
+
+\section{Betimsel analiz}
+
+Son-test puanları için
+\[
+\bar x=59{,}50,
+\qquad s=5{,}90,
+\qquad Md=59{,}0,
+\qquad \min=50,
+\qquad \max=70
+\]
+bulunur. Ortalama ile medyan yakındır ve veri aralığında açıkça olanaksız bir
+değer yoktur.
+
+Grup bazında son-test özetleri:
+
+\begin{table}[htbp]
+\centering
+\caption{Gruplara göre ön-test, son-test ve değişim özetleri.}
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+ & \multicolumn{2}{c}{Ön-test} & \multicolumn{2}{c}{Son-test} & \multicolumn{2}{c}{Değişim} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(l){6-7}
+Grup & Ort. & SS & Ort. & SS & Ort. & SS \\
+\midrule
+A & 54,13 & 6,36 & 61,25 & 6,43 & 7,13 & 0,83 \\
+B & 54,13 & 4,58 & 57,75 & 5,12 & 3,63 & 0,52 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+İki grubun ön-test ortalamaları bu yapay örnekte aynıdır. A grubunun ortalama
+artışı B grubundan daha büyüktür. Yalnız ortalamaya bakmak yeterli değildir;
+ham noktalar, değişim dağılımı ve küçük örneklem belirsizliği de incelenmelidir.
+
+\section{Görselleştirme planı}
+\index{veri görselleştirme}
+\index{bağlantı grafiği}
+
+Bu veri için tek bir grafik bütün soruları yanıtlamaz:
+
+\begin{itemize}
+  \item son-test dağılımı için nokta veya histogram,
+  \item gruplar için yan yana nokta ve kutu grafiği,
+  \item bireysel değişim için ön--son bağlantı grafiği,
+  \item çalışma saati ile son-test için saçılım grafiği ve doğrusal uyum,
+  \item regresyon tanısı için artık--uydurulan değer grafiği.
+\end{itemize}
+
+Ön--son bağlantı grafiği ortalama artışın her öğrenci için aynı olup olmadığını
+gösterir. Bu veride bütün öğrencilerin puanı artmıştır; fakat A grubundaki
+artışlar 6--8, B grubundakiler 3--4 puan arasındadır.
+
+\begin{etkinlik}
+Aynı veri için yalnız grup ortalamalarını gösteren çubuk grafik ile bütün
+öğrenci noktalarını gösteren grafiği karşılaştırın. Küçük örneklemde hangi
+bilginin çubuk grafikte kaybolduğunu açıklayın.
+\end{etkinlik}
+
+\section{Ortalama için güven aralığı}
+
+Son-test ortalamasının standart hatası
+\[
+SE(\bar X)=\frac{5{,}90}{\sqrt{16}}=1{,}475
+\]
+ve 15 serbestlik derecesinde kritik değer yaklaşık 2,131'dir. Yüzde 95 güven
+aralığı
+\[
+59{,}50\pm2{,}131(1{,}475)
+=[56{,}36;\ 62{,}64]
+\]
+olarak bulunur.
+
+Bu aralık örnekleme belirsizliğini gösterir. Kolayda seçilmiş, yanlı veya
+geçersiz ölçülmüş bir örneklemin sorunlarını kapsamaz. Ayrıca öğrencilerin
+yüzde 95'inin bu aralıkta olduğu anlamına gelmez.
+
+\section{Eşleştirilmiş ön-test--son-test analizi}
+\index{t testi@$t$ testi!eşleştirilmiş örneklem}
+\index{ön-test--son-test tasarımı}
+
+Her öğrenci için son-testten ön-test çıkarılır:
+\[
+D_i=\text{Son}_i-\text{Ön}_i.
+\]
+Farkların ortalaması ve standart sapması
+\[
+\bar d=5{,}375,
+\qquad s_D=1{,}928
+\]
+olup standart hata
+\[
+SE(\bar D)=\frac{1{,}928}{\sqrt{16}}=0{,}482
+\]
+bulunur. Test istatistiği
+\[
+t=\frac{5{,}375}{0{,}482}=11{,}15,
+\qquad sd=15,
+\qquad p<0{,}001
+\]
+ve yüzde 95 güven aralığı
+\[
+[4{,}35;\ 6{,}40]
+\]
+olur.
+
+Eşleştirilmiş standartlaştırılmış değişim
+\[
+d_z=\frac{5{,}375}{1{,}928}=2{,}79
+\]
+olarak hesaplanır. Bu yapay veride fark değişkenliği çok küçük olduğu için
+etki olağandışı büyüktür; gerçek araştırmada bu büyüklüğün genellenebilirliği
+ayrı örneklemde değerlendirilmelidir.
+
+\begin{mistakebox}
+Ön-test--son-test farkının anlamlı olması artışın uygulamadan kaynaklandığını
+kanıtlamaz. Zaman, sınanma etkisi, olgunlaşma ve dış olaylar da değişim
+üretebilir. Nedensel yorum için uygun karşılaştırma grubu ve atama süreci
+gerekir.
+\end{mistakebox}
+
+\section{Bağımsız grupların son-test karşılaştırması}
+\index{Welch t testi@Welch $t$ testi}
+
+A grubunun son-test ortalaması 61,25, B grubunun 57,75'tir. Fark
+\[
+61{,}25-57{,}75=3{,}50
+\]
+puandır. Welch standart hatası yaklaşık 2,91 ve serbestlik derecesi 13,33'tür:
+\[
+t(13{,}33)=1{,}20,
+\qquad p=0{,}249.
+\]
+Fark için yüzde 95 güven aralığı
+\[
+[-2{,}76;\ 9{,}76]
+\]
+olur. Cohen'in birleşik standart sapmaya dayalı $d$ değeri yaklaşık 0,60'tır.
+
+Nokta tahmini A grubunda daha yüksek ortalama ve orta büyüklükte
+standartlaştırılmış fark göstermesine rağmen aralık sıfırı ve ters yöndeki
+küçük farkları da içermektedir. ``Gruplar eşittir'' değil, bu küçük örneklemde
+son-test farkının hassas tahmin edilemediği söylenmelidir.
+
+\begin{researchbox}
+$d=0{,}60$ ile $p=0{,}249$ çelişki değildir. Etki büyüklüğü gözlenen farkın
+derecesini, $p$-değeri bu farkın standart hataya göre ne kadar olağandışı
+olduğunu gösterir. Sekizer kişilik gruplarda belirsizlik geniştir.
+\end{researchbox}
+
+\section{Değişim farkı ve başlangıç ayarı}
+\index{değişim puanı}
+\index{başlangıç ayarlı model}
+\index{ANCOVA}
+
+Son-test karşılaştırması grupların dönem sonundaki farkını; değişim puanı
+karşılaştırması grupların ortalama artış farkını hedefler. A grubunun ortalama
+artışı 7,125, B grubunun 3,625 olduğundan değişim farkı 3,50 puandır.
+
+Değişim puanlarının grup içi standart sapmaları küçük olduğu için Welch testi
+\[
+t(11{,}69)=10{,}08,
+\qquad p<0{,}001
+\]
+sonucunu verir. Aynı 3,50 puanlık farkın son-test analizinde belirgin değil,
+değişim analizinde belirgin olması paydadaki standart hatanın farklılığından
+kaynaklanır.
+
+Başka bir yaklaşım, son-test puanını ön-test ve grup ile modelleyen başlangıç
+ayarlı regresyon veya ANCOVA'dır:
+\[
+\text{Son}=\beta_0+\beta_1\text{Ön}+\beta_2\text{Grup}+\varepsilon.
+\]
+Bu yapay veride ön-test son-testin çok güçlü yordayıcısıdır ve ayarlı grup
+farkı yine 3,50 puandır. Ancak değişim analizi ile ANCOVA her veri yapısında
+aynı sonucu vermez.
+
+\begin{mistakebox}
+Son-test, değişim puanı ve ANCOVA arasından en küçük $p$-değerini veren yöntemi
+seçmeyin. Hedef büyüklük, randomizasyon, başlangıç dengesi, ölçüm güvenirliği
+ve analiz planı yöntem seçiminden önce belirlenmelidir.
+\end{mistakebox}
+
+\section{Korelasyon analizi}
+\index{Pearson korelasyonu}
+
+Çalışma süresi ile son-test puanı arasında
+\[
+r(14)=0{,}981,
+\qquad p<0{,}001
+\]
+bulunur. Saçılım grafiği güçlü ve yaklaşık doğrusal pozitif örüntü gösterir.
+Basit doğrusal modelde $r^2=0{,}962$ olur.
+
+Bu olağandışı yüksek ilişki küçük ve öğretim için oluşturulmuş veri setinin
+özelliğidir. Gerçek çalışmada güven aralığı, etkili gözlemler, ölçüm
+güvenirliği ve yeni örneklem doğrulaması özellikle önemlidir.
+
+Korelasyon çalışma süresinin başarıya neden olduğunu kanıtlamaz. Başlangıç
+başarısı, motivasyon, ders devamı veya aile desteği her iki değişkenle ilişkili
+olabilir. Ayrıca başarılı öğrenciler daha fazla çalışma bildirebilir.
+
+\section{Basit doğrusal regresyon}
+\index{basit doğrusal regresyon}
+
+Uydurulan doğru
+\[
+\widehat{\text{Son puan}}
+=44{,}60+3{,}14\times\text{Saat}
+\]
+biçimindedir. Eğimin standart hatası 0,168 ve yüzde 95 güven aralığı
+\[
+[2{,}78;\ 3{,}50]
+\]
+olarak bulunur. Test sonucu
+\[
+t(14)=18{,}73,
+\qquad p<0{,}001
+\]
+ve model uyumu
+\[
+R^2=0{,}962,
+\qquad s_e=1{,}20
+\]
+şeklindedir.
+
+Gözlenen 2--8 saat aralığında çalışma süresi bir saat daha yüksek olan
+öğrencilerin beklenen son-test puanı yaklaşık 3,14 puan daha yüksektir. Bu
+ilişki 15 saat için doğrudan uzatılmamalı ve nedensel ``bir saat çalıştırmak
+3,14 puan artırır'' ifadesine dönüştürülmemelidir.
+
+\section{Kategorik bir türetim: Bilgi kaybını görmek}
+\index{kategorileştirme}
+\index{bilgi kaybı}
+
+Değişim puanı en az 7 olan öğrenciler ``yüksek artış'' olarak sınıflandırılsın.
+A grubunda 6, B grubunda 0 öğrenci yüksek artış göstermiştir:
+
+\begin{table}[htbp]
+\centering
+\caption{Grup ve yüksek artış sınıflandırması.}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+ & Yüksek artış & Diğer & Toplam \\
+\midrule
+A & 6 & 2 & 8 \\
+B & 0 & 8 & 8 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Beklenen frekanslardan ikisi 5'in altındadır ve bir gözlenen hücre sıfırdır;
+Fisher kesin testi uygundur ve iki yönlü $p=0{,}007$ verir. Bununla birlikte 7
+puan eşiği veri görüldükten sonra seçilmişse sonuç doğrulayıcı değildir.
+
+Nicel değişim puanını iki kategoriye ayırmak değerler arasındaki farkları
+kaybeder. 7 ve 8 puan aynı, 6 ve 7 puan tamamen farklı kabul edilir. Klinik
+veya eğitsel olarak doğrulanmış eşik yoksa özgün nicel analiz önceliklidir.
+
+\section{Varsayım ve duyarlılık matrisi}
+\index{varsayım kontrolü}
+\index{duyarlılık analizi}
+
+\begin{table}[htbp]
+\centering
+\caption{Laboratuvar analizlerinde temel tanı soruları.}
+\begingroup\scriptsize
+\begin{tabular}{@{}p{0.20\textwidth}p{0.28\textwidth}p{0.34\textwidth}@{}}
+\toprule
+Analiz & Temel kontrol & Sorun varsa olası yaklaşım \\
+\midrule
+Güven aralığı & Örnekleme, aykırı değer, dağılım & Bootstrap veya sağlam aralık \\
+Eşleştirilmiş $t$ & Farkların bağımsızlığı ve biçimi & Wilcoxon, işaret veya sağlam yöntem \\
+Welch $t$ & Bağımsızlık, aykırı değer, biçim & Mann--Whitney ya da sağlam ortalama \\
+Korelasyon & Doğrusallık ve etkili gözlem & Spearman, eğrisel model, duyarlılık \\
+Regresyon & Artık örüntüsü, varyans, etki & Sağlam SE, dönüşüm, farklı model \\
+Kategorik test & Bağımsızlık ve beklenen frekans & Fisher veya kesin/Monte Carlo test \\
+\bottomrule
+\end{tabular}
+\endgroup
+\end{table}
+
+Alternatif yöntem seçimi sonuç görüldükten sonra anlamlılık arama yolu
+olmamalıdır. Ana analiz, varsayım sorunu ve duyarlılık analizinin amacı açıkça
+ayrılmalıdır.
+
+\section{Eksik veri senaryosu}
+\index{eksik veri}
+\index{seçici kayıp}
+
+Bu öğretim verisi eksiksizdir; gerçek projede bu durum seyrektir. Örneğin B
+grubundaki düşük son-test puanlı iki öğrenci izlem ölçümüne katılmasaydı grup
+ortalaması yapay biçimde yükselebilirdi. Eksiklik yalnız örneklem hacmini
+azaltmaz, sonuçla ilişkiliyse yanlılık da üretir.
+
+Asgari raporlama:
+
+\begin{itemize}
+  \item her değişken için eksik sayı ve yüzde,
+  \item gruplara göre kayıp örüntüsü,
+  \item tam durum analizine giren öğrenci sayısı,
+  \item kullanılan silme veya atama yöntemi,
+  \item makul alternatiflere duyarlılık analizi.
+\end{itemize}
+
+Eksik değerleri sıfırla veya grup ortalamasıyla doldurmak değişkenliği ve
+standart hatayı bozar. Yöntem eksiklik mekanizması ve araştırma tasarımına göre
+seçilmelidir.
+
+\section{Yeniden üretilebilir Python analizi}
+
+\begin{lstlisting}
+import numpy as np
+import pandas as pd
+from scipy import stats
+import statsmodels.formula.api as smf
+
+veri = pd.DataFrame({
+    "id": range(1, 17),
+    "grup": ["A"] * 8 + ["B"] * 8,
+    "on": [52,48,61,55,58,46,63,50,
+           54,57,49,60,51,56,47,59],
+    "son": [60,54,68,63,65,52,70,58,
+            57,61,52,64,55,60,50,63],
+    "saat": [5,3,7,6,6,2,8,4,
+             4,5,3,7,3,5,2,6]
+})
+
+# Veri kalite kontrolleri
+assert veri["id"].is_unique
+assert veri["grup"].isin(["A", "B"]).all()
+assert veri[["on", "son"]].apply(
+    lambda x: x.between(0, 100)).all().all()
+assert veri["saat"].between(0, 40).all()
+print(veri.isna().sum())
+
+# Turetilmis degisken
+veri["degisim"] = veri["son"] - veri["on"]
+print(veri.groupby("grup")[["on", "son", "degisim"]]
+      .agg(["count", "mean", "std"]))
+
+# Guven araligi ve temel testler
+ga = stats.t.interval(
+    .95, len(veri) - 1,
+    loc=veri["son"].mean(),
+    scale=stats.sem(veri["son"])
+)
+esli = stats.ttest_rel(veri["son"], veri["on"])
+A = veri.loc[veri["grup"] == "A", "son"]
+B = veri.loc[veri["grup"] == "B", "son"]
+welch = stats.ttest_ind(A, B, equal_var=False)
+korelasyon = stats.pearsonr(veri["saat"], veri["son"])
+
+# Regresyon ve baslangic ayarli model
+basit = smf.ols("son ~ saat", data=veri).fit()
+ayarli = smf.ols("son ~ on + C(grup)", data=veri).fit()
+
+# Kesin kategorik analiz
+veri["yuksek_artis"] = veri["degisim"] >= 7
+tablo = pd.crosstab(veri["grup"], veri["yuksek_artis"])
+fisher = stats.fisher_exact(tablo.to_numpy())
+
+print("Yuzde 95 GA:", ga)
+print("Eslestirilmis test:", esli)
+print("Welch testi:", welch)
+print("Korelasyon:", korelasyon)
+print(basit.summary())
+print(ayarli.summary())
+print(tablo, fisher)
+\end{lstlisting}
+
+Kodda veri kalite kontrollerinin analiz komutlarından önce yer alması
+önemlidir. \texttt{assert} satırları bir sorun olduğunda işlemi durdurur.
+Gerçek projede veri kaynağı, paket sürümleri ve rassal tohum da kaydedilmelidir.
+
+\section{Python ile görselleştirme ve çıktı kaydı}
+
+\begin{lstlisting}
+import matplotlib.pyplot as plt
+
+fig, ax = plt.subplots(1, 3, figsize=(11, 3.2))
+
+# Gruplara gore son-test noktalarini goster
+for i, g in enumerate(["A", "B"]):
+    y = veri.loc[veri["grup"] == g, "son"]
+    ax[0].scatter([i] * len(y), y, label=g)
+ax[0].set_xticks([0, 1], ["A", "B"])
+ax[0].set_ylabel("Son-test puani")
+
+# Bireysel on-son degisimleri
+for _, satir in veri.iterrows():
+    ax[1].plot([0, 1], [satir["on"], satir["son"]],
+               marker="o", alpha=.65)
+ax[1].set_xticks([0, 1], ["On", "Son"])
+ax[1].set_ylabel("Basari puani")
+
+# Sacilim ve regresyon dogrusu
+ax[2].scatter(veri["saat"], veri["son"])
+sira = np.linspace(veri["saat"].min(), veri["saat"].max(), 100)
+ax[2].plot(sira, basit.predict(pd.DataFrame({"saat": sira})))
+ax[2].set_xlabel("Haftalik calisma saati")
+ax[2].set_ylabel("Son-test puani")
+
+plt.tight_layout()
+plt.savefig("laboratuvar-sekiller.png", dpi=300,
+            bbox_inches="tight")
+plt.show()
+\end{lstlisting}
+
+Dosya adı, çözünürlük ve grafiği üreten kod analiz kaydının parçasıdır.
+Grafikler elle düzenlenip veriyle bağı koparılmamalı; mümkün olduğunca koddan
+yeniden üretilebilmelidir.
+
+\section{SPSS işlem ve doğrulama haritası}
+
+\begin{description}
+  \item[Veri denetimi] Analyze $>$ Descriptive Statistics $>$ Frequencies / Explore
+  \item[Değişim puanı] Transform $>$ Compute Variable
+  \item[Eşleştirilmiş test] Analyze $>$ Compare Means $>$ Paired-Samples T Test
+  \item[Bağımsız test] Analyze $>$ Compare Means $>$ Independent-Samples T Test
+  \item[Korelasyon] Analyze $>$ Correlate $>$ Bivariate
+  \item[Regresyon] Analyze $>$ Regression $>$ Linear
+  \item[Çapraz tablo] Analyze $>$ Descriptive Statistics $>$ Crosstabs
+\end{description}
+
+SPSS menüleriyle yapılan işlemler \textbf{Paste} düğmesi kullanılarak syntax
+dosyasına aktarılmalıdır. Syntax, hangi değişkenin hangi alana konduğunu,
+eksik veri seçeneklerini ve analiz sırasını denetlenebilir hâle getirir.
+
+\begin{outputguidebox}
+Çıktıyı test test okumak yerine araştırma sorusu sırasıyla inceleyin. Her
+soruda önce geçerli $n$ ve betimsel istatistikleri, sonra tahmin ve güven
+aralığını, ardından test ve etki büyüklüğünü, son olarak varsayım tanılarını
+okuyun. SPSS Viewer dosyası tek başına yeniden üretilebilir analiz değildir;
+syntax ve veri işleme günlüğü de saklanmalıdır.
+\end{outputguidebox}
+
+\section{Analiz günlüğü ve proje yapısı}
+\index{analiz günlüğü}
+\index{proje yapısı}
+\index{yeniden üretilebilirlik}
+
+Tekrarlanabilir bir proje en az şu öğeleri içerir:
+
+\begin{itemize}
+  \item değiştirilmeyen ham veri,
+  \item kimlikten arındırılmış analiz verisi,
+  \item veri sözlüğü,
+  \item temizleme ve türetme kodu,
+  \item analiz ve grafik kodu,
+  \item yazılım ile paket sürümleri,
+  \item alınan kararların tarihli analiz günlüğü,
+  \item üretilen tablo, şekil ve rapor.
+\end{itemize}
+
+Ham veri üzerinde elle yapılan ve kaydedilmeyen değişiklikler yeniden
+üretilebilirliği bozar. Temiz veri her seferinde ham veriden kodla
+oluşturulmalıdır. Katılımcı kimlikleri analiz dosyasından ayrı ve güvenli
+tutulmalıdır.
+
+\section{Sonuçları tek anlatıda birleştirmek}
+
+Ayrı analizler birbiriyle çelişiyor gibi görünebilir:
+
+\begin{itemize}
+  \item bütün öğrencilerde güçlü ortalama artış vardır,
+  \item son-test grup farkı küçük örneklemde belirsizdir,
+  \item değişim farkı gruplar arasında belirgindir,
+  \item çalışma süresi son-testle çok güçlü ilişkilidir.
+\end{itemize}
+
+Bu sonuçlar farklı hedefleri yanıtladığı için doğrudan çelişmez. Bütün
+öğrencilerin zaman içindeki değişimi, iki grubun dönem sonu konumu, grupların
+artış farkı ve öğrenciler arası çalışma--başarı ilişkisi ayrı niceliklerdir.
+
+Araştırmacı analizleri tek bir nedensel hikâyeye zorlamamalıdır. Grup ataması
+ve çalışma süresi gözlemselse hem grup farkları hem regresyon eğimi karıştırıcı
+değişkenlerden etkilenebilir.
+
+\section{Bütünleştirici yöntem paragrafı}
+
+``Her satırın bir öğrenciyi temsil ettiği veri setinde ön-test, son-test ve
+haftalık çalışma süresi incelenmiştir. Değişim puanı son-test eksi ön-test
+olarak hesaplanmıştır. Veri aralıkları, yinelenen kimlikler ve eksik gözlemler
+analizden önce kontrol edilmiştir. Son-test puanları betimsel istatistik ve
+yüzde 95 güven aralığıyla özetlenmiş; zaman içindeki değişim eşleştirilmiş
+$t$ testi, gruplar arası son-test farkı Welch $t$ testiyle değerlendirilmiştir.
+Çalışma süresi ile son-test ilişkisi saçılım grafiği, Pearson korelasyonu ve
+basit doğrusal regresyonla incelenmiştir. Tahminler güven aralıkları ve etki
+büyüklükleriyle raporlanmıştır.''
+
+\section{Bütünleştirici bulgu paragrafı}
+
+``Öğrencilerin son-test puanı ortalama 59,50'dir ($SS=5{,}90$, yüzde 95 GA
+$[56{,}36;62{,}64]$, $n=16$). Son-test puanları ön-testten ortalama 5,38
+puan daha yüksektir, $t(15)=11{,}15$, $p<0{,}001$, yüzde 95 GA
+$[4{,}35;6{,}40]$, $d_z=2{,}79$. A ve B gruplarının son-test farkı 3,50
+puandır; ancak tahmin belirsizdir, Welch $t(13{,}33)=1{,}20$, $p=0{,}249$,
+yüzde 95 GA $[-2{,}76;9{,}76]$, $d=0{,}60$. Çalışma süresi son-test
+puanıyla güçlü pozitif ilişki göstermiştir, $r(14)=0{,}981$, $p<0{,}001$.
+Regresyon eğimi saat başına 3,14 puandır (yüzde 95 GA $[2{,}78;3{,}50]$,
+$R^2=0{,}962$). Küçük ve gözlemsel öğretim verisi nedeniyle bulgular nedensel
+etki veya dış evrene genelleme olarak yorumlanmamıştır.''
+
+\section{Etik ve ölçülü yorum}
+\index{araştırma etiği}
+\index{mahremiyet}
+\index{damgalayıcı dil}
+
+PDR verileri çoğu zaman hassastır. İyi analiz yalnız doğru formül değil,
+katılımcı mahremiyeti ve zarar vermeyen raporlama gerektirir:
+
+\begin{itemize}
+  \item küçük hücrelerde kimliği açığa çıkarabilecek ayrıntılar verilmemeli,
+  \item risk kategorileri damgalayıcı dille sunulmamalı,
+  \item grup ortalaması bireysel tanı gibi kullanılmamalı,
+  \item belirsizlik ve sınırlılıklar görünür olmalı,
+  \item sonuçlara göre sonradan değiştirilen analizler açıklanmalı,
+  \item veri ve kod paylaşımı onam ile gizlilik sınırlarına uymalıdır.
+\end{itemize}
+
+\begin{researchbox}
+Tekrarlanabilirlik veriyi herkese açmak demek değildir. Hassas veriler
+paylaşılmadan kod, sentetik örnek, değişken sözlüğü ve analiz kararları açık
+tutulabilir. Bilimsel şeffaflık ile katılımcı gizliliği birlikte korunmalıdır.
+\end{researchbox}
+
+\section{Son teslim ürünü}
+
+Bu laboratuvarın ürünü yalnız bir çıktı dosyası değil, küçük bir araştırma
+paketidir:
+
+\begin{enumerate}
+  \item araştırma soruları ve yöntem eşleştirme tablosu,
+  \item veri sözlüğü ve kalite kontrol günlüğü,
+  \item bir betimsel tablo,
+  \item en az iki açıklayıcı grafik,
+  \item güven aralığı, karşılaştırma ve ilişki analizleri,
+  \item varsayım ve duyarlılık değerlendirmesi,
+  \item yöntem, bulgu ve sınırlılık paragrafları,
+  \item yeniden çalıştırılabilir Python kodu veya SPSS syntax dosyası.
+\end{enumerate}
+
+\section{Değerlendirme anahtarı}
+
+\begin{table}[htbp]
+\centering
+\caption{Bütünleştirici laboratuvar için kısa değerlendirme rubriği.}
+\begingroup\scriptsize
+\begin{tabular}{@{}p{0.22\textwidth}p{0.30\textwidth}p{0.30\textwidth}@{}}
+\toprule
+Boyut & Güçlü çalışma & Geliştirilmesi gereken çalışma \\
+\midrule
+Soru--yöntem uyumu & Her yöntem açık hedefe bağlıdır & Testler amaç belirtilmeden seçilmiştir \\
+Veri kalitesi & Kontroller ve kararlar kaydedilmiştir & Temizleme görünmez veya sonuç odaklıdır \\
+İstatistiksel doğruluk & Tahmin, GA, etki ve test uyumludur & Yalnız $p$-değeri veya yanlış test vardır \\
+Görselleştirme & Ham veri ve örüntü görünürdür & Yalnız süslü özet grafik vardır \\
+Yorum & Tasarım ve belirsizlik sınırları korunur & Nedensellik veya kesinlik abartılır \\
+Tekrarlanabilirlik & Kod/syntax ve sürümler kaydedilmiştir & İşlemler elle ve belgelenmeden yapılmıştır \\
+Etik & Gizlilik ve damgalamama gözetilmiştir & Küçük hücre veya kimlik riski vardır \\
+\bottomrule
+\end{tabular}
+\endgroup
+\end{table}
+
+\section{Literatür veri setiyle IBM SPSS bütünleştirici laboratuvarı}
+\index{Student Performance veri seti!bütünleştirici analiz}
+\index{SPSS!bütünleştirici analiz}
+\index{SPSS!analiz günlüğü}
+\index{yeniden üretilebilirlik!SPSS syntax}
+
+Bu uygulamada önceki bölümlerde tanıtılan \emph{Student Performance}
+matematik dosyası baştan sona tek bir IBM SPSS iş akışıyla analiz edilecektir
+\cite{cortez2008data,cortezsilva2008}. Veri iki Portekiz okulundaki
+öğrencilerin notlarını, çalışma süresi kategorilerini ve bazı demografik,
+sosyal ve okul değişkenlerini içerir. Bu laboratuvarda yalnız şu değişkenler
+kullanılacaktır:
+
+\begin{description}
+  \item[\textnormal{\texttt{school}}] Öğrencinin okulu: GP veya MS,
+  \item[\textnormal{\texttt{studytime}}] Haftalık çalışma süresi: 1'den 4'e sıralı kategori,
+  \item[\textnormal{\texttt{G3}}] 0--20 aralığındaki yıl sonu matematik notu,
+  \item[\textnormal{\texttt{basarili}}] Bu laboratuvarda \texttt{G3}$\geq10$ olarak türetilen gösterge.
+\end{description}
+
+Amaç en fazla sayıda anlamlı sonuç bulmak değil, araştırma sorularının veri
+denetiminden raporlamaya kadar aynı syntax içinde izlenebilmesini sağlamaktır.
+
+\begin{researchbox}
+Matematik dosyasında 395 öğrenci bulunması, örneklemin bütün Portekizli
+öğrencileri temsil ettiği anlamına gelmez. Veri iki okulla sınırlıdır ve
+öğrencilerin ülke genelinden olasılıklı yöntemle seçildiği belirtilmemiştir.
+Bu nedenle aşağıdaki standart hatalar ve testler örneklem içi belirsizliği
+gösterir; seçim yanlılığını ortadan kaldırmaz.
+\end{researchbox}
+
+\subsection{Araştırma soruları ve önceden tanımlanan analizler}
+
+\begin{table}[htbp]
+\centering
+\caption{Literatür verisi için bütünleştirici analiz planı.}
+\begin{tabular}{@{}p{0.43\textwidth}p{0.40\textwidth}@{}}
+\toprule
+Araştırma sorusu & SPSS yordamı \\
+\midrule
+G3 puanlarının merkezi, yayılımı ve biçimi nasıldır? & Frequencies ve Explore \\
+Ortalama G3 puanı 10 referansından farklı mıdır? & Tek örneklem $t$ testi \\
+G3 ortalamaları çalışma süresi gruplarında farklı mıdır? & Tek yönlü ve Welch ANOVA \\
+Okul ile başarı durumu ilişkili midir? & Crosstabs ve Pearson ki-kare \\
+Sonuçlar hangi etki büyüklükleriyle tamamlanmalıdır? & Cohen $d$, eta-kare ve Cramér $V$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Birincil soru veri görülmeden önce belirlenmelidir. Burada çok sayıda yöntem
+aynı veri üzerinde öğretim amacıyla gösterildiği için bütün sonuçlar
+keşfedici bir analiz ailesinin parçaları olarak değerlendirilecektir.
+
+\subsection{Tek dosyada yeniden üretilebilir SPSS syntax}
+
+Birinci bölümde içe aktarılan \texttt{StudentMath} veri seti açıkken aşağıdaki
+syntax çalıştırılır. Önce çalışma kopyası oluşturulur; böylece özgün içe
+aktarım dosyası değiştirilmeden korunur.
+
+\begin{lstlisting}[language={}]
+* 1. Calisma kopyasi ve veri denetimi.
+DATASET ACTIVATE StudentMath.
+DATASET COPY StudentMathLab.
+DATASET ACTIVATE StudentMathLab.
+
+DISPLAY DICTIONARY.
+
+FREQUENCIES VARIABLES=school studytime
+ /ORDER=ANALYSIS.
+
+FREQUENCIES VARIABLES=G3
+ /STATISTICS=MEAN MEDIAN STDDEV MINIMUM MAXIMUM QUARTILES
+ /HISTOGRAM NORMAL
+ /ORDER=ANALYSIS.
+
+COMPUTE g3_aralik_hatasi=
+ (NOT MISSING(G3) AND (G3<0 OR G3>20)).
+VARIABLE LABELS g3_aralik_hatasi
+ 'G3 degeri 0-20 araligi disinda'.
+VALUE LABELS g3_aralik_hatasi 0 'Uygun' 1 'Aralik disi'.
+FREQUENCIES VARIABLES=g3_aralik_hatasi.
+
+* 2. Basari gostergesini eksikleri koruyarak uret.
+COMPUTE basarili=$SYSMIS.
+IF NOT MISSING(G3) basarili=(G3>=10).
+VARIABLE LABELS basarili 'Yil sonu notu en az 10'.
+VALUE LABELS basarili 0 'Basarisiz' 1 'Basarili'.
+VARIABLE LEVEL basarili (NOMINAL).
+FORMATS basarili (F1.0).
+EXECUTE.
+
+* 3. Dagilim ve grup grafiklerini incele.
+EXAMINE VARIABLES=G3 BY studytime
+ /PLOT BOXPLOT HISTOGRAM NPPLOT
+ /STATISTICS DESCRIPTIVES
+ /CINTERVAL 95
+ /MISSING LISTWISE.
+
+* 4. Ortalama G3 puanini 10 referansiyla karsilastir.
+T-TEST
+ /TESTVAL=10
+ /MISSING=ANALYSIS
+ /VARIABLES=G3
+ /CRITERIA=CI(.95).
+
+* Tek orneklem Cohen d.
+AGGREGATE
+ /OUTFILE=* MODE=ADDVARIABLES
+ /BREAK=
+ /n_G3=N(G3)
+ /ortalama_G3=MEAN(G3)
+ /ss_G3=SD(G3).
+COMPUTE d_tek=(ortalama_G3-10)/ss_G3.
+FORMATS ortalama_G3 ss_G3 d_tek (F7.3).
+
+* 5. Calisma suresi gruplarini karsilastir.
+ONEWAY G3 BY studytime
+ /STATISTICS DESCRIPTIVES HOMOGENEITY WELCH
+ /MISSING ANALYSIS.
+
+* 6. Okul ile basari durumunun capraz tablosu.
+CROSSTABS
+ /TABLES=school BY basarili
+ /FORMAT=AVALUE TABLES
+ /STATISTICS=CHISQ PHI RISK
+ /CELLS=COUNT EXPECTED ROW COLUMN ASRESID
+ /COUNT ROUND CELL.
+
+* 7. Analiz verisini ve Viewer ciktisini kaydet.
+SAVE OUTFILE='student-math-lab.sav'.
+OUTPUT SAVE OUTFILE='student-math-lab.spv'.
+\end{lstlisting}
+
+Dosya adları göreli yazılmıştır; SPSS bunları etkin çalışma klasörüne
+kaydeder. Kurumsal veya kişisel bilgisayarda proje klasörü önceden
+belirlenmeli, ham veriyle üretilen dosyalar farklı alt klasörlerde tutulmalıdır.
+
+\subsection{Kontrol noktaları}
+
+Syntax sırasındaki denetimler analiz sonuçları kadar önemlidir:
+
+\begin{enumerate}
+  \item \textbf{Dictionary} tablosunda değişken türü, etiketi ve eksik değer tanımları kontrol edilir.
+  \item Frekans tablolarında geçerli $n$, eksik sayısı ve kategori kodları doğrulanır.
+  \item G3 için 0--20 dışında değer bulunmadığı denetlenir.
+  \item \texttt{basarili} değişkenindeki 0 ve 1 sayıları özgün G3 değerleriyle karşılaştırılır.
+  \item Histogram, Q--Q ve kutu grafikleri test tablolarından önce incelenir.
+  \item Çıktıdaki grup sırası, farkların ve odds oranının yönüyle eşleştirilir.
+\end{enumerate}
+
+\begin{mistakebox}
+Çalışma kopyası oluşturmak tek başına yeniden üretilebilirlik sağlamaz.
+Syntax satırları seçilip farklı sırayla çalıştırılırsa eski türetilmiş
+değişkenler veya açık kalan ağırlık ve filtreler sonuçları etkileyebilir.
+Ana syntax temiz bir oturumda baştan sona çalıştırılmalı ve Viewer çıktısı bu
+çalıştırmayla birlikte kaydedilmelidir.
+\end{mistakebox}
+
+\subsection{SPSS çıktılarının bütünleştirici özeti}
+
+\begin{table}[htbp]
+\centering
+\caption{Student Performance analizlerinin ortak sonuç özeti.}
+\begingroup\small
+\begin{tabular}{@{}p{0.28\textwidth}p{0.25\textwidth}p{0.31\textwidth}@{}}
+\toprule
+Analiz & Nokta tahmini & Çıkarımsal sonuç \\
+\midrule
+G3 betimsel özeti & $\bar x=10{,}415$, $SS=4{,}581$, $Md=11$ & Yüzde 95 GA $[9{,}962;10{,}868]$ \\
+Tek örneklem testi & 10'a göre fark $0{,}415$ & $t(394)=1{,}801$, $p=0{,}072$, $d=0{,}091$ \\
+Çalışma süresi ANOVA & Grup ortalamaları 10,048--11,400 & $F(3,391)=1{,}728$, $p=0{,}161$, $\eta^2=0{,}013$ \\
+Okul--başarı ilişkisi & GP \%67,6; MS \%63,0 başarılı & $\chi^2(1,N=395)=0{,}386$, $p=0{,}534$, $V=0{,}031$ \\
+\bottomrule
+\end{tabular}
+\endgroup
+\end{table}
+
+G3 ortalaması 10 referansından 0,415 puan yüksektir; fakat güven aralığı sıfır
+farkını içerir ve $p=0{,}072$'dir. Bu sonuç ortalamanın kesin olarak 10
+olduğunu kanıtlamaz. $d=0{,}091$, gözlenen farkın standart sapmaya göre çok
+küçük olduğunu gösterir.
+
+Çalışma süresi gruplarının örneklem ortalamaları farklı görünse de grup içi
+değişkenliğe göre genel fark belirgin değildir. Eta-kare yaklaşık 0,013'tür;
+örneklemdeki G3 değişkenliğinin yaklaşık yüzde 1,3'ü çalışma süresi
+kategorileri arasındaki ayrımla ilişkilidir. Çalışma süresinin geniş ve öz
+bildirime dayalı kategorilerle ölçülmesi bu sonucun yorum sınırıdır.
+
+GP okulunda başarı oranı yüzde 67,6, MS okulunda yüzde 63,0'dır. Pearson
+ki-kare testi ve çok küçük Cramér $V$ değeri, bu örneklemde okul ile ikili
+başarı göstergesi arasında belirgin bir ayrışma göstermemektedir. Bu sonuç
+okulların eşdeğer olduğunu kanıtlamaz; özellikle MS grubunun daha küçük olması
+tahmin hassasiyetini sınırlar.
+
+\begin{outputguidebox}
+Bütünleştirici Viewer dosyasını tablo sırasıyla değil, araştırma sorusu
+sırasıyla okuyun. Her soru için önce geçerli $n$ ve dağılımı, sonra nokta
+tahmini ile güven aralığını, ardından test istatistiği ve $p$-değerini, son
+olarak etki büyüklüğü ile tasarım sınırlarını kaydedin. Levene, normallik veya
+beklenen frekans tablolarını ana araştırma sonucu gibi sunmayın.
+\end{outputguidebox}
+
+\subsection{Bütünleştirici yöntem ve bulgu metni}
+
+``Student Performance matematik dosyasında değişken türleri, kategori kodları,
+eksik gözlemler ve G3 puan aralığı analizden önce denetlenmiştir. Yıl sonu notu
+betimsel istatistik ve yüzde 95 güven aralığıyla özetlenmiş; ortalama 10
+referansıyla tek örneklem $t$ testi kullanılarak karşılaştırılmıştır. Çalışma
+süresi grupları klasik ve Welch ANOVA, okul ile önceden tanımlanan başarı
+durumu ise çapraz tablo ve Pearson ki-kare testiyle incelenmiştir. Sonuçlar
+Cohen $d$, eta-kare ve Cramér $V$ ile tamamlanmıştır.''
+
+``Yıl sonu matematik notu ortalama 10,42'dir ($SS=4{,}58$, yüzde 95 GA
+$[9{,}96;10{,}87]$, $n=395$) ve 10 referansından belirgin biçimde farklı
+değildir, $t(394)=1{,}80$, $p=0{,}072$, $d=0{,}09$. Çalışma süresi
+gruplarının ortalamaları için yeterli fark kanıtı bulunmamıştır,
+$F(3,391)=1{,}73$, $p=0{,}161$, $\eta^2=0{,}013$. Benzer biçimde okul ile
+başarı durumu arasındaki ilişki belirgin değildir,
+$\chi^2(1,N=395)=0{,}386$, $p=0{,}534$, $V=0{,}031$. Analizler keşfedici
+olarak değerlendirilmiş ve iki okulla sınırlı veri ülke geneline
+genellenmemiştir.''
+
+Bu metin farklı analizleri tek bir ``etki var veya yok'' sonucuna indirgemez.
+Her analiz farklı hedef büyüklüğü yanıtlar ve anlamlı olmayan sonuçlar eşitlik
+kanıtı olarak kullanılmaz.
+
+\input{chapters/r/integrated-lab}
+\input{chapter-exercises/14-uygulama-laboratuvari}
+
+\bolumkaynaklari{\cite{mccullagh2022,james2021,anscombe1973,efron1993,cortez2008data,cortezsilva2008}}
+
+\section*{Hatırla--Uygula--Yansıt}
+
+\begin{enumerate}
+\renewcommand{\labelenumi}{\textbf{\Alph{enumi}.}}
+  \item \textbf{Hatırla:} Soru--tasarım--veri--yöntem--yorum zincirindeki her aşamanın görevini açıklayın.
+  \item \textbf{Denetle:} Veri seti için en az sekiz otomatik veya görsel kalite kontrolü yazın.
+  \item \textbf{Eşleştir:} Yedi araştırma sorusunun her birini hedef büyüklük ve uygun yöntemle eşleştirin.
+  \item \textbf{Betimle:} Son-test puanlarını merkez, yayılım, biçim ve olağandışı gözlemler açısından özetleyin.
+  \item \textbf{Aralık:} Son-test ortalamasının güven aralığını hesaplayıp doğru ve yanlış birer yorum yazın.
+  \item \textbf{Eşleştirilmiş analiz:} Farkın yönünü, tahminini, güven aralığını ve $d_z$ değerini yorumlayın.
+  \item \textbf{Bağımsız analiz:} $d=0{,}60$ iken $p=0{,}249$ bulunmasının neden çelişki olmadığını açıklayın.
+  \item \textbf{Yöntem karşılaştır:} Son-test, değişim puanı ve başlangıç ayarlı modelin farklı hedeflerini ayırın.
+  \item \textbf{İlişki:} Çok yüksek korelasyonun hangi veri ve tasarım kontrollerini gerekli kıldığını yazın.
+  \item \textbf{Regresyon:} Eğim, güven aralığı, $R^2$ ve artık hatasını ayrı ayrı yorumlayın.
+  \item \textbf{Kategorileştirme:} Değişim puanını eşikle ikiye ayırmanın bilgi ve güç kaybını açıklayın.
+  \item \textbf{Eksik veri:} B grubundaki düşük puanlı öğrencilerin kaybının grup karşılaştırmasını nasıl yanlılaştırabileceğini tartışın.
+  \item \textbf{Duyarlılık:} En az iki ana analiz için alternatif yöntem ve hangi sorunu değerlendirdiğini yazın.
+  \item \textbf{Uygula:} Python kodunu çalıştırıp tablo ve grafiklerin metindeki sonuçlarla tutarlılığını denetleyin.
+  \item \textbf{Tekrarla:} Analizi SPSS syntax ile yeniden üretip Python sonuçlarıyla karşılaştırın.
+  \item \textbf{Raporla:} Yöntem, bulgu, sınırlılık ve etik paragrafından oluşan kısa bir araştırma özeti hazırlayın.
+  \item \textbf{Yansıt:} Analiz sürecinde en fazla yargı gerektiren üç kararı ve farklı bir araştırmacının neden başka karar verebileceğini açıklayın.
+\end{enumerate}

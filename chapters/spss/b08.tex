@@ -1,0 +1,125 @@
+\section{Literatür verisiyle yazılım uygulamaları}
+\label{sec:spss-b08}
+
+\textbf{Amaç ve veri.} \texttt{b08.xlsx} ile ortalama için $t$ güven
+aralığını, \texttt{pass10} oranı için Wilson aralığını bulun
+\citep{cortez2008data}.
+
+\textbf{Ortak veri.} Üç yazılımda aynı kayıtlar ve değişkenler kullanılır. R ve Python için \texttt{companion/spss/csv/b08.csv}, Excel dosyasının aynı veri sayfasını içerir. Kodları proje kökünden çalıştırın; veri sözlüğü ve hazırlık için bkz. sayfa~\pageref{sec:spss-guide}.
+
+\subsection{IBM SPSS uygulaması}
+\textbf{Başlamadan önce.} Rehberdeki veri açma adımıyla yalnız \texttt{open-b08.sps} dosyasını çalıştırın; etiketli veri açılır. Menü yolu ve aşağıdaki tam komut dosyası alternatif uygulama yollarıdır.
+
+\begin{spssadimlar}
+\spssadim{\emph{Analyze $\to$ Descriptive Statistics $\to$ Explore} yolunda \texttt{g3} değişkenini \emph{Dependent List} alanına taşıyın. \emph{Factor List} boş kalsın.}
+\spssadim{\emph{Display} için \emph{Statistics} seçin. \emph{Statistics} penceresinde \emph{Descriptives} ve yüzde 95 ortalama güven düzeyini belirleyin; \emph{Continue $\to$ OK} seçin.}
+\spssadim{Çıktıdaki \emph{95\% Confidence Interval for Mean} altında \emph{Lower Bound} ve \emph{Upper Bound} satırlarını bulun. Bunlar not ortalamasının sınırlarıdır.}
+\spssadim{\emph{Analyze $\to$ Descriptive Statistics $\to$ Frequencies} yolunda \texttt{pass10} tablosunu alın; 1 kategorisinin frekansını ve toplamı okuyun.}
+\spssadim{Oran için Wilson aralığı, Explore içindeki ortalama aralığı değildir. Aşağıdaki tam komut dosyasını \emph{File $\to$ Open $\to$ Syntax} ile açıp \emph{Run $\to$ All} seçin; \texttt{alt} ve \texttt{ust} sınırlarını \texttt{LIST} çıktısından okuyun.}
+\end{spssadimlar}
+
+{\raggedright
+\noindent\textbf{Komutların görevi.} \texttt{EXAMINE} ortalamanın $t$ aralığını verir. Sonraki \texttt{AGGREGATE} ve \texttt{COMPUTE} komutları oran için Wilson sınırlarını hesaplar; bunlar ayrı çıktılardır.\par}
+
+\par\noindent\begin{minipage}{\linewidth}
+\textbf{Uygulama kodu:} \texttt{b08}. Veri: \texttt{excel/b08.xlsx};
+komut: \texttt{syntax/b08.sps} (\texttt{companion/spss} altında).
+
+% Derleme harici .sps dosyasına bağlı değildir. Eşlikçi kopya:
+% companion/spss/syntax/b08.sps
+\begin{lstlisting}[style=prismSPSS]
+INSERT FILE='companion/spss/syntax/open-b08.sps'
+ ERROR=STOP.
+EXAMINE VARIABLES=g3
+ /PLOT=NONE /STATISTICS=DESCRIPTIVES
+ /CINTERVAL=95.
+FREQUENCIES VARIABLES=pass10.
+AGGREGATE /OUTFILE=*
+ /BREAK= /n=N /oran=MEAN(pass10).
+COMPUTE z=1.959963984540054.
+COMPUTE payda=1+z**2/n.
+COMPUTE merkez=(oran+z**2/(2*n))/payda.
+COMPUTE yari=z*SQRT(oran*(1-oran)/n+z**2/(4*n**2))/payda.
+COMPUTE alt=merkez-yari.
+COMPUTE ust=merkez+yari.
+FORMATS oran alt ust (F10.4).
+LIST VARIABLES=n oran alt ust.
+\end{lstlisting}
+
+\end{minipage}\par
+
+\begin{outputguidebox}
+\textbf{Beklenen kontrol değerleri (SPSS burada çalıştırılmadı).}
+\emph{Descriptives} tablosunda ortalamanın yüzde 95 güven aralığı
+$[\SPMatCILow;\SPMatCIHigh]$ olur. \texttt{LIST} çıktısında oran
+\SPMatPHat, Wilson alt ve üst sınırları \SPWilsonLow\ ve \SPWilsonHigh'dır.
+Birinci aralığın birimi not puanı, ikincisininki orandır.
+Bu aralıklar öğrencilerin yüzde 95'inin notlarını kapsayan aralıklar değildir.
+Model ve örnekleme varsayımları geçerliyken tekrarlanan örneklemelerden elde
+edilen aralıkların kapsama özelliğiyle yorumlanırlar. İki okuldan veri
+toplanmış olmasının genelleme sınırlılığı aralık hesaplayarak ortadan kalkmaz.
+\end{outputguidebox}
+
+
+\par\noindent\begin{minipage}{\linewidth}
+\subsection{R uygulaması}
+\label{sec:r-gercek-b08}
+
+İlk satır yalnız ortalama için $t$ aralığını seçer. Sonraki hesap, SPSS ile aynı Wilson formülünü kullanır.
+
+\begin{lstlisting}[style=prismR]
+d <- read.csv("companion/spss/csv/b08.csv")
+stopifnot(!anyNA(d))
+print(t.test(d$g3, conf.level=.95)$conf.int)
+print(table(d$pass10))
+n <- nrow(d); p <- mean(d$pass10)
+z <- qnorm(.975); den <- 1 + z^2/n
+center <- (p + z^2/(2*n))/den
+half <- z * sqrt(p*(1-p)/n + z^2/(4*n^2))/den
+print(c(proportion=p, lower=center-half,
+        upper=center+half))
+\end{lstlisting}
+
+\textbf{Çıktıyı okuma.} Aşağıdaki ortak karşılaştırmada verilen nicelikleri, kodun yazdırdığı etiketler ve değişken sırasıyla eşleştirin. R kodu bu ortamda çalıştırılmamıştır.
+\end{minipage}\par
+
+\par\noindent\begin{minipage}{\linewidth}
+\subsection{Python uygulaması}
+\label{sec:python-b08}
+
+Ortalama aralığı ile Wilson oran aralığı ayrı hesaplanır. \texttt{wilson} alt ve üst sınırı saklar.
+
+\begin{lstlisting}[style=prismPythonApp]
+import pandas as pd
+import numpy as np
+from scipy import stats
+
+d = pd.read_csv("companion/spss/csv/b08.csv")
+assert not d.isna().any().any()
+mean_ci = stats.ttest_1samp(d.g3, 0).confidence_interval(.95)
+print(mean_ci)
+print(d.pass10.value_counts().sort_index())
+n, p = len(d), d.pass10.mean()
+z = stats.norm.ppf(.975); den = 1 + z*z/n
+center = (p + z*z/(2*n))/den
+half = z*np.sqrt(p*(1-p)/n + z*z/(4*n*n))/den
+wilson = (center-half, center+half)
+print(p, wilson)
+\end{lstlisting}
+
+\textbf{Çıktıyı okuma.} Yazdırılan değerleri aşağıdaki ortak kontrol noktalarıyla karşılaştırın; yalnız testin $p$ değerine bakarak rapor yazmayın.
+\end{minipage}\par
+
+\subsection{Sonuçların karşılaştırılması ve ortak rapor}
+\begin{outputguidebox}
+Ortalama aralığı $[\SPMatCILow;\SPMatCIHigh]$, Wilson aralığı $[\SPWilsonLow;\SPWilsonHigh]$ olmalıdır. Wald veya süreklilik düzeltmeli bir aralıkla karşılaştırma yapılmamalıdır.
+\end{outputguidebox}
+
+\textbf{Raporlama örneği (kontrol değerleriyle).}
+``Bağımsız gözlemler modeli altında ortalama için yüzde 95 güven aralığı $[\SPMatCILow;\SPMatCIHigh]$, eşik göstergesinin oranı için Wilson aralığı $[\SPWilsonLow;\SPWilsonHigh]$ bulunmuştur.''
+
+
+\textbf{Görev.} Ortalama aralığının 10'u içerip içermediğini bulun.
+Aynı veri, çift yönlü hipotez ve anlamlılık düzeyinde bunun $t$ testiyle
+ilişkisini açıklayın. \texttt{.95} güven olasılığı ile \texttt{95} yüzde
+gösteriminin farklı komutlarda kullanılmasına dikkat edin.

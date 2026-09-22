@@ -1,0 +1,476 @@
+\chapter{Genel Sınava Hazırlık}
+\label{ch:review}
+
+\begin{hedefler}
+Bu bölümün sonunda:
+\begin{itemize}
+  \item araştırma sorusu, değişken türü ve gözlem yapısından uygun yönteme ulaşabilecek,
+  \item örnekleme, betimleme, tahmin ve hipotez testi kavramlarını aynı problemde birleştirebilecek,
+\ifimoders
+  \item \tstat testleri, ki-kare, korelasyon ve basit regresyon çıktılarını varsayımlarıyla yorumlayabilecek,
+\else
+  \item \tstat testleri, ANOVA, ki-kare, korelasyon ve regresyon çıktılarını varsayımlarıyla yorumlayabilecek,
+\fi
+  \item hesabı, belirsizliği, etki büyüklüğünü ve bağlamsal sonucu içeren bütünlüklü sınav yanıtı yazabileceksiniz.
+\end{itemize}
+\end{hedefler}
+
+\begin{prerequisitebox}
+\ifimoders
+Bölüm~\ref{ch:research}--\ref{ch:correlation-regression}'teki temel
+kavramların ilk kez öğrenilmiş olması beklenir.
+\else
+Bölüm 1--19'daki temel kavramların ilk kez öğrenilmiş olması beklenir.
+\fi
+Bu
+bölüm yeni bir yöntem öğretmekten çok kavramlar arasındaki bağlantıları
+pekiştirir. Veri üretiminden yorumlamaya uzanan bu bütüncül yaklaşım GAISE
+önerileriyle uyumludur \citep{gaise2016}.
+\end{prerequisitebox}
+
+\begin{hazirlik}
+Bir analiz sorusunu gördüğünüzde yöntem adını düşünmeden önce yazmanız gereken
+dört bilgiyi sıralayın: hedef, değişken türü, gözlem yapısı ve belirsizlik.
+\end{hazirlik}
+
+\begin{definitionbox}
+\textbf{Bütünlüklü istatistiksel yanıt}; hedef parametreyi, yöntem seçiminin
+gerekçesini, varsayım ve tasarım sınırlarını, sayısal sonucu, belirsizliği ve
+bağlamsal yorumu birlikte içerir.
+\end{definitionbox}
+
+\ifimoders
+Bu bölüm kitabın önceki yöntemlerini birlikte kullanır. Tahmin ve aralıklar
+için Bölüm~\ref{ch:point-estimation}--\ref{ch:confidence-intervals}; testler
+için Bölüm~\ref{ch:hypothesis}--\ref{ch:categorical}; korelasyon ve basit
+doğrusal regresyon için Bölüm~\ref{ch:correlation-regression} hızlı başvuru
+noktalarıdır.
+\else
+Bu bölüm kitabın önceki yöntemlerini birlikte kullanır. Tahmin ve aralıklar
+için Bölüm~\ref{ch:point-estimation}--\ref{ch:confidence-intervals}; testler
+için Bölüm~\ref{ch:hypothesis}--\ref{ch:categorical}; ilişki modelleri için
+Bölüm~\ref{ch:correlation-regression}--\ref{ch:multiple-regression} ilişki
+modelleri; Bölüm~\ref{ch:anova} ise üç veya daha fazla bağımsız ortalamanın
+karşılaştırılması için hızlı başvuru noktalarıdır.
+\fi
+
+\section{Kavramsal kontrol listesi}
+
+\begin{enumerate}
+  \item Evren, örneklem, parametre ve istatistiği ayırt edin.
+  \item Örnekleme yöntemini ve olası yanlılık kaynaklarını belirleyin.
+  \item Değişken türüne uygun grafik ve özetleri seçin.
+  \item Standart sapma ile standart hatayı ayırt edin.
+  \item Örnekleme dağılımı ve MLT arasındaki ilişkiyi açıklayın.
+  \item Nokta tahmini ile güven aralığının farklı rollerini belirtin.
+  \item \pval-değerini, hata türlerini ve test gücünü doğru yorumlayın.
+  \item Araştırma tasarımına uygun \tstat testini seçin.
+\ifimoders\else
+  \item Üç veya daha fazla bağımsız ortalama için ANOVA'yı ve çoklu karşılaştırmaları değerlendirin.
+\fi
+  \item Kategorik değişkenler için çapraz tablo ve ki-kare testini değerlendirin.
+  \item Korelasyon, regresyon ve nedensellik kavramlarını ayırın.
+\end{enumerate}
+
+\section{Yöntem seçim özeti}
+\label{sec:method-summary}
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X@{}}
+\toprule
+Araştırma hedefi & Temel yöntem \\
+\midrule
+Tek ortalamayı sabit değerle karşılaştırma & Tek örneklem \tstat testi \\
+Tek ortalama veya oranı tahmin etme & Standart hata ve güven aralığı \\
+İki bağımsız grup ortalamasını karşılaştırma & Bağımsız örneklem Welch \tstat testi \\
+Aynı bireylerin iki ölçümünü karşılaştırma & Eşleştirilmiş örneklem \tstat testi \\
+\ifimoders\else
+Üç veya daha fazla bağımsız grup ortalamasını karşılaştırma & Tek yönlü ANOVA veya Welch ANOVA \\
+\fi
+Tek kategorik dağılımı kuramsal oranlarla karşılaştırma & Ki-kare uyum iyiliği testi \\
+İki kategorik değişkenin ilişkisini inceleme & Çapraz tablo ve ki-kare bağımsızlık testi \\
+İki nicel değişkenin doğrusal ilişkisini ölçme & Pearson korelasyonu \\
+Nicel yanıtı tek açıklayıcıyla modelleme & Basit doğrusal regresyon \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Yöntem seçme akışı}
+
+Bir sınav sorusunda yöntemi doğrudan formüllerden aramak yerine önce yanıt
+değişkeninin türü ve gözlemlerin ilişkisi belirlenmelidir.
+
+\begin{figure}[H]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[every node/.style={font=\scriptsize,align=center}]
+  \node[draw,rounded corners,fill=PrismLight,minimum width=3.4cm,
+    minimum height=0.8cm] (start) at (0,0) {Yanıt değişkeni nedir?};
+  \node[draw,rounded corners,fill=PrismNoteBlue,minimum width=3.1cm,
+    minimum height=0.8cm] (num) at (-3.5,-1.7) {Nicel};
+  \node[draw,rounded corners,fill=PrismResearchGreen,minimum width=3.1cm,
+    minimum height=0.8cm] (cat) at (3.5,-1.7) {Kategorik};
+  \node[draw,fill=white,minimum width=3.3cm,minimum height=1.15cm]
+    (one) at (-5.2,-3.7) {Tek ortalama\\tahmin veya tek örneklem t};
+  \node[draw,fill=white,minimum width=3.3cm,minimum height=1.15cm]
+    (two) at (-1.7,-3.7) {\ifimoders İki ortalama\\bağımsız/eşleştirilmiş t\else Grup ortalamaları\\2 grup: t; 3+: ANOVA\fi};
+  \node[draw,fill=white,minimum width=3.3cm,minimum height=1.15cm]
+    (assoc) at (1.7,-3.7) {İki nicel değişken\\korelasyon/regresyon};
+  \node[draw,fill=white,minimum width=3.3cm,minimum height=1.15cm]
+    (chi) at (5.2,-3.7) {Frekans dağılımı\\uyum iyiliği/ki-kare};
+  \draw[->,PrismBlue,thick] (start)--(num);
+  \draw[->,PrismBlue,thick] (start)--(cat);
+  \draw[->,PrismBlue] (num)--(one);
+  \draw[->,PrismBlue] (num)--(two);
+  \draw[->,PrismBlue] (num)--(assoc);
+  \draw[->,PrismBlue] (cat)--(chi);
+\end{tikzpicture}
+}
+\caption{Araştırma sorusundan temel yönteme geçiş için kısa karar akışı.}
+\label{fig:method-decision-flow}
+\end{figure}
+
+Şekil~\ref{fig:method-decision-flow}'deki akış son karar değildir. Bağımsızlık,
+örnekleme yöntemi, dağılım biçimi,
+beklenen frekanslar ve ölçümün niteliği ayrıca kontrol edilir. Yöntem seçimi
+bir değişkenin yazılımda sayısal görünmesine değil, araştırmadaki anlamına
+dayanır.
+
+\section{Çözümlü örnek: yöntem seçimi ve yorum}
+
+Bir araştırmacı aynı 24 öğrencinin eğitim öncesi ve sonrası kaygı puanlarını
+karşılaştırmak istemektedir. Son--ön farkının ortalaması $-3{,}2$, farkların
+standart sapması 6,0 bulunmuştur.
+
+\begin{enumerate}
+  \item Ölçümler aynı öğrencilere ait olduğu için eşleştirilmiş örneklem \tstat testi seçilir.
+  \item Hedef parametre son--ön farklarının evren ortalaması $\mu_D$'dir.
+  \item Standart hata $6/\sqrt{24}=1{,}225$ ve test değeri
+  $t=-3{,}2/1{,}225=-2{,}61$'dir.
+  \item $sd=23$ için çift yönlü \pval-değeri yaklaşık 0,016'dır; $H_0:\mu_D=0$ reddedilir.
+  \item Yüzde 95 güven aralığı yaklaşık $[-5{,}73;-0{,}67]$, etki büyüklüğü
+  $d_z=-3{,}2/6=-0{,}53$'tür.
+\end{enumerate}
+
+Negatif işaret son ölçüm kaygı puanının ortalama olarak daha düşük olduğunu
+gösterir. Kontrol grubu olmayan bir ön test--son test tasarımında azalmanın
+yalnız eğitime bağlı olduğu söylenemez.
+
+\section{Çözümlü karma problemler}
+
+\subsection*{Problem 1: Örnekleme, değişken türü ve genelleme}
+
+Bir üniversite, öğrencilerin haftalık çalışma süresi ile sınav başarısı
+arasındaki ilişkiyi incelemek için kütüphaneden çıkan ilk 200 gönüllüye anket
+uygulamıştır. Çalışma süresi saat, başarı ise başarılı/başarısız olarak
+kaydedilmiştir. Evreni, örneklemi, değişken türlerini, temel yanlılık riskini
+ve uygun ilk analizi belirleyin.
+
+\textbf{Çözüm.} Hedef evren üniversitedeki araştırma kapsamına giren bütün
+öğrenciler, örneklem ankete katılan 200 gönüllüdür. Çalışma süresi sürekli
+nicel, başarı durumu ikili kategorik değişkendir. Yalnız kütüphaneden çıkan
+gönüllülerin seçilmesi kapsam ve gönüllülük yanlılığı doğurabilir; düzenli
+kütüphane kullanan öğrenciler evrenin geri kalanından farklı olabilir.
+
+İlk aşamada başarı gruplarındaki çalışma süresi dağılımları yan yana kutu veya
+nokta grafikleriyle karşılaştırılabilir. İki bağımsız başarı grubunun ortalama
+çalışma süreleri incelenecekse koşullar altında Welch \tstat testi düşünülebilir.
+Ancak gözlemsel ve yanlı seçilmiş veri, çalışma süresinin başarıya neden
+olduğu sonucunu desteklemez.
+
+\subsection*{Problem 2: Örnekleme dağılımı ve olasılık}
+
+Ortalaması 60, standart sapması 12 olan bir evrenden bağımsız $n=36$
+gözlem seçilmektedir. Örneklem ortalamasının beklenen değerini ve standart
+hatasını bulun. Merkezi limit yaklaşımıyla $\P(\bar X>64)$ olasılığını
+hesaplayın.
+
+\textbf{Çözüm.}
+\[
+\E[\bar X]=60,
+\qquad
+\SE(\bar X)=\frac{12}{\sqrt{36}}=2.
+\]
+64 değeri örnekleme dağılımı merkezinin
+\[
+z=\frac{64-60}{2}=2
+\]
+standart hata üzerindedir. Standart normal dağılımdan
+$\P(Z>2)\approx0{,}0228$ bulunur. Yani aynı örnekleme süreci tekrarlandığında
+örneklem ortalamasının 64'ü aşması yaklaşık yüzde 2,28 olasılıklıdır. Bu
+hesap tek tek öğrenci puanlarının 64'ü aşma olasılığı değildir.
+
+\subsection*{Problem 3: Güven aralığı ve örneklem planlama}
+
+Bağımsız 49 öğrencinin ortalama puanı 72, standart sapması 14'tür.
+$t_{0{,}975,48}=2{,}01$ kullanarak yüzde 95 güven aralığını bulun. Standart
+sapma yaklaşık 14 kabul edilirse yüzde 95 güven düzeyinde hata payını 2 puana
+indirmek için normal yaklaşımla gereken örneklem hacmini hesaplayın.
+
+\textbf{Çözüm.} Standart hata $14/\sqrt{49}=2$ ve hata payı
+$2{,}01(2)=4{,}02$'dir. Güven aralığı
+\[
+72\pm4{,}02=[67{,}98;76{,}02]
+\]
+olur. Hedef hata payı için
+\[
+n\approx\left(\frac{1{,}96(14)}{2}\right)^2
+=188{,}24
+\]
+bulunur ve örneklem hacmi yukarı yuvarlanarak en az 189 seçilir. Bu plan basit
+rastgele örnekleme yaklaşımına dayanır; beklenen yanıtlamama veya kümeleşme
+varsa başlangıç sayısı artırılmalıdır.
+
+\subsection*{Problem 4: Tek örneklem testi, aralık ve etki büyüklüğü}
+
+Bir ölçeğin referans ortalaması 50'dir. $n=25$, $\bar x=54$ ve $s=10$
+değerleri için çift yönlü tek örneklem \tstat testini, yüzde 95 güven aralığını ve
+Cohen'in $d$ değerini hesaplayın.
+
+\textbf{Çözüm.} Standart hata $10/\sqrt{25}=2$ ve
+\[
+t=\frac{54-50}{2}=2{,}00,\qquad sd=24
+\]
+olur. Çift yönlü \pval-değeri yaklaşık 0,057'dir; yüzde 5 düzeyinde $H_0$
+reddedilemez. $t_{0{,}975,24}=2{,}064$ ile ortalama güven aralığı
+\[
+54\pm2{,}064(2)=[49{,}87;58{,}13]
+\]
+olup referans değer 50'yi içerir. Etki büyüklüğü
+$d=(54-50)/10=0{,}40$'tır.
+
+Sonuç ``fark yoktur'' biçiminde yorumlanmaz. Örneklemde dört puanlık fark
+gözlenmiş, ancak aralık küçük negatif farklara yakın değerlerden sekiz puanın
+üzerindeki pozitif farklara kadar uzanmıştır. Çalışmanın hassasiyeti sınırlıdır.
+
+\subsection*{Problem 5: Bağımsız iki grup için Welch testi}
+
+A grubunda $n_1=40$, $\bar x_1=78$, $s_1=10$; B grubunda
+$n_2=35$, $\bar x_2=72$, $s_2=14$ bulunmuştur. Yazılım Welch testi için
+$sd=60{,}60$ vermektedir. Test istatistiğini, yüzde 95 güven aralığını ve
+yaklaşık etki büyüklüğünü hesaplayıp yorumlayın.
+
+\textbf{Çözüm.} Ortalama farkı 6 ve standart hata
+\[
+SE=\sqrt{\frac{10^2}{40}+\frac{14^2}{35}}
+=\sqrt{8{,}10}\approx2{,}85
+\]
+olduğundan
+\[
+t=\frac{6}{2{,}85}\approx2{,}11.
+\]
+Çift yönlü \pval-değeri yaklaşık 0,039'dur. Uygun kritik değerle yüzde 95 fark
+aralığı yaklaşık $[0{,}31;11{,}69]$ bulunur. Birleşik standart sapma yaklaşık
+12,03 olduğundan betimsel standartlaştırılmış fark $d\approx0{,}50$'dir.
+
+A grubunun ortalamasının daha yüksek olduğuna ilişkin kanıt vardır; ancak
+makul farklar yaklaşık 0,3 ile 11,7 puan arasında geniştir. Gruplara rastgele
+atama yapılmadıysa fark yöntemlerin nedensel etkisi olarak yorumlanamaz.
+
+\subsection*{Problem 6: Ki-kare ve hücre örüntüsü}
+
+İki programdaki başarı durumu aşağıdaki gibidir:
+\[
+\begin{array}{c|rr|r}
+ & \text{Başarılı} & \text{Başarısız} & \text{Toplam}\\ \hline
+A&36&24&60\\
+B&24&36&60\\ \hline
+\text{Toplam}&60&60&120
+\end{array}
+\]
+Pearson ki-kare değerini, serbestlik derecesini ve Cramér $V$ değerini
+hesaplayarak sonucu yorumlayın.
+
+\textbf{Çözüm.} Bütün hücrelerin beklenen frekansı $60(60)/120=30$'dur.
+Her hücrenin katkısı $(6^2)/30=1{,}20$ olduğundan
+\[
+\chi^2=4(1{,}20)=4{,}80,
+\qquad sd=1,
+\qquad p\approx0{,}028.
+\]
+Cramér katsayısı
+\[
+V=\sqrt{\frac{4{,}80}{120}}=0{,}20
+\]
+olur. A programında başarı oranı yüzde 60, B programında yüzde 40'tır.
+Program ile başarı durumu arasında ilişkiye yönelik kanıt vardır. İlişkinin
+yönü yüzdelerden, büyüklüğü $V$ değerinden okunur; nedensellik için atama ve
+olası karıştırıcılar ayrıca değerlendirilir.
+
+\subsection*{Problem 7: Korelasyon ve regresyonu birleştirme}
+
+Bir çalışmada $n=50$, $r=0{,}50$, $\bar x=4$, $s_X=2$,
+$\bar y=60$ ve $s_Y=8$ bulunmuştur. Regresyon doğrusunu, $R^2$ değerini,
+korelasyon testini ve $X=7$ için öngörüyü hesaplayın.
+
+\textbf{Çözüm.} Eğim ve sabit terim
+\[
+b_1=0{,}50\frac{8}{2}=2,
+\qquad b_0=60-2(4)=52
+\]
+olduğundan regresyon doğrusu $\hat Y=52+2X$'tir. Açıklanan varyans oranı
+$R^2=0{,}25$ ve $X=7$ için öngörü $\hat y=66$'dır. Korelasyon testi
+\[
+t=0{,}50\sqrt{\frac{48}{1-0{,}25}}=4{,}00,
+\qquad sd=48
+\]
+sonucunu verir; çift yönlü \pval-değeri 0,001'den küçüktür.
+
+Pozitif doğrusal ilişkiye ilişkin güçlü istatistiksel kanıt vardır ve model
+örneklemdeki $Y$ değişkenliğinin yüzde 25'ini açıklamaktadır. Eğim, $X$'teki
+bir birimlik farkla ilişkili ortalama iki birimlik $Y$ farkıdır; gözlemsel
+çalışmada nedensel artış olarak sunulamaz.
+
+\section{Yazılım uygulaması: hesapları denetleme}
+
+\Needspace{22\baselineskip}
+\begin{softwarebox}
+\begin{lstlisting}
+from scipy import stats
+import numpy as np
+
+n, mean_diff, sd_diff = 24, -3.2, 6.0
+se = sd_diff / np.sqrt(n)
+t_value = mean_diff / se
+p_value = 2 * stats.t.sf(abs(t_value), df=n-1)
+critical = stats.t.ppf(.975, df=n-1)
+ci = (mean_diff - critical*se,
+      mean_diff + critical*se)
+
+print(t_value, p_value, ci)
+\end{lstlisting}
+Yazılım doğrulaması yöntemin gerekçesinin yerini tutmaz. İşaretin yönü,
+farkın ``son--ön'' ya da ``ön--son'' tanımına göre yorumlanmalıdır.
+\end{softwarebox}
+
+\begin{mistakebox}
+Sınav çözümünde yalnız ``$p<0{,}05$, anlamlıdır'' yazmak yeterli değildir.
+Hedef parametre, test türü, farkın yönü, belirsizlik ve bağlamsal sonuç açıkça
+belirtilmelidir.
+\end{mistakebox}
+
+\begin{assumptionbox}
+Bir yöntemin formülünü uygulamadan önce gözlemlerin bağımsızlığı, değişken
+türü, grup veya eşleşme yapısı ve dağılım koşulları kontrol edilmelidir.
+Varsayım değerlendirmesi sonuç görüldükten sonra yapılan bir formalite değildir.
+\end{assumptionbox}
+
+\section{Sınav yanıtı yazma ilkesi}
+
+Her çözümde hedef parametreyi, kullanılan yöntemi, gerekli koşulları,
+hesaplanan istatistiği ve bağlamsal yorumu açıkça belirtin. Yalnız formül veya
+yazılım çıktısı vermek tam bir istatistiksel yanıt değildir.
+
+Tam puana yaklaşan kısa bir yanıt şu sırayı izler:
+
+\begin{enumerate}
+  \item \textbf{Tanımla:} Hedef evreni, parametreyi ve değişkenleri yazın.
+  \item \textbf{Seç:} Yöntemi veri yapısına dayanarak gerekçelendirin.
+  \item \textbf{Kontrol et:} Bağımsızlık ve yönteme özgü koşulları belirtin.
+  \item \textbf{Hesapla:} Tahmin, standart hata, test istatistiği veya aralığı gösterin.
+  \item \textbf{Karar ver:} \pval-değerini önceden belirlenen $\alpha$ ile karşılaştırın.
+  \item \textbf{Yorumla:} Yönü, büyüklüğü, belirsizliği ve tasarım sınırını bağlamda açıklayın.
+\end{enumerate}
+
+\begin{prismbox}[PrismResearchGreen]{Son kontrol}
+Bir yanıtı teslim etmeden önce dört soruyu sorun: Hedef büyüklüğü belirttim
+mi? Yöntemi veri yapısına göre seçtim mi? Belirsizliği gösterdim mi? Sonucu
+araştırma bağlamında ve yöntemin sınırlarıyla birlikte yorumladım mı?
+\end{prismbox}
+
+\input{chapters/spss/b14}
+
+\input{chapters/r/b14}
+
+\begin{etkinlik}
+Rastgele bir soruyu seçip yalnız sonucunu değil karar izini yazın: hedef
+büyüklük, veri yapısı, yöntem, varsayım, tahmin, belirsizlik, etki büyüklüğü
+ve ileri sürülemeyecek iddia.
+\end{etkinlik}
+
+\section{Bölüm özeti}
+
+\begin{itemize}
+  \item Yöntem seçimi araştırma hedefi, değişken türü ve gözlemlerin ilişkisine dayanır.
+  \item Tam bir çözüm hedef parametreyi, varsayımları, hesabı ve bağlamsal yorumu içerir.
+  \item \pval-değeri tek başına etki büyüklüğü, hassasiyet veya nedensellik göstermez.
+  \item Yazılım hesapları doğrular; bilimsel kararın gerekçesini araştırmacı kurar.
+  \item Aynı sayısal çıktı, örnekleme ve araştırma tasarımı farklı olduğunda
+  farklı genelleme ve nedensellik sınırlarına sahiptir.
+  \item Güven aralığı ve etki büyüklüğü, ikili anlamlı/anlamsız kararından
+  daha zengin bir sonuç değerlendirmesi sağlar.
+\end{itemize}
+
+\bolumkaynaklari{\cite{gaise2016,cumming2014,appelbaum2018}}
+
+\section*{Alıştırmalar}
+
+\subsection*{Genel tekrar soruları}
+
+\begin{enumerate}
+  \item Örnekleme yanlılığı büyük örneklemle neden kendiliğinden kaybolmaz?
+  \item MLT'nin istatistiksel çıkarımdaki rolünü açıklayın.
+  \item Yüzde 95 güven aralığını doğru biçimde yorumlayın.
+  \item Tip I hata, Tip II hata ve test gücü arasındaki ilişkiyi açıklayın.
+  \item Bağımsız ve eşleştirilmiş \tstat testlerini tasarım bakımından karşılaştırın.
+  \item Ki-kare bağımsızlık testinin koşullarını yazın.
+  \item Güçlü korelasyonun neden nedensellik kanıtı olmadığını açıklayın.
+  \item Bir regresyon eğimi ve $R^2$ değeri için raporlama cümlesi kurun.
+  \item Standart sapma ile standart hatayı tek bir araştırma örneği üzerinde karşılaştırın.
+  \item İstatistiksel anlamlılık ile uygulamalı önemin ayrıldığı bir sonuç tasarlayın.
+  \item Welch ve eşleştirilmiş \tstat testlerinin analiz birimlerini karşılaştırın.
+  \item Ki-kare artıklarının ve Cramér $V$ değerinin farklı rollerini açıklayın.
+\end{enumerate}
+
+\subsection*{Mini deneme}
+
+\begin{enumerate}
+  \item Bir üniversitedeki tüm birinci sınıf öğrencileri araştırmanın hedef
+  grubudur. Bu grubun yalnız gönüllü 80 üyesi incelenmiştir. Evreni, örneklemi
+  ve en önemli yanlılık riskini belirtin.
+  \item Standart sapması 15 olan bir değişkende $n=100$ için ortalamanın
+  standart hatasını hesaplayın.
+  \item $\bar x=68$, $s=12$, $n=36$ için yaklaşık yüzde 95 güven aralığını
+  kritik değeri 2 alarak hesaplayın.
+  \item Bir testte $p=0{,}08$ ve $\alpha=0{,}05$ bulunmuştur. Uygun kararı ve
+  kullanılması gereken ifadeyi yazın.
+  \item Aynı öğrencilerin dönem başı ve dönem sonu puanları hangi \tstat testiyle
+  karşılaştırılır? Analizde hangi puanların dağılımı incelenmelidir?
+  \item Bir çapraz tabloda tüm beklenen frekanslar 5'in altında kalmıştır.
+  Pearson ki-kare yaklaşımı bakımından ne yapılmalıdır?
+  \item $r=-0{,}60$ değerinin yönünü, gücünü ve basit doğrusal modeldeki
+  $R^2$ karşılığını yorumlayın.
+  \item Anlamlı fakat çok dar uygulamalı etkiye sahip bir bulgunun neden
+  yalnız \pval-değeriyle raporlanmaması gerektiğini açıklayın.
+  \item $n=64$, $\bar x=75$, $s=16$ için standart hatayı ve kritik değeri 2
+  alarak yaklaşık yüzde 95 güven aralığını bulun.
+  \item $n=36$, $\bar x=52$, $s=12$ ve $\mu_0=48$ için tek örneklem t
+  değerini ve Cohen'in $d$ değerini hesaplayın.
+  \item İki bağımsız grupta ortalama farkı 5 ve farkın standart hatası 2 ise
+  t değerini ve yaklaşık yüzde 95 güven aralığını bulun.
+  \item $2\times3$ çapraz tabloda serbestlik derecesini hesaplayın ve anlamlı
+  genel testten sonra hangi iki çıktının incelenmesi gerektiğini yazın.
+  \item $n=40$ ve $r=0{,}45$ için $R^2$ değerini hesaplayıp yorumlayın.
+  \item Bir artık grafiğinde belirgin huni biçimi görülmesinin hangi varsayımı
+  sorgulattığını açıklayın.
+\end{enumerate}
+
+\subsection*{Mini deneme yanıtları}
+
+\begin{enumerate}
+  \item Evren tüm birinci sınıf öğrencileri, örneklem 80 gönüllüdür; gönüllü
+  katılım nedeniyle öz-seçim yanlılığı temel risktir.
+  \item $SE=15/\sqrt{100}=1{,}5$.
+  \item $68\pm2(12/6)=68\pm4$, yani yaklaşık $[64;72]$.
+  \item $H_0$ reddedilemez; ``fark yoktur'' yerine ``$H_0$'ı reddetmek için
+  yeterli kanıt bulunamamıştır'' denir.
+  \item Eşleştirilmiş örneklem \tstat testi kullanılır; son--ön fark puanlarının
+  dağılımı değerlendirilir.
+  \item Kesin yöntemler, kategori birleştirmenin bilimsel olarak anlamlı olup
+  olmadığı veya daha büyük örneklem seçenekleri değerlendirilmelidir.
+  \item Orta-güçlü negatif doğrusal ilişki vardır; $R^2=0{,}36$'dır.
+  \item Etki tahmini ve güven aralığı, bulgunun büyüklüğünü ve hassasiyetini
+  gösterir; küçük \pval-değeri tek başına uygulamalı önem göstermez.
+\end{enumerate}

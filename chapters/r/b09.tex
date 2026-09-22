@@ -1,0 +1,41 @@
+\section{R ile hipotez testi}
+\label{sec:r-b09}
+
+\textbf{Soru.} Bölümdeki çift yönlü testte gözlenen ortalama farkı 2,1,
+standart hata 1 ve serbestlik derecesi 49 olsun. $H_0:\delta=0$ için
+\pval-değerini, yüzde 95 güven aralığını ve $\alpha=0{,}05$ kararını bulun.
+
+\begin{lstlisting}[style=prismR]
+fark <- 2.1
+standart_hata <- 1
+serbestlik <- 49
+alfa <- 0.05
+t_degeri <- fark / standart_hata
+p_degeri <- 2 * pt(abs(t_degeri), df = serbestlik,
+                   lower.tail = FALSE)
+kritik <- qt(1 - alfa / 2, df = serbestlik)
+aralik <- fark + c(-1, 1) * kritik * standart_hata
+c(t = t_degeri, p = p_degeri, kritik = kritik)
+aralik
+if (p_degeri < alfa) {
+  print("H0 reddedilir")
+} else {
+  print("H0 reddedilemez")
+}
+pt(t_degeri, df = serbestlik, lower.tail = FALSE)
+\end{lstlisting}
+
+\begin{outputguidebox}
+\textbf{Çözüm ve kontrol değerleri.} $t=2{,}10$, çift yönlü
+$p=0{,}04090$ ve kritik değer 2,0096'dır. Güven aralığı
+$[0{,}0904;4{,}1096]$ sıfırı içermez; yüzde 5 düzeyinde $H_0$ reddedilir.
+Son satır, önceden belirlenmiş $H_1:\delta>0$ için tek yönlü
+$p=0{,}02045$ verir.
+\end{outputguidebox}
+
+\textbf{Yorum.} Çift yönlü değer, mutlak test istatistiğinin üst kuyruk
+olasılığının iki katıdır. Sonuca bakıp yön seçmek uygun değildir. Küçük
+\pval-değeri $H_0$'ın doğru olma olasılığı veya etkinin önemli olduğu anlamına gelmez.
+
+\textbf{Pekiştirme ve yanıt.} Önceden $\alpha=0{,}01$ seçilseydi aynı
+$p=0{,}04090$ ile $H_0$ reddedilemezdi. Veri değişmez; karar eşiği değişir.

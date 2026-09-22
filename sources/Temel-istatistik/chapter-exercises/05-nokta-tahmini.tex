@@ -1,0 +1,15 @@
+\section{Bölüm sonu çözümlü problemler}
+
+\begin{enumerate}
+  \item \textbf{Oran tahmini ve standart hata.} 200 öğrencinin 54'ü danışma hizmetini kullanmıştır. Nokta tahminini ve yaklaşık standart hatayı bulun.
+
+  \textbf{Çözüm:} $\hat p=54/200=0{,}27$'dir. $SE(\hat p)=\sqrt{\hat p(1-\hat p)/n}=\sqrt{0{,}27(0{,}73)/200}\approx0{,}0314$ olur.
+
+  \item \textbf{Yanlılık--varyans dengesi.} A tahmin edicisinin yanlılığı 1 ve varyansı 9; B'nin yanlılığı 2 ve varyansı 4 olsun. MSE değerlerini karşılaştırın.
+
+  \textbf{Çözüm:} $MSE=\operatorname{Var}(\hat\theta)+\operatorname{Bias}(\hat\theta)^2$ olduğundan $MSE_A=9+1^2=10$, $MSE_B=4+2^2=8$'dir. B daha yanlı olmasına rağmen toplam karesel hata bakımından üstündür.
+
+  \item \textbf{Ağırlıklı ortalama.} Evrenin yüzde 70'ini oluşturan A grubunun örneklem ortalaması 40, yüzde 30'unu oluşturan B grubunun ortalaması 55'tir. Evren ortalaması için tabaka ağırlıklı tahmini bulun.
+
+  \textbf{Çözüm:} $\bar x_w=0{,}70(40)+0{,}30(55)=44{,}5$'tir. Basit grup ortalaması $(40+55)/2=47{,}5$, evren paylarını yanlışlıkla eşit kabul eder.
+\end{enumerate}

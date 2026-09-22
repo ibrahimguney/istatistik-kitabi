@@ -1,0 +1,9 @@
+dosya,degisken,anlam,birim,duzey,eksik_kurali
+veri.csv,saat,Yapay calisma suresi,saat,scale,kabul edilmez
+veri.csv,devamsizlik,Yapay devamsizlik sayisi,tam gun,scale,kabul edilmez
+veri.csv,puan,40+2*saat-3*devamsizlik+hata,puan,scale,kabul edilmez
+yeni.csv,saat,Ongoru icin calisma suresi,saat,scale,kabul edilmez
+yeni.csv,devamsizlik,Ongoru icin devamsizlik sayisi,tam gun,scale,kabul edilmez
+beklenen-sonuclar.csv,degisken,Model veya katsayi veya satir grubu,etiket,nominal,kabul edilmez
+beklenen-sonuclar.csv,olcu,Kontrol olcusunun adi,etiket,nominal,kabul edilmez
+beklenen-sonuclar.csv,deger,Beklenen sonlu sayisal sonuc,olcuye bagli,scale,kabul edilmez

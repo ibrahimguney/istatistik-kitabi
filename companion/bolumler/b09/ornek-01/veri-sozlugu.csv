@@ -1,0 +1,6 @@
+degisken,aciklama,veri_turu,birim,gecerli_degerler,eksik_deger_kurali
+fark,Gozlenen evren farki tahmini,Sayisal,Fark birimi,Sonlu sayi,Eksik kabul edilmez
+standart_hata,Fark tahmininin standart hatasi,Sayisal,Fark birimi,Pozitif sonlu sayi,Eksik kabul edilmez
+serbestlik,Testin t dagilimi serbestlik derecesi,Sayisal,Birimsiz,Pozitif sonlu sayi; kesirli olabilir,Eksik kabul edilmez
+null_degeri,Sifir hipotezindeki fark degeri,Sayisal,Fark birimi,Sonlu sayi,Eksik kabul edilmez
+alfa,Onceden secilen ana anlamlilik duzeyi,Sayisal,Olasilik,0 ile 1 arasinda,Eksik kabul edilmez

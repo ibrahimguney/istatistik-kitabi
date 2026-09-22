@@ -1,0 +1,149 @@
+\phantomsection
+\chapter*{Simgeler ve Kısaltmalar}
+\markboth{Simgeler ve Kısaltmalar}{Simgeler ve Kısaltmalar}
+\addcontentsline{toc}{chapter}{Simgeler ve Kısaltmalar}
+
+Bu bölümde kitap boyunca kullanılan temel simgeler ve kısaltmalar toplu olarak
+verilmiştir. Büyük harfli $X$, $\bar X$ ve $S^2$ örneklem seçilmeden önce
+rassal değişken veya tahmin ediciyi; küçük harfli $x$, $\bar x$ ve $s^2$ ise
+gözlenen veriyi ve gerçekleşmiş sayısal değerleri gösterir. Evren
+parametreleri Yunan harfleriyle, örneklem tahminleri Latin harfleri veya şapka
+işaretiyle yazılır.
+
+\small
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.24\textwidth}>{\raggedright\arraybackslash}p{0.70\textwidth}@{}}
+\toprule
+\textbf{Simge} & \textbf{Anlamı} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Simge} & \textbf{Anlamı} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+$N,n$ & Evren ve örneklem hacmi \\
+\ifimoders
+$k$ & Bağlama göre binom olay sayısı veya sistematik örnekleme aralığı \\
+\else
+$k$ & Bağlama göre binom olay sayısı, sistematik örnekleme aralığı veya ANOVA'daki grup sayısı \\
+\fi
+\ifimoders\else
+$K$ & Regresyon modelindeki sabit terim dışındaki açıklayıcı sayısı \\
+\fi
+$\P(A)$ & $A$ olayının olasılığı \\
+$X,Y$; $x,y$ & Rassal değişkenler ve gözlenen değerleri \\
+$\E[X]$ & Beklenen değer \\
+$\Var(X)$ & Varyans \\
+$\mu,\sigma^2,p,\rho$ & Evren ortalaması, varyansı, oranı ve korelasyonu; $\rho$ küme içi korelasyonu da gösterebilir \\
+$\bar X,S,S^2,\hat p$ & Örneklem ortalaması, standart sapması, varyansı ve oranı için tahmin ediciler \\
+$\bar x,s,s^2,\hat p$ & Gözlenen örneklemde gerçekleşmiş tahminler \\
+$\theta,\hat\theta$ & Hedef parametre ve bu parametrenin tahmin edicisi \\
+$Q_1,Q_3,\IQR$ & Birinci ve üçüncü çeyrek ile çeyrekler arası açıklık \\
+$\SE(\hat\theta)$ & Tahmin edicinin standart hatası \\
+$\alpha$ & Anlamlılık düzeyi veya Tip I hata olasılığı \\
+$\beta$ & Tip II hata olasılığı \\
+\pval-değeri & Sıfır hipotezi altında gözlenen kadar veya daha aşırı sonuç elde etme olasılığı \\
+$\Phi(z)$ & Standart normal dağılımın $z$ noktasındaki birikimli olasılığı \\
+\ifimoders
+$z_q,\ t_{q,\nu},\chi^2_{q,\nu}$ & İlgili dağılımların $q$ birikimli olasılık nicelikleri \\
+\else
+$z_q,\ t_{q,\nu},\chi^2_{q,\nu},F_{q;\nu_1,\nu_2}$ & İlgili dağılımların $q$ birikimli olasılık nicelikleri \\
+\fi
+$\nu$ & Serbestlik derecesi \\
+\ifimoders
+$Z,z,T,t,\chi^2$ & Standart normal, $t$ ve ki-kare test istatistikleri ile gerçekleşmiş değerleri \\
+\else
+$Z,z,T,t,\chi^2,F$ & Standart normal, $t$, ki-kare, ANOVA ve genel regresyon test istatistikleri ile gerçekleşmiş değerleri \\
+\fi
+$H_0,H_1$ & Sıfır ve alternatif hipotez \\
+$\mu_0,\mu_1-\mu_2,\mu_D$ & Referans ortalama, iki evren ortalaması farkı ve eşleştirilmiş farkların evren ortalaması \\
+$h$ & Güven aralığı planlamasında hedef hata payı \\
+$D_i,\bar D,S_D$; $d_i,\bar d,s_D$ & Rassal fark nicelikleri ve gözlenen karşılıkları \\
+$s_p,d,d_{\mathrm{tek}},d_z,g$ & Birleşik standart sapma ve kullanılan standartlaştırılmış fark ölçüleri \\
+$O_{ij},E_{ij}$ & Çapraz tablodaki gözlenen ve beklenen hücre frekansları \\
+$R_i,C_j$ & Çapraz tablonun satır ve sütun toplamları \\
+$V$ & Cramér ilişki katsayısı \\
+$\pi_i,w_i$ & $i$'inci birimin seçilme olasılığı ve örnekleme ağırlığı \\
+$m,n_{\mathrm{etkin}},\DEFF$ & Ortalama küme büyüklüğü, etkin örneklem hacmi ve tasarım etkisi \\
+\ifimoders\else
+$B,\hat\theta_b^*$ & Yeniden örnekleme tekrar sayısı ve $b$'inci bootstrap tahmini \\
+$\bar\theta^*,T_{\mathrm{göz}},T_b^*$ & Bootstrap tahminlerinin ortalaması, gözlenen test istatistiği ve $b$'inci rastgeleleştirme istatistiği \\
+$\Ind{A}$ & $A$ koşulu doğruysa 1, değilse 0 alan gösterge fonksiyonu \\
+$\SE_{\mathrm{boot}},p_{\mathrm{rand}}$ & Bootstrap standart hatası ve rastgeleleştirme testi $p$ değeri \\
+\fi
+
+$r_{ij},r_{ij}^{\ast}$ & Pearson hücre artığı ve düzeltilmiş standartlaştırılmış artık \\
+$r$ & Örneklem Pearson korelasyonu \\
+\ifimoders
+$\beta_0,\beta_1,b_0,b_1$ & Basit regresyonda evren sabiti ve eğimi ile örneklem tahminleri \\
+\else
+$\beta_j,b_j$ & $j$'inci evren regresyon katsayısı ve örneklem tahmini \\
+\fi
+\ifimoders
+$\varepsilon_i,e_i,\hat Y,\hat y_i$ & Model hatası, gözlenen artık, uydurulan doğru ve gerçekleşmiş uydurulan değer \\
+\else
+$\varepsilon_i,e_i,\hat Y_i,\hat y_i$ & Model hatası, gözlenen artık, uydurulan değer kuralı ve gerçekleşmiş uydurulan değer \\
+\fi
+$R^2$ & Regresyon modelinin açıklanan varyans oranı \\
+\ifimoders\else
+$R^2_{\mathrm{düz}}$ & Açıklayıcı sayısını dikkate alan düzeltilmiş açıklanan varyans oranı \\
+$\SSE,\SST$ & Hata kareleri toplamı ve toplam kareler toplamı \\
+$R_j^2,\VIF_j$ & $X_j$ için yardımcı regresyonun açıklanan varyans oranı ve varyans büyütme faktörü \\
+$SS_{\mathrm{gruplar}},SS_{\mathrm{hata}}$ & ANOVA'da gruplar arası ve grup içi kareler toplamları \\
+$SS_{\mathrm{toplam}}$ & ANOVA'da toplam kareler toplamı \\
+$MS_{\mathrm{gruplar}},MS_{\mathrm{hata}}$ & ANOVA'da gruplar arası ve grup içi ortalama kareler \\
+$\eta^2,\omega^2$ & ANOVA için eta-kare ve omega-kare etki büyüklükleri \\
+\fi
+
+\end{longtable}
+
+\vspace{0.5em}
+
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.24\textwidth}>{\raggedright\arraybackslash}p{0.70\textwidth}@{}}
+\toprule
+\textbf{Kısaltma} & \textbf{Açılımı} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Kısaltma} & \textbf{Açılımı} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\ifimoders\else
+ANOVA & Analysis of variance; varyans analizi \\
+\fi
+\ifimoders\else
+BCa & Yanlılık düzeltilmiş ve hızlandırılmış bootstrap aralığı \\
+\fi
+CI & Confidence interval; İngilizce yazılım çıktılarında güven aralığı \\
+DEFF & Tasarım etkisi \\
+df & Degrees of freedom; yazılım kodunda serbestlik derecesi \\
+GA & Güven aralığı \\
+GAISE & İstatistik Eğitimi için Değerlendirme ve Öğretim İlkeleri \\
+\ifimoders\else
+HSD & Honestly significant difference; Tukey çoklu karşılaştırma yöntemi \\
+\fi
+IQR & Çeyrekler arası açıklık \\
+MLT & Merkezi Limit Teoremi \\
+MSE & Ortalama karesel hata \\
+\ifimoders\else
+OLS & En küçük kareler yöntemi \\
+\fi
+SE & Standart hata \\
+sd & Serbestlik derecesi \\
+SPSS & Statistical Package for the Social Sciences \\
+\ifimoders\else
+VIF & Varyans büyütme faktörü \\
+\fi
+\end{longtable}
+\begin{prismbox}[PrismLight]{Yazım ve raporlama standardı}
+Metinde \pval-değeri biçimi kullanılır. Güven aralığı Türkçe metinde
+\textbf{GA}, İngilizce yazılım çıktısı açıklanırken gerekirse \textbf{CI}
+olarak gösterilir. Serbestlik derecesi formüllerde $\nu$, Türkçe raporlama
+cümlelerinde ``sd'' ve yazılım kodunda ilgili işlev gerektiriyorsa
+\texttt{df} ile belirtilir. Kuramsal rassal nicelikler büyük, gözlenen
+değerler küçük harfle yazılır.
+\end{prismbox}
+\normalsize

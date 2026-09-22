@@ -1,0 +1,266 @@
+\section{Literatür verisiyle yazılım uygulamaları}
+\label{sec:spss-b09}
+
+\textbf{Amaç ve veri.} \texttt{b09.csv} ile öğretim amaçlı
+$H_0:\mu=10$ ve $H_1:\mu\ne10$ hipotezlerini sınayın
+\citep{cortez2008data}. 10 puan, burada seçilen referans değeridir.
+İki yönlü tek örneklem $t$ testinde anlamlılık düzeyi $\alpha=0{,}05$,
+güven düzeyi yüzde 95 olarak belirlenmiştir.
+
+
+\textbf{Ortak veri.} Doğrulanan B09 uygulamasında üç yazılım da
+\nolinkurl{companion/spss/csv/b09.csv} dosyasını kullanmıştır. Dosya
+395 satır ve 10 sütun içerir; kayıtların tamamı analiz edilir.
+B06'nın seçim göstergeleri ve ağırlığı burada kullanılmaz.
+Bu karşılaştırma Excel içe aktarmanın doğrulandığı anlamına gelmez.
+Kodları \texttt{companion} klasörünü içeren paket kökünden çalıştırın;
+veri sözlüğü ve hazırlık için bkz. sayfa~\pageref{sec:spss-guide}.
+
+\subsection{IBM SPSS uygulaması}
+\textbf{Başlamadan önce.} Aşağıdaki komut dosyası B09 CSV verisini
+açar ve analiz eder. Menü yolunu kullanacaksanız önce veri açma ve
+tanımlama komutlarını \texttt{EXECUTE} satırı dahil çalıştırın.
+B08'den kalan tek satırlık özet yerine ham veriyi yeniden açın;
+filtre, ağırlık ve dosya bölme kapalı olmalıdır. \texttt{GET DATA}
+dosya açma hatası verirse önce \texttt{/FILE} yolunu düzeltin ve
+kodu baştan çalıştırın. Veri açılmadan sonraki komutlar çalışmaz.
+
+\begin{spssadimlar}
+\spssadim{Önce \emph{Analyze $\to$ Descriptive Statistics $\to$ Explore} ile \texttt{g3} histogramını inceleyin. Referans değerini sonuçlara bakarak değiştirmeyin.}
+\spssadim{\emph{Analyze $\to$ Compare Means $\to$ One-Sample T Test} yolunu açın. Yeni sürümlerde orta menü \emph{Compare Means and Proportions} olarak görünebilir.}
+\spssadim{\texttt{g3} değişkenini \emph{Test Variable(s)} alanına taşıyın; \emph{Test Value} alanına 10 yazın.}
+\spssadim{\emph{Options} altında güven düzeyini yüzde 95 bırakın; \emph{Continue $\to$ OK} seçin. Bu uygulamanın alternatif hipotezi iki yönlüdür.}
+\spssadim{\emph{One-Sample Test} tablosunda \emph{t}, \emph{df} ve iki yönlü anlamlılık sütununu okuyun. Tek yönlü anlamlılık sütunu da varsa bu uygulamada onu kullanmayın.}
+\end{spssadimlar}
+
+{\raggedright
+\noindent\textbf{Komutların görevi.} \texttt{TESTVAL=10} sıfır hipotezindeki ortalamayı, \texttt{VARIABLES=g3} test değişkenini belirtir. \texttt{CI(.95)} fark için yüzde 95 güven aralığı ister.\par}
+
+\textbf{Uygulama kodu:} \texttt{b09}. Doğrulanan veri dosyası
+\texttt{companion/spss} altındaki \texttt{csv/b09.csv} dosyasıdır.
+
+\begin{lstlisting}[style=prismSPSS]
+SET DECIMAL=DOT.
+GET DATA /TYPE=TXT
+ /FILE='companion/spss/csv/b09.csv'
+ /ENCODING='UTF8'
+ /ARRANGEMENT=DELIMITED /DELCASE=LINE
+ /DELIMITERS="," /QUALIFIER='"'
+ /FIRSTCASE=2
+ /VARIABLES=id F8.0 school F8.0 sex F8.0 age F8.0
+ studytime F8.0 absences F8.0 g1 F8.0 g2 F8.0
+ g3 F8.0 pass10 F8.0.
+FILTER OFF.
+WEIGHT OFF.
+SPLIT FILE OFF.
+VARIABLE LABELS
+ g3 'Yil sonu matematik notu'
+ pass10 'Yil sonu notu 10 veya uzerinde'.
+VALUE LABELS school 1 'GP' 2 'MS'.
+VALUE LABELS pass10
+ 0 '10 puanin altinda' 1 '10 puan ve uzerinde'.
+VARIABLE LEVEL
+ id school sex pass10 (NOMINAL)
+ studytime (ORDINAL)
+ age absences g1 g2 g3 (SCALE).
+FORMATS g3 (F14.9).
+EXECUTE.
+EXAMINE VARIABLES=g3
+ /PLOT=HISTOGRAM /STATISTICS=DESCRIPTIVES
+ /CINTERVAL=95.
+T-TEST /TESTVAL=10 /VARIABLES=g3
+ /CRITERIA=CI(.95).
+\end{lstlisting}
+
+\begin{outputguidebox}
+\textbf{Paylaşılan SPSS çıktısıyla doğrulanan değerler.}
+\emph{One-Sample Statistics} tablosunda $n=395$, ortalama \SPMatMean\ ve
+standart hata \SPMatSE\ bulunmuştur. \emph{One-Sample Test} tablosunda
+$t(394)=1{,}801$, çift yönlü $p=0{,}072$ gösterilmiştir. Yüzde 5 düzeyinde
+$H_0$ reddedilmez; bu, ortalamanın kesinlikle 10 olduğunun veya farkın
+önemsiz olduğunun kanıtı değildir. Test tablosundaki güven aralığı
+\emph{ortalama farkı} içindir: Explore çıktısındaki ortalama aralığının
+iki sınırından da 10 çıkarılır. Histogram, sıfır yığılmasını değerlendirmek
+içindir; büyük örneklem bağımsızlık sorununu çözmez.
+\end{outputguidebox}
+
+
+\par\noindent\begin{minipage}{\linewidth}
+\subsection{R uygulaması}
+\label{sec:r-gercek-b09}
+
+\texttt{mu=10} sıfır hipotezini belirler. \texttt{conf.int} ortalama için aralıktır; 10 çıkarılınca fark aralığı elde edilir.
+
+\begin{lstlisting}[style=prismR]
+veri <- read.csv("companion/spss/csv/b09.csv")
+stopifnot(nrow(veri) == 395, ncol(veri) == 10,
+          !anyNA(veri),
+          all(veri$pass10 == as.integer(veri$g3 >= 10)))
+sonuc <- t.test(veri$g3, mu=10,
+               alternative="two.sided", conf.level=.95)
+ozet <- c(
+  n=nrow(veri), ort=mean(veri$g3), ss=sd(veri$g3),
+  sh_ort=sd(veri$g3)/sqrt(nrow(veri)),
+  t=unname(sonuc$statistic), df=unname(sonuc$parameter),
+  p_iki_yonlu=sonuc$p.value, fark=mean(veri$g3)-10,
+  ort_alt=sonuc$conf.int[1], ort_ust=sonuc$conf.int[2],
+  fark_alt=sonuc$conf.int[1]-10,
+  fark_ust=sonuc$conf.int[2]-10)
+print(sonuc)
+print(ozet, digits=15)
+print(sum(veri$g3 == 0))
+\end{lstlisting}
+
+\textbf{Çıktıyı okuma.} Paylaşılan R çıktısı 395 satır, 10 sütun ve
+her sütunda sıfır eksik değer gösterir. Test çıktısındaki
+\texttt{p-value}, burada iki yönlü olasılıktır. Ayrıntılı özette
+\texttt{ort\_alt} ve \texttt{ort\_ust} ortalama için;
+\texttt{fark\_alt} ve \texttt{fark\_ust} ise ortalama eksi 10 için
+sınırlardır. Sıfır notlu 38 kayıt analizde tutulmuştur.
+\end{minipage}\par
+
+\par\noindent\begin{minipage}{\linewidth}
+\subsection{Python uygulaması}
+\label{sec:python-b09}
+
+\texttt{sonuc} iki yönlü testin istatistiğini ve $p$ değerini tutar.
+\texttt{ddof=1} örneklem standart sapmasını seçer; ortalama aralığından
+10 çıkarılarak SPSS fark aralığıyla karşılaştırılır.
+
+\begin{lstlisting}[style=prismPythonApp]
+import pandas as pd
+import numpy as np
+from scipy import stats
+
+veri = pd.read_csv("companion/spss/csv/b09.csv")
+assert veri.shape == (395, 10)
+assert not veri.isna().any().any()
+assert veri.pass10.eq((veri.g3 >= 10).astype(int)).all()
+gozlem_sayisi = len(veri)
+ortalama = veri.g3.mean()
+standart_sapma = veri.g3.std(ddof=1)
+standart_hata = standart_sapma / np.sqrt(gozlem_sayisi)
+sonuc = stats.ttest_1samp(
+    veri.g3, popmean=10, alternative="two-sided")
+ortalama_alt, ortalama_ust = stats.t.interval(
+    .95, df=gozlem_sayisi-1,
+    loc=ortalama, scale=standart_hata)
+ozet = pd.Series({
+    "n": gozlem_sayisi, "ort": ortalama, "ss": standart_sapma,
+    "sh_ort": standart_hata, "t": sonuc.statistic,
+    "df": gozlem_sayisi-1, "p_iki_yonlu": sonuc.pvalue,
+    "fark": ortalama-10,
+    "ort_alt": ortalama_alt, "ort_ust": ortalama_ust,
+    "fark_alt": ortalama_alt-10, "fark_ust": ortalama_ust-10
+})
+print(ozet.to_string(float_format=lambda deger: f"{deger:.13f}"))
+print(int(veri.g3.eq(0).sum()))
+\end{lstlisting}
+
+\textbf{Çıktıyı okuma.} Paylaşılan Python çıktısında da 395 satır,
+10 sütun, sıfır eksik değer ve 38 sıfır notlu kayıt vardır.
+On iki özet değer, R sonuçları 13 ondalık basamağa yuvarlandığında
+eşleşir. Her iki yazılımda ana veri korunur. Buradaki karşılaştırma
+sayısal çıktılara aittir; R ve Python histogramları doğrulanmamıştır.
+\end{minipage}\par
+
+\subsection{Sonuçların karşılaştırılması ve ortak rapor}
+12 Eylül 2026'da paylaşılan SPSS tabloları ve histogramı ile R ve
+Python metin çıktıları incelenmiştir. Gözlem sayısı, ortalama,
+standart sapma, standart hata, $t$, serbestlik derecesi, iki yönlü
+$p$, ortalama farkı ve iki aralığın dört sınırından oluşan on iki
+özet değer R ve Python'da 13 ondalık basamağa yuvarlandığında
+eşleşmiştir. SPSS'in ilgili değerleri gösterilen yuvarlama
+hassasiyetlerinde uyumludur. Proje CSV'sinden yapılan hesaplar
+sonuçları destekler. Aşağıdaki tablolar çıktıların kitap düzenine
+uyarlanmış özetidir; ekran görüntüsü değildir.
+
+\begin{table}[H]
+\centering
+\caption{B09'da yıl sonu notunun doğrulanmış betimsel özeti}
+\label{tab:b09-dogrulanmis-betimsel}
+\begin{tabular}{@{}lr@{}}
+\toprule
+Ölçü & Değer \\
+\midrule
+Gözlem sayısı & 395 \\
+Ortalama & 10,415190 \\
+Standart sapma & 4,581443 \\
+Ortalamanın standart hatası & 0,230517 \\
+\bottomrule
+\end{tabular}
+\par\smallskip
+{\footnotesize Ondalıklı değerler altı basamağa yuvarlanmıştır.
+Standart sapma 394 böleniyle, standart hata $s/\sqrt{395}$ ile
+hesaplanmıştır. \texttt{g3} için eksik değer yoktur; sıfır notlu
+38 kayıt analizde korunmuştur.\par}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{B09'da 10 puan referansına karşı iki yönlü tek örneklem testi}
+\label{tab:b09-dogrulanmis-test}
+\begin{tabular}{@{}lr@{}}
+\toprule
+Ölçü & Değer \\
+\midrule
+$t$ istatistiği & 1,801122 \\
+Serbestlik derecesi & 394 \\
+İki yönlü $p$ değeri & 0,072448 \\
+Ortalama farkı ($\bar x-10$) & 0,415190 \\
+Ortalamanın \%95 güven aralığı: alt & 9,961992 \\
+Ortalamanın \%95 güven aralığı: üst & 10,868388 \\
+Farkın \%95 güven aralığı: alt & $-0{,}038008$ \\
+Farkın \%95 güven aralığı: üst & 0,868388 \\
+\bottomrule
+\end{tabular}
+\par\smallskip
+{\footnotesize Ondalıklı değerler altı basamağa yuvarlanmıştır;
+ara hesaplarda yuvarlanmamış değerler kullanılmıştır. SPSS test
+tablosu farkın aralığını, Explore tablosu ortalamanın aralığını
+verir. Fark aralığının iki sınırına da 10 eklenince ortalama
+aralığı elde edilir.\par}
+\end{table}
+
+\Needspace{15\baselineskip}
+\begin{outputguidebox}
+Tablo~\ref{tab:b09-dogrulanmis-test} için $p=0{,}072448>0{,}05$
+olduğundan $H_0:\mu=10$ reddedilmez. Bu karar ortalamanın kesinlikle
+10 olduğunu, iki değerin eşdeğerliğini veya farkın uygulamada
+önemsizliğini kanıtlamaz. Ortalama aralığı 10'u, fark aralığı 0'ı
+içerir; aynı iki yönlü test ve güven düzeyi için bu sonuçlar uyumludur.
+
+Paylaşılan SPSS tablosunda \emph{One-Sided p} sütunu 0,036,
+\emph{Two-Sided p} sütunu 0,072 gösterir. B09'un alternatif hipotezi
+iki yönlü olduğundan ikinci sütun kullanılır. Yardım açıklamasındaki
+tek yönlü anlamlılık vurgusu, bu uygulamanın kararını değiştirmez.
+Sonuçlara bakarak testin yönünü değiştirmeyin; renk yerine hipotezi
+ve ilgili sütunun başlığını esas alın.
+
+SPSS histogramında sıfırda ayrı bir yığılma vardır; bu 38 kayıt
+gerekçesiz biçimde silinmemiştir. Histogram bağımsızlığı veya temsil
+gücünü doğrulamaz. Hesaplar öğretim amacıyla kullanılan bağımsız
+gözlemler modeline dayanır; iki okuldan gelen verinin daha geniş bir
+öğrenci evrenine genellenebilirliği, yazılımlar aynı sonucu verdiği
+için kanıtlanmış olmaz.
+\end{outputguidebox}
+
+\Needspace{10\baselineskip}
+\textbf{Raporlama örneği (doğrulanmış çıktılarla).}
+``395 kayıtta yıl sonu notunun ortalaması 10,415190, standart sapması
+4,581443 bulunmuştur. Öğretim amaçlı 10 puan referansına karşı iki
+yönlü tek örneklem $t$ testinde yüzde 5 düzeyinde sıfır hipotezi
+reddedilmemiştir ($t(394)=1{,}801122$, $p=0{,}072448$).
+Ortalama farkı 0,415190 puan, farkın yüzde 95 güven aralığı
+$[-0{,}038008;0{,}868388]$ bulunmuştur. Ortalamanın yüzde 95 güven
+aralığı $[9{,}961992;10{,}868388]$ olarak hesaplanmıştır. Sıfır notlu
+38 kayıt korunmuştur. Bağımsız gözlemler modeline dayanan bu sonuçlar,
+iki okulla sınırlı veri kaynağının daha geniş bir öğrenci evrenine
+genellenebilirliğini kanıtlamamaktadır.''
+
+
+\textbf{Görev.} Farkın güven aralığına 10 ekleyerek ortalamanın
+aralığını doğrulayın. Neden 0,036 yerine 0,072 sütununun kullanıldığını
+hipotezlerle açıklayın. $H_0$'ın reddedilmemesi ile eşdeğerlik
+kanıtı arasındaki ayrımı ve bağımsızlık varsayımının histogramdan
+doğrulanamayacağını belirtin.

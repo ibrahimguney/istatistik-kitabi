@@ -1,0 +1,34 @@
+GET DATA /TYPE=TXT /FILE='veri.csv' /ENCODING='UTF8'
+ /ARRANGEMENT=DELIMITED /DELCASE=LINE /DELIMITERS="," /QUALIFIER='"'
+ /FIRSTCASE=2 /VARIABLES=fark F24.0 standart_hata F24.0 serbestlik F24.0
+ null_degeri F24.0 alfa F24.0.
+DATASET NAME B09Ozet.
+FILTER OFF.
+USE ALL.
+WEIGHT OFF.
+SPLIT FILE OFF.
+COMPUTE t_degeri=(fark-null_degeri)/standart_hata.
+COMPUTE p_cift=2*CDF.T(-ABS(t_degeri),serbestlik).
+COMPUTE p_ust=CDF.T(-t_degeri,serbestlik).
+COMPUTE p_alt=CDF.T(t_degeri,serbestlik).
+COMPUTE reddet_cift=(p_cift<alfa).
+COMPUTE reddet_alfa001=(p_cift<.01).
+COMPUTE reddet_ust=(p_ust<alfa).
+COMPUTE reddet_alt=(p_alt<alfa).
+COMPUTE guven_duzeyi=1-alfa.
+COMPUTE kritik_t=IDF.T(1-alfa/2,serbestlik).
+COMPUTE hata_payi=kritik_t*standart_hata.
+COMPUTE alt_sinir=fark-hata_payi.
+COMPUTE ust_sinir=fark+hata_payi.
+COMPUTE genislik=2*hata_payi.
+COMPUTE null_aralikta=(alt_sinir<=null_degeri AND null_degeri<=ust_sinir).
+VALUE LABELS reddet_cift reddet_alfa001 reddet_ust reddet_alt
+ 0 'H0 reddedilemez' 1 'H0 reddedilir'.
+VALUE LABELS null_aralikta 0 'Null degeri aralik disinda' 1 'Null degeri aralikta'.
+FORMATS fark standart_hata serbestlik null_degeri alfa t_degeri p_cift p_ust p_alt
+ guven_duzeyi kritik_t hata_payi alt_sinir ust_sinir genislik (F16.10).
+EXECUTE.
+DISPLAY DICTIONARY.
+LIST VARIABLES=fark standart_hata serbestlik null_degeri alfa.
+LIST VARIABLES=t_degeri p_cift p_ust p_alt reddet_cift reddet_alfa001 reddet_ust reddet_alt.
+LIST VARIABLES=guven_duzeyi kritik_t hata_payi alt_sinir ust_sinir genislik null_aralikta.

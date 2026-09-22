@@ -1,0 +1,4 @@
+degisken,aciklama,veri_turu,olcme_duzeyi,birim,gecerli_degerler,eksik_deger_kurali
+okul_turu,Öğretim örneğindeki öğrencinin okul türü,kategorik,nominal,birimsiz,Devlet veya Ozel; Ozel özel okul etiketidir,Boş hücre eksiktir; özgün örnekte yoktur
+sinif,Öğrencinin sınıf düzeyi,kategorik,sıralı,birimsiz,1 < 2 < 3; puan veya süre değildir,Boş hücre eksiktir; özgün örnekte yoktur
+puan,Öğretim örneğindeki sınav puanı,nicel,aralık varsayımı,puan,Sonlu sayısal puan; ölçek sınırları belirtilmemiştir,Boş hücre eksiktir; özgün örnekte yoktur

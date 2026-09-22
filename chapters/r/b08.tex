@@ -1,0 +1,39 @@
+\section{R ile çözümlü uygulama}
+\label{sec:r-b08}
+
+\textbf{Soru.} $n=25$, $\bar x=72$ ve $s=10$ için evren ortalamasının
+yüzde 95 ve yüzde 99 güven aralıklarını hesaplayın. Burada ham gözlemler
+değil özet istatistikler verildiği için $t$ kritik değeriyle doğrudan hesap yapın.
+
+\begin{lstlisting}[style=prismR]
+hacim <- 25
+ortalama <- 72
+standart_sapma <- 10
+standart_hata <- standart_sapma / sqrt(hacim)
+serbestlik <- hacim - 1
+guven_araligi <- function(duzey) {
+  kritik <- qt((1 + duzey) / 2, df = serbestlik)
+  ortalama + c(-1, 1) * kritik * standart_hata
+}
+c(standart_hata = standart_hata,
+  kritik_95 = qt(0.975, df = serbestlik))
+rbind(GA95 = guven_araligi(0.95),
+      GA99 = guven_araligi(0.99))
+\end{lstlisting}
+
+\begin{outputguidebox}
+\textbf{Çözüm ve kontrol değerleri.} Standart hata $10/\sqrt{25}=2$,
+serbestlik derecesi 24 ve yüzde 95 aralık için kritik değer 2,0639'dur.
+Yüzde 95 güven aralığı $[67{,}8722;76{,}1278]$, yüzde 99 güven aralığı
+yaklaşık $[66{,}4061;77{,}5939]$ olur.
+\end{outputguidebox}
+
+\textbf{Yorum.} Bağımsız gözlemler ve küçük örneklemde yaklaşık normal
+bir evren modeli altında bu $t$ aralığı kullanılır. Özet istatistikler aykırı
+değerleri ve dağılım biçimini denetlemeye yetmez. Ham veri elde olsaydı
+\texttt{t.test(puan, conf.level = 0.95)\$conf.int} kullanılabilirdi;
+\texttt{puan} yerine üç özet sayıyı koymak yanlış olurdu.
+
+\textbf{Pekiştirme ve yanıt.} Güven düzeyi arttıkça kritik değer ve aralık
+genişliği artar. Yüzde 95 ifadesi, sabit parametrenin hesaplanmış bu aralıkta
+bulunma olasılığı değil yöntemin uzun dönem kapsama oranıdır.

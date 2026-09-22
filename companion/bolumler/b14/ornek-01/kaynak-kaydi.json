@@ -1,0 +1,16 @@
+{
+  "tarih": "2026-09-09",
+  "paket": "B14",
+  "ders_bolumu": 14,
+  "kapsamli_bolum": 17,
+  "kaynaklar": [
+    "chapters/14-genel-sinava-hazirlik.tex",
+    "chapters/r/b14.tex"
+  ],
+  "veri_turu": "Aynı 24 öğrencinin son-ön farkları için tek özet satırı; bireysel ön/son veya fark gözlemleri verilmedi.",
+  "fark_yonu": "Son eksi ön; kitabın kaygı puanı örneği.",
+  "veri_sha256": "6e2bf925b1ce47ad0c9cd4d3234ce85662ad26448554e54665b8029808c33a47",
+  "referans_yontemi": "SE=sqrt(36/24) ve t cebirsel olarak hesaplandı; merkezi t yoğunluğu açık formülünün quad integrali ve brentq ile p/kuantil üretildi. Çözümün stats.t.sf/ppf çıktıları referansa kopyalanmadı.",
+  "kontrol_sayisi": 17,
+  "rastgele_islem": false
+}

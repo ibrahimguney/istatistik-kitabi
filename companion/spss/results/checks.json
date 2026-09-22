@@ -1,0 +1,450 @@
+{
+  "warning": "Independent Python calculations, not IBM SPSS output.",
+  "seed": 2026,
+  "replicates": 2000,
+  "values": {
+    "MatN": {
+      "value": 395.0,
+      "places": 0
+    },
+    "MatMean": {
+      "value": 10.415189873417722,
+      "places": 3
+    },
+    "MatSD": {
+      "value": 4.5814426109978434,
+      "places": 3
+    },
+    "MatSE": {
+      "value": 0.23051739492213585,
+      "places": 3
+    },
+    "MatVar": {
+      "value": 20.989616397866733,
+      "places": 3
+    },
+    "MatMedian": {
+      "value": 11.0,
+      "places": 1
+    },
+    "MatZero": {
+      "value": 38.0,
+      "places": 0
+    },
+    "MatPass": {
+      "value": 265.0,
+      "places": 0
+    },
+    "MatPHat": {
+      "value": 0.6708860759493671,
+      "places": 4
+    },
+    "MatCILow": {
+      "value": 9.961991937034202,
+      "places": 3
+    },
+    "MatCIHigh": {
+      "value": 10.868387809801241,
+      "places": 3
+    },
+    "ContextN": {
+      "value": 395.0,
+      "places": 0
+    },
+    "ContextMean": {
+      "value": 10.415189873417722,
+      "places": 3
+    },
+    "ContextSD": {
+      "value": 4.5814426109978434,
+      "places": 3
+    },
+    "ContextSE": {
+      "value": 0.23051739492213585,
+      "places": 3
+    },
+    "ContextVar": {
+      "value": 20.989616397866733,
+      "places": 3
+    },
+    "ContextMedian": {
+      "value": 11.0,
+      "places": 1
+    },
+    "ContextZero": {
+      "value": 38.0,
+      "places": 0
+    },
+    "ContextPass": {
+      "value": 265.0,
+      "places": 0
+    },
+    "ContextPHat": {
+      "value": 0.6708860759493671,
+      "places": 4
+    },
+    "ContextCILow": {
+      "value": 9.961991937034202,
+      "places": 3
+    },
+    "ContextCIHigh": {
+      "value": 10.868387809801241,
+      "places": 3
+    },
+    "ContextPSE": {
+      "value": 0.02364280333389279,
+      "places": 4
+    },
+    "AbsMean": {
+      "value": 5.708860759493671,
+      "places": 3
+    },
+    "AbsSD": {
+      "value": 8.00309568710818,
+      "places": 3
+    },
+    "AbsMax": {
+      "value": 75.0,
+      "places": 3
+    },
+    "SimFiveMean": {
+      "value": 10.367799999999999,
+      "places": 3
+    },
+    "SimFiveSD": {
+      "value": 2.078856412066739,
+      "places": 3
+    },
+    "TheoryFiveSE": {
+      "value": 2.046288255769702,
+      "places": 3
+    },
+    "SimThirtyMean": {
+      "value": 10.419049999999999,
+      "places": 3
+    },
+    "SimThirtySD": {
+      "value": 0.8445122380299254,
+      "places": 3
+    },
+    "TheoryThirtySE": {
+      "value": 0.8353936822142609,
+      "places": 3
+    },
+    "SimHundredMean": {
+      "value": 10.41525,
+      "places": 3
+    },
+    "SimHundredSD": {
+      "value": 0.45891419526890825,
+      "places": 3
+    },
+    "TheoryHundredSE": {
+      "value": 0.457563964146053,
+      "places": 3
+    },
+    "EmpSigma": {
+      "value": 4.57563964146053,
+      "places": 3
+    },
+    "SimZMean": {
+      "value": 0.0001314058513988572,
+      "places": 3
+    },
+    "SimZSD": {
+      "value": 1.002950912284745,
+      "places": 3
+    },
+    "SimCoverage": {
+      "value": 94.6,
+      "places": 2
+    },
+    "SrsMean": {
+      "value": 10.275,
+      "places": 3
+    },
+    "SrsSD": {
+      "value": 5.5654036644899305,
+      "places": 3
+    },
+    "StratMean": {
+      "value": 10.456347197106691,
+      "places": 3
+    },
+    "WilsonLow": {
+      "value": 0.6230954720673821,
+      "places": 4
+    },
+    "WilsonHigh": {
+      "value": 0.7153848865171338,
+      "places": 4
+    },
+    "MatT": {
+      "value": 1.8011216618076253,
+      "places": 3
+    },
+    "MatP": {
+      "value": 0.0724481981327951,
+      "places": 4
+    },
+    "MatD": {
+      "value": 0.09062426590721676,
+      "places": 4
+    },
+    "PlanN": {
+      "value": 167.0,
+      "places": 0
+    },
+    "PlanPower": {
+      "value": 0.8007711947426354,
+      "places": 4
+    },
+    "FemaleN": {
+      "value": 208.0,
+      "places": 3
+    },
+    "MaleN": {
+      "value": 187.0,
+      "places": 3
+    },
+    "FemaleMean": {
+      "value": 9.966346153846153,
+      "places": 3
+    },
+    "MaleMean": {
+      "value": 10.914438502673796,
+      "places": 3
+    },
+    "WelchT": {
+      "value": -2.0650572003629564,
+      "places": 3
+    },
+    "WelchDF": {
+      "value": 390.5693560400321,
+      "places": 3
+    },
+    "WelchP": {
+      "value": 0.03957700303089975,
+      "places": 4
+    },
+    "WelchDiff": {
+      "value": -0.9480923488276431,
+      "places": 3
+    },
+    "WelchLow": {
+      "value": -1.8507322559611021,
+      "places": 3
+    },
+    "WelchHigh": {
+      "value": -0.045452441694184165,
+      "places": 3
+    },
+    "PairDiff": {
+      "value": -0.4936708860759494,
+      "places": 3
+    },
+    "PairT": {
+      "value": -3.5517031247185855,
+      "places": 3
+    },
+    "PairP": {
+      "value": 0.0004290673865804158,
+      "places": 5
+    },
+    "PairLow": {
+      "value": -0.7669365584468487,
+      "places": 3
+    },
+    "PairHigh": {
+      "value": -0.22040521370505006,
+      "places": 3
+    },
+    "PairDZ": {
+      "value": -0.17870557843103002,
+      "places": 3
+    },
+    "Chi": {
+      "value": 1.9698085706874033,
+      "places": 3
+    },
+    "ChiP": {
+      "value": 0.16046818257121087,
+      "places": 4
+    },
+    "CramerV": {
+      "value": 0.07061768291993704,
+      "places": 3
+    },
+    "MinExpected": {
+      "value": 61.54430379746835,
+      "places": 3
+    },
+    "FemalePassPct": {
+      "value": 63.94230769230769,
+      "places": 2
+    },
+    "MalePassPct": {
+      "value": 70.58823529411765,
+      "places": 2
+    },
+    "RegR": {
+      "value": 0.8014679320174146,
+      "places": 3
+    },
+    "RegRSq": {
+      "value": 0.6423508460522711,
+      "places": 3
+    },
+    "RegSlope": {
+      "value": 1.1062560947728435,
+      "places": 3
+    },
+    "RegIntercept": {
+      "value": -1.6528038288004616,
+      "places": 3
+    },
+    "RegSlopeLow": {
+      "value": 1.024392751420309,
+      "places": 3
+    },
+    "RegSlopeHigh": {
+      "value": 1.188119438125378,
+      "places": 3
+    },
+    "RegAtTen": {
+      "value": 9.409757118927974,
+      "places": 3
+    },
+    "PositiveN": {
+      "value": 357.0,
+      "places": 0
+    },
+    "PositiveMean": {
+      "value": 11.523809523809524,
+      "places": 3
+    },
+    "PositiveSD": {
+      "value": 3.227796940207425,
+      "places": 3
+    }
+  },
+  "crosstab": [
+    [
+      75,
+      133
+    ],
+    [
+      55,
+      132
+    ]
+  ],
+  "expected": [
+    [
+      68.45569620253164,
+      139.54430379746836
+    ],
+    [
+      61.54430379746835,
+      125.45569620253164
+    ]
+  ],
+  "sampling_ids": {
+    "srs": [
+      10,
+      29,
+      37,
+      46,
+      58,
+      62,
+      63,
+      64,
+      66,
+      90,
+      108,
+      110,
+      112,
+      130,
+      132,
+      133,
+      135,
+      169,
+      175,
+      180,
+      199,
+      230,
+      231,
+      235,
+      243,
+      244,
+      249,
+      255,
+      260,
+      267,
+      276,
+      289,
+      291,
+      304,
+      305,
+      320,
+      334,
+      349,
+      365,
+      387
+    ],
+    "stratified": [
+      12,
+      26,
+      35,
+      52,
+      63,
+      75,
+      84,
+      101,
+      122,
+      127,
+      130,
+      131,
+      139,
+      144,
+      152,
+      156,
+      162,
+      163,
+      170,
+      177,
+      184,
+      191,
+      202,
+      207,
+      210,
+      221,
+      227,
+      235,
+      244,
+      255,
+      278,
+      295,
+      319,
+      325,
+      346,
+      363,
+      377,
+      388,
+      389,
+      392
+    ]
+  },
+  "versions": {
+    "python": "3.13.15",
+    "numpy": "2.4.1",
+    "pandas": "2.3.3",
+    "scipy": "1.17.0"
+  },
+  "context_dataset": "mat",
+  "sources": {
+    "student-mat.csv": {
+      "origin": "companion/spss/student-mat.csv",
+      "sha256": "041d88ddca1da9fb8a1a9261bbf090d2f7c75625c228392e1077c2cf656051e8"
+    }
+  }
+}

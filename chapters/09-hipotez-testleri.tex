@@ -1,0 +1,429 @@
+\chapter{Hipotez Testlerinin Mantığı: H₀, H₁, Test İstatistiği, Anlamlılık Düzeyi ve p-Değeri}
+\label{ch:hypothesis}
+
+\begin{prismbox}[PrismLight]{Öğrenme çıktıları}
+Bu bölümün sonunda:
+\begin{itemize}
+  \item araştırma sorusunu parametre üzerinden $H_0$ ve $H_1$ biçiminde yazabilecek,
+  \item test istatistiği, anlamlılık düzeyi ve \pval-değerinin rollerini ayırabilecek,
+  \item tek ve çift yönlü test arasında araştırma sorusuna göre seçim yapabilecek,
+  \item bir test sonucunu güven aralığı ve bağlamla birlikte yorumlayabileceksiniz.
+\end{itemize}
+\end{prismbox}
+
+\begin{prerequisitebox}
+Parametre, tahmin, standart hata, güven aralığı ve örnekleme dağılımı
+kavramları bilinmelidir. Standartlaştırılmış bir istatistiğin referans
+dağılımla karşılaştırılması fikri hatırlanmalıdır.
+\end{prerequisitebox}
+
+Nokta tahmini ve güven aralığı için sırasıyla Bölüm~\ref{ch:point-estimation}
+\ifimoders
+ve Bölüm~\ref{ch:confidence-intervals} önce okunabilir.
+\else
+ve Bölüm~\ref{ch:confidence-intervals}; benzetim temelli test mantığı için
+Bölüm~\ref{sec:randomization-test} önce okunabilir.
+\fi
+
+\section{Araştırma sorusundan hipoteze}
+\label{sec:hypotheses}
+
+Sıfır hipotezi $H_0$, veri üretim süreci hakkında sınanan temel iddiayı;
+alternatif hipotez $H_1$ ise kanıt aranan karşıt durumu ifade eder.
+Hipotezler veri incelenmeden önce hedef parametre üzerinden yazılmalıdır.
+
+\section{Test istatistiği}
+
+Test istatistiği, gözlenen tahminin $H_0$ altında beklenen değerden standart
+hata birimleriyle ne kadar uzak olduğunu ölçer. Genel yapı
+\[
+\text{test istatistiği}=
+\frac{\text{gözlenen tahmin}-\text{$H_0$ değeri}}
+{\text{tahminin standart hatası}}
+\]
+biçimindedir.
+
+\section{Hipotez testinin altı adımı}
+
+\begin{enumerate}
+  \item Hedef evreni, parametreyi ve araştırma sorusunu tanımlayın.
+  \item $H_0$ ve $H_1$ hipotezlerini veri incelenmeden önce yazın.
+  \item Anlamlılık düzeyini ve test yönünü belirleyin.
+  \item Veri yapısına uygun test istatistiğini seçip varsayımları değerlendirin.
+  \item Test istatistiğini ve \pval-değerini hesaplayın.
+  \item Kararı etki tahmini, güven aralığı ve araştırmanın sınırlılıklarıyla raporlayın.
+\end{enumerate}
+
+Bu sıralama, test seçiminin yazılım menüsünden değil araştırma sorusu ve veri
+üretim sürecinden başlamasını sağlar.
+
+\section{Anlamlılık düzeyi ve \pval-değeri}
+\label{sec:pvalue}
+
+\begin{definitionbox}
+Anlamlılık düzeyi $\alpha$, testten önce belirlenen hata eşiğidir. \pval-değeri,
+$H_0$ doğru kabul edildiğinde gözlenen kadar veya daha uç bir sonuç elde etme
+olasılığıdır. $p\leq\alpha$ olduğunda $H_0$ reddedilir; aksi durumda
+reddetmek için yeterli kanıt bulunmadığı belirtilir.
+\end{definitionbox}
+
+\begin{mistakebox}
+\pval-değeri $H_0$'ın doğru olma olasılığı, etkinin büyüklüğü veya sonucun yeniden
+üretileceğinin garantisi değildir \citep{wasserstein2016}.
+\end{mistakebox}
+
+\section{Tek ve çift yönlü test}
+\label{sec:test-direction}
+
+Çift yönlü alternatif $H_1:\theta\neq\theta_0$ biçiminde iki yöndeki
+sapmaları değerlendirir. Tek yönlü alternatif yalnız araştırma sorusunda
+önceden gerekçelendirilmiş bir yönü sınar. Veri görüldükten sonra test yönü
+değiştirilemez.
+
+Şekil~\ref{fig:pvalue-two-tails}'de, $H_0$ altında standart normal
+dağılıma sahip bir test istatistiği için $z_{\text{göz}}=2$ örneği
+gösterilir. Çift yönlü testte yalnız sağ kuyruk değil, aynı uzaklıktaki
+sol kuyruk da sayılır:
+\[
+p=\P(Z\leq-2)+\P(Z\geq2)
+  =2\bigl[1-\Phi(2)\bigr]\approx0{,}0455.
+\]
+Bu değer, sıfır hipotezinin doğru olma olasılığı değil, $H_0$ altında
+gözlenen kadar veya daha uç sonuçların toplam olasılığıdır.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[x=1.25cm,y=1cm,font=\footnotesize]
+  \fill[PrismSubheadingBlue!35]
+    (-3.8,0)--plot[domain=-3.8:-2,samples=45]
+      (\x,{2.3*exp(-\x*\x/2)})--(-2,0)--cycle;
+  \fill[PrismSubheadingBlue!35]
+    (2,0)--plot[domain=2:3.8,samples=45]
+      (\x,{2.3*exp(-\x*\x/2)})--(3.8,0)--cycle;
+  \draw[PrismBlue,line width=1pt,domain=-3.8:3.8,samples=100,smooth]
+    plot (\x,{2.3*exp(-\x*\x/2)});
+  \draw[->,PrismGray] (-3.9,0)--(3.95,0) node[right] {$z$};
+  \foreach \x in {-2,2}
+    \draw[PrismBlue,dashed] (\x,0)--(\x,0.8);
+  \node[below] at (0,0) {$0$};
+  \node[below] at (-2,0) {$-|z_{\text{göz}}|=-2$};
+  \node[below] at (2,0) {$z_{\text{göz}}=2$};
+  \node[align=center] at (0,2.7) {$H_0$ altındaki referans dağılım};
+  \node at (-2.85,1.15) {Sol kuyruk: $p/2$};
+  \node at (2.85,1.15) {Sağ kuyruk: $p/2$};
+  \draw[->,PrismBlue] (-2.85,0.9)--(-2.5,0.07);
+  \draw[->,PrismBlue] (2.85,0.9)--(2.5,0.07);
+\end{tikzpicture}
+\caption{Standart normal referans altında çift yönlü \pval-değeri.
+İki gölgeli kuyruğun temsil ettiği toplam olasılık, $z_{\text{göz}}=2$ için yaklaşık
+$0{,}0455$'tir. Dikey ölçek görsel açıklık için büyütülmüştür.}
+\label{fig:pvalue-two-tails}
+\end{figure}
+
+\section{Kritik bölge ve \pval-değeri yaklaşımı}
+
+Hipotez testi aynı kararı iki eşdeğer yolla verebilir. Standart normal
+referans altında çift yönlü bir testte
+\[
+|Z|\geq z_{1-\alpha/2}
+\]
+olduğunda gözlenen değer kritik bölgededir. Üst yönlü bir testte ise
+$Z\geq z_{1-\alpha}$ koşulu kullanılır. Alternatif olarak \pval-değeri doğrudan
+$\alpha$ ile karşılaştırılır. Aynı model, yön ve anlamlılık düzeyi
+kullanıldığında iki yaklaşımın kararı aynı olmalıdır.
+
+Kritik değer yaklaşımı karar sınırını, \pval-değeri yaklaşımı ise gözlenen
+sonucun sınırın ne kadar ötesinde veya gerisinde olduğunu gösterir. Her iki
+yaklaşımda da etki tahmini ve güven aralığı ayrıca raporlanmalıdır.
+
+\section{Sonucun yorumlanması}
+\label{sec:test-reporting}
+
+Bir test sonucu; test istatistiği, serbestlik derecesi, \pval-değeri, tahmin,
+güven aralığı ve araştırma bağlamıyla birlikte raporlanmalıdır. ``Anlamlı''
+ifadesi tek başına uygulamalı önemi göstermez.
+
+\section{\pval-değeri bir kanıt ölçüsüdür, kararın tamamı değildir}
+
+\pval-değeri küçüldükçe gözlenen sonucun $H_0$ altında açıklanması güçleşir;
+ancak 0,049 ile 0,051 arasında bilimsel bakımdan keskin bir sınır yoktur.
+Örneklem hacmi çok büyük olduğunda önemsiz bir fark küçük \pval-değeri üretebilir;
+örneklem küçük olduğunda ise uygulamada önemli bir fark belirsizlik nedeniyle
+istatistiksel eşiği geçemeyebilir. Eşik merkezli mekanik yorumların yerine
+tahmin, belirsizlik, bağlam ve çalışma tasarımının birlikte değerlendirilmesi
+önerilmektedir \citep{wasserstein2019}.
+
+Çift yönlü bir testte yüzde 95 güven aralığı $H_0$ değerini dışlıyorsa aynı
+veriye dayanan test genellikle $\alpha=0{,}05$ düzeyinde anlamlıdır. Güven
+aralığı ayrıca etkinin yönünü, olası büyüklüklerini ve tahmin hassasiyetini
+gösterdiği için \pval-değerinden daha fazla bilgi taşır.
+
+\section{Çözümlü düşünme örneği}
+
+Bir öğretim programının ortalama başarı puanını 50'den değiştirdiği iddia
+edilsin. Hipotezler $H_0:\mu=50$ ve $H_1:\mu\neq50$ olarak kurulur. Analiz
+sonucunda $t=2{,}50$ ve $p=0{,}020$ elde edilirse, $\alpha=0{,}05$ düzeyinde
+$H_0$ reddedilir. Bu karar ``$H_0$ kesinlikle yanlıştır'' anlamına gelmez;
+verinin $H_0$ altında beklenenden yeterince sıra dışı olduğunu belirtir.
+
+Aynı sonuç için $\alpha=0{,}01$ önceden seçilmiş olsaydı $H_0$ reddedilemezdi.
+Veri değişmemiş, yalnız karar eşiği değişmiştir. Bu nedenle anlamlılık düzeyi
+sonuca bakılmadan önce belirlenmelidir.
+
+\section{Çözümlü uygulama: akademik destek programı}
+
+Bir üniversitede önceki yılların ortalama akademik uyum puanı 70'tir. Yeni bir
+destek programına katılan $n=50$ öğrencinin ortalaması 72,1 ve standart hatası
+1 puan bulunmuştur. Programın puanı herhangi bir yönde değiştirip
+değiştirmediği araştırılsın.
+
+\begin{enumerate}
+  \item \textbf{Parametre:} Programı alan hedef evrendeki ortalama uyum puanı $\mu$.
+  \item \textbf{Hipotezler:} $H_0:\mu=70$ ve $H_1:\mu\neq70$.
+  \item \textbf{Test istatistiği:}
+  \[
+  t=\frac{72{,}1-70}{1}=2{,}10,\qquad sd=49.
+  \]
+  \item \textbf{Kanıt:} Çift yönlü \pval-değeri yaklaşık $0{,}041$'dir.
+  \item \textbf{Belirsizlik:} Ortalama farkının yüzde 95 güven aralığı
+  $[0{,}09;4{,}11]$ puandır.
+  \item \textbf{Karar ve yorum:} $\alpha=0{,}05$ düzeyinde $H_0$ reddedilir.
+  Program grubunun ortalaması referans değerden yüksek görünmektedir; ancak
+  farkın küçük olabileceği ve karşılaştırma grubu yoksa sonucun doğrudan
+  programa bağlanamayacağı belirtilmelidir.
+\end{enumerate}
+
+\begin{researchbox}
+Referans değer başka yıllardan geliyorsa öğrenci profili, ölçme aracı veya
+uygulama koşulları değişmiş olabilir. İstatistiksel test bu tasarım farklarını
+kendiliğinden denetlemez.
+\end{researchbox}
+
+\begin{outputguidebox}
+Yazılım çıktısında önce sınanan hipotezin ve test yönünün doğru tanımlandığını
+kontrol edin. Ardından test istatistiği, serbestlik derecesi, \pval-değeri, etki
+tahmini ve güven aralığını birlikte okuyun. Yazılımın verdiği \pval-değeri
+araştırma tasarımındaki yanlılıkları düzeltemez.
+\end{outputguidebox}
+
+\section{Yazılım uygulaması: test sonucu ve güven aralığı}
+
+\begin{softwarebox}
+\begin{lstlisting}
+from scipy import stats
+
+t_value, df = 2.10, 49
+p_value = 2 * stats.t.sf(abs(t_value), df=df)
+critical = stats.t.ppf(.975, df=df)
+diff_ci = (2.1 - critical, 2.1 + critical)
+
+print(p_value)
+print(diff_ci)
+\end{lstlisting}
+Sonuç yaklaşık $p=0{,}041$ ve fark için $[0{,}09;4{,}11]$ aralığını verir.
+Test ile güven aralığının aynı veri, model ve yön tanımını kullandığı
+doğrulanmalıdır.
+\end{softwarebox}
+
+\begin{assumptionbox}
+\pval-değerinin geçerliliği yalnız hesap formülüne değil, örnekleme tasarımına,
+bağımsızlığa, test yönünün önceden belirlenmesine ve kullanılan modelin
+uygunluğuna bağlıdır.
+\end{assumptionbox}
+
+\section{Çözümlü problemler}
+
+\subsection*{Problem 1: Araştırma sorusundan hipotezlere}
+
+Bir destek programının öğrencilerin ortalama öz yeterlik puanını bilinen 50
+puanlık düzeyin üzerine çıkardığı iddia edilmektedir. Hedef parametreyi,
+hipotezleri ve uygun test yönünü belirleyin.
+
+\textbf{Çözüm.} Hedef parametre, programın uygulanacağı evrendeki ortalama öz
+yeterlik puanı $\mu$'dür. Araştırma iddiası yalnız artış yönünde ve veri
+görülmeden önce kurulmuşsa
+\[
+H_0:\mu\leq50,
+\qquad
+H_1:\mu>50
+\]
+biçiminde üst yönlü test uygundur. Test istatistiğinin sıfır hipotezi altındaki
+dağılımı sınır değer olan $\mu=50$ üzerinden hesaplanır.
+
+Programın puanı herhangi bir yönde değiştirip değiştirmediği sorulsaydı
+$H_1:\mu\neq50$ biçiminde çift yönlü test gerekirdi. Yalnız gözlenen ortalama
+50'nin üzerinde çıktığı için sonradan tek yönlü teste geçilemez.
+
+\textbf{Raporlama örneği.} ``Programın ortalama öz yeterlik puanını 50'nin
+üzerine çıkaracağı yönündeki önceden belirlenmiş hipotez üst yönlü testle
+incelendi.''
+
+\subsection*{Problem 2: Aynı test istatistiğinde tek ve çift yönlü \pval-değeri}
+
+Bir araştırmada gözlenen ortalama 74, sıfır hipotezindeki değer 70 ve
+tahminin standart hatası 2'dir. Büyük örneklem normal yaklaşımı altında test
+istatistiğini, üst yönlü ve çift yönlü \pval-değerlerini bulun.
+
+\textbf{Çözüm.} Test istatistiği
+\[
+Z=\frac{74-70}{2}=2
+\]
+olur. Standart normal tabloda $\Phi(2)=0{,}9772$ olduğundan üst yönlü
+\pval-değeri
+\[
+p_{\text{üst}}=1-0{,}9772=0{,}0228
+\]
+ve çift yönlü \pval-değeri
+\[
+p_{\text{çift}}=2(0{,}0228)=0{,}0456
+\]
+olarak bulunur. Her ikisi de 0,05'ten küçüktür; ancak tek yönlü \pval-değeri daha
+küçüktür çünkü karşı kuyruğu değerlendirmez.
+
+Bu fark, daha küçük \pval-değeri elde etmek için tek yönlü test seçmeyi haklı
+çıkarmaz. Test yönü veri görülmeden önce araştırma sorusuna göre belirlenir.
+
+\subsection*{Problem 3: Kritik değerle karar verme}
+
+Çift yönlü standart normal testte gözlenen değer $Z=1{,}85$ olsun. Sonucu
+$\alpha=0{,}05$ ve $\alpha=0{,}10$ düzeylerinde kritik değer yaklaşımıyla
+değerlendirin. Çift yönlü \pval-değeri yaklaşık 0,064'tür.
+
+\textbf{Çözüm.} Yüzde 5 düzeyinde kritik değerler yaklaşık $\pm1{,}96$'dır.
+\[
+|1{,}85|<1{,}96
+\]
+olduğu için $H_0$ reddedilemez. Aynı karar $p=0{,}064>0{,}05$
+karşılaştırmasından da elde edilir.
+
+Yüzde 10 düzeyinde kritik değerler yaklaşık $\pm1{,}645$'tir.
+\[
+|1{,}85|>1{,}645
+\]
+olduğundan $H_0$ reddedilir; aynı biçimde $0{,}064<0{,}10$'dur. Veri ve etki
+tahmini değişmemiş, yalnız önceden kabul edilen Tip I hata eşiği değişmiştir.
+Bu nedenle sonuç ``yüzde 10'da anlamlı, yüzde 5'te anlamlı değil'' biçiminde
+verilebilir; kanıtın niteliği yapay olarak iki bütünüyle farklı sınıfa
+ayrılmamalıdır.
+
+\subsection*{Problem 4: Örneklem hacmi ve uygulamalı önem}
+
+İki çalışmada aynı 2 puanlık ortalama fark gözlenmiştir. İlk çalışmada
+standart hata 1, ikinci çalışmada 0,25'tir. Sıfır fark hipotezi için test
+istatistiklerini hesaplayın. Uygulamada en az 5 puanlık fark önemliyse
+sonuçları yorumlayın.
+
+\textbf{Çözüm.} İlk çalışmada
+\[
+Z_1=\frac{2}{1}=2
+\]
+ve çift yönlü \pval-değeri yaklaşık 0,046'dır. İkinci çalışmada
+\[
+Z_2=\frac{2}{0{,}25}=8
+\]
+olur ve \pval-değeri son derece küçüktür. Daha düşük standart hata, aynı etki
+tahminini sıfırdan çok daha kesin biçimde ayırmıştır.
+
+Bununla birlikte iki çalışmada da gözlenen fark 2 puandır ve önceden
+belirlenen 5 puanlık uygulamalı önem eşiğinin altındadır. İkinci sonuç çok
+güçlü istatistiksel kanıt sunabilir fakat etkinin uygulamadaki büyüklüğü yine
+küçük olabilir. \pval-değeri etki büyüklüğünün ölçüsü değildir.
+
+\subsection*{Problem 5: Test ile güven aralığının birlikte okunması}
+
+Bir öğretim uygulamasının ortalama etkisi 3 puan ve yüzde 95 güven aralığı
+$[0{,}5;5{,}5]$ bulunmuştur. Sıfır fark hipotezini ve en az 4 puanlık
+uygulamalı önem eşiğini dikkate alarak sonucu yorumlayın.
+
+\textbf{Çözüm.} Aralık sıfırı dışladığı için aynı çift yönlü test
+$\alpha=0{,}05$ düzeyinde $H_0$'ı reddeder. Etkinin pozitif olduğuna ilişkin
+istatistiksel kanıt vardır. Ancak güven aralığı 0,5 ile 5,5 arasında geniş bir
+etki kümesini kapsar.
+
+Aralığın bir bölümü 4 puanlık uygulamalı önem eşiğinin altında, bir bölümü
+üzerindedir. Dolayısıyla etkinin yönü konusunda kanıt bulunmasına rağmen
+uygulamada önemli büyüklüğe ulaşıp ulaşmadığı kesin değildir. Yalnız
+``istatistiksel olarak anlamlıdır'' demek belirsizliğin bu yönünü gizler.
+
+\subsection*{Problem 6: Oran için hipotez testi}
+
+Bir dijital platformda öğrencilerin yarısının bir etkinliği tamamladığı
+$H_0:p=0{,}50$ hipotezi sınanacaktır. Rastgele seçilen 200 öğrencinin yüzde
+57'si etkinliği tamamlamıştır. Büyük örneklem yaklaşımıyla test istatistiğini
+ve çift yönlü \pval-değerini yaklaşık olarak bulun.
+
+\textbf{Çözüm.} Sıfır hipotezi altında oran standart hatası
+\[
+SE_0=\sqrt{\frac{0{,}50(1-0{,}50)}{200}}
+=\sqrt{0{,}00125}\approx0{,}03536
+\]
+olur. Test istatistiği
+\[
+Z=\frac{0{,}57-0{,}50}{0{,}03536}\approx1{,}98
+\]
+ve çift yönlü \pval-değeri yaklaşık 0,048'dir. Yüzde 5 düzeyinde $H_0$ sınırda
+reddedilir; veri, tamamlanma oranının yüzde 50'den farklı olduğuna ilişkin
+ılımlı kanıt sunar.
+
+Test hesabında standart hata $H_0$ değeri olan 0,50 ile kurulmuştur. Güven
+aralığında ise standart hata genellikle gözlenen $\hat p=0{,}57$ üzerinden
+tahmin edilir. İki hesap yakın olsa da amaçları aynı değildir.
+
+\begin{mistakebox}
+$p=0{,}048$ sonucu, sıfır hipotezinin yanlış olma olasılığının yüzde 95,2
+olduğu anlamına gelmez. Bu değer, $H_0$ altında gözlenen kadar veya daha uç
+bir oran farkının olasılığını özetler.
+\end{mistakebox}
+
+\begin{outputguidebox}
+Bir test çıktısında araştırma hipotezinin yönünü, sıfır hipotezindeki değeri,
+test istatistiğini, serbestlik derecesini ve tek/çift yönlü \pval-değerini kontrol
+edin. Ardından etki tahmini ile güven aralığını okuyun. ``Sig.'' sütununu tek
+başına raporlamak araştırma sonucunu tamamlamaz.
+\end{outputguidebox}
+
+\input{chapters/spss/b09}
+
+\input{chapters/r/b09}
+
+\section{Bölüm özeti}
+
+\begin{itemize}
+  \item Hipotezler veri görülmeden önce hedef parametre üzerinden kurulur.
+  \item \pval-değeri $H_0$ altında verinin ne kadar sıra dışı olduğunu ölçer; $H_0$'ın olasılığı değildir.
+  \item Reddedememek eşitliği veya etkisizliği kanıtlamak anlamına gelmez.
+  \item Karar; tahmin, güven aralığı, etki büyüklüğü ve tasarım sınırlılıklarıyla raporlanır.
+  \item Kritik bölge ve \pval-değeri yaklaşımları aynı model ve anlamlılık düzeyi
+  altında aynı test kararını verir.
+  \item Büyük örneklem küçük etkileri istatistiksel olarak ayırt edebilir;
+  uygulamalı önem ayrıca değerlendirilmelidir.
+\end{itemize}
+
+\section*{Alıştırmalar}
+
+\begin{enumerate}
+  \item $H_0$ ve $H_1$ için bir eğitim araştırması örneği yazın.
+  \item \pval-değerinin ne olduğunu ve ne olmadığını açıklayın.
+  \item $H_0$ reddedilemediğinde hangi ifade kullanılmalıdır?
+  \item Aynı \pval-değeri için $\alpha=0{,}05$ ve $\alpha=0{,}01$ kararlarını karşılaştırın.
+  \item İstatistiksel anlamlılık ile uygulamalı önemin neden ayrı değerlendirilmesi gerektiğini açıklayın.
+  \item Akademik destek örneğinde güven aralığının alt sınırını uygulamalı önem bakımından yorumlayın.
+  \item $p=0{,}049$ ile $p=0{,}051$ sonuçlarının neden bütünüyle farklı kanıtlar olmadığını açıklayın.
+  \item Araştırma sorusuna uygun bir tek yönlü hipotez yazın ve yön seçimini gerekçelendirin.
+  \item Bir öğretim yönteminin ortalamayı azalttığı iddiası için hedef
+  parametreyi ve tek yönlü hipotezleri yazın.
+  \item Tahmin 62, sıfır hipotezi değeri 58 ve standart hata 2 ise test
+  istatistiğini, üst yönlü ve çift yönlü yaklaşık \pval-değerlerini bulun.
+  \item $Z=-2{,}20$ sonucunu yüzde 5 çift yönlü testte kritik değer
+  yaklaşımıyla değerlendirin.
+  \item $p=0{,}032$ sonucunda $\alpha=0{,}05$ ve $\alpha=0{,}01$ için
+  kararları ve uygun sözel ifadeleri yazın.
+  \item Etki tahmini 1,5 puan ve yüzde 95 güven aralığı $[0{,}2;2{,}8]$ iken
+  uygulamalı önem sınırı 4 puansa sonucu yorumlayın.
+  \item Fark tahmini 6 ve güven aralığı $[-1;13]$ olan bir araştırmada
+  $H_0$'ın reddedilememesinin neden ``etki yoktur'' demek olmadığını açıklayın.
+  \item $H_0:p=0{,}40$, $n=400$ ve $\hat p=0{,}45$ için sıfır hipotezi
+  altındaki standart hatayı ve test istatistiğini hesaplayın.
+  \item Aynı etki tahmininin farklı örneklem hacimlerinde farklı \pval-değerleri
+  üretmesini standart hata üzerinden açıklayın.
+\end{enumerate}

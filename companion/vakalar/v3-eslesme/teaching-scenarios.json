@@ -1,0 +1,95 @@
+{
+  "original": {
+    "first_rows": 395,
+    "final_rows": 395,
+    "accepted": true,
+    "first_invalid_ids": 0,
+    "first_duplicate_ids": [],
+    "final_invalid_ids": 0,
+    "final_duplicate_ids": [],
+    "first_only_ids": [],
+    "final_only_ids": [],
+    "matched_ids": 395,
+    "invalid_grade_matched_ids": [],
+    "complete_pairs": 395,
+    "reason": "complete_one_to_one"
+  },
+  "reversed_order_keyed_join": {
+    "first_rows": 395,
+    "final_rows": 395,
+    "accepted": true,
+    "first_invalid_ids": 0,
+    "first_duplicate_ids": [],
+    "final_invalid_ids": 0,
+    "final_duplicate_ids": [],
+    "first_only_ids": [],
+    "final_only_ids": [],
+    "matched_ids": 395,
+    "invalid_grade_matched_ids": [],
+    "complete_pairs": 395,
+    "reason": "complete_one_to_one"
+  },
+  "artificial_missing_final_row_id1": {
+    "first_rows": 395,
+    "final_rows": 394,
+    "accepted": false,
+    "first_invalid_ids": 0,
+    "first_duplicate_ids": [],
+    "final_invalid_ids": 0,
+    "final_duplicate_ids": [],
+    "first_only_ids": [
+      1
+    ],
+    "final_only_ids": [],
+    "matched_ids": 394,
+    "invalid_grade_matched_ids": [],
+    "complete_pairs": 394,
+    "reason": "unmatched_key_or_invalid_measurement"
+  },
+  "artificial_duplicate_final_id1": {
+    "first_rows": 395,
+    "final_rows": 396,
+    "accepted": false,
+    "first_invalid_ids": 0,
+    "first_duplicate_ids": [],
+    "final_invalid_ids": 0,
+    "final_duplicate_ids": [
+      1
+    ],
+    "reason": "invalid_or_duplicate_key"
+  },
+  "artificial_missing_grade_id1": {
+    "first_rows": 395,
+    "final_rows": 395,
+    "accepted": false,
+    "first_invalid_ids": 0,
+    "first_duplicate_ids": [],
+    "final_invalid_ids": 0,
+    "final_duplicate_ids": [],
+    "first_only_ids": [],
+    "final_only_ids": [],
+    "matched_ids": 395,
+    "invalid_grade_matched_ids": [
+      1
+    ],
+    "complete_pairs": 394,
+    "reason": "unmatched_key_or_invalid_measurement"
+  },
+  "artificial_extra_final_id1001": {
+    "first_rows": 395,
+    "final_rows": 396,
+    "accepted": false,
+    "first_invalid_ids": 0,
+    "first_duplicate_ids": [],
+    "final_invalid_ids": 0,
+    "final_duplicate_ids": [],
+    "first_only_ids": [],
+    "final_only_ids": [
+      1001
+    ],
+    "matched_ids": 395,
+    "invalid_grade_matched_ids": [],
+    "complete_pairs": 395,
+    "reason": "unmatched_key_or_invalid_measurement"
+  }
+}

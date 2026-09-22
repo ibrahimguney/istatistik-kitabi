@@ -1,0 +1,28 @@
+SET DECIMAL=DOT.
+GET DATA /TYPE=TXT /FILE='veri.csv' /ENCODING='UTF8'
+ /ARRANGEMENT=DELIMITED /DELCASE=LINE /DELIMITERS="," /FIRSTCASE=2
+ /VARIABLES=tekrar F8.0 ort1 F24.16 ort5 F24.16 ort30 F24.16.
+WEIGHT OFF.
+FILTER OFF.
+SPLIT FILE OFF.
+VARIABLE LEVEL tekrar (NOMINAL) ort1 ort5 ort30 (SCALE).
+VARSTOCASES /MAKE ortalama FROM ort1 ort5 ort30
+ /INDEX=sira /KEEP=tekrar /NULL=KEEP.
+RECODE sira (1=1) (2=5) (3=30) INTO hacim.
+SORT CASES BY hacim.
+SPLIT FILE LAYERED BY hacim.
+GRAPH /HISTOGRAM=ortalama.
+SPLIT FILE OFF.
+AGGREGATE OUTFILE=* /BREAK=hacim
+ /tekrar_sayisi=N(ortalama) /merkez=MEAN(ortalama) /ampirik_se=SD(ortalama).
+COMPUTE kuramsal_se=10/SQRT(hacim).
+COMPUTE varyans=100/hacim.
+COMPUTE sapma=merkez-10.
+FORMATS merkez ampirik_se kuramsal_se varyans sapma (F18.10).
+LIST hacim tekrar_sayisi merkez ampirik_se kuramsal_se varyans sapma.
+COMPUTE se25=2.
+COMPUTE se100=1.
+COMPUTE hacim_carpani=4.
+TEMPORARY.
+SELECT IF hacim=1.
+LIST se25 se100 hacim_carpani.

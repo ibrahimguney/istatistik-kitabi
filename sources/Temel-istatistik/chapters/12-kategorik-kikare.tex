@@ -1,0 +1,285 @@
+\chapter{Kategorik Veriler, Çapraz Tablolar ve Ki-Kare Testi}
+\index{kategorik veri}
+\index{çapraz tablo}
+\index{ki-kare testi}
+
+\begin{hedefler}
+Çapraz tabloyu frekans ve yüzdelerle okumak; beklenen frekansları hesaplamak;
+ki-kare testi ile Cramér $V$ sonucunu birlikte yorumlamak.
+\end{hedefler}
+
+\begin{hazirlik}
+Grup büyüklükleri çok farklıysa yalnız hücre sayılarını karşılaştırmak neden
+yanıltıcı olabilir? Satır veya sütun yüzdelerinin rolünü açıklayın.
+\end{hazirlik}
+
+\section{Kategorik veriyi özetlemek}
+\index{frekans}
+\index{satır yüzdesi}
+\index{sütun yüzdesi}
+
+Kategorik değişkenlerde temel özet frekans ve yüzdedir. İki kategorik
+değişken birlikte incelendiğinde satır ve sütun kategorilerinden oluşan çapraz
+tablo kullanılır. Grup büyüklükleri farklıysa yalnız hücre sayılarına değil,
+uygun satır veya sütun yüzdelerine bakılmalıdır.
+
+\section{Bağımsızlık hipotezi}
+\index{bağımsızlık!kategorik değişkenler}
+\index{beklenen frekans}
+
+Ki-kare bağımsızlık testinde
+\[
+H_0:\text{iki kategorik değişken bağımsızdır}
+\]
+hipotezi sınanır. Bağımsızlık altında $(i,j)$ hücresinin beklenen frekansı
+\[
+E_{ij}=\frac{R_iC_j}{N}
+\]
+ile hesaplanır. Burada $R_i$ satır, $C_j$ sütun toplamıdır.
+
+\section{Pearson ki-kare istatistiği}
+\index{Pearson ki-kare testi}
+\index{standartlaştırılmış artık}
+\index{hücre katkısı}
+
+Gözlenen ve beklenen frekanslar arasındaki standartlaştırılmış farklar
+\[
+\chi^2=\sum_i\sum_j\frac{(O_{ij}-E_{ij})^2}{E_{ij}}
+\]
+istatistiğinde birleştirilir. $r\times c$ tabloda serbestlik derecesi
+$(r-1)(c-1)$'dir \cite{degroot2012,conover1999}.
+
+Büyük $\chi^2$ değeri gözlenen tablonun bağımsızlık altında beklenen tablodan
+uzak olduğunu gösterir. Hangi hücrelerin farkı oluşturduğunu anlamak için
+standartlaştırılmış artıklar ve tablo yüzdeleri incelenir.
+
+\section{Uygulama koşulları}
+\index{ki-kare testi!beklenen frekans koşulu}
+\index{Fisher kesin testi}
+
+Gözlemler bağımsız olmalı ve beklenen frekanslar ki-kare yaklaşımı için
+yeterince büyük olmalıdır. Aynı kişinin birden çok kez sayılması bağımsızlığı
+bozar. Küçük $2\times2$ tablolarda Fisher kesin testi düşünülebilir.
+
+\section{Etki büyüklüğü}
+\index{Cramer V@Cramér $V$}
+\index{etki büyüklüğü!kategorik veri}
+
+İlişkinin büyüklüğü Cramér katsayısıyla
+\[
+V=\sqrt{\frac{\chi^2}{N\min(r-1,c-1)}}
+\]
+özetlenebilir. Anlamlı test ilişkinin güçlü veya uygulamada önemli olduğunu
+tek başına göstermez.
+
+\begin{outputguidebox}
+Çıktıda Pearson ki-kare satırını, serbestlik derecesini ve $p$-değerini
+okuyun. Beklenen frekans uyarısını, satır/sütun yüzdelerini, artıkları ve
+Cramér $V$ değerini ayrıca inceleyin.
+\end{outputguidebox}
+
+\section{Raporlama örneği}
+
+``Tercih edilen çözüm stratejisi ile öğretim yöntemi arasında ilişki bulundu,
+$\chi^2(2,N=180)=8{,}31$, $p=0{,}016$, $V=0{,}21$. Yüzdeler ve
+standartlaştırılmış artıklar farkın özellikle görsel strateji kategorisinde
+yoğunlaştığını gösterdi.''
+
+\section{Literatür veri setiyle IBM SPSS laboratuvarı}
+\index{Student Performance veri seti!ki-kare testi}
+\index{SPSS!Crosstabs komutu}
+\index{okul!başarı çapraz tablosu}
+\index{odds oranı!ki-kare uygulaması}
+\index{Cramer V@Cramér $V$!SPSS uygulaması}
+
+Bu uygulamada \emph{Student Performance} matematik dosyasındaki okul
+değişkeni ile yıl sonu başarı durumu arasındaki ilişki incelenecektir
+\cite{cortez2008data,cortezsilva2008}. Veri setinde okul iki kategoriyle
+kodlanmıştır: Gabriel Pereira (GP) ve Mousinho da Silveira (MS). Yıl sonu
+notu \texttt{G3} en az 10 olan öğrenciler başarılı, 10'un altında olanlar
+başarısız olarak sınıflandırılacaktır.
+
+Araştırma hipotezleri
+\[
+H_0:\text{okul ile başarı durumu bağımsızdır},
+\]
+\[
+H_1:\text{okul ile başarı durumu bağımsız değildir}
+\]
+biçimindedir. Analiz birimi öğrencidir ve her öğrenci çapraz tabloda yalnız
+bir hücreye katkıda bulunur.
+
+\begin{researchbox}
+Başarı durumunu iki kategoriye indirmek G3 puanları arasındaki büyüklük
+bilgisini kaybettirir. Eşik eğitim sistemindeki anlamıyla önceden
+gerekçelendirilmelidir. Ayrıca okul ile başarı arasında ilişki bulunması okulun
+nedensel etkisini göstermez; öğrenci bileşimi, önceki başarı ve okul dışı
+koşullar olası karıştırıcılardır.
+\end{researchbox}
+
+\subsection{SPSS syntax}
+
+Başarı göstergesi önce sistem eksik olarak oluşturulur; böylece eksik G3
+değerleri yanlışlıkla başarısız kategorisine atanmaz. \textbf{Crosstabs}
+komutu gözlenen ve beklenen frekansları, satır ve sütun yüzdelerini, hücre
+artıklarını, ki-kare testlerini, Cramér $V$ ve risk ölçülerini üretir.
+
+\begin{lstlisting}[language={}]
+DATASET ACTIVATE StudentMath.
+
+COMPUTE basarili=$SYSMIS.
+IF NOT MISSING(G3) basarili=(G3>=10).
+VARIABLE LABELS basarili 'Yıl sonu notu en az 10'.
+VALUE LABELS basarili 0 'Başarısız' 1 'Başarılı'.
+VALUE LABELS school
+ 'GP' 'Gabriel Pereira'
+ 'MS' 'Mousinho da Silveira'.
+VARIABLE LEVEL school basarili (NOMINAL).
+EXECUTE.
+
+CROSSTABS
+ /TABLES=school BY basarili
+ /FORMAT=AVALUE TABLES
+ /STATISTICS=CHISQ PHI RISK
+ /CELLS=COUNT EXPECTED ROW COLUMN
+        RESID SRESID ASRESID
+ /COUNT ROUND CELL.
+\end{lstlisting}
+
+Menüyle çalışmak için \textbf{Analyze $>$ Descriptive Statistics $>$
+Crosstabs} yolunda okul satır, başarı durumu sütun değişkeni olarak seçilir.
+\textbf{Statistics} bölümünde \textbf{Chi-square}, \textbf{Phi and Cramer's
+V} ve gerekirse \textbf{Risk}; \textbf{Cells} bölümünde gözlenen, beklenen,
+satır yüzdesi ve ayarlanmış standartlaştırılmış artıklar işaretlenir.
+
+\subsection{Gözlenen çapraz tablo}
+
+\begin{table}[htbp]
+\centering
+\caption{Okula göre yıl sonu başarı durumu.}
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+ & \multicolumn{2}{c}{Başarısız} & \multicolumn{2}{c}{Başarılı} & Toplam \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+Okul & $n$ & Satır \% & $n$ & Satır \% & $n$ \\
+\midrule
+GP & 113 & 32,4 & 236 & 67,6 & 349 \\
+MS & 17 & 37,0 & 29 & 63,0 & 46 \\
+\midrule
+Toplam & 130 & 32,9 & 265 & 67,1 & 395 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Grupların büyüklükleri çok farklıdır: öğrencilerin 349'u GP, 46'sı MS
+okulundadır. Bu nedenle yalnız başarılı öğrenci sayılarını, 236 ile 29'u,
+karşılaştırmak yanıltıcıdır. Okul içindeki başarı yüzdeleri karşılaştırıldığında
+GP için yüzde 67,6, MS için yüzde 63,0 elde edilir; gözlenen fark 4,6 yüzde
+puandır.
+
+\subsection{Beklenen frekanslar ve hücre artıkları}
+
+Bağımsızlık altında beklenen frekanslar şöyledir:
+
+\begin{table}[htbp]
+\centering
+\caption{Bağımsızlık altında beklenen frekanslar ve ayarlanmış artıklar.}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+ & \multicolumn{2}{c}{Başarısız} & \multicolumn{2}{c}{Başarılı} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+Okul & Beklenen & Ayarlı artık & Beklenen & Ayarlı artık \\
+\midrule
+GP & 114,861 & $-0{,}621$ & 234,139 & 0,621 \\
+MS & 15,139 & 0,621 & 30,861 & $-0{,}621$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+En küçük beklenen frekans 15,139'dur; dolayısıyla bu tabloda büyük örneklem
+Pearson ki-kare yaklaşımının beklenen frekans koşulu sağlanmaktadır. Ayarlanmış
+artıkların mutlak değerleri 2'nin oldukça altındadır. Hiçbir hücre bağımsızlık
+altında beklenenden belirgin biçimde fazla veya az görünmemektedir.
+
+\subsection{Ki-kare ve etki büyüklüğü çıktısı}
+
+\begin{table}[htbp]
+\centering
+\caption{Okul ile başarı durumu için ilişki testleri ve etki büyüklüğü.}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Ölçü & Değer & $sd$ & $p$ \\
+\midrule
+Pearson ki-kare & 0,386 & 1 & 0,534 \\
+Süreklilik düzeltmesi & 0,206 & 1 & 0,650 \\
+Fisher kesin testi & --- & --- & 0,617 \\
+Cramér $V$ & 0,031 & --- & 0,534 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Pearson sonucu $\chi^2(1,N=395)=0{,}386$, $p=0{,}534$'tür. Yüzde 5
+anlamlılık düzeyinde okul ile başarı durumu arasında ilişki bulunduğunu
+söylemek için yeterli istatistiksel kanıt yoktur. Bu sonuç iki okulun başarı
+oranlarının kesinlikle eşit olduğunu kanıtlamaz; gözlenen farkın örnekleme
+değişkenliğiyle uyumlu olduğunu gösterir.
+
+$2\times2$ tabloda Cramér $V$, mutlak phi katsayısına eşittir. $V=0{,}031$
+örneklemde çok küçük bir ilişkiye işaret eder. Etki büyüklüğü ve güven aralığı,
+yalnız $p$-değerine göre daha açık bir büyüklük değerlendirmesi sağlar.
+
+\subsection{Odds oranı}
+
+Başarı odds'u GP için $236/113$, MS için $29/17$'dir. GP'nin MS'ye göre
+başarı odds oranı
+\[
+OR=\frac{236\times17}{113\times29}\approx1{,}224
+\]
+ve yaklaşık yüzde 95 güven aralığı $[0{,}646;2{,}320]$'dir. Aralık 1'i
+içerdiğinden veriler daha düşük veya daha yüksek odds değerleriyle uyumludur;
+tek bir yön ve büyüklük hakkında kesin bir sonuç vermez.
+
+SPSS \textbf{Risk Estimate} tablosunda odds oranının yönü kategori sırasına
+bağlıdır. Yazılımın hangi satır ve sütun kategorisini paya aldığını kontrol
+etmeden yalnız sayıyı raporlamak ters yönlü yorum üretebilir. Bu nedenle
+raporda ``GP'nin MS'ye göre başarı odds'u'' gibi yön açıkça yazılmalıdır.
+
+\begin{mistakebox}
+$p=0{,}534$ iki okulun aynı olduğunu kanıtlamaz. Özellikle MS grubunda yalnız
+46 öğrenci bulunduğundan küçük veya orta büyüklükteki gerçek farklar hassas
+biçimde tahmin edilemeyebilir. Eşitlik savı için yalnız anlamlı olmayan test
+değil, önceden tanımlanmış eşdeğerlik sınırları ve yeterli örneklem gerekir.
+\end{mistakebox}
+
+\begin{outputguidebox}
+Çıktıyı şu sırayla okuyun: (1) kategori kodları ve eksikler, (2) gözlenen
+frekanslar, (3) araştırma sorusuna uygun satır veya sütun yüzdeleri,
+(4) beklenen frekansların yeterliliği, (5) Pearson ki-kare ve gerekirse Fisher
+testi, (6) ayarlanmış artıklarla farkın hangi hücrelerde yoğunlaştığı,
+(7) Cramér $V$, (8) yönü açık odds veya risk oranı ve güven aralığı,
+(9) gözlemsel tasarımın nedensellik sınırı. Yalnız ``Sig.'' değerini
+raporlamayın.
+\end{outputguidebox}
+
+\subsection{Örnek bulgu paragrafı}
+
+``GP okulundaki öğrencilerin yüzde 67,6'sı (236/349), MS okulundakilerin
+yüzde 63,0'ı (29/46) yıl sonu notunda başarı eşiğini karşılamıştır. Okul ile
+başarı durumu arasında istatistiksel olarak belirgin bir ilişki bulunmamıştır,
+$\chi^2(1,N=395)=0{,}386$, $p=0{,}534$, Cramér $V=0{,}031$. Bütün beklenen
+frekanslar 15'in üzerindedir ve ayarlanmış artıkların mutlak değeri 0,621'i
+aşmamıştır. GP'nin MS'ye göre başarı odds oranı 1,22'dir (yüzde 95 GA
+$[0{,}65;2{,}32]$). Sonuç eşitlik kanıtı veya okulun nedensel etkisi olarak
+yorumlanmamıştır.''
+
+\input{chapter-exercises/12-kategorik-kikare}
+
+\bolumkaynaklari{\cite{degroot2012,conover1999,wasserman2004,cortez2008data,cortezsilva2008}}
+
+\section*{Hatırla--Uygula--Yansıt}
+
+\begin{enumerate}
+  \item Bir çapraz tabloda neden yüzdelerin de incelenmesi gerektiğini açıklayın.
+  \item Beklenen frekans formülünü kullanarak bir hücre için hesaplama yapın.
+  \item Anlamlı genel testten sonra artıkların rolünü belirtin.
+\end{enumerate}

@@ -1,0 +1,486 @@
+\chapter{Kategorik Veriler, Çapraz Tablolar ve Ki-Kare Bağımsızlık Testine Giriş}
+\label{ch:categorical}
+
+\begin{hedefler}
+Bu bölümün sonunda:
+\begin{itemize}
+  \item çapraz tabloda araştırma sorusuna uygun satır, sütun veya toplam yüzdesini seçebilecek,
+  \item bağımsızlık altındaki beklenen frekansları, hücre katkılarını ve artıkları hesaplayabilecek,
+  \item uyum iyiliği, bağımsızlık, homojenlik ve Fisher kesin testi arasında seçim yapabilecek,
+  \item Pearson ki-kare sonucunu Cramér $V$, hücre örüntüsü ve varsayımlarla raporlayabileceksiniz.
+\end{itemize}
+\end{hedefler}
+
+\begin{prerequisitebox}
+Kategorik değişken, frekans, yüzde, bağımsızlık ve hipotez testi kavramları
+bilinmelidir. Satır ve sütun toplamlarıyla oran hesaplanabilmelidir.
+\end{prerequisitebox}
+
+\begin{hazirlik}
+İki programın başarı yüzdeleri karşılaştırılırken yalnız başarılı öğrenci
+sayılarına bakmak neden yanıltıcı olabilir? Grup büyüklüklerini kullanarak
+açıklayın.
+\end{hazirlik}
+
+Kategorik değişkenlerin ölçme düzeyi Bölüm~\ref{sec:population-data-types}'te,
+hipotez testi ve \pval-değeri yorumu Bölüm~\ref{ch:hypothesis}'te verilmiştir.
+
+\section{Kategorik veriyi özetlemek}
+
+Kategorik değişkenlerde temel özet frekans ve yüzdedir. İki kategorik
+değişken birlikte incelendiğinde satır ve sütun kategorilerinden oluşan çapraz
+tablo kullanılır. Grup büyüklükleri farklıysa yalnız hücre sayılarına değil,
+uygun satır veya sütun yüzdelerine bakılmalıdır. Kategorik veri çözümlemesinin
+kuramsal ve uygulamalı çerçevesi için bkz. \citet{agresti2019}.
+
+\section{Bağımsızlık hipotezi}
+
+Ki-kare bağımsızlık testinde
+\[
+H_0:\text{iki kategorik değişken bağımsızdır}
+\]
+hipotezi sınanır. Bağımsızlık altında $(i,j)$ hücresinin beklenen frekansı
+\[
+E_{ij}=\frac{R_iC_j}{N}
+\]
+ile hesaplanır. Burada $R_i$ satır, $C_j$ sütun toplamıdır.
+
+\begin{definitionbox}
+\textbf{Ki-kare bağımsızlık testi}, iki kategorik değişkenin ortak
+frekanslarını, değişkenler bağımsız olsaydı beklenen frekanslarla karşılaştırır.
+Genel test ilişkinin yerini ve büyüklüğünü tek başına göstermez.
+\end{definitionbox}
+
+\section{Ki-kare test ailesinde doğru soruyu seçmek}
+\label{sec:chi-choice}
+
+\textbf{Uyum iyiliği testi}, tek bir kategorik değişkenin gözlenen
+dağılımını önceden belirlenmiş oranlarla karşılaştırır. \textbf{Bağımsızlık
+testi}, tek bir evrende ölçülen iki kategorik değişkenin ilişkili olup
+olmadığını inceler. \textbf{Homojenlik testi} ise farklı evren veya gruplarda
+aynı kategorik değişkenin dağılımlarını karşılaştırır. Bağımsızlık ve
+homojenlik testlerinin hesapları aynı çapraz tablo formülünü kullanabilse de
+örnekleme tasarımları ve yorumları farklıdır.
+
+Aynı kişilerin önce ve sonra ölçüldüğü ikili kategorik veriler bağımsız
+değildir. Böyle bir durumda $2\times2$ bağımlı tablo için McNemar testi gibi
+eşleştirilmiş veriye uygun bir yöntem gerekir.
+
+\section{Pearson ki-kare istatistiği}
+\label{sec:pearson-chi}
+
+Gözlenen ve beklenen frekanslar arasındaki standartlaştırılmış farklar
+\[
+\chi^2=\sum_i\sum_j\frac{(O_{ij}-E_{ij})^2}{E_{ij}}
+\]
+istatistiğinde birleştirilir. $r\times c$ tabloda serbestlik derecesi
+$(r-1)(c-1)$'dir.
+
+Büyük $\chi^2$ değeri gözlenen tablonun bağımsızlık altında beklenen tablodan
+uzak olduğunu gösterir. Hangi hücrelerin farkı oluşturduğunu anlamak için
+standartlaştırılmış artıklar ve tablo yüzdeleri incelenir.
+
+\section{Uygulama koşulları}
+\label{sec:chi-assumptions}
+
+Gözlemler bağımsız olmalı ve beklenen frekanslar ki-kare yaklaşımı için
+yeterince büyük olmalıdır. Aynı kişinin birden çok kez sayılması bağımsızlığı
+bozar. Küçük $2\times2$ tablolarda Fisher kesin testi düşünülebilir
+\citep{agresti2018}.
+
+\section{Etki büyüklüğü}
+\label{sec:cramers-v}
+
+İlişkinin büyüklüğü Cramér katsayısıyla
+\[
+V=\sqrt{\frac{\chi^2}{N\min(r-1,c-1)}}
+\]
+özetlenebilir. Anlamlı test ilişkinin güçlü veya uygulamada önemli olduğunu
+tek başına göstermez.
+
+\begin{outputguidebox}
+Çıktıda Pearson ki-kare satırını, serbestlik derecesini ve \pval-değerini
+okuyun. Beklenen frekans uyarısını, satır/sütun yüzdelerini, artıkları ve
+Cramér $V$ değerini ayrıca inceleyin.
+\end{outputguidebox}
+
+\section{Raporlama örneği}
+
+``Tercih edilen çözüm stratejisi ile öğretim yöntemi arasında ilişki bulundu,
+$\chi^2(2,N=180)=8{,}31$, $p=0{,}016$, $V=0{,}21$. Yüzdeler ve
+standartlaştırılmış artıklar farkın özellikle görsel strateji kategorisinde
+yoğunlaştığını gösterdi.''
+
+\section{Çözümlü iki çarpı iki tablo}
+
+İki öğretim yönteminde başarı durumu Tablo~\ref{tab:teaching-success}'teki
+gibi gözlenmiş olsun.
+
+\begin{table}[H]
+\centering
+\caption{Öğretim yöntemi ve başarı durumu.}
+\label{tab:teaching-success}
+\begin{tabular}{lrrr}
+\toprule
+ & Başarılı & Başarısız & Toplam \\
+\midrule
+Yöntem A & 30 & 10 & 40 \\
+Yöntem B & 20 & 20 & 40 \\
+\midrule
+Toplam & 50 & 30 & 80 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+A--başarılı hücresinin beklenen frekansı $40\times50/80=25$'tir. Diğer
+beklenen frekanslar 15, 25 ve 15 olur. Pearson testi
+$\chi^2(1,N=80)=5{,}33$, $p=0{,}021$ sonucunu verir. Etki büyüklüğü
+\[
+V=\sqrt{5{,}33/80}=0{,}26
+\]
+olarak bulunur. A yönteminde başarı oranı yüzde 75, B yönteminde yüzde 50'dir.
+İlişki istatistiksel olarak desteklenmektedir; nedensel yorum için yöntemlere
+atama sürecinin de incelenmesi gerekir.
+
+\subsection{Yüzdeler ve hücre katkıları}
+
+Araştırma sorusu yöntemler içindeki başarı oranlarını karşılaştırdığı için
+satır yüzdeleri kullanılır: A yönteminde $30/40=0{,}75$, B yönteminde
+$20/40=0{,}50$. Yalnız ``başarılı öğrencilerin 30'u A yöntemindedir'' demek,
+grup büyüklükleri farklı olduğunda yanıltıcı olabilir.
+
+Her hücrenin ki-kare toplamına katkısı $(O-E)^2/E$ ile bulunur ve
+Tablo~\ref{tab:chi-cell-contributions}'de ayrı ayrı gösterilir.
+
+\begin{table}[H]
+\centering
+\caption{Gözlenen, beklenen ve Pearson katkıları.}
+\label{tab:chi-cell-contributions}
+\begin{tabular}{llrrr}
+\toprule
+Yöntem & Sonuç & $O$ & $E$ & $(O-E)^2/E$ \\
+\midrule
+A & Başarılı   & 30 & 25 & 1,00 \\
+A & Başarısız  & 10 & 15 & 1,67 \\
+B & Başarılı   & 20 & 25 & 1,00 \\
+B & Başarısız  & 20 & 15 & 1,67 \\
+\midrule
+ & Toplam & & & 5,33 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Şekil~\ref{fig:chi-residuals}'in temelini oluşturan Pearson artığı
+\[
+r_{ij}=\frac{O_{ij}-E_{ij}}{\sqrt{E_{ij}}}
+\]
+ile tanımlanır. Bu değerler sırasıyla yaklaşık $1{,}00$, $-1{,}29$,
+$-1{,}00$ ve $1{,}29$'dur. Bu örnekte hiçbir tek hücre olağanüstü büyük bir
+artık üretmemekte; genel fark dört hücreye dağılmaktadır. Daha büyük tablolarda
+artıklar hangi kategori birleşimlerinin genel ilişkiye yön verdiğini anlamada
+özellikle önemlidir.
+
+Pearson artıkları genel tanı için yararlıdır. Satır ve sütun oranlarını da
+dikkate alan düzeltilmiş standartlaştırılmış artık
+\[
+r_{ij}^{\ast}=\frac{O_{ij}-E_{ij}}
+{\sqrt{E_{ij}(1-R_i/N)(1-C_j/N)}}
+\]
+ile hesaplanabilir. Mutlak değeri yaklaşık 2'yi aşan artıklar, genel ilişkinin
+hangi hücrelerde yoğunlaşabileceğine işaret eder. Çok sayıda hücre ayrı ayrı
+incelendiğinde yanlış pozitif yorum riski arttığından artıklar mekanik birer
+hipotez testi gibi kullanılmamalıdır.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[x=1.55cm,y=1.0cm]
+  \draw[->,PrismGray] (0.2,0)--(5.2,0);
+  \draw[->,PrismGray] (0.5,-2.4)--(0.5,2.5)
+    node[above,font=\scriptsize]{Pearson artığı};
+  \draw[PrismGray,dashed] (0.5,2)--(5.0,2);
+  \draw[PrismGray,dashed] (0.5,-2)--(5.0,-2);
+  \fill[PrismBlue!78] (0.8,0) rectangle (1.5,1.00);
+  \fill[PrismWarnOrange!88!black] (1.9,0) rectangle (2.6,-1.29);
+  \fill[PrismWarnOrange!88!black] (3.0,0) rectangle (3.7,-1.00);
+  \fill[PrismBlue!78] (4.1,0) rectangle (4.8,1.29);
+  \node[below,align=center,font=\tiny] at (1.15,-0.08) {A\\başarılı};
+  \node[above,align=center,font=\tiny] at (2.25,0.08) {A\\başarısız};
+  \node[above,align=center,font=\tiny] at (3.35,0.08) {B\\başarılı};
+  \node[below,align=center,font=\tiny] at (4.45,-0.08) {B\\başarısız};
+  \node[left,font=\tiny] at (0.45,2) {$+2$};
+  \node[left,font=\tiny] at (0.45,-2) {$-2$};
+\end{tikzpicture}
+\caption{Çözümlü çapraz tablodaki hücrelerin Pearson artıkları.}
+\label{fig:chi-residuals}
+\end{figure}
+
+\Needspace{10\baselineskip}
+\begin{assumptionbox}
+Ki-kare testi frekanslara uygulanır; yüzde veya ortalamalar doğrudan hücre
+sayısı gibi kullanılamaz. Her gözlem yalnız bir hücreye katkı vermeli ve
+beklenen frekansların dağılımı yaklaşımı desteklemelidir. Aynı öğrencinin iki
+zamandaki kategorik yanıtları bağımsızlık testi için bağımsız gözlemler değildir.
+\end{assumptionbox}
+
+\begin{mistakebox}
+Anlamlı ki-kare sonucu ilişkinin yönünü tek başına göstermez. Hangi grupta
+hangi kategorinin daha sık olduğunu anlamak için satır veya sütun yüzdeleri
+ile hücre artıklarının incelenmesi gerekir.
+\end{mistakebox}
+
+\Needspace{26\baselineskip}
+\begin{softwarebox}
+SPSS'te \emph{Analyze $>$ Descriptive Statistics $>$ Crosstabs}; Python'da
+\texttt{scipy.stats.chi2\_contingency}; R'de \texttt{chisq.test} kullanılabilir.
+Yates düzeltmesi gibi yazılım varsayılanları nedeniyle küçük sayısal farklar
+oluşabileceğinden kullanılan seçenek raporda belirtilmelidir.
+
+\begin{lstlisting}
+import numpy as np
+from scipy import stats
+
+observed = np.array([[30, 10],
+                     [20, 20]])
+chi2, p, dof, expected = stats.chi2_contingency(
+    observed, correction=False)
+contribution = (observed - expected)**2 / expected
+residual = (observed - expected) / np.sqrt(expected)
+cramers_v = np.sqrt(chi2 / observed.sum())
+
+print(chi2, p, dof, cramers_v)
+print(expected)
+print(contribution, residual)
+\end{lstlisting}
+\end{softwarebox}
+
+\section{Sonuçtan araştırma kararına}
+
+Anlamlı bir ki-kare sonucu iki değişken arasında evrensel ve değişmez bir
+ilişki bulunduğunu göstermez. Örnekleme yöntemi, eksik gözlemler, kategori
+tanımları ve olası karıştırıcı değişkenler değerlendirilmelidir. Ayrıca
+ilişkinin eğitimsel önemini anlayabilmek için grup yüzdeleri ve $V$ değeri
+test sonucuyla birlikte sunulmalıdır.
+
+\section{Çözümlü problemler}
+
+\subsection*{Problem 1: Araştırma sorusuna uygun testi seçme}
+
+Aşağıdaki araştırma durumlarının her biri için uygun yöntemi belirleyin.
+
+\begin{enumerate}[label=\alph*)]
+  \item Öğrencilerin seçtiği üç öğrenme biçiminin oranları yüzde 50, yüzde 30
+  ve yüzde 20 biçimindeki kuramsal dağılımla karşılaştırılıyor.
+  \item Okul türü ile tercih edilen öğrenme biçiminin ilişkisi tek bir öğrenci
+  örnekleminde inceleniyor.
+  \item Üç farklı üniversitedeki öğrencilerin aynı memnuniyet kategorilerine
+  dağılımları karşılaştırılıyor.
+  \item Aynı öğrencilerin bir eğitimden önce ve sonra başarılı/başarısız
+  durumları karşılaştırılıyor.
+\end{enumerate}
+
+\textbf{Çözüm.} İlk durumda tek kategorik değişken gözlenen oranlarla
+karşılaştırıldığı için ki-kare uyum iyiliği testi uygundur. İkinci durumda
+aynı örneklemdeki iki kategorik değişken için ki-kare bağımsızlık testi,
+üçüncü durumda farklı grupların dağılımlarını karşılaştırmak için ki-kare
+homojenlik testi kullanılır. Dördüncü durumda ölçümler aynı öğrencilere ait
+olduğundan bağımsızlık koşulu sağlanmaz; ikili sonuçlar için McNemar testi
+düşünülmelidir.
+
+\textbf{Sık hata.} Bir tablonun $2\times2$ olması tek başına Pearson ki-kare
+testini uygun kılmaz. Gözlemlerin bağımsız mı, eşleştirilmiş mi olduğu veri
+toplama tasarımından belirlenir.
+
+\subsection*{Problem 2: $2\times2$ tabloda tam Pearson çözümü}
+
+Tablo~\ref{tab:teaching-success}'teki Yöntem A ve Yöntem B verilerini
+kullanarak bütün beklenen
+frekansları, Pearson ki-kare değerini, serbestlik derecesini ve Cramér $V$
+değerini hesaplayın.
+
+\textbf{Çözüm.} Satır toplamları 40 ve 40, sütun toplamları 50 ve 30,
+genel toplam 80'dir. Beklenen tablo
+\[
+\begin{pmatrix}
+40(50)/80 & 40(30)/80\\
+40(50)/80 & 40(30)/80
+\end{pmatrix}
+=
+\begin{pmatrix}25&15\\25&15\end{pmatrix}
+\]
+olur. Hücre katkılarının toplamı
+\[
+\chi^2=\frac{(30-25)^2}{25}+\frac{(10-15)^2}{15}
++\frac{(20-25)^2}{25}+\frac{(20-15)^2}{15}=5{,}33
+\]
+ve serbestlik derecesi $(2-1)(2-1)=1$'dir. Çift yönlü Pearson sonucu
+$p\approx0{,}021$ verir. Etki büyüklüğü
+\[
+V=\sqrt{\frac{5{,}33}{80}}\approx0{,}26
+\]
+olarak bulunur. Yöntem içi başarı yüzdeleri sırasıyla yüzde 75 ve yüzde
+50'dir. Test ilişkiye ilişkin kanıt verir; ilişkinin yönü ve uygulamalı anlamı
+yüzdelerden okunmalıdır.
+
+\subsection*{Problem 3: Üç çarpı iki tabloda artık analizi}
+
+Üç öğretim yaklaşımında öğrencilerin görsel veya sözel strateji tercihleri
+aşağıdaki gibi gözlenmiştir:
+\[
+\begin{array}{c|rr|r}
+ & \text{Görsel} & \text{Sözel} & \text{Toplam}\\ \hline
+A&40&20&60\\
+B&30&30&60\\
+C&20&40&60\\ \hline
+\text{Toplam}&90&90&180
+\end{array}
+\]
+Beklenen frekansları, test sonucunu, Cramér $V$ değerini ve hücre örüntüsünü
+yorumlayın.
+
+\textbf{Çözüm.} Her satır toplamı 60 ve her sütun toplamı 90 olduğundan bütün
+hücrelerin beklenen frekansı $60(90)/180=30$'dur. A ve C satırlarındaki dört
+dış hücrenin her biri $100/30=3{,}33$, B satırındaki hücreler ise sıfır katkı
+verir. Böylece
+\[
+\chi^2=13{,}33,\qquad sd=(3-1)(2-1)=2,
+\qquad p\approx0{,}0013.
+\]
+Cramér katsayısı
+\[
+V=\sqrt{\frac{13{,}33}{180\min(2,1)}}\approx0{,}27
+\]
+olur. Pearson artıkları A--görsel ve C--sözel hücrelerinde yaklaşık $+1{,}83$,
+A--sözel ve C--görsel hücrelerinde $-1{,}83$'tür. Düzeltilmiş artıkların
+mutlak değeri bu dört hücrede yaklaşık 3,16'dır. A grubunda görsel, C grubunda
+sözel tercihin bağımsızlık altında beklenenden fazla olduğu; B grubunun ise
+beklenen dağılıma uyduğu görülür.
+
+\subsection*{Problem 4: Küçük beklenen frekansta Fisher kesin testi}
+
+Yirmi öğrencilik küçük bir çalışmada sonuçlar
+\[
+\begin{array}{c|rr}
+ & \text{Başarılı} & \text{Başarısız}\\ \hline
+A&1&9\\
+B&7&3
+\end{array}
+\]
+biçimindedir. Pearson yaklaşımının koşullarını ve uygun analizi değerlendirin.
+
+\textbf{Çözüm.} Bağımsızlık altında beklenen tablo
+\[
+\begin{pmatrix}4&6\\4&6\end{pmatrix}
+\]
+olur. Dört hücrenin ikisinde beklenen frekans 5'in altındadır. Bu küçük
+$2\times2$ tabloda asimptotik Pearson yaklaşımına güvenmek yerine Fisher kesin
+testi tercih edilir. İki yönlü Fisher testi yaklaşık $p=0{,}020$ verir.
+Örneklemde başarı oranları A grubunda yüzde 10, B grubunda yüzde 70'tir.
+
+Fisher testi küçük hücre sorununu ele alır; gözlemlerin bağımsız olmaması,
+yanlı örnekleme veya gruplara sistematik atama gibi tasarım sorunlarını
+düzeltmez. Ayrıca odds oranının hangi grup ve sonuç yönünde tanımlandığı açıkça
+belirtilmelidir.
+
+\subsection*{Problem 5: Uyum iyiliği testi}
+
+Yüz yirmi öğrencinin tercih ettiği öğrenme biçiminin eşit oranlarda olması
+beklenmektedir. Gözlenen frekanslar yüz yüze için 54, karma için 42 ve çevrim
+içi için 24'tür. Eşit dağılım hipotezini sınayın ve etkinin kaynağını açıklayın.
+
+\textbf{Çözüm.} Üç kategori eşit bekleniyorsa her kategorinin beklenen
+frekansı $120/3=40$'tır. Test istatistiği
+\[
+\chi^2=\frac{(54-40)^2}{40}+\frac{(42-40)^2}{40}
++\frac{(24-40)^2}{40}=4{,}90+0{,}10+6{,}40=11{,}40
+\]
+ve serbestlik derecesi $3-1=2$ olur. \pval-değeri yaklaşık 0,0033'tür; eşit
+dağılım hipotezi reddedilir. Pearson artıkları yüz yüze, karma ve çevrim içi
+için sırasıyla yaklaşık 2,21, 0,32 ve $-2{,}53$'tür. Fark özellikle yüz yüze
+tercihin beklenenden fazla, çevrim içi tercihin beklenenden az olmasından
+kaynaklanmaktadır.
+
+Burada beklenen oranların veri görüldükten sonra eşit seçilmemiş olması;
+kuram, önceki bilgi veya araştırma tasarımıyla önceden gerekçelendirilmesi
+gerekir.
+
+\subsection*{Problem 6: Yazılım çıktısını bütüncül yorumlama}
+
+Bir yazılım çıktısında $3\times2$ tablo için
+$\chi^2(2,N=240)=7{,}68$, $p=0{,}021$ ve $V=0{,}18$ verilmiştir. Hücrelerin
+yüzde 16,7'sinde beklenen frekans 5'in altında, en küçük beklenen frekans
+3,8'dir. Düzeltilmiş artıkların en büyüğü 2,7'dir. Sonucu değerlendirin.
+
+\textbf{Çözüm.} Genel test, iki kategorik değişkenin bağımsız olmadığına
+ilişkin yüzde 5 düzeyinde kanıt sunmaktadır. $V=0{,}18$ ilişkinin büyüklüğünü
+özetler; ancak küçük, orta veya büyük gibi etiketler araştırma bağlamından
+bağımsız kullanılmamalıdır. En büyük mutlak düzeltilmiş artık 2,7 olduğundan
+genel ilişkinin belirli bir hücrede yoğunlaştığı düşünülebilir; yönü söylemek
+için artığın işareti ve ilgili satır/sütun yüzdesi görülmelidir.
+
+Beklenen frekans özeti tamamen göz ardı edilmemelidir. Hücrelerin yüzde
+16,7'sinin 5'in altında olması yaygın öğretici kuraldaki yüzde 20 sınırının
+altında kalsa da en küçük değerin 3,8 olması tablo yapısı ve örnekleme planıyla
+birlikte değerlendirilmelidir. Gerekirse kategorilerin bilimsel anlamı
+bozulmadan birleştirilmesi, kesin veya Monte Carlo \pval-değeri gibi duyarlılık
+analizleri raporlanabilir. Yalnız \pval-değerine dayanarak ilişkinin güçlü ya da
+nedensel olduğu söylenemez.
+
+\begin{outputguidebox}
+Çapraz tablo çıktısını okurken önce gözlenen frekanslarla satır veya sütun
+yüzdelerini, sonra beklenen frekans uyarılarını inceleyin. Pearson değerini,
+serbestlik derecesini ve \pval-değerini Cramér $V$ ile birlikte raporlayın. Genel
+test anlamlıysa ilişkinin nerede yoğunlaştığını artıklar üzerinden, yönünü ise
+yüzdeler üzerinden açıklayın.
+\end{outputguidebox}
+
+\input{chapters/spss/b12}
+
+\input{chapters/r/b12}
+
+\begin{etkinlik}
+Bir ki-kare sonucunu kapatmadan önce kontrol edin: Doğru yüzde yönü seçildi mi?
+Beklenen frekanslar yeterli mi? Farkı hangi hücreler taşıyor? Cramér $V$ ve
+tasarım sınırı raporlandı mı?
+\end{etkinlik}
+
+\section{Bölüm özeti}
+
+\begin{itemize}
+  \item Çapraz tablo frekanslarla kurulur; yorum araştırma sorusuna uygun yüzdelerle yapılır.
+  \item Beklenen frekanslar satır ve sütun toplamlarından bağımsızlık altında hesaplanır.
+  \item Pearson istatistiği hücre katkılarının toplamıdır; artıklar farkın kaynağını gösterir.
+  \item Cramér $V$, ilişkinin büyüklüğünü örneklem hacminden ayrı değerlendirmeye yardım eder.
+  \item Uyum iyiliği, bağımsızlık ve homojenlik testleri benzer hesaplar
+  kullansa da farklı araştırma sorularını yanıtlar.
+  \item Küçük $2\times2$ tablolarda Fisher kesin testi, eşleştirilmiş ikili
+  verilerde ise McNemar testi gibi tasarıma uygun yöntemler düşünülmelidir.
+\end{itemize}
+
+\bolumkaynaklari{\cite{agresti2018,agresti2019}}
+
+\section*{Alıştırmalar}
+
+\begin{enumerate}
+  \item Bir çapraz tabloda neden yüzdelerin de incelenmesi gerektiğini açıklayın.
+  \item Beklenen frekans formülünü kullanarak bir hücre için hesaplama yapın.
+  \item Anlamlı genel testten sonra artıkların rolünü belirtin.
+  \item Çözümlü tabloda Yöntem A--başarısız hücresinin beklenen değerini hesaplayın.
+  \item Ki-kare sonucunun neden tek başına nedensel etki göstermediğini açıklayın.
+  \item Çözümlü örnekte dört hücre katkısını toplayarak $\chi^2$ değerini doğrulayın.
+  \item Aynı öğrencilerin dönem başı ve dönem sonu tercihlerini incelemek için bağımsızlık varsayımını tartışın.
+  \item Anlamlı ki-kare sonucunda Cramér $V$ değerinin neden gerekli olduğunu açıklayın.
+  \item Uyum iyiliği, bağımsızlık ve homojenlik testlerine birer araştırma
+  sorusu örneği verin.
+  \item Satır toplamı 50, sütun toplamı 80 ve genel toplamı 200 olan bir
+  hücrenin bağımsızlık altındaki beklenen frekansını bulun.
+  \item $3\times4$ çapraz tablonun serbestlik derecesini hesaplayın.
+  \item $\chi^2=12$, $N=300$ ve $2\times3$ tablo için Cramér $V$ değerini bulun.
+  \item Beklenen frekansları 3, 7, 12 ve 18 olan $2\times2$ tabloda Pearson
+  yaklaşımının uygunluğunu tartışın.
+  \item Aynı öğrencilerin dönem başı ve sonundaki başarılı/başarısız
+  durumları için neden McNemar testinin düşünülmesi gerektiğini açıklayın.
+  \item Mutlak düzeltilmiş artığı 3,1 olan bir hücrenin ne gösterdiğini ve ne
+  göstermediğini belirtin.
+  \item Anlamlı ki-kare sonucu ve $V=0{,}06$ bulunan çok büyük bir örneklemi
+  istatistiksel ve uygulamalı önem bakımından yorumlayın.
+\end{enumerate}

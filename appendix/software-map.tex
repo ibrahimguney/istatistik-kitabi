@@ -1,0 +1,89 @@
+\chapter{Yazılım Haritası: Python, SPSS ve R}
+\label{app:software-map}
+
+Bu ek, bölüm sonlarına eklenen R ile çözümlü uygulamaları tamamlayan kısa bir eşleştirme haritasıdır. Her bölüm kendi R kodunu, kontrol değerlerini ve yorumunu içerir; buradaki tablo temel analizlere karşılık gelen fonksiyon ailelerini topluca gösterir.
+Kitapta kullanılan başlıca açık kaynak altyapılar NumPy, SciPy, pandas,
+Matplotlib ve statsmodels'dır \citep{harris2020,virtanen2020,mckinney2022,hunter2007,seabold2010};
+R tarafındaki veri düzenleme yaklaşımı için ayrıca bkz. \citet{wickham2017}.
+
+\begin{table}[H]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.08}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{0.16\textwidth}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{Konu} & \textbf{Python} & \textbf{SPSS yolu} & \textbf{R eşdeğeri} \\
+\midrule
+Tanımlayıcı istatistikler & \texttt{pandas}, \texttt{numpy} & Analyze $>$ Descriptive Statistics & \texttt{summary}, \texttt{mean}, \texttt{sd} \\
+Eksik veri denetimi & \texttt{isna}, \texttt{MICEData} & Missing Value Analysis / Multiple Imputation & \texttt{is.na}, \texttt{mice} \\
+Örnekleme benzetimi & \texttt{numpy.random} & Transform / benzetim sözdizimi & \texttt{sample}, \texttt{rnorm}, \texttt{replicate} \\
+\ifimoders\else
+Bootstrap & \texttt{numpy.random.choice} & Bootstrap veya yeniden örnekleme eklentileri & \texttt{boot}, \texttt{replicate} \\
+Rastgeleleştirme testi & \texttt{numpy.random} & Randomization/Exact Tests & \texttt{sample}, \texttt{coin} \\
+\fi
+
+Ortalama için güven aralığı & \texttt{scipy.stats.t} & Explore / One-Sample T Test & \texttt{t.test} \\
+Tek örneklem ve iki örneklem testleri & \texttt{ttest\_1samp}, \texttt{ttest\_ind} & Compare Means & \texttt{t.test} \\
+Doğrusal regresyon & \texttt{linregress} & Analyze $>$ Regression $>$ Linear & \texttt{lm}, \texttt{summary.lm} \\
+\ifimoders\else
+Çoklu regresyon & \texttt{statsmodels.OLS} & Analyze $>$ Regression $>$ Linear & \texttt{lm}, \texttt{car::vif} \\
+Tek yönlü ANOVA & \texttt{f\_oneway} & Analyze $>$ Compare Means $>$ One-Way ANOVA & \texttt{aov} \\
+Welch ANOVA & \texttt{anova\_generic} & One-Way ANOVA $>$ Welch & \texttt{oneway.test} \\
+Çoklu karşılaştırma & \texttt{tukey\_hsd} & One-Way ANOVA $>$ Post Hoc & \texttt{TukeyHSD}, \texttt{pairwise.t.test} \\
+\fi
+
+Ki-kare testi & \texttt{scipy.stats} & Crosstabs & \texttt{chisq.test} \\
+Fisher kesin testi & \texttt{scipy.stats} & Exact Tests & \texttt{fisher.test} \\
+Korelasyon & \texttt{pearsonr} & Analyze $>$ Correlate $>$ Bivariate & \texttt{cor.test} \\
+Spearman korelasyonu & \texttt{spearmanr} & Bivariate Correlations $>$ Spearman & \texttt{cor.test} (Spearman yöntemi) \\
+Mann--Whitney / Wilcoxon & \texttt{mannwhitneyu}, \texttt{wilcoxon} & Nonparametric Tests & \texttt{wilcox.test} \\
+Kruskal--Wallis & \texttt{kruskal} & Independent Samples $>$ Kruskal--Wallis & \texttt{kruskal.test} \\
+Cronbach alfa & \texttt{numpy}/\texttt{pandas} ile formül & Analyze $>$ Scale $>$ Reliability Analysis & temel R formülü, \texttt{psych::alpha} \\
+Omega & faktör modeli & Ek yazılım gerekir & \texttt{psych::omega} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section*{Asgari R Raporlama Şablonu}
+
+Tekrarlanabilir bir R analizi; veri kaynağını, temizleme kararlarını, paket sürümlerini, rassal tohum değerini, model formülünü, tanı kontrollerini ve tablo ile şekilleri üreten tam kodu kaydetmelidir. Asgari bir proje betiği çoğu zaman şöyle başlar:
+
+\begin{lstlisting}[style=prismR]
+set.seed(2026)
+sessionInfo()
+veri <- data.frame(saat = c(2, 3, 4, 5, 6),
+                   puan = c(58, 62, 65, 69, 70))
+model <- lm(puan ~ saat, data = veri)
+summary(model)
+confint(model)
+plot(model)
+\end{lstlisting}
+
+Bu şablondaki beş satır öğretim amaçlıdır; dış dosya gerekmez. Bölümlerdeki
+R ile çözümlü öğretim uygulamaları kod içindeki girdilerle bağımsız çalışır; ortak gerçek veri uygulamaları ise eşlikçi CSV dosyasını okur. Haritadaki ek paket seçenekleri zorunlu değildir; bölüm çözümlerinde standart kurulumdaki işlevler kullanılır.
+
+\section*{Çeviri İlkesi}
+
+Python, SPSS ve R arasında geçiş yaparken önce araştırma sorusunu ve hedef
+büyüklüğü, sonra veri yapısını, en son yazılım fonksiyonunu eşleştirin. Benzer
+menü adları aynı varsayılanların kullanıldığı anlamına gelmez: eksik veri
+işlemleri, eşit varyans seçimi, süreklilik düzeltmesi ve kesin test seçenekleri
+çıktılar karşılaştırılmadan önce denetlenmelidir.
+
+\section*{Eşlikçi paketi yeniden üretme}
+
+Kitabın gerçek veri örnekleri \texttt{companion/} klasöründedir. Temiz veri,
+sayısal tablolar, örnekleme benzetimleri ve grafikler şu komutla yeniden
+oluşturulur:
+\begin{center}
+\ifimoders
+\texttt{python companion/code/run\_imo301.py}
+\else
+\texttt{python companion/code/run\_all.py}
+\fi
+\end{center}
+Çalışma sonunda yazılım sürümleri \texttt{environment.txt} dosyasına
+kaydedilir. Üretilen dosyaların bütünlük özetleri ise
+\texttt{manifest\_sha256.csv} içinde tutulur. Bir analiz sonucu paylaşılırken
+kullanılan kitap baskısı, veri paketi sürümü ve kaynak veri birlikte
+belirtilmelidir.

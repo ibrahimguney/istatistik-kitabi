@@ -1,0 +1,45 @@
+\section{R ile test gücü ve tek örneklem testi}
+\label{sec:r-b10}
+
+\textbf{Soru.} $n=25$, $\bar x=55$, $s=10$ için referans ortalama 50'yi
+çift yönlü test edin. Ayrıca veri toplanmadan önce gerçek farkın 5, evren
+standart sapmasının 10 olduğu varsayımıyla $n=34$ için gücü hesaplayın.
+
+\begin{lstlisting}[style=prismR]
+hacim <- 25
+ortalama <- 55
+standart_sapma <- 10
+referans <- 50
+standart_hata <- standart_sapma / sqrt(hacim)
+t_degeri <- (ortalama - referans) / standart_hata
+p_degeri <- 2 * pt(abs(t_degeri), df = hacim - 1,
+                   lower.tail = FALSE)
+aralik <- ortalama + c(-1, 1) *
+  qt(0.975, df = hacim - 1) * standart_hata
+c(t = t_degeri, p = p_degeri,
+  d = (ortalama - referans) / standart_sapma)
+aralik
+power.t.test(n = 34, delta = 5, sd = 10,
+             sig.level = 0.05, type = "one.sample",
+             alternative = "two.sided", strict = TRUE)
+plan <- power.t.test(delta = 5, sd = 10, power = 0.80,
+                     sig.level = 0.05, type = "one.sample",
+                     alternative = "two.sided", strict = TRUE)
+ceiling(plan$n)
+\end{lstlisting}
+
+\begin{outputguidebox}
+\textbf{Çözüm ve kontrol değerleri.} $t(24)=2{,}50$, $p=0{,}01965$,
+$d=0{,}50$ ve yüzde 95 güven aralığı $[50{,}8722;59{,}1278]$'dir.
+Planlama varsayımları altında 34 gözlemin gücü yaklaşık 0,8078'dir.
+Yüzde 80 hedef güç için hesaplanan hacim yukarı yuvarlandığında 34 bulunur.
+\end{outputguidebox}
+
+\textbf{Yorum.} \texttt{strict = TRUE} çift yönlü testin iki ret bölgesini
+de güç hesabına katar. Güç hesabındaki 5 puan ve 10 puan önceden gerekçelenmiş
+planlama değerleri olmalıdır; gözlenen anlamlılığı yeniden ifade eden
+``gözlenen güç'' olarak sunulmamalıdır.
+
+\textbf{Pekiştirme ve yanıt.} Tip II hata olasılığı bu belirli alternatif
+ve tasarım altında yaklaşık $1-0{,}8078=0{,}1922$'dir. Daha küçük bir gerçek
+fark için aynı örneklem hacminin gücü daha düşük olur.

@@ -1,0 +1,70 @@
+\input{companion/vakalar/v2-nhanes/values.tex}
+\subsection{Sayısal uygulama: dosya oranı ve hedef nüfus oranı}
+\label{sec:v2-nhanes-sonuclar}
+
+Kaynakta \VtwoN{} kişi kaydı vardır; bunların \VtwoAdults{} tanesi
+20 yaş ve üzerinde, \VtwoOlder{} tanesi 60 yaş ve üzerindedir.
+Seçili alanlarda eksiksizlik, pozitif görüşme ağırlıkları ve 15
+tabaka--30 PSU yapısı kontrol edilmiştir. Diğer sütunların eksikleri
+nedeniyle kayıt silinmemiştir. Dosyanın sayısal kabulü, kamu dosyasının
+gizli hane seçim çerçevesini içerdiği anlamına gelmez.
+
+\begin{center}
+\begin{tabular}{@{}lr@{}}
+\toprule
+Özet & Sonuç \\
+\midrule
+Ağırlıksız yetişkin kayıt oranı & \%\VtwoUnweighted \\
+Ağırlıklı alt evren oranı & \%\VtwoWeighted \\
+Taylor standart hatası & \VtwoSE{} yüzde puan \\
+Tasarım serbestlik derecesi & \VtwoDf \\
+Yaklaşık \%95 güven aralığı & [\%\VtwoLower; \%\VtwoUpper] \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Ağırlıklı pay yaklaşık 69,596 milyon, payda 238,738 milyondur;
+bunlar dosyadaki kişi sayısı değil, görüşme ağırlıklarıyla elde edilen
+nüfus toplamı tahminleridir. Ağırlıksız oran yanıtlayıcıların bileşimini,
+ağırlıklı oran hedef alt nüfusu özetler. Farklı olmaları hesap çelişkisi
+veya iki bağımsız araştırma kanıtı değildir.
+
+\textbf{İzlenebilir varyans hesabı.} $B=\sum_iw_id_i$ ve
+$z_i=w_id_i(y_i-\widehat p_w)/B$ olsun. Tabaka $h$ içindeki PSU $j$
+için $Z_{hj}$ kişi katkılarının toplamıdır. Nihai PSU yaklaşımıyla,
+sonlu evren düzeltmesi kullanmadan,
+\[
+\widehat{\Var}(\widehat p_w)=
+\sum_h\frac{m_h}{m_h-1}\sum_j(Z_{hj}-\overline Z_h)^2
+\]
+hesaplanır. Bütün kayıtlar tasarımda kalır; çocukların alt evren
+katkıları sıfırdır. Bu veride yetişkinler bütün 15 tabaka ve 30 PSU'da
+bulunduğundan serbestlik derecesi $30-15=15$ alınır
+\citep{nchsvariance}. PSU kodları tabaka koduyla birlikte kullanılır.
+
+Aralık $\widehat p_w\pm t_{0{,}975;15}\widehat{\SE}$ biçiminde,
+yaklaşık t-Wald öğretim aralığıdır. NCHS'nin bütün oran yayımlama
+ölçütlerinin uygulandığı iddia edilmez. Kapsam veya yanıtsızlık
+yanlılığı yalnız standart hata hesabıyla ölçülmüş olmaz.
+
+\begin{researchbox}
+\textbf{Örnek rapor.} NHANES 2017--2018 görüşme ağırlıkları ve
+maskelenmiş varyans tasarımıyla, hedefteki kurum dışı sivil yetişkin
+nüfusta 60 yaş ve üzeri oranı yaklaşık \%29,15 tahmin edilmiştir
+(Taylor standart hatası 1,55 yüzde puan; yaklaşık \%95 t aralığı
+\%25,84--\%32,46). Bu tahmin bugünkü nüfusa, Türkiye'ye veya kurum
+nüfusuna doğrudan taşınamaz; nedensel etkiyi ölçmez. CDC'nin belirli
+bir resmî tahmininin tekrarı olarak sunulmaz.
+\end{researchbox}
+
+\begin{softwarebox}
+Tam duyarlıklı sonuçlar \path{companion/vakalar/v2-nhanes/results.json},
+30 PSU'nun katkıları aynı klasörde \texttt{psu.csv} içindedir.
+\texttt{export.py} çıktıları üretir; \texttt{verify\_delivery.py}
+dosya bütünlüğünü, sayısal eşleşmeyi ve kitap bağlantısını denetler.
+İkinci hesap pay/payda toplamlarının kovaryansından delta yöntemiyle
+aynı varyansa ulaşmıştır. XPT okuyucusu ve t kritik değeri ortaktır;
+R/SPSS veya bağımsız bir anket yazılımı çalıştırılmış sayılmaz.
+Sayısal eşleşme, örnekleme kapsamının veya yanıt sürecinin kusursuzluğunu
+kanıtlamaz.
+\end{softwarebox}

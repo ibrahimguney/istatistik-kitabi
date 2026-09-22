@@ -1,0 +1,23 @@
+{
+  "algorithm": "SHA-256",
+  "files": {
+    "DOGRULAMA.md": "2ccaa27baab59eaffc79322a21b3cfa8d32681c057c4c88fc7fd04355c13daea",
+    "README.md": "a38a2c07d0de7154f71dbba854722ea2f7a4e65966d1937b836f9a24a25c4171",
+    "alistirmalar.md": "907abee3210eb9f642e9ca07705eee9901010bf29f477ead9c5a26d03d2e3a82",
+    "cozumler.md": "3342ed2dbb7938cf460479f9b2d02752e83c9ffb2347bd6feed98786bad4e734",
+    "ornek-01/README.md": "f3e294dcd2dd7d8089a203c2139549c9c09279e68acedba871f624c900828728",
+    "ornek-01/analiz.sps": "1e88ae6077bacae565a41eb0e32cdd6960d54d409e5e3e53937746a975270825",
+    "ornek-01/analiz.sps.txt": "1e88ae6077bacae565a41eb0e32cdd6960d54d409e5e3e53937746a975270825",
+    "ornek-01/beklenen-sonuclar.csv": "7dbb95380bf3499c9d3278fcafd2f593b7dab567bd68c8881d2ad0eb4bc2bcb6",
+    "ornek-01/ciktilar/python/coklu-regresyon-tani.png": "d927575c9d1651fa1b70e53b465197be11b572b0daf7315b013bd7e30fffe39d",
+    "ornek-01/cozum.R": "81ffd287f163ae79e4a2bc72df83616a68c4c888b622cd881fc9f76577ce8665",
+    "ornek-01/cozum.md": "e8942b75066144f02a6db2b8b23a84d16ad3980df4d796317a1e8f7572414247",
+    "ornek-01/cozum.py": "b042b44d7b946b1a1d33f85aa7dc5eb9a5d47d1228af81e698b4bcd8620eb3f3",
+    "ornek-01/grafik-aciklamasi.md": "5fc37a97900dc2ed1e66da5b7c63519e4d9b2f68046c608470a616a23be5f89d",
+    "ornek-01/uret.py": "fb0e2f7e2df99e7c55cd0ca563f5d99c8ba7b46eb17a549ba95e8f93af401106",
+    "ornek-01/uretim-kaydi.json": "06595d60f8d61031c70660a80797ec49c2993448735d3864e0f00cbbfa0ac8d4",
+    "ornek-01/veri-sozlugu.csv": "bb5b29353b63ab5a732ea1038d3b68e1124ea93bc955a5f58c5d6bc6dceccde3",
+    "ornek-01/veri.csv": "3a199713427b6dad357013bffe805fc0b651d8771d8a74f2432b9e2607cc7763",
+    "ornek-01/yeni.csv": "673a767edec8e6adc715b651ed54d60c8dd74b5fde233394515f3231d0a7d637"
+  }
+}

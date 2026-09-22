@@ -1,0 +1,370 @@
+\chapter{İstatistiksel Düşünme ve İstatistiksel Araştırma Süreci}
+\label{ch:research}
+
+\begin{prismbox}[PrismLight]{Öğrenme çıktıları}
+Bu bölümün sonunda okuyucu bir araştırma sorusunu değişkenlere dönüştürebilecek;
+evren, örneklem, parametre ve istatistik kavramlarını ayırt edebilecek; veri
+türüne uygun bir istatistiksel çalışma planı kurabilecektir.
+\end{prismbox}
+
+\begin{prerequisitebox}
+Temel aritmetik işlemler, yüzde kavramı ve basit tablo okuma becerisi
+yeterlidir. Bu bölüm sonraki tüm bölümlerin araştırma dili ve karar
+çerçevesini kurar.
+\end{prerequisitebox}
+
+\section{İstatistik neden yalnızca hesaplama değildir?}
+
+İstatistik, eldeki sayılara bir formül uygulamaktan önce verinin nasıl
+üretildiğini sorgulayan bir düşünme biçimidir. Sağlam bir analiz şu zinciri
+izler:
+\[
+\begin{aligned}
+\text{araştırma sorusu}&\longrightarrow\text{ölçülebilir değişkenler}
+\longrightarrow\text{veri toplama tasarımı}\\
+&\longrightarrow\text{analiz}\longrightarrow\text{bağlamsal yorum}.
+\end{aligned}
+\]
+Zincirin ilk halkalarında yapılan bir hata, daha sonra kullanılan yöntem ne
+kadar gelişmiş olursa olsun giderilemez. Örneğin yalnız gönüllü öğrencilerden
+toplanan bir memnuniyet anketinde örnekleme yanlılığı varsa, çok küçük bir
+\pval-değeri bu yanlılığı ortadan kaldırmaz. Bu nedenle çağdaş istatistik
+eğitimi hesaplamadan önce araştırma sorusuna ve veri üretim sürecine ağırlık
+verir \citep{gaise2016}.
+
+\section{Temel kavramlar}
+
+\begin{definitionbox}
+\begin{description}[style=nextline,leftmargin=2.8cm,labelwidth=2.5cm]
+  \item[Evren (anakütle)] Araştırma sonucunun genellenmek istendiği bütün birimlerdir.
+  \item[Örneklem] Evrenden gözlenen veya ölçülen birimler kümesidir.
+  \item[Parametre] Evrene ait, çoğu zaman bilinmeyen sayısal özelliktir.
+  \item[İstatistik] Örneklem verisinden hesaplanan sayısal özettir.
+  \item[Değişken] Birimden birime farklı değer alabilen ölçülen özelliktir.
+\end{description}
+\end{definitionbox}
+
+Bir üniversitedeki bütün birinci sınıf öğrencilerinin matematik kaygısı
+ortalaması bir parametre, seçilen 120 öğrencinin ortalaması ise bir
+istatistiktir. İstatistik, parametre hakkında bilgi edinmek için kullanılır.
+
+\section{Değişken türleri ve ölçme düzeyleri}
+\label{sec:research-variable-types}
+
+\begin{table}[H]
+\centering
+\caption{Ölçme düzeyleri ve uygun temel özetler.}
+\label{tab:measurement-levels}
+\begin{tabular}{p{0.18\textwidth}p{0.31\textwidth}p{0.35\textwidth}}
+\toprule
+Düzey & Örnek & Uygun özetler \\
+\midrule
+Nominal & Program türü, cinsiyet kategorisi & Frekans, yüzde, mod \\
+Sıralı & Memnuniyet düzeyi, Likert maddesi & Frekans, medyan, yüzdelikler \\
+Aralık & Standartlaştırılmış test puanı & Ortalama, standart sapma, fark \\
+Oran & Süre, yaş, doğru cevap sayısı & Tüm aritmetik özetler ve oranlar \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Sayısal kod verilmesi bir değişkeni otomatik olarak nicel yapmaz. ``Hiç
+katılmıyorum'' ile ``tamamen katılıyorum'' seçeneklerine 1--5 kodlarının
+verilmesi kategoriler arasında bir sıra oluşturur; fakat tek bir madde için
+ardışık kategoriler arasındaki uzaklıkların kesinlikle eşit olduğu sonucunu
+garanti etmez.
+
+\begin{mistakebox}
+Öğrenci numarası rakamlardan oluşsa da nicel bir değişken değildir. Bu
+numaraların ortalamasını hesaplamak araştırma açısından anlam taşımaz.
+\end{mistakebox}
+
+\section{İstatistiksel araştırma döngüsü}
+\label{sec:research-cycle}
+
+\begin{enumerate}
+  \item Araştırma problemi ve hedef evren açıkça tanımlanır.
+  \item Değişkenler işlemsel olarak tanımlanır ve ölçme düzeyleri belirlenir.
+  \item Örnekleme ve veri toplama yöntemi seçilir.
+  \item Veri temizlenir; eksik, olanaksız ve aykırı değerler incelenir.
+  \item Önce grafiksel ve betimsel, sonra uygun çıkarımsal analiz yapılır.
+  \item Belirsizlik, etki büyüklüğü, sınırlılıklar ve bağlam birlikte raporlanır.
+\end{enumerate}
+Eksik verinin oluşma mekanizması ve kullanılan yöntemin açıkça raporlanması
+için bkz. \citet{little2019}.
+
+Şekil~\ref{fig:research-cycle} bu adımların birbirine nasıl bağlandığını
+gösterir. Sonuçların yeni sorular doğurması döngüyü yeniden başlatır;
+bu, aynı veride istenen sonucu bulana kadar analiz değiştirmek değildir.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  stage/.style={draw=PrismBlue,fill=PrismLight,rounded corners=2mm,
+    text width=3.65cm,minimum height=1.35cm,align=center,
+    font=\small,inner sep=5pt},
+  flow/.style={->,draw=PrismBlue,line width=0.8pt}]
+  \node[stage] (question) at (-2.55,0)
+    {\textbf{1. Araştırma sorusu}\\Kim, ne, hangi evren?};
+  \node[stage] (variables) at (2.55,0)
+    {\textbf{2. Ölçülebilir değişkenler}\\Ne, nasıl ölçülecek?};
+  \node[stage] (design) at (2.55,-1.8)
+    {\textbf{3. Veri toplama tasarımı}\\Kimlerden, hangi yöntemle?};
+  \node[stage] (cleaning) at (-2.55,-1.8)
+    {\textbf{4. Veri kontrolü}\\Eksik, hatalı,\\aykırı değerler};
+  \node[stage] (analysis) at (-2.55,-3.6)
+    {\textbf{5. Analiz}\\Grafikler, özetler\\ve çıkarım};
+  \node[stage] (report) at (2.55,-3.6)
+    {\textbf{6. Bağlamsal yorum}\\Belirsizlik ve sınırlılıklar};
+  \draw[flow] (question)--(variables);
+  \draw[flow] (variables)--(design);
+  \draw[flow] (design)--(cleaning);
+  \draw[flow] (cleaning)--(analysis);
+  \draw[flow] (analysis)--(report);
+  \draw[flow,dashed] (report.east)--(5,-3.6)--(5,1.05)
+    --(-2.55,1.05)--(question.north);
+  \node[font=\footnotesize,fill=white,inner sep=3pt] at (0,1.05)
+    {Yeni araştırma soruları};
+\end{tikzpicture}
+\caption{Araştırma sorusundan yoruma uzanan istatistiksel araştırma döngüsü.
+Kesikli ok, bulgulardan yeni bir araştırmaya geçişi gösterir.}
+\label{fig:research-cycle}
+\end{figure}
+
+\section{Örnekleme ve yanlılık}
+\label{sec:research-bias}
+
+Basit rastgele örneklemede her birimin bilinen bir seçilme şansı vardır.
+Tabakalı örneklemede önemli alt gruplar ayrı ayrı temsil edilir. Küme
+örneklemesinde doğal gruplar, örneğin sınıflar veya okullar seçilir. Kolayda
+örnekleme hızlıdır; ancak hedef evreni temsil etme gücü çoğu zaman sınırlıdır.
+
+\begin{researchbox}
+Yanlılık örneklem hacmi büyütülerek otomatik olarak giderilemez. Yanlı bir
+seçim mekanizmasından gelen 10.000 gözlem, iyi tasarlanmış daha küçük bir
+örneklemden daha yanıltıcı olabilir.
+\end{researchbox}
+
+\section{Etik ve eleştirel veri okuryazarlığı}
+
+İstatistiksel sonuçlar kişisel verilerin korunması, katılımcı onamı, eksik
+verilerin açıklanması ve analiz kararlarının şeffaflığıyla birlikte
+değerlendirilir. Yalnız anlamlı sonuçları seçerek raporlamak, korelasyonu
+nedensellik gibi sunmak veya analiz sonrasında hipotezi önceden belirlenmiş
+gibi göstermek bilimsel güvenilirliği zedeler
+\citep{asaethics2022,appelbaum2018}.
+
+\section{Çözümlü örnek: araştırma sorusundan plana}
+
+``Derse devam süresi başarı puanıyla ilişkili midir?'' sorusunda gözlem birimi
+öğrenci, açıklayıcı değişken haftalık devam süresi, yanıt değişkeni başarı
+puanıdır. Hedef evren fakültedeki ilgili dersi alan tüm öğrencilerdir. Önce
+iki nicel değişken için saçılım grafiği ve korelasyon düşünülebilir. Ancak
+çalışma gözlemselse bulunan ilişki, devam süresinin başarıya neden olduğunu
+tek başına göstermez; önceki başarı ve çalışma alışkanlığı gibi değişkenler
+iki sonucu birlikte etkileyebilir \citep{shadish2002}.
+
+\section{Yazılım uygulaması: veri yapısını tanıma}
+
+\begin{softwarebox}
+\begin{lstlisting}
+import pandas as pd
+
+data = pd.DataFrame({
+    "devam_saati": [8, 10, 7, 12, 9],
+    "basari": [68, 75, 64, 83, 72],
+    "program": ["A", "A", "B", "B", "A"]
+})
+
+print(data.info())
+print(data.describe(include="all"))
+\end{lstlisting}
+İlk çıktı değişken türlerini ve eksik değerleri, ikinci çıktı temel özetleri
+gösterir. Yazılımın atadığı türler araştırmadaki ölçme düzeyiyle ayrıca
+karşılaştırılmalıdır.
+\end{softwarebox}
+
+\begin{assumptionbox}
+İstatistiksel analizden önce her satırın hangi gözlem birimini, her sütunun
+hangi değişkeni temsil ettiği ve aynı birimin yinelenip yinelenmediği
+doğrulanmalıdır. Belirsiz veri yapısı doğru yöntem seçimini engeller.
+\end{assumptionbox}
+
+\section{Çözümlü problemler}
+
+Bu problemler araştırma sorusunu hedef evren, gözlem birimi, değişken,
+örnekleme tasarımı ve uygun ilk analiz kararlarına dönüştürme becerisini
+geliştirir. Her çözümde yalnız sonuç değil, kararın gerekçesi de gösterilir.
+
+\subsection*{Problem 1: Araştırma sorusunun bileşenleri}
+
+Bir araştırmacı, ``Ortaokul öğrencilerinin günlük ekran süresi ile matematik
+başarısı arasında ilişki var mıdır?'' sorusunu incelemek istemektedir. Hedef
+evreni, gözlem birimini, değişkenleri ve araştırma türünü belirleyin.
+
+\textbf{Çözüm.} Sonucun genellenmek istendiği topluluk araştırmanın yapıldığı
+bölgedeki ortaokul öğrencileridir; dolayısıyla hedef evren bu öğrencilerin
+tamamıdır. Her bir öğrenci bir gözlem birimidir. Günlük ekran süresi saat veya
+dakika olarak ölçülen nicel açıklayıcı değişken, matematik başarı puanı ise
+nicel yanıt değişkenidir. Öğrencilerin mevcut alışkanlıkları değiştirilmeden
+yalnız ölçüm yapılıyorsa çalışma gözlemseldir.
+
+İlk incelemede iki değişken için saçılım grafiği çizilebilir ve ilişkinin
+doğrusal olması durumunda korelasyon hesaplanabilir. Bununla birlikte gözlenen
+ilişki nedensellik kanıtı değildir. Önceki başarı, aile desteği, uyku süresi
+ve çalışma alışkanlığı gibi değişkenler hem ekran süresiyle hem başarıyla
+ilişkili olabilir.
+
+\textbf{Raporlama örneği.} ``Çalışma, bölgedeki ortaokul öğrencilerinde günlük
+ekran süresi ile matematik başarı puanı arasındaki ilişkiyi gözlemsel bir
+tasarımla incelemektedir. Bulgular ilişki göstergesi olarak yorumlanacak,
+nedensel etki iddiasında bulunulmayacaktır.''
+
+\subsection*{Problem 2: Ölçme düzeyi ve uygun özet}
+
+Bir öğrenci anketinde program türü, sınıf düzeyi, bir maddelik memnuniyet
+yanıtı, haftalık çalışma süresi ve sınav puanı kaydedilmiştir. Değişkenlerin
+ölçme düzeylerini ve uygun ilk özetlerini belirleyin.
+
+\textbf{Çözüm.}
+
+\begin{center}
+\small
+\begin{tabularx}{\textwidth}{@{}p{0.25\textwidth}p{0.22\textwidth}X@{}}
+\toprule
+Değişken & Ölçme düzeyi & Uygun ilk özet \\
+\midrule
+Program türü & Nominal & Frekans ve yüzde \\
+Sınıf düzeyi & Sıralı & Frekans, yüzde ve medyan \\
+Memnuniyet maddesi & Sıralı & Kategori yüzdeleri ve medyan \\
+Haftalık çalışma süresi & Oran & Ortalama, medyan, standart sapma ve histogram \\
+Sınav puanı & Aralık/nicel & Ortalama, standart sapma ve dağılım grafiği \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+Program türüne 1, 2 ve 3 kodları verilmiş olsa bile bu kodların ortalaması
+anlamlı değildir. Benzer biçimde tek bir Likert maddesinde 1 ile 2 arasındaki
+farkın 4 ile 5 arasındaki farka kesin olarak eşit olduğu varsayılmamalıdır.
+Çalışma süresinde gerçek bir sıfır noktası bulunduğundan ``sekiz saat, dört
+saatin iki katıdır'' yorumu anlamlıdır.
+
+\textbf{Sık hata.} Yazılımın bir sütunu tam sayı olarak tanıması, o değişkenin
+araştırma bakımından nicel olduğunu göstermez. Ölçme düzeyi kod biçiminden
+değil, değerlerin taşıdığı anlamdan belirlenir.
+
+\subsection*{Problem 3: Parametre ile istatistiği ayırma}
+
+Bir üniversitede 6.000 lisans öğrencisi bulunmaktadır. Rastgele seçilen 150
+öğrencinin haftalık çalışma süresi ortalaması 7,2 saat, standart sapması 2,4
+saat bulunmuştur. Bu araştırmada evreni, örneklemi, parametreyi ve
+istatistikleri belirleyin.
+
+\textbf{Çözüm.} Evren 6.000 lisans öğrencisinin tamamı, örneklem ise ölçüm
+yapılan 150 öğrencidir. Bütün öğrencilerin bilinmeyen ortalama çalışma süresi
+$\mu$ bir parametredir. Örneklem ortalaması $\bar{x}=7{,}2$ ve örneklem
+standart sapması $s=2{,}4$ ise örnekleme bağlı olarak değişebilen
+istatistiklerdir.
+
+7,2 saatlik değer doğrudan ``üniversitedeki öğrencilerin gerçek ortalaması''
+diye sunulmamalıdır. Bu değer $\mu$ için bir nokta tahminidir ve örnekleme
+değişkenliği içerir. Ayrıca rastgele seçildiği belirtilen öğrencilerin hangi
+listeden ve nasıl seçildiği de temsil gücü açısından açıklanmalıdır.
+
+\textbf{Raporlama örneği.} ``Rastgele seçilen 150 öğrencinin haftalık çalışma
+süresi ortalaması 7,2 saat ($s=2{,}4$) bulunmuştur. Örneklem ortalaması,
+üniversitedeki 6.000 lisans öğrencisinin bilinmeyen ortalamasını tahmin etmek
+için kullanılacaktır.''
+
+\subsection*{Problem 4: Örnekleme tasarımı ve yanlılık}
+
+Bir üniversite yönetimi uzaktan eğitim memnuniyetini ölçmek için anket
+bağlantısını yalnız üniversitenin sosyal medya hesabında paylaşmış ve üç gün
+içinde gönüllü olarak yanıt veren 2.400 öğrencinin sonuçlarını incelemiştir.
+Örneklem büyüktür. Buna rağmen hangi sorunlar ortaya çıkabilir ve tasarım
+nasıl iyileştirilebilir?
+
+\textbf{Çözüm.} Anketi yalnız sosyal medya hesabını izleyen öğrenciler
+görebildiği için örnekleme çerçevesi hedef evreni tam kapsamayabilir. Bu durum
+\emph{kapsam yanlılığı} doğurur. Katılım gönüllü olduğu için çok memnun veya
+çok memnuniyetsiz öğrenciler yanıt vermeye daha istekli olabilir; bu da
+\emph{gönüllülük yanlılığı} oluşturur. Ayrıca üç günlük süre, hesabı seyrek
+kontrol eden öğrencileri dışlayabilir.
+
+Öğrenci bilgi sistemindeki güncel kayıt listesinden olasılıklı bir örneklem
+seçmek daha uygun olur. Fakülte veya sınıf düzeylerinin yeterince temsil
+edilmesi önemliyse tabakalı örnekleme kullanılabilir. Seçilen öğrencilere
+birden fazla hatırlatma gönderilmeli, yanıt oranı ve yanıtlamayanların bilinen
+özellikleri raporlanmalıdır.
+
+2.400 kişilik büyük örneklem rastgele dalgalanmayı azaltabilir; ancak seçim
+mekanizmasının oluşturduğu sistematik yanlılığı ortadan kaldırmaz. Bu nedenle
+``büyük örneklem temsil edicidir'' sonucu geçerli değildir.
+
+\subsection*{Problem 5: Etik, veri yapısı ve analiz planı}
+
+Bir araştırma ekibi öğrencilerin psikolojik iyi oluş puanlarıyla devamsızlık
+bilgilerini birleştirmek istemektedir. Dosyada öğrenci numarası, ad, program,
+iyi oluş puanı ve devamsızlık günü vardır. Araştırma başlamadan önce hangi
+istatistiksel ve etik kararlar verilmelidir?
+
+\textbf{Çözüm.} İlk olarak araştırma sorusu ve gerçekten gerekli değişkenler
+belirlenmelidir. Ad bilgisi analiz için gerekmiyorsa çalışma dosyasından
+çıkarılmalıdır. Öğrenci numarası doğrudan kimlik belirlemeye yol açabileceği
+için rastgele bir araştırma koduyla değiştirilip eşleştirme anahtarı ayrı ve
+güvenli biçimde saklanmalıdır. Erişim yetkisi, saklama süresi, katılımcı onamı
+ve gerekli etik kurul/kurum izinleri veri toplanmadan önce planlanmalıdır.
+
+Her satırın tek bir öğrenciyi temsil edip etmediği, aynı öğrencinin birden
+fazla kaydının bulunup bulunmadığı, eksik puanların hangi kodla gösterildiği
+ve olanaksız değerlerin varlığı kontrol edilmelidir. Örneğin iyi oluş ölçeği
+0--100 aralığındaysa 140 değeri ölçüm veya veri giriş hatası olarak
+incelenmelidir; doğrudan silinmemelidir.
+
+İlk analizde değişkenlerin dağılımları ve eksik veri örüntüleri özetlenebilir,
+ardından iyi oluş ile devamsızlık arasındaki ilişki grafiksel olarak
+incelenebilir. Analiz planında hangi gözlemlerin dışlanacağı ve hangi
+yöntemlerin kullanılacağı sonuçlar görülmeden önce belirtilmelidir.
+
+\textbf{Raporlama örneği.} ``Kimlik bilgileri analiz dosyasından ayrılmış,
+doğrudan tanımlayıcılar araştırma kodlarıyla değiştirilmiştir. Veri temizleme
+kuralları analiz öncesinde belirlenmiş; eksik, yinelenen ve ölçüm aralığı
+dışındaki değerler kayıt altına alınarak incelenmiştir.''
+
+\input{chapters/spss/b01}
+
+\input{chapters/r/b01}
+
+\section{Bölüm özeti}
+
+\begin{itemize}
+  \item İstatistiksel çalışma araştırma sorusu ve veri üretim tasarımıyla başlar.
+  \item Değişken türü, kullanılabilecek grafik ve yöntemleri sınırlar.
+  \item Örneklemden evrene yapılan her genelleme belirsizlik ve olası yanlılık içerir.
+  \item Etik, şeffaflık ve nedensellik sınırları istatistiksel raporun parçasıdır.
+\end{itemize}
+
+\section*{Alıştırmalar}
+
+\begin{enumerate}
+  \item Bir eğitim araştırması sorusu yazın; hedef evreni, gözlem birimini,
+  açıklayıcı değişkeni ve yanıt değişkenini belirtin.
+  \item Okul türü, yaş, öğrenci numarası, başarı sırası ve sınav süresinin
+  ölçme düzeylerini sınıflandırın; her biri için uygun bir özet önerin.
+  \item Bir ilçedeki öğrencilerin ortalama okuma süresini inceleyen çalışmada
+  parametre ve istatistiğe birer örnek verin.
+  \item Bir çevrim içi ankette yalnız gönüllü katılımcıların kullanılmasının
+  doğurabileceği iki yanlılık kaynağını açıklayın.
+  \item Tabakalı örneklemenin basit rastgele örneklemeye tercih edilebileceği
+  bir araştırma durumu tasarlayın.
+  \item Korelasyon gözlenen bir çalışmada nedensel sonuç çıkarılmasını
+  engelleyebilecek en az iki karıştırıcı değişken önerin.
+  \item Her satırın bir sınav girişini gösterdiği veri dosyasında aynı
+  öğrencinin iki sınava girmesinin analiz birimi bakımından doğuracağı sorunu
+  açıklayın.
+  \item Eksik değerlerin 0 koduyla kaydedilmesinin ortalama ve dağılım üzerinde
+  nasıl yanıltıcı bir etki oluşturabileceğini tartışın.
+  \item Büyük bir örneklemin neden kötü bir örnekleme çerçevesini telafi
+  edemeyeceğini bir örnekle açıklayın.
+  \item Bir öğrenci veri seti için veri toplama, temizleme, analiz ve etik
+  raporlama adımlarını içeren kısa bir araştırma planı hazırlayın.
+\end{enumerate}

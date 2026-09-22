@@ -1,0 +1,888 @@
+\chapter{Kademeli Çözüm ve Değerlendirme Rehberi}
+\label{app:answer-key}
+
+Bu ek, kitabın temel konularına ilişkin seçilmiş alıştırmalar için kademeli
+çözüm desteği sunar. Konu kümeleri, iki eski kitap projesinden korunan ve
+birleşik yapıya aktarılan soru havuzunu izlediği için her bölümdeki bütün
+etkinliklerle birebir bir cevap listesi değildir. Her maddede önce çözümü
+açmadan ilerlemeyi sağlayan bir \emph{ipucu}, ardından kısa \emph{yanıt veya
+değerlendirme ölçütü} verilir. Açık uçlu sorularda örnekler tek doğru
+değildir; belirtilen temel kavramları doğru ilişkilendiren başka yanıtlar da
+kabul edilebilir. Ayrıntılı hesaplarda ara yuvarlama yerine son aşamada
+yuvarlama yapılmalıdır.
+
+\section{İstatistiksel düşünme ve araştırma süreci}
+
+\begin{enumerate}[leftmargin=*,itemsep=5pt]
+\item \emph{İpucu:} Soruyu kim, ne ve hangi sonuç biçiminde ayırın.
+\textbf{Ölçüt:} Hedef evren, tek gözlem birimi, açıklayıcı değişken ve yanıt
+değişkeni birbiriyle tutarlı biçimde tanımlanmalıdır.
+\item \emph{İpucu:} Sayı biçimine değil, değerlerin taşıdığı anlama bakın.
+\textbf{Yanıt:} Okul türü nominal; yaş ve sınav süresi oran ölçeğinde sürekli;
+öğrenci numarası nominal tanımlayıcı; başarı sırası sıralıdır. Sırasıyla
+frekans, ortalama/medyan, frekans, medyan/yüzdelik ve ortalama/medyan uygundur.
+\item \emph{İpucu:} Evren özelliği ile örneklem hesabını ayırın.
+\textbf{Yanıt:} İlçedeki bütün öğrencilerin ortalama okuma süresi $\mu$
+parametresi; seçilen öğrencilerin ortalaması $\bar x$ istatistiğidir.
+\item \emph{İpucu:} Ankete kimlerin eriştiğini ve kimlerin yanıt vermeyi
+seçtiğini düşünün. \textbf{Yanıt:} Kapsam yanlılığı ve gönüllülük/öz-seçim
+yanlılığı temel iki risktir.
+\item \emph{İpucu:} Küçük fakat önemli alt grupları düşünün.
+\textbf{Ölçüt:} Örneğin fakülte veya program düzeylerinin ayrı temsil edilmesi
+gerektiğinde her tabakadan olasılıklı seçim önerilmelidir.
+\item \emph{İpucu:} Her iki değişkeni birlikte etkileyebilecek nedenleri arayın.
+\textbf{Ölçüt:} Önceki başarı, motivasyon, aile desteği, uyku veya çalışma
+alışkanlığı gibi en az iki makul karıştırıcı verilmelidir.
+\item \emph{İpucu:} Satır sayısı ile bağımsız öğrenci sayısını ayırın.
+\textbf{Yanıt:} Aynı öğrenci iki satırla temsil edildiğinden gözlemler bağımsız
+değildir; analiz birimi sınav girişi seçilirse öğrenci içi kümelenme modellenmelidir.
+\item \emph{İpucu:} Sıfırın gerçek bir ölçüm mü yoksa kod mu olduğunu sorun.
+\textbf{Yanıt:} Kod, gerçek sıfır gibi hesaba katılırsa ortalama düşer ve yapay
+bir yığılma oluşur; eksikler ayrı eksik değer olarak tanımlanmalıdır.
+\item \emph{İpucu:} Rastgele hata ile sistematik kapsam hatasını ayırın.
+\textbf{Ölçüt:} Örneğin yalnız çevrim içi platform kullanıcılarından gelen çok
+büyük örneklemin, platformu kullanmayanları temsil etmeyeceği açıklanmalıdır.
+\item \emph{İpucu:} Süreci toplama--temizleme--analiz--raporlama olarak kurun.
+\textbf{Ölçüt:} Hedef evren ve değişkenler, onam/gizlilik, eksik ve aykırı
+değer kuralları, grafiksel inceleme, uygun çıkarım ve sınırlılıklar bulunmalıdır.
+\end{enumerate}
+
+\section{Evren, örneklem ve veri türleri}
+
+\begin{enumerate}[leftmargin=*,itemsep=5pt]
+\item \emph{İpucu:} Sonucun genelleneceği grup ile erişilebilen listeyi ayırın.
+\textbf{Ölçüt:} Örneğin bütün lise öğrencileri hedeflenirken yalnız devlet
+liselerinin kayıtlarına erişilmesi uygun bir örnektir.
+\item \emph{İpucu:} Bilinmeyen evren sayısını ve onun örneklem karşılığını yazın.
+\textbf{Ölçüt:} Aynı özellik için $\mu$--$\bar x$ veya $p$--$\hat p$ çifti
+doğru tanımlanmalıdır.
+\item \emph{İpucu:} Kategori, sıra, sayım ve ölçüm ayrımını kullanın.
+\textbf{Örnek yanıt:} Program türü nominal, memnuniyet düzeyi sıralı, doğru
+sayısı kesikli, süre sürekli değişkendir.
+\item \emph{İpucu:} Kodların aritmetik anlam taşıyıp taşımadığını sorun.
+\textbf{Yanıt:} Nominal kategori veya öğrenci numarası sayıyla kodlansa da
+fark ve ortalamaları anlamlı değildir.
+\item \emph{İpucu:} Örneklem hacmi hangi hatayı azaltır?
+\textbf{Yanıt:} Büyük $n$ rastgele örnekleme değişkenliğini azaltır; kapsam,
+gönüllülük veya yanıtlamama yanlılığını kendiliğinden gidermez.
+\item \emph{İpucu:} Üç kümeyi iç içe düşünün.
+\textbf{Ölçüt:} Hedeflenen bütün birimler, fiilen ulaşılabilen grup ve seçimde
+kullanılan somut liste ayrı ayrı belirtilmelidir.
+\item \emph{İpucu:} Aynı sınıftaki öğrencilerin ortak öğretmen ve çevresini düşünün.
+\textbf{Yanıt:} Sınıf içi benzerlik pozitif ilişki oluşturabilir; etkin bilgi
+miktarı azalır ve bağımsızlık varsayımıyla bulunan standart hata küçük kalabilir.
+\item \emph{İpucu:} $\hat p=x/n$. \textbf{Yanıt:} $\hat p=145/250=0{,}58$;
+parametre hedef evrendeki uygulamayı başarılı bulanların bilinmeyen oranı $p$'dir.
+\item \emph{İpucu:} Birey, alt grup ve doğal küme seçimlerini karşılaştırın.
+\textbf{Yanıt:} Basit rastgele seçim bireylerden; tabakalı seçim her önemli alt
+gruptan; küme seçimi sınıf/okul gibi doğal gruplardan yapılır. Amaçlar sırasıyla
+genel basitlik, temsil/hassasiyet ve saha maliyetini azaltmadır.
+\item \emph{İpucu:} Üç eğitim düzeyini tabaka kabul edin.
+\textbf{Ölçüt:} Her düzey için güncel liste, uygun tahsis kuralı ve tabaka
+içinde rastgele seçim belirtilmelidir.
+\item \emph{İpucu:} Ad, anlam, tür, kod ve geçerlilik bilgilerini düşünün.
+\textbf{Yanıt:} Değişken adı, açıklama, ölçme düzeyi/tür, birim, kodlar,
+eksik değer kodu ve geçerli aralık bilgilerinden en az beşi verilmelidir.
+\item \emph{İpucu:} Yazılım 99'u gerçek değer sayarsa ne olur?
+\textbf{Yanıt:} Ortalama ve dağılım bozulur; 99 eksik olarak tanımlanmalı,
+analiz dosyasında uygun eksik gösterimine dönüştürülmelidir.
+\end{enumerate}
+
+\section{Betimsel istatistik}
+
+\begin{enumerate}[leftmargin=*,itemsep=5pt]
+\item \emph{İpucu:} Küçük değerlerin yanına tek bir büyük değer ekleyin.
+\textbf{Örnek yanıt:} $2,3,3,4,20$ için medyan 3, ortalama 6,4'tür.
+\item \emph{İpucu:} Simetri ve aykırı değerleri değerlendirin.
+\textbf{Yanıt:} Yaklaşık simetrik, aykırısız dağılımda ortalama ile standart
+sapma; çarpık veya aykırı değerli dağılımda medyan ile IQR tercih edilir.
+\item \emph{İpucu:} Doğruluk, evrene aidiyet ve etkiyi sorgulayın.
+\textbf{Ölçüt:} Veri giriş/ölçüm hatası mı, geçerli bir alt gruba mı ait,
+sonuçları ne kadar değiştiriyor soruları bulunmalıdır.
+\item \emph{İpucu:} Toplamı 5'e bölün ve sıralı ortanca değeri bulun.
+\textbf{Yanıt:} Ortalama $5$, medyan $4$, açıklık $9-3=6$.
+\item \emph{İpucu:} Ortanca dışarıda bırakılarak iki yarının ortancalarını alın.
+\textbf{Yanıt:} Beş sayı özeti $(10,12,12{,}5,15,28)$, $IQR=3$; sınırlar
+$7{,}5$ ve $19{,}5$ olup 28 aykırı değer adayıdır.
+\item \emph{İpucu:} Ortalamayı sabit tutup merkezden uzaklıkları değiştirin.
+\textbf{Örnek yanıt:} $49,50,51$ ve $40,50,60$ ortalaması 50 olan iki settir;
+ikincisinin standart sapması daha büyüktür.
+\item \emph{İpucu:} Her frekansı 50'ye bölün.
+\textbf{Yanıt:} Yüz yüze 20 ve yüzde 40; karma 18 ve yüzde 36; çevrim içi 12
+ve yüzde 24.
+\item \emph{İpucu:} Değişken türü, sütunların teması ve eksen anlamını karşılaştırın.
+\textbf{Yanıt:} Histogram nicel aralıkları ve bitişik sınıfları, çubuk grafiği
+kategorileri ve ayrık çubukları gösterir; histogram alan/frekans dağılımını,
+çubuk uzunluğu kategori büyüklüğünü temsil eder.
+\item \emph{İpucu:} Uzun sağ kuyruk hangi özeti yukarı çeker?
+\textbf{Yanıt:} Genellikle ortalama medyandan büyüktür; tipik gelir için
+medyan ve IQR daha sağlamdır.
+\item \emph{İpucu:} $200-184$ eksik gözlemi inceleyin.
+\textbf{Yanıt:} Eksiklerin hangi değişken ve gruplarda oluştuğu, kodlanışı,
+mekanizması ve analize etkisi kontrol edilmelidir.
+\item \emph{İpucu:} Çubukların görünen uzunluklarını gerçek yüzdelerle karşılaştırın.
+\textbf{Yanıt:} Kesilmiş eksen küçük farkı büyütür; sıfır tabanlı eksen,
+doğrudan değer etiketi veya farkı açıkça gösteren uygun başka grafik kullanılmalıdır.
+\item \emph{İpucu:} Aynı istatistikleri gözlemle ve gözlemsiz hesaplayın.
+\textbf{Ölçüt:} Ortalama, medyan, standart sapma/IQR ve grafik iki durumda
+karşılaştırılmalı; çıkarma kararı veri doğruluğu ve bilimsel gerekçeyle verilmelidir.
+\end{enumerate}
+
+\section{Eksik veri ve veri kalitesi}
+
+\begin{enumerate}[leftmargin=*,itemsep=5pt]
+\item \emph{İpucu:} Gözlenmemiş olmayı sayısal değer ve uygulanabilirlikle ayırın.
+\textbf{Yanıt:} Boş hücre gerçek eksik olarak tanımlanır; 0 geçerli sıfırsa
+korunur; 99 veri sözlüğüne göre özel kodsa eksik gösterimine çevrilir; yapısal
+eksiklik ``uygulanamaz'' olarak ayrı belgelenir.
+\item \emph{İpucu:} $30/200$. \textbf{Yanıt:} Eksiklik oranı yüzde 15'tir.
+Genel oran, eksikliğin belirli grup veya düşük/yüksek puanlarda yoğunlaşmasını
+gizleyebilir.
+\item \emph{İpucu:} Eksikliğin neye bağlı olduğunu belirtin.
+\textbf{Örnek yanıt:} Formların rastgele kaybı MCAR; son-test eksikliğinin
+gözlenen başlangıç puanına bağlı olması MAR; iyileşmeyenlerin gözlenmeyen
+sonuçları nedeniyle ayrılması MNAR örneğidir.
+\item \emph{İpucu:} Miktar kadar seçiciliği düşünün.
+\textbf{Yanıt:} Küçük oran kritik bir alt grupta yoğunlaşabilir; güvenlik,
+yanlılık ve yöntem kararı mekanizma ile örüntüye bağlıdır.
+\item \emph{İpucu:} Analize giren örneklemlerin aynı olup olmadığını sorun.
+\textbf{Yanıt:} Liste bazında silme modeldeki bütün değişkenleri gözlenen tek
+altküme kullanır; çift bazında silme her özet/değişken çifti için farklı
+kayıtları kullanabilir.
+\item \emph{İpucu:} Eksik hücrelerin hepsi merkeze ekleniyor.
+\textbf{Yanıt:} Ortalama değişmeyebilir; fakat ortalamadan sıfır sapmalı yapay
+gözlemler kareli sapma toplamına katkı vermeden paydayı büyütür ve varyansı
+küçültür.
+\item \emph{İpucu:} $T=\bar U+(1+1/m)B$.
+\textbf{Yanıt:} $\bar U$ her tamamlanmış veri setindeki örnekleme belirsizliğini,
+$B$ ise makul atamalar arasındaki ek belirsizliği temsil eder.
+\item \emph{İpucu:} Sonucu ve eksikliği öngören gözlenen bilgileri düşünün.
+\textbf{Örnek yanıt:} Başlangıç puanı, program grubu, devam oranı ve önceki
+akademik başarı; zaman ve etkileşim yapısı da hedef modele göre eklenebilir.
+\item \emph{İpucu:} Gözlenmeyen sonuçları sistematik kaydırın.
+\textbf{Ölçüt:} Örneğin müdahale grubundaki atanan son-testlerin 3, 5 ve 8 puan
+daha düşük alındığı senaryolarda tahmin, aralık ve karar karşılaştırılmalıdır.
+\item \emph{İpucu:} Miktar--mekanizma--yöntem--duyarlılık sırasını kullanın.
+\textbf{Ölçüt:} Değişken bazında eksik $n$/yüzde, mekanizma varsayımı, analiz
+ve atama modeli, atama sayısı/birleştirme yöntemi ve en az bir duyarlılık
+sonucu bulunmalıdır.
+\end{enumerate}
+
+\section{Örnekleme dağılımları}
+
+\begin{enumerate}[leftmargin=*,itemsep=5pt]
+\item \emph{İpucu:} Rastgele dalgalanma ile sistematik kaymayı ayırın.
+\textbf{Yanıt:} Değişkenlik aynı yöntemle seçilen örneklemlerin farklı sonuçları;
+yanlılık ise sonuçların merkezinin gerçek parametreden sistematik uzaklığıdır.
+\item \emph{İpucu:} Gözlem birimi ile tekrar edilen istatistiği ayırın.
+\textbf{Yanıt:} Ham dağılım bireylerin puanlarını; örnekleme dağılımı çok sayıda
+örneklemden hesaplanan ortalamaları gösterir ve genellikle daha dardır.
+\item \emph{İpucu:} $\Var(\bar X)=\sigma^2/n$. \textbf{Yanıt:} $n$ ile ters
+orantılı azalır; örneklem hacmi $c$ katına çıkarsa varyans $1/c$ olur.
+\item \emph{İpucu:} $\SE=\sigma/\sqrt n$. \textbf{Yanıt:} $18/9=2$.
+\item \emph{İpucu:} Merkezdeki sistematik kaymayı düşünün.
+\textbf{Yanıt:} Büyük örneklem dağılımı daraltır fakat yanlı seçim mekanizmasının
+merkezini gerçek parametreye taşımaz.
+\item \emph{İpucu:} $\sqrt{p(1-p)/n}$. \textbf{Yanıt:}
+$\sqrt{0{,}4(0{,}6)/100}\approx0{,}049$.
+\item \emph{İpucu:} İki seçimin toplamı 10 olmalıdır.
+\textbf{Yanıt:} $(2,8),(4,6),(6,4),(8,2)$.
+\item \emph{İpucu:} Ortak sınıf etkilerini düşünün.
+\textbf{Yanıt:} Aynı öğretmen ve ortam öğrencileri benzeştirir; bağımsızlık
+varsayımı zayıflar ve sıradan standart hata küçük kalabilir.
+\item \emph{İpucu:} Ortalama için merkez değişmez.
+\textbf{Yanıt:} $\E(\bar X)=80$, $\Var(\bar X)=16^2/64=4$,
+$\SE(\bar X)=2$.
+\item \emph{İpucu:} Standart hata $1/\sqrt n$ ile değişir.
+\textbf{Yanıt:} Üçte bire indirmek için $n$ yaklaşık $3^2=9$ katına çıkarılmalıdır.
+\item \emph{İpucu:} Oran standart hatası formülünü kullanın.
+\textbf{Yanıt:} $\sqrt{0{,}6(0{,}4)/600}=0{,}02$.
+\item \emph{İpucu:} Merkez ve genişliği ayrı değerlendirin.
+\textbf{Yanıt:} Dağılım düşük değişkenlikli fakat yanlıdır; tahminler birbirine
+yakın olsa da sistematik olarak yanlış hedef çevresindedir.
+\item \emph{İpucu:} Monte Carlo hatası ile veri bilgisini ayırın.
+\textbf{Yanıt:} Tekrar sayısı yalnız benzetim sonucunu kararlılaştırır;
+örneklem hacmi gerçek tahminin standart hatasını ve bilgi miktarını değiştirir.
+\item \emph{İpucu:} Dört sıralı çiftin ortalamasını bulun.
+\textbf{Yanıt:} $(2,2),(2,6),(6,2),(6,6)$ ortalamaları $2,4,4,6$'dır;
+$P(2)=1/4$, $P(4)=1/2$, $P(6)=1/4$.
+\end{enumerate}
+
+\section{Merkezi limit teoremi ve standart hata}
+
+\begin{enumerate}[leftmargin=*,itemsep=5pt]
+\item \emph{İpucu:} Ham veriyi değil hangi istatistiği düşünün.
+\textbf{Yanıt:} MLT, uygun koşullarda örneklem toplamı/ortalamasının
+standartlaştırılmış örnekleme dağılımını yaklaşık normale götürür.
+\item \emph{İpucu:} $s/\sqrt n$. \textbf{Yanıt:} $12/6=2$.
+\item \emph{İpucu:} $n$ dört katına çıkıyor.
+\textbf{Yanıt:} Standart hata yarıya iner.
+\item \emph{İpucu:} Bireyler ile örneklem ortalamalarını ayırın.
+\textbf{Yanıt:} Standart sapma bireysel değerlerin yayılımını; standart hata
+tahminin örneklemden örnekleme değişkenliğini ölçer.
+\item \emph{İpucu:} MLT biçimle ilgilidir, seçim mekanizmasıyla değil.
+\textbf{Yanıt:} Yanlı örneklemin ortalaması normal görünebilir fakat yanlış
+merkez çevresinde yoğunlaşır; temsil sorunu sürer.
+\item \emph{İpucu:} $24/\sqrt n$. \textbf{Yanıt:} $n=36$ için 4,
+$n=144$ için 2; hacim dört katına çıkınca hata yarıya iner.
+\item \emph{İpucu:} Hem biçim hem $1/\sqrt n$ etkisini belirtin.
+\textbf{Yanıt:} $n=10$ dağılımı daha geniş ve çarpıklık taşıyabilir;
+$n=100$ daha dar ve normale daha yakındır.
+\item \emph{İpucu:} $np$ ve $n(1-p)$ sayılarını hesaplayın.
+\textbf{Yanıt:} Beklenen başarı sayısı 4'tür; küçük olduğu için normal yaklaşım
+özellikle kuyruk ve aralık hesaplarında güvenilir olmayabilir.
+\item \emph{İpucu:} $\sigma$ yerine $s$ kullanıldığında ek belirsizlik vardır.
+\textbf{Yanıt:} Özellikle küçük örneklemde Student $t$ dağılımına geçilir.
+\item \emph{İpucu:} Birey için $\sigma$, ortalama için $\sigma/\sqrt n$ kullanın.
+\textbf{Yanıt:} Bireysel $z=(72-60)/8=1{,}5$; ortalama için
+$z=(64-60)/(8/4)=2$.
+\item \emph{İpucu:} Önce $SE=20/8$ ve sonra standartlaştırın.
+\textbf{Yanıt:} $SE=2{,}5$, $z=(105-100)/2{,}5=2$;
+$P(\bar X>105)\approx0{,}0228$.
+\item \emph{İpucu:} Hata üçte bire inecek.
+\textbf{Yanıt:} Örneklem hacmi yaklaşık dokuz katına çıkarılmalıdır.
+\item \emph{İpucu:} $25/\sqrt n\le2$ eşitsizliğini çözün.
+\textbf{Yanıt:} $n\ge156{,}25$; en küçük tam sayı $157$.
+\item \emph{İpucu:} Beklenen olay ve olay-dışı sayılarını hesaplayın.
+\textbf{Yanıt:} $np=5$, $n(1-p)=495$; ilk sayı sınırda olduğundan normal
+yaklaşım dikkatle kullanılmalı, uygun kesin/Wilson yöntemleri düşünülmelidir.
+\item \emph{İpucu:} Pozitif sınıf içi ilişkiyi düşünün.
+\textbf{Yanıt:} Bağımlılık etkin örneklem hacmini azaltır; $s/\sqrt n$
+bağımsızlık varsayarak gerçek değişkenliği olduğundan küçük gösterebilir.
+\end{enumerate}
+
+\section{Örnekleme yöntemleri}
+
+\begin{enumerate}[leftmargin=*,itemsep=5pt]
+\item \emph{İpucu:} Hedeflenen grubun listede bulunmayan kesimini seçin.
+\textbf{Örnek yanıt:} Bütün öğrenciler hedeflenirken yalnız kampüs yurdunda
+kalanların listesinden seçim yapılması kapsam hatası oluşturur.
+\item \emph{İpucu:} Temsil ile saha maliyetini karşılaştırın.
+\textbf{Yanıt:} Tabakalama her önemli alt grubun temsilini/hassasiyeti artırır;
+küme örneklemesi doğal grupları seçerek veri toplama maliyetini azaltır.
+\item \emph{İpucu:} Rastgele hata ile sistematik hatayı ayırın.
+\textbf{Yanıt:} Büyük $n$ rastgele dalgalanmayı azaltır; yanlı çerçeve,
+yanıtlamama veya gönüllülüğün oluşturduğu sistematik farkı gidermez.
+\item \emph{İpucu:} $\pi=n/N$, $w=1/\pi$.
+\textbf{Yanıt:} $\pi=250/5000=0{,}05$, temel ağırlık $w=20$.
+\item \emph{İpucu:} $k=N/n$ ve başlangıca ardışık $k$ değerleri ekleyin.
+\textbf{Yanıt:} $k=20$; ilk beş sıra $12,32,52,72,92$.
+\item \emph{İpucu:} Toplam evren 1000'dir.
+\textbf{Yanıt:} Orantılı hacimler sırasıyla $210,60,30$.
+\item \emph{İpucu:} Seçilme olasılığının bilinip bilinmediğini sorun.
+\textbf{Yanıt:} Tabakalı örnekleme her tabakada olasılıklı seçim yapar; kota
+örneklemesinde sayılar hedeflense de birimlerin seçilme olasılıkları bilinmez.
+\item \emph{İpucu:} $\DEFF\approx1+(m-1)\rho$.
+\textbf{Yanıt:} $1+29(0{,}05)=2{,}45$.
+\item \emph{İpucu:} $n_{\rm etkin}=n/\DEFF$.
+\textbf{Yanıt:} $600/2{,}5=240$.
+\item \emph{İpucu:} Yanıt oranı ve tersi.
+\textbf{Yanıt:} $520/800=0{,}65$; düzeltme çarpanı $1/0{,}65\approx1{,}54$.
+\item \emph{İpucu:} Ağırlığın hangi değişkenlere göre kurulduğunu düşünün.
+\textbf{Yanıt:} Yanıt olasılığını açıklayan değişkenler modele girmemişse veya
+yanıtlamama sonuçla doğrudan ilişkiliyse grup içi fark sürer.
+\item \emph{İpucu:} Her aşamada seçim birimini küçültün.
+\textbf{Ölçüt:} İller tabakalanıp seçilir; illerde okullar, okullarda sınıflar,
+sınıflarda öğrenciler olasılıklı seçilir; her aşama olasılığı kaydedilir.
+\end{enumerate}
+
+\section{Nokta tahmini}
+
+\begin{enumerate}[leftmargin=*,itemsep=5pt]
+\item \emph{İpucu:} Kural ile gözlenen sayıyı ayırın.
+\textbf{Yanıt:} Tahmin edici örneklemden örnekleme değişen rassal kuraldır;
+tahmin, belirli örneklemde aldığı sayısal değerdir.
+\item \emph{İpucu:} Uzun dönem merkezi kadar saçılmayı da düşünün.
+\textbf{Yanıt:} Yansız olsa da örneklemler arasında çok değişir; tek çalışmada
+gerçek parametreden uzak bir sonuç verme olasılığı yüksektir.
+\item \emph{İpucu:} Aynı tahmin farklı örneklem hacimlerinde ne kadar güvenilir?
+\textbf{Yanıt:} Nokta tahmini belirsizliği göstermez; standart hata veya güven
+aralığı ve örneklem hacmiyle verilmelidir.
+\item \emph{İpucu:} Oran standart hatası.
+\textbf{Yanıt:} $\sqrt{0{,}4(0{,}6)/100}\approx0{,}049$.
+\item \emph{İpucu:} Hassasiyet ile doğruluğu ayırın.
+\textbf{Yanıt:} Yanlı bir seçim mekanizması çok dar fakat yanlış merkezli bir
+örnekleme dağılımı üretebilir.
+\item \emph{İpucu:} $X$ olumlu yanıt sayısıdır.
+\textbf{Yanıt:} Parametre evren oranı $p$; tahmin edici $\hat p=X/120$;
+gerçekleşmiş tahmin $78/120=0{,}65$.
+\item \emph{İpucu:} $MSE=\Var+\text{yanlılık}^2$.
+\textbf{Yanıt:} $5+(-1)^2=6$.
+\item \emph{İpucu:} İki MSE'yi ayrı hesaplayın.
+\textbf{Yanıt:} $MSE_A=12$, $MSE_B=4+2^2=8$; kare hata ölçütünde B daha iyidir.
+\item \emph{İpucu:} Ortalama 6'dır.
+\textbf{Yanıt:} Kareli sapmalar toplamı 20; $s^2=20/(4-1)=20/3\approx6{,}67$.
+\item \emph{İpucu:} Tutarlılık asimptotik bir özelliktir.
+\textbf{Yanıt:} Küçük $n$'de yüksek varyans, yanlılık veya aykırı değerlere
+duyarlılık sürebilir; yakınsama yalnız $n$ büyüdükçe garanti edilir.
+\item \emph{İpucu:} Bütün değerleri kullanan ölçü ile sıralama ölçüsünü ayırın.
+\textbf{Yanıt:} Ortalama uç değerlerden güçlü etkilenir; medyan sıralamaya
+dayandığı için daha sağlamdır, ancak simetrik normal veride daha az etkin olabilir.
+\item \emph{İpucu:} Grup toplamlarını birleştirin.
+\textbf{Yanıt:} $[30(60)+70(75)]/100=70{,}5$.
+\item \emph{İpucu:} Belirsizlik hangi ondalık basamağı destekliyor?
+\textbf{Yanıt:} $SE=0{,}08$ iken dört ondalık, verinin desteklemediği kesinlik
+izlenimi verir; tahmin benzer basamakta yuvarlanmalıdır.
+\item \emph{İpucu:} Aynı veri üretim sürecini çok kez taklit edin.
+\textbf{Ölçüt:} Parametre ve dağılımı belirleme, çok örnek üretme, her örnekte
+tahmin hesaplama, ortalama eksi parametreyle yanlılık ve standart sapmayla SE
+hesaplama, farklı $n$ ve koşulları karşılaştırma adımları bulunmalıdır.
+\end{enumerate}
+
+\section{Güven aralıkları}
+
+\begin{enumerate}[leftmargin=*,itemsep=5pt]
+\item \emph{İpucu:} Kritik değer nasıl değişir?
+\textbf{Yanıt:} Yüzde 99 kritik değeri daha büyük olduğundan aralık genişler.
+\item \emph{İpucu:} Hata payı $1/\sqrt n$ ile değişir.
+\textbf{Yanıt:} Örneklem hacmi dört katına çıkarsa hata payı yaklaşık yarıya iner.
+\item \emph{İpucu:} Referans değer ve olası etki büyüklüklerini ayrı okuyun.
+\textbf{Yanıt:} Aralığın sıfır/referans değeri içerip içermemesi istatistiksel
+kanıtı; genişliği ve uçları makul etkilerin uygulamalı büyüklüğünü gösterir.
+\item \emph{İpucu:} $SE=15/5$ ve $t=2{,}064$.
+\textbf{Yanıt:} Hata payı $6{,}192$; yaklaşık yüzde 95 GA
+$[65{,}81;78{,}19]$.
+\item \emph{İpucu:} Aralık yalnız örnekleme hatasını kapsar.
+\textbf{Örnek yanıt:} Büyük fakat gönüllü/yanlı örneklem çok dar, buna rağmen
+hedef evren için sistematik olarak yanıltıcı bir aralık üretebilir.
+\item \emph{İpucu:} $SE=14/7=2$.
+\textbf{Yanıt:} $60\pm2{,}01(2)=[55{,}98;64{,}02]$.
+\item \emph{İpucu:} $\hat p=310/500$.
+\textbf{Yanıt:} $\hat p=0{,}62$, $SE\approx0{,}0217$; yaklaşık yüzde 95 GA
+$[0{,}577;0{,}663]$.
+\item \emph{İpucu:} Tahmin $\pm zSE$.
+\textbf{Yanıt:} Yüzde 90 GA $[19{,}07;28{,}94]$; yüzde 95 GA
+$[18{,}12;29{,}88]$; ikincisi daha geniştir.
+\item \emph{İpucu:} Hata payı $2(1{,}5)$.
+\textbf{Yanıt:} GA $[1;7]$; sıfırı dışladığı için aynı çift yönlü testte
+yüzde 5 düzeyinde fark yönünde kanıt vardır.
+\item \emph{İpucu:} $n=(1{,}96\sigma/m)^2$.
+\textbf{Yanıt:} $n\approx245{,}86$; yukarı yuvarlanarak en az 246.
+\item \emph{İpucu:} Geçerli sayı beklenen yanıt oranına bölünür.
+\textbf{Yanıt:} $240/0{,}75=320$ kişi davet edilmelidir.
+\item \emph{İpucu:} Kapsama hedefinin maliyetini düşünün.
+\textbf{Yanıt:} Daha yüksek kapsama için daha büyük kritik değer gerekir;
+aynı veriyle bu, daha geniş ve daha az hassas aralık üretir.
+\item \emph{İpucu:} Sıfırı ve olası iki yönü inceleyin.
+\textbf{Yanıt:} Aralık sıfırı içerdiğinden yüzde 5 çift yönlü test anlamlı
+değildir; eksi 2 ile artı 12 arasında iki yön ve büyük pozitif etkiler hâlâ
+makuldür, dolayısıyla eşitlik kanıtlanmaz.
+\item \emph{İpucu:} İki tahminin kovaryansı farkın standart hatasına girer.
+\textbf{Yanıt:} Ayrı aralıkların örtüşmesi doğrudan farkın örnekleme
+dağılımını vermez; karar $\mu_1-\mu_2$ için kurulan aralıktan yapılmalıdır.
+\end{enumerate}
+
+\ifimoders\else
+\section{Bootstrap ve rastgeleleştirme}
+
+\begin{enumerate}[leftmargin=*,itemsep=5pt]
+\item \emph{İpucu:} Ampirik dağılımı olası evren gibi düşünün.
+\textbf{Yanıt:} Yerine koyma, örneklemdeki her gözlemin her çekilişte yeniden
+seçilebilmesini sağlayarak örneklem büyüklüğünü korur ve ampirik dağılımdan
+bağımsız çekilişleri taklit eder.
+\item \emph{İpucu:} Biri veriden, diğeri kuramsal evrenden düşünülür.
+\textbf{Yanıt:} Bootstrap dağılımı gözlenen örneklemin ampirik dağılımından
+üretilen yaklaşımdır; kuramsal örnekleme dağılımı gerçek veri üretim modelinin
+tüm olası örneklemlerine dayanır.
+\item \emph{İpucu:} Hesaplama kararlılığı ile veri bilgisini ayırın.
+\textbf{Yanıt:} Büyük $B$ Monte Carlo dalgalanmasını azaltır; büyük $n$
+tahminin gerçek örnekleme belirsizliğini ve bilgi miktarını değiştirir.
+\item \emph{İpucu:} İki konuma 3 veya 7 gelebilir.
+\textbf{Yanıt:} $(3,3),(3,7),(7,3),(7,7)$.
+\item \emph{İpucu:} Bootstrap tahminlerinin yayılımını düşünün.
+\textbf{Yanıt:} Tekrarlardaki $\hat\theta^*$ değerlerinin standart sapması,
+$\hat\theta$ tahmin edicisinin standart hatasını yaklaşıklar.
+\item \emph{İpucu:} Toplam kuyruk olasılığı yüzde 10'dur.
+\textbf{Yanıt:} Yüzde 5 ve yüzde 95 yüzdelikleri kullanılır.
+\item \emph{İpucu:} Yeniden örneklenen veri hangi seçim sürecinden geldi?
+\textbf{Yanıt:} Bootstrap gözlenen örneklemin temsil sorununu miras alır;
+eksik grupları veya sistematik seçim kaymasını oluşturup düzeltemez.
+\item \emph{İpucu:} Gözlenen sonuçları sabit tutup grup üyeliklerini değiştirin.
+\textbf{Yanıt:} Sonuçlar birleştirilir, özgün grup büyüklükleri korunarak
+etiketler rastgele dağıtılır, fark hesaplanır ve işlem çok kez yinelenir.
+\item \emph{İpucu:} Artı bir düzeltmesini kullanın.
+\textbf{Yanıt:} $(124+1)/(4999+1)=125/5000=0{,}025$.
+\item \emph{İpucu:} Mutlak değer ile yalnız pozitif kuyruğu karşılaştırın.
+\textbf{Yanıt:} İki yönlü testte $|T^*|\ge|T_{\text{göz}}|$; üst yönlü testte
+$T^*\ge T_{\text{göz}}$ sonuçları uç kabul edilir.
+\item \emph{İpucu:} Eşleşme hangi birim içinde korunmalı?
+\textbf{Yanıt:} Bağımsız etiket karıştırma çift bağını yok eder; farkların
+işareti çift içinde değiştirilmelidir veya tasarıma uygun eşleştirilmiş yöntem kullanılmalıdır.
+\item \emph{İpucu:} Bağımsız örnekleme birimi okul mu satır mı?
+\textbf{Yanıt:} Aynı okuldaki satırlar bağımlıdır; satır bootstrap'i kümeyi
+parçalar ve belirsizliği küçültebilir. Okullar küme olarak yeniden örneklenmelidir.
+\item \emph{İpucu:} Yüzdelik aralığın simetri ve yanlılık düzeltmesini düşünün.
+\textbf{Yanıt:} Küçük örneklem ve güçlü çarpıklıkta bootstrap dağılımı
+parametre dağılımına kötü yaklaşabilir; basit yüzdelik aralık kapsama hatası verebilir.
+\item \emph{İpucu:} Farkı yüzde puanla, testi sıfır hipotezi altında yorumlayın.
+\textbf{Yanıt:} Program grubunun iyileşme oranı yaklaşık 40,5 yüzde puan daha
+yüksektir; $p=0{,}0267$ etiketlenebilirlik altında bu kadar uç farkın seyrek
+olduğunu gösterir. Rastgele atama/tasarım bilgisi olmadan nedensellik kurulmaz.
+\item \emph{İpucu:} Belirsizlik tahmini ile hipotez sınamasını ayırın.
+\textbf{Yanıt:} Bootstrap gözlenen tahminin örnekleme belirsizliğini ve aralığını;
+rastgeleleştirme sıfır hipotezi altında gözlenen kadar uç sonucun olasılığını yanıtlar.
+\item \emph{İpucu:} Yeniden üretim için tüm hesaplama kararlarını düşünün.
+\textbf{Yanıt:} Veri kaynağı/sürümü, istatistik, $n$, tekrar sayısı $B$, tohum,
+yeniden örnekleme birimi, uçluk tanımı, yazılım/paket sürümleri ve koddan en az
+beşi verilmelidir.
+\end{enumerate}
+\fi
+
+\section{Hipotez testlerinin mantığı}
+
+\begin{enumerate}[leftmargin=*,itemsep=5pt]
+\item \emph{İpucu:} İddiayı evren parametresi üzerinden yazın.
+\textbf{Örnek yanıt:} $H_0:\mu_A-\mu_B=0$, $H_1:\mu_A-\mu_B\ne0$.
+\item \emph{İpucu:} Hesap koşulu $H_0$'ın doğru kabul edilmesidir.
+\textbf{Yanıt:} \pval-değeri, $H_0$ altında gözlenen kadar veya daha uç verinin
+olasılığıdır; $H_0$'ın doğru olma olasılığı, etki büyüklüğü veya yeniden üretim
+olasılığı değildir.
+\item \emph{İpucu:} Kanıt yokluğu ile yokluk kanıtını ayırın.
+\textbf{Yanıt:} ``$H_0$'ı reddetmek için yeterli kanıt bulunamadı'' denmelidir.
+\item \emph{İpucu:} Aynı $p$ iki eşikle karşılaştırılır.
+\textbf{Yanıt:} $p\le0{,}01$ ise ikisinde; $0{,}01<p\le0{,}05$ ise yalnız
+$\alpha=0{,}05$'te reddedilir; $p>0{,}05$ ise ikisinde reddedilemez.
+\item \emph{İpucu:} Örneklem hacminin \pval-değerine etkisini düşünün.
+\textbf{Yanıt:} Çok küçük etkiler büyük $n$ ile anlamlı olabilir; uygulamalı
+önem etki tahmini, güven aralığı ve bağlamsal eşikle değerlendirilmelidir.
+\item \emph{İpucu:} Alt sınır $0{,}09$ puandır.
+\textbf{Yanıt:} Pozitif fark için kanıt vardır fakat makul en küçük fark çok
+küçüktür; programın eğitimsel olarak önemli etki sağladığı garanti edilmez.
+\item \emph{İpucu:} Eşik karar kuralıdır, kanıtta sıçrama yaratmaz.
+\textbf{Yanıt:} İki değer neredeyse aynı veri uyumsuzluğunu gösterir; 0,05'in
+iki yanında olmaları bilimsel kanıtı keskin biçimde farklılaştırmaz.
+\item \emph{İpucu:} Yön veri görülmeden önce gerekçelendirilmelidir.
+\textbf{Örnek yanıt:} Programın başarıyı artıracağı önceden öngörülüyorsa
+$H_0:\mu\le50$, $H_1:\mu>50$.
+\item \emph{İpucu:} Azalma alt yönlü alternatiftir.
+\textbf{Yanıt:} Hedef parametre yöntem evreninin ortalaması $\mu$;
+$H_0:\mu\ge\mu_0$, $H_1:\mu<\mu_0$.
+\item \emph{İpucu:} Farkı standart hataya bölün.
+\textbf{Yanıt:} $Z=(62-58)/2=2$; üst yönlü $p\approx0{,}0228$, çift yönlü
+$p\approx0{,}0456$.
+\item \emph{İpucu:} $|Z|$ değerini 1,96 ile karşılaştırın.
+\textbf{Yanıt:} $2{,}20>1{,}96$; yüzde 5 çift yönlü testte $H_0$ reddedilir.
+\item \emph{İpucu:} 0,032'yi iki eşikle karşılaştırın.
+\textbf{Yanıt:} $\alpha=0{,}05$'te reddedilir; $\alpha=0{,}01$'de reddedilemez.
+Kanıt değişmez, yalnız karar eşiği değişir.
+\item \emph{İpucu:} Aralık sıfır ve 4 puan sınırına göre nerede?
+\textbf{Yanıt:} Pozitif etki için istatistiksel kanıt vardır; fakat aralığın
+tamamı 4 puanın altında olduğundan etki belirlenen uygulamalı önem düzeyine ulaşmaz.
+\item \emph{İpucu:} Aralığın sıfır dışındaki değerlerini de okuyun.
+\textbf{Yanıt:} Sıfır uyumludur fakat eksi 1'den artı 13'e kadar, önemli
+pozitif etkiler dâhil geniş bir küme de uyumludur; çalışma hassas değildir.
+\item \emph{İpucu:} Testte standart hatayı $p_0$ ile hesaplayın.
+\textbf{Yanıt:} $SE_0=\sqrt{0{,}4(0{,}6)/400}\approx0{,}0245$;
+$Z=(0{,}45-0{,}40)/0{,}0245\approx2{,}04$.
+\item \emph{İpucu:} $SE$ yaklaşık $1/\sqrt n$'dir.
+\textbf{Yanıt:} Büyük $n$ aynı etki için daha küçük standart hata, daha büyük
+mutlak test istatistiği ve genellikle daha küçük \pval-değeri üretir.
+\end{enumerate}
+
+\section{Hata türleri, güç ve tek örneklem testi}
+
+\begin{enumerate}[leftmargin=*,itemsep=5pt]
+\item \emph{İpucu:} Yanlış alarm ve kaçırmayı düşünün.
+\textbf{Örnek yanıt:} Etkisiz programı etkili sanmak Tip I; etkili programı
+belirleyememek Tip II hatadır.
+\item \emph{İpucu:} Sinyal, gürültü ve karar eşiğini düşünün.
+\textbf{Yanıt:} Etki büyüklüğü, örneklem hacmi, değişkenlik, $\alpha$ ve test
+yönü gücü etkiler; bunlardan üçü yeterlidir.
+\item \emph{İpucu:} Tek evren ortalamasını sabit bir değerle karşılaştırın.
+\textbf{Yanıt:} Hedef, $\mu$ evren ortalamasının önceden belirlenmiş bilimsel
+referans $\mu_0$'dan farklı/büyük/küçük olup olmadığını sınamaktır.
+\item \emph{İpucu:} Çözümlü örnekte $s=10$, fark 5'tir.
+\textbf{Yanıt:} $SE=10/10=1$, $t=5/1=5$; önceki $n=25$ durumuna göre hata
+yarıya, test istatistiği iki katına çıkar.
+\item \emph{İpucu:} Güç çalışma öncesi varsayımlara dayanır.
+\textbf{Yanıt:} \pval-değeri gözlenen veriye ilişkindir; planlama için önemli
+en küçük etki, değişkenlik, $\alpha$, yön ve hedef güç birlikte gerekir.
+\item \emph{İpucu:} $\beta=1-\text{güç}$.
+\textbf{Yanıt:} $n=10$ için $\beta\approx0{,}71$; $n=50$ için
+$\beta\approx0{,}07$. Büyük örneklem gerçek etkiyi daha seyrek kaçırır.
+\item \emph{İpucu:} $SE=8/4$.
+\textbf{Yanıt:} $t=(42-38)/2=2$.
+\item \emph{İpucu:} Referansın sonuçla birlikte seçilmesi karar kuralını değiştirir.
+\textbf{Yanıt:} Veri sonrası seçim çoklu deneme/seçici raporlama yaratır ve
+nominal Tip I hata oranını korumaz.
+\item \emph{İpucu:} Risk yokken alarm ile risk varken alarm yokluğunu ayırın.
+\textbf{Yanıt:} Yanlış alarm Tip I; gerçek riski gözden kaçırma Tip II hatadır.
+\item \emph{İpucu:} $\beta=1-0{,}90$.
+\textbf{Yanıt:} $\beta=0{,}10$; 500 gerçek etkili çalışmada yaklaşık 50 Tip II hata.
+\item \emph{İpucu:} $SE=12/6$ ve $d=(\bar x-\mu_0)/s$.
+\textbf{Yanıt:} $t=(74-70)/2=2$; $d=4/12\approx0{,}33$.
+\item \emph{İpucu:} Gözlenen işaret önceden belirlenmiş yönle aynıysa.
+\textbf{Yanıt:} Simetrik dağılımda üst yönlü \pval-değeri çift yönlü değerin
+yaklaşık yarısıdır; yön veri görülmeden önce seçilmiş olmalıdır.
+\item \emph{İpucu:} $[(1{,}96+0{,}842)/0{,}40]^2$.
+\textbf{Yanıt:} Yaklaşık $49{,}07$; yukarı yuvarlayarak en az 50 (kesin
+$t$ hesabı biraz daha büyük değer verebilir).
+\item \emph{İpucu:} Sinyal/gürültü oranını koruyun.
+\textbf{Yanıt:} Küçük etki test istatistiğinin beklenen uzaklığını azaltır;
+aynı güce ulaşmak için standart hata, dolayısıyla daha büyük $n$ gerekir.
+\item \emph{İpucu:} Test istatistiği $\sqrt n$ ile ölçeklenir.
+\textbf{Yanıt:} $n=400$, $n=25$'in 16 katı olduğundan mutlak $t$ yaklaşık
+4 kat büyür ve \pval-değeri çok daha küçük olur; etki büyüklüğü değişmez.
+\item \emph{İpucu:} Çok büyük $n$ ve küçük $d$ seçin.
+\textbf{Ölçüt:} Örneğin $d=0{,}10$, çok küçük $p$ ve dar GA verilip etkinin
+istatistiksel olarak ayırt edildiği fakat önceden belirlenen uygulamalı eşiğin
+altında kaldığı açıkça yazılmalıdır.
+\end{enumerate}
+
+\section{Bağımsız ve eşleştirilmiş örneklem testleri}
+
+\begin{enumerate}[leftmargin=*,itemsep=5pt]
+\item \emph{İpucu:} Farklı kişiler ile aynı kişilerin iki ölçümünü ayırın.
+\textbf{Örnek yanıt:} İki ayrı sınıfın puanları bağımsız; aynı öğrencilerin
+ön test--son test puanları eşleştirilmiştir.
+\item \emph{İpucu:} Testin analiz birimi nedir?
+\textbf{Yanıt:} Eşleştirilmiş test her çiftin $D_i$ farkına uygulanan tek
+örneklem testidir; normallik ve aykırı değerler fark dağılımında incelenir.
+\item \emph{İpucu:} Eşit olmayan varyans ve hacimleri düşünün.
+\textbf{Yanıt:} Welch testi eşit varyans zorunluluğu olmadan doğru standart
+hata ve serbestlik derecesi sağlar; eşitlikte de iyi performans gösterir.
+\item \emph{İpucu:} Eşleşme sayıdan değil birim bağından gelir.
+\textbf{Yanıt:} Eşit $n$ yalnız grup büyüklüğüdür; aynı birey, ikiz veya
+eşleştirme ölçütüyle kurulmuş çiftler yoksa gözlemler bağımsızdır.
+\item \emph{İpucu:} Farkın işaretini ters çevirin.
+\textbf{Yanıt:} Tahmin ve iki uç noktanın işareti değişir:
+$[L,U]$ aralığı ters yönde $[-U,-L]$ olur; bilimsel sonuç değişmez.
+\item \emph{İpucu:} $\sqrt{s_1^2/n_1+s_2^2/n_2}$.
+\textbf{Yanıt:} $\sqrt{144/36+196/49}=\sqrt8\approx2{,}83$.
+\item \emph{İpucu:} Farkı standart hataya bölün.
+\textbf{Yanıt:} $t=5/2=2{,}5$.
+\item \emph{İpucu:} $SE_D=s_D/\sqrt n$.
+\textbf{Yanıt:} $SE=6/4=1{,}5$, $t=3/1{,}5=2$.
+\item \emph{İpucu:} $s_D^2=s_1^2+s_2^2-2rs_1s_2$.
+\textbf{Yanıt:} $s_D=\sqrt{64+64-64}=8$.
+\item \emph{İpucu:} Ortak bireysel düzey farkta iptal olur.
+\textbf{Yanıt:} Pozitif korelasyon $s_D^2$ içindeki $-2rs_1s_2$ terimini
+büyütür, fark varyansını ve standart hatayı azaltır.
+\item \emph{İpucu:} Yalnız tam çiftler analize girer.
+\textbf{Yanıt:} $n=34$, $sd=33$.
+\item \emph{İpucu:} Welch--Satterthwaite yaklaşımını düşünün.
+\textbf{Yanıt:} Serbestlik derecesi varyans ve örneklem hacimlerinden yaklaşık
+hesaplanır; kesirli olması yöntemin doğal sonucudur.
+\item \emph{İpucu:} Aralık sıfırı ve iki yönü içeriyor mu?
+\textbf{Yanıt:} Tahmin 4 puan olsa da GA $[-1;9]$ sıfırı içerir; yüzde 5
+düzeyinde fark belirlenemez ve hem küçük ters hem önemli pozitif farklar makuldür.
+\item \emph{İpucu:} Gruplara kim, nasıl girdi?
+\textbf{Yanıt:} Rastgele atama yoksa başlangıç farkları ve karıştırıcılar
+grup farkını açıklayabilir; test yalnız ilişkiyi ayırt eder.
+\item \emph{İpucu:} Paydadaki standartlaştırma farklıdır.
+\textbf{Yanıt:} $d$ birleşik/grup standart sapması, $g$ küçük örneklem
+düzeltmesi, $d_z$ farkların standart sapmasını kullanır; sayılar tanım olmadan
+karşılaştırılamaz.
+\item \emph{İpucu:} Ölçümler arası kovaryans ne olur?
+\textbf{Yanıt:} Bağımsız test eşleşme bilgisini yok sayar; pozitif korelasyonda
+genellikle gereğinden büyük standart hata ve daha düşük güç üretir.
+\end{enumerate}
+
+\section{Kategorik veriler ve ki-kare}
+
+\begin{enumerate}[leftmargin=*,itemsep=5pt]
+\item \emph{İpucu:} Grup büyüklükleri farklı olabilir.
+\textbf{Yanıt:} Frekanslar örüntüyü grup büyüklüğüyle karıştırabilir; araştırma
+sorusuna uygun satır/sütun yüzdesi koşullu oranları karşılaştırır.
+\item \emph{İpucu:} $E_{ij}=R_iC_j/N$.
+\textbf{Ölçüt:} Seçilen hücrenin satır ve sütun toplamları çarpılıp genel
+toplama bölünmeli, gözlenen frekans kullanılmamalıdır.
+\item \emph{İpucu:} Genel farkın nerede oluştuğunu arayın.
+\textbf{Yanıt:} İşaret ve büyüklük, hangi hücrelerin bağımsızlık beklentisinden
+fazla/az olduğunu gösterir; çoklu inceleme nedeniyle mekanik test gibi kullanılmaz.
+\item \emph{İpucu:} Satır 40, sütun 30, toplam 80.
+\textbf{Yanıt:} $E=40(30)/80=15$.
+\item \emph{İpucu:} Test tablo üretim tasarımını değiştirmez.
+\textbf{Yanıt:} Karıştırıcılar, seçim yanlılığı ve rastgele atama yokluğu
+sürebilir; ilişki nedensel yön veya etkiyi kanıtlamaz.
+\item \emph{İpucu:} Katkılar 1,00; 1,67; 1,00; 1,67'dir.
+\textbf{Yanıt:} Toplam $\chi^2\approx5{,}33$.
+\item \emph{İpucu:} Aynı kişi iki kez sayılıyor.
+\textbf{Yanıt:} Gözlemler bağımsız değildir; ikili eşleştirilmiş sonuçta
+McNemar gibi eşleşmeyi koruyan yöntem gerekir.
+\item \emph{İpucu:} Kanıt gücü ile ilişki büyüklüğünü ayırın.
+\textbf{Yanıt:} \pval-değeri örneklem hacminden etkilenir; Cramér $V$ ilişkinin
+standartlaştırılmış büyüklüğünü verir.
+\item \emph{İpucu:} Tek değişken--beklenen dağılım, aynı örneklemde iki değişken,
+farklı gruplarda tek dağılım ayrımını kullanın. \textbf{Ölçüt:} Bu üç yapıya
+uygun birer soru sırasıyla uyum iyiliği, bağımsızlık ve homojenlikle eşleşmelidir.
+\item \emph{İpucu:} $50(80)/200$.
+\textbf{Yanıt:} Beklenen frekans 20.
+\item \emph{İpucu:} $(r-1)(c-1)$.
+\textbf{Yanıt:} $(3-1)(4-1)=6$.
+\item \emph{İpucu:} Küçük boyut $\min(1,2)=1$.
+\textbf{Yanıt:} $V=\sqrt{12/(300\cdot1)}=0{,}20$.
+\item \emph{İpucu:} 5'in altındaki hücre oranını bulun.
+\textbf{Yanıt:} Dört hücrenin biri, yani yüzde 25'i 5'in altındadır ve en
+küçük değer 3'tür; Pearson yaklaşımı kuşkuludur, Fisher/kesin yöntem düşünülmelidir.
+\item \emph{İpucu:} Yalnız uyumsuz çiftler değişimi belirler.
+\textbf{Yanıt:} Aynı kişilerin iki yanıtı bağımlıdır; McNemar testi başarılıdan
+başarısıza ve tersine geçen uyumsuz çiftleri karşılaştırır.
+\item \emph{İpucu:} İşaret verilmediğini unutmayın.
+\textbf{Yanıt:} Hücre bağımsızlık beklentisinden güçlü sapar; artığın işareti
+olmadan fazla mı az mı olduğu, ayrıca nedensellik veya genel etki gücü söylenemez.
+\item \emph{İpucu:} Büyük $n$ küçük ilişkileri ayırt edebilir.
+\textbf{Yanıt:} İlişki için istatistiksel kanıt vardır fakat $V=0{,}06$
+uygulamada çok küçük olabilir; yüzdeler ve bağlamsal eşikler incelenmelidir.
+\end{enumerate}
+
+\section{Korelasyon ve basit doğrusal regresyon}
+
+\begin{enumerate}[leftmargin=*,itemsep=5pt]
+\item \emph{İpucu:} Ortak neden ve ters yönü düşünün.
+\textbf{Yanıt:} Korelasyon zaman sırasını, rastgele atamayı veya karıştırıcı
+denetimini sağlamaz; ters nedensellik, ortak neden ve seçim ilişki üretebilir.
+\item \emph{İpucu:} $X$ ve $Y$ birimlerini cümlede kullanın.
+\textbf{Ölçüt:} ``$X$ bir birim arttığında beklenen $Y$, ortalama $b_1$ birim
+değişir'' biçiminde, gözlemsel veride ``ilişkilidir'' denmelidir.
+\item \emph{İpucu:} Veri, model, sonuç ve tanıyı kapsayın.
+\textbf{Yanıt:} Veri kaynağı/$n$, saçılım grafiği, $r$, eğim ve GA, \pval-değeri,
+$R^2$, artık ve etkili gözlem kontrolleri, yazılım sürümü ve nedensellik sınırı bulunmalıdır.
+\item \emph{İpucu:} ``Yüzde 96,2'si'' hangi değişkenliğe aittir?
+\textbf{Yanıt:} Örneklemde son puan değişkenliğinin yüzde 96,2'si çalışma
+süresiyle kurulan doğrusal model tarafından açıklanır; nedensellik/gelecek başarı garantisi değildir.
+\item \emph{İpucu:} Doğrusal örüntü veri dışında sürecek mi?
+\textbf{Yanıt:} Dışa taşırma gözlenmeyen bölgede aynı doğrunun geçerli olduğunu
+varsayar; ilişki biçimi değişebileceğinden öngörü güvenilmez olabilir.
+\item \emph{İpucu:} Artık $y-\hat y$'dir.
+\textbf{Yanıt:} Pozitif artık, öğrencinin modelin altı saat için öngördüğünden
+daha yüksek puan aldığını gösterir.
+\item \emph{İpucu:} Bir saatlik artışı cümlede kullanın.
+\textbf{Yanıt:} Model koşullarında bir saat daha uzun çalışma, ortalama son
+puanda 2,78 ile 3,50 puan arasındaki artışla ilişkilidir.
+\item \emph{İpucu:} Pearson $r$ yalnız doğrusal örüntüyü ölçer.
+\textbf{Yanıt:} Güçlü U biçimli ilişki pozitif ve negatif doğrusal eğimleri
+dengeleyip $r\approx0$ verebilir; saçılım grafiği zorunludur.
+\item \emph{İpucu:} Ortalama eğri ile tek öğrencinin sapmasını ayırın.
+\textbf{Yanıt:} Ortalama yanıt GA'sı belirli $X$'teki ortalama için; öngörü
+aralığı yeni tek gözlem için olup artık değişkenliğini de içerdiğinden daha geniştir.
+\item \emph{İpucu:} İşaret ve kareyi ayrı yorumlayın.
+\textbf{Yanıt:} Orta-güçlü negatif doğrusal ilişki vardır; $R^2=0{,}36$.
+\item \emph{İpucu:} $b_1=r(s_Y/s_X)$.
+\textbf{Yanıt:} $b_1=0{,}50(12/4)=1{,}5$.
+\item \emph{İpucu:} $b_0=\bar y-b_1\bar x$.
+\textbf{Yanıt:} $b_0=40-2(10)=20$; $\hat Y=20+2X$.
+\item \emph{İpucu:} Önce $\hat y$, sonra $y-\hat y$.
+\textbf{Yanıt:} $\hat y=30+4(6)=54$; artık $57-54=3$.
+\item \emph{İpucu:} $t=r\sqrt{(n-2)/(1-r^2)}$.
+\textbf{Yanıt:} $t=0{,}35\sqrt{28/0{,}8775}\approx1{,}98$, $sd=28$.
+\item \emph{İpucu:} Ortalama biçimi ile varyans biçimini ayırın.
+\textbf{Yanıt:} U örüntüsü doğrusallık sorununa; huni örüntüsü sabit hata
+varyansı varsayımının bozulmasına işaret eder.
+\item \emph{İpucu:} Kaldıraç $X$ konumu, etki katsayı değişimiyle ilgilidir.
+\textbf{Yanıt:} Uç $X$ değeri doğruya yakınsa katsayıyı az etkileyebilir;
+ölçüm doğrulanmadan yüksek kaldıraç gözlemi hatalı sayılamaz.
+\item \emph{İpucu:} Kanıt ile açıklanan varyansı ayırın.
+\textbf{Yanıt:} Büyük örneklem eğimin sıfırdan farklılığına güçlü kanıt verir;
+$R^2=0{,}08$ ise model değişkenliğin yalnız yüzde 8'ini açıklar ve öngörü zayıf olabilir.
+\item \emph{İpucu:} 20 saat gözlenen aralığın çok dışındadır.
+\textbf{Yanıt:} Bu ciddi dışa taşırmadır; doğrusal ilişkinin 8 saatten sonra
+sürdüğüne veri yoktur ve öngörü kullanılmamalı ya da açıkça çok belirsiz sayılmalıdır.
+\end{enumerate}
+
+\ifimoders\else
+\section{Çoklu doğrusal regresyon}
+
+\begin{enumerate}[leftmargin=*,itemsep=5pt]
+\item \emph{İpucu:} Ayarlanmamış ve ayarlanmış ilişkiyi ayırın.
+\textbf{Yanıt:} Basit katsayı $X$ ile $Y$ arasındaki toplam doğrusal ilişkiyi;
+çoklu katsayı diğer model değişkenleri sabitken koşullu ilişkiyi yanıtlar.
+\item \emph{İpucu:} Aynı model değerlerindeki gözlemleri karşılaştırın.
+\textbf{Yanıt:} İlgili $X_j$ dışındaki açıklayıcılar aynı kabul edilerek
+$X_j$'de bir birimlik farkla ilişkili ortalama $Y$ farkı yorumlanır.
+\item \emph{İpucu:} Değerleri denklemde yerine koyun.
+\textbf{Yanıt:} $30+4(3)-2(5)=32$.
+\item \emph{İpucu:} Yeni değişken hem $X$ hem $Y$ ile ilişkili olabilir.
+\textbf{Yanıt:} Önceki katsayı karıştırılmış ortak değişkenliği içeriyorsa yeni
+değişken bu kısmı ayırır; katsayının büyüklüğü hatta işareti değişebilir.
+\item \emph{İpucu:} $k$ kategori için $k-1$ gösterge.
+\textbf{Yanıt:} Üç kategori için iki gösterge gerekir; katsayılar seçilen
+referans okul türüne göre ortalama farkları verir.
+\item \emph{İpucu:} Referansı ve diğer değişkenleri belirtin.
+\textbf{Ölçüt:} İlgili kategorinin beklenen $Y$ değeri, diğer açıklayıcılar
+sabitken referans kategoriden ortalama 6 birim düşüktür denmelidir.
+\item \emph{İpucu:} Etkileşim terimini iki $Z$ değerinde yerine koyun.
+\textbf{Yanıt:} $Z=0$ için $X$ eğimi $\beta_1$; $Z=1$ için
+$\beta_1+\beta_3$.
+\item \emph{İpucu:} Ana katsayının diğer değişken sıfırken tanımlandığını hatırlayın.
+\textbf{Yanıt:} Etkileşim varken $X$ etkisi $Z$'ye göre değişir; $\beta_1$
+yalnız $Z=0$ koşulundaki eğimdir, tüm gözlemler için tek genel etki değildir.
+\item \emph{İpucu:} Merkezlenmiş sıfır hangi gerçek değerdir?
+\textbf{Yanıt:} Açıklayıcı ortalamasından çıkarılırsa sabit terim diğer
+değişkenler ortalama düzeydeyken beklenen $Y$ olur; eğim değişmez.
+\item \emph{İpucu:} $1-(1-R^2)(n-1)/(n-K-1)$.
+\textbf{Yanıt:} $1-0{,}5(79/74)\approx0{,}466$.
+\item \emph{İpucu:} Genel ortak katkı ile tekil standart hataları ayırın.
+\textbf{Yanıt:} Açıklayıcılar birlikte modele katkı verir; korelasyonları
+nedeniyle tek katsayıların belirsizliği yüksek olabilir. Anlamsız tek katsayı
+``etkisiz değişken'' sonucunu tek başına vermez.
+\item \emph{İpucu:} $1/(1-R_j^2)$.
+\textbf{Yanıt:} $VIF=1/(1-0{,}80)=5$.
+\item \emph{İpucu:} Aynı bilgiyi taşıyan açıklayıcıları düşünün.
+\textbf{Yanıt:} Çoklu bağlantı katsayı standart hatalarını büyütür, işaret ve
+büyüklükleri örnekleme duyarlı hâle getirir; öngörü mutlaka aynı ölçüde bozulmayabilir.
+\item \emph{İpucu:} Basit regresyondaki tanıları kullanın.
+\textbf{Yanıt:} Eğri, ortalama yapısında eksik doğrusal olmayan terime;
+huni, sabit varyans varsayımının bozulmasına işaret eder.
+\item \emph{İpucu:} Ayarlama yalnız ölçülen ve doğru modellenen değişkenler içindir.
+\textbf{Yanıt:} Ölçülmemiş karıştırıcı, seçim yanlılığı, ters nedensellik ve
+model hatası sürebilir; çoklu regresyon rastgele atama yaratmaz.
+\item \emph{İpucu:} Seçim belirsizliği ve aşırı uyumu düşünün.
+\textbf{Yanıt:} Tekrarlı \pval-elemesi Tip I hata/seçim yanlılığı ve kararsız
+modeller üretir; kuramı, öngörü performansını, çoklu bağlantıyı ve uygulamalı
+önemi göz ardı eder.
+\end{enumerate}
+
+\section{Tek yönlü varyans analizi}
+
+\begin{enumerate}[leftmargin=*,itemsep=5pt]
+\item \emph{İpucu:} Bir nicel yanıt ve üç veya daha fazla bağımsız grup kurun.
+\textbf{Ölçüt:} Örneğin üç öğretim yöntemindeki ortalama başarı puanlarının
+karşılaştırıldığı tutarlı bir araştırma sorusu verilmelidir.
+\item \emph{İpucu:} Bütün evren ortalamalarını eşitleyin.
+\textbf{Yanıt:} $H_0:\mu_1=\mu_2=\mu_3$; $H_1$: en az bir ortalama farklıdır.
+\item \emph{İpucu:} Ayrı testlerin ortak yanlış alarm riskini düşünün.
+\textbf{Yanıt:} Düzeltmesiz ikili testler aile düzeyindeki Tip I hata riskini
+artırır; genel test ve düzeltilmiş karşılaştırmalar kullanılmalıdır.
+\item \emph{İpucu:} $k-1$, $N-k$ ve $N-1$.
+\textbf{Yanıt:} Serbestlik dereceleri sırasıyla 4, 115 ve 119'dur.
+\item \emph{İpucu:} Kareler toplamlarını serbestlik derecelerine bölün.
+\textbf{Yanıt:} $MS_{\mathrm{gruplar}}=60$,
+$MS_{\mathrm{hata}}=15$ ve $F=4$.
+\item \emph{İpucu:} Hesaplanan değeri kritik değerle karşılaştırın.
+\textbf{Yanıt:} $4>2{,}866$ olduğundan $H_0$ reddedilir; en az bir ortalamanın
+farklı olduğuna ilişkin yüzde 5 düzeyinde kanıt vardır.
+\item \emph{İpucu:} $SS_{\mathrm{gruplar}}/SS_{\mathrm{toplam}}$.
+\textbf{Yanıt:} $\eta^2=180/720=0{,}25$.
+\item \emph{İpucu:} Omega-kare hata değişkenliğiyle düzeltme yapar.
+\textbf{Yanıt:} Omega-kare eta-karenin küçük örneklemdeki yukarı yönlü
+yanlılığını azaltmaya çalıştığı için genellikle daha küçüktür.
+\item \emph{İpucu:} Genel test farkın yerini göstermez.
+\textbf{Yanıt:} Tukey HSD ikili farkları aile düzeyindeki hata oranını
+denetleyen eşzamanlı aralıklar ve düzeltilmiş \pval-değerleriyle inceler.
+\item \emph{İpucu:} Aralık sıfırı içeriyor mu?
+\textbf{Yanıt:} $[-1{,}2;4{,}8]$ sıfırı içerdiğinden bu çift için fark
+belirlenemez; ortalamaların eşitliği kanıtlanmış değildir.
+\item \emph{İpucu:} Hacimleri ve standart sapmaları karşılaştırın.
+\textbf{Yanıt:} Eşit hacimler ile birbirine yakın 5, 6 ve 5 standart
+sapmaları klasik ANOVA açısından belirgin varyans sorunu göstermez.
+\item \emph{İpucu:} En küçük grubun yayılımına dikkat edin.
+\textbf{Yanıt:} Hacim ve varyans dengesizliği, özellikle küçük grubun büyük
+varyansı nedeniyle Welch ANOVA'yı uygun kılar.
+\item \emph{İpucu:} Aynı öğrenci üç kez ölçülmüştür.
+\textbf{Yanıt:} Bağımsızlık sağlanmaz; tekrarlı ölçümler ANOVA'sı veya
+bağımlılığı modelleyen başka bir yöntem gerekir.
+\item \emph{İpucu:} Sıra testi yalnız medyanı sınamayabilir.
+\textbf{Yanıt:} Dağılım biçimleri ve yayılımları farklıysa Kruskal--Wallis
+sonucu genel dağılım farkını yansıtabilir; doğrudan medyan farkı denemez.
+\item \emph{İpucu:} $0{,}309>0{,}05$.
+\textbf{Yanıt:} $H_0$ reddedilemez; veri en az bir ortalama farkını
+belirlemek için yeterli kanıt sunmamıştır, eşitlik kanıtlanmamıştır.
+\item \emph{İpucu:} Gruplara atanma sürecini değerlendirin.
+\textbf{Yanıt:} Rastgele atama yoksa seçim ve karıştırıcı değişkenler grup
+farkını açıklayabilir; anlamlı ANOVA tek başına nedensel etki göstermez.
+\end{enumerate}
+\fi
+
+\section{Genel değerlendirme ve yöntem seçimi}
+
+\subsection*{Genel tekrar soruları}
+
+\begin{enumerate}[leftmargin=*,itemsep=5pt]
+\item \emph{İpucu:} Yanlılık dağılımın merkezidir.
+\textbf{Yanıt:} Büyük örneklem rastgele yayılımı daraltır; sistematik olarak
+yanlış çerçeve veya katılım mekanizmasının merkezini düzeltmez.
+\item \emph{İpucu:} MLT'nin ham veriye değil örnekleme dağılımına etkisini yazın.
+\textbf{Yanıt:} Uygun koşullarda toplam/ortalamanın standartlaştırılmış
+örnekleme dağılımını yaklaşık normal yaparak normal ve $t$ çıkarımlarını destekler.
+\item \emph{İpucu:} Tek aralığa olasılık yüklemeyin.
+\textbf{Yanıt:} Aynı yöntem çok kez uygulandığında kurulan aralıkların yaklaşık
+yüzde 95'i gerçek sabit parametreyi kapsar.
+\item \emph{İpucu:} Karar tablosundaki dört hücreyi düşünün.
+\textbf{Yanıt:} Tip I doğru $H_0$'ı reddetme olasılığı $\alpha$; Tip II yanlış
+$H_0$'ı reddedememe olasılığı $\beta$; güç $1-\beta$'dır.
+\item \emph{İpucu:} Farklı kişiler ile aynı kişileri ayırın.
+\textbf{Yanıt:} Bağımsız test iki ayrı grubun ortalamasını; eşleştirilmiş test
+aynı/bağlı çiftlerin fark ortalamasını sınar.
+\item \emph{İpucu:} Bağımsız gözlem ve beklenen frekansları yazın.
+\textbf{Yanıt:} Kategorik frekanslar, her birimin tek hücreye katkısı,
+bağımsız gözlemler ve yeterli beklenen frekanslar gerekir.
+\item \emph{İpucu:} Ortak neden ve ters nedensellik.
+\textbf{Yanıt:} Güçlü $r$ yalnız doğrusal birlikteliği ölçer; araştırma tasarımı
+karıştırıcıları ve yönü belirlemedikçe nedensellik kurulamaz.
+\item \emph{İpucu:} Birim, yön ve açıklanan varyansı belirtin.
+\textbf{Ölçüt:} $X$'te bir birim artışla ilişkili ortalama $b_1$ birimlik $Y$
+değişimi ve modelin örneklem $Y$ değişkenliğinin $100R^2$ yüzdesini açıkladığı yazılmalıdır.
+\item \emph{İpucu:} Birey ve tahmin yayılımını ayırın.
+\textbf{Yanıt:} Standart sapma öğrencilerin puan farklılığını; standart hata
+örneklem ortalamasının evren ortalamasını tahminindeki değişkenliği ölçer.
+\item \emph{İpucu:} Büyük $n$ ile küçük etki seçin.
+\textbf{Ölçüt:} Küçük \pval-değeri fakat uygulamalı eşik altında tahmin ve dar güven
+aralığı içeren tutarlı bir örnek verilmelidir.
+\item \emph{İpucu:} Analiz birimini yazın.
+\textbf{Yanıt:} Welch testinde birimler iki bağımsız grubun bireysel puanları;
+eşleştirilmiş testte her çiftin fark puanıdır.
+\item \emph{İpucu:} Konum ile büyüklüğü ayırın.
+\textbf{Yanıt:} Artıklar ilişkinin hangi hücrelerde ve hangi yönde yoğunlaştığını;
+Cramér $V$ genel ilişkinin standartlaştırılmış büyüklüğünü gösterir.
+\end{enumerate}
+
+\subsection*{Mini deneme}
+
+\begin{enumerate}[leftmargin=*,itemsep=5pt]
+\item \emph{İpucu:} Hedef grup ve katılanları ayırın.
+\textbf{Yanıt:} Evren tüm birinci sınıflar, örneklem 80 gönüllüdür; temel risk
+gönüllülük/öz-seçim yanlılığıdır.
+\item \emph{İpucu:} $15/\sqrt{100}$.
+\textbf{Yanıt:} $SE=1{,}5$.
+\item \emph{İpucu:} $SE=12/6$.
+\textbf{Yanıt:} $68\pm2(2)=[64;72]$.
+\item \emph{İpucu:} 0,08'i 0,05 ile karşılaştırın.
+\textbf{Yanıt:} $H_0$ reddedilemez; reddetmek için yeterli kanıt bulunmadığı söylenir.
+\item \emph{İpucu:} Aynı öğrenciler iki kez ölçülmüştür.
+\textbf{Yanıt:} Eşleştirilmiş örneklem testi; son--ön fark puanlarının dağılımı incelenir.
+\item \emph{İpucu:} Asimptotik yaklaşımın koşulu sağlanmıyor.
+\textbf{Yanıt:} Pearson sonucuna güvenilmemeli; bilimsel olarak uygun kategori
+birleştirme, kesin/Monte Carlo yöntem veya daha büyük örneklem değerlendirilmelidir.
+\item \emph{İpucu:} İşaret ve kare.
+\textbf{Yanıt:} Orta-güçlü negatif doğrusal ilişki; $R^2=0{,}36$.
+\item \emph{İpucu:} Kanıt gücü ile etki büyüklüğünü ayırın.
+\textbf{Yanıt:} Tahmin ve güven aralığı etkinin ne kadar küçük ve ne kadar
+hassas olduğunu gösterir; \pval-değeri uygulamalı önemi ölçmez.
+\item \emph{İpucu:} $SE=16/8$.
+\textbf{Yanıt:} $SE=2$; yaklaşık GA $75\pm4=[71;79]$.
+\item \emph{İpucu:} $SE=12/6$ ve fark 4.
+\textbf{Yanıt:} $t=2$; Cohen $d=4/12\approx0{,}33$.
+\item \emph{İpucu:} Fark $\pm2SE$.
+\textbf{Yanıt:} $t=5/2=2{,}5$; yaklaşık yüzde 95 GA $5\pm4=[1;9]$.
+\item \emph{İpucu:} $(r-1)(c-1)$ ve anlamlılığın kaynağı/büyüklüğü.
+\textbf{Yanıt:} $sd=(2-1)(3-1)=2$; satır/sütun yüzdeleri ile artıklar ve
+Cramér $V$ incelenmelidir.
+\item \emph{İpucu:} Korelasyonun karesini alın.
+\textbf{Yanıt:} $R^2=0{,}45^2=0{,}2025$; basit doğrusal model örneklemdeki
+yanıt değişkenliğinin yaklaşık yüzde 20,3'ünü açıklar.
+\item \emph{İpucu:} Yayılım uydurulan değerle artıyor.
+\textbf{Yanıt:} Sabit hata varyansı (homoskedastisite) varsayımı sorgulanır.
+\end{enumerate}
+
+\section*{Üçüncü düzey: genişletilmiş çözüm kontrolü}
+
+Bir çözümün yalnız sonuca değil gerekçeye de tam puan alabilmesi için şu sıra
+kullanılabilir:
+\begin{enumerate}
+  \item hedef evren, parametre ve değişkenleri tanımlama;
+  \item yöntemi veri yapısına göre seçme;
+  \item bağımsızlık ve yönteme özgü koşulları belirtme;
+  \item ara hesapları, tahmini ve belirsizliği gösterme;
+  \item kararı etki büyüklüğü ve güven aralığıyla birlikte verme;
+  \item genelleme ve nedensellik sınırını araştırma tasarımına göre yazma.
+\end{enumerate}
+
+\ifimoders
+Örneğin Bölüm~\ref{ch:two-sample}, Alıştırma 13 için
+\else
+Örneğin Bölüm 12, Alıştırma 13 için
+\fi yalnız ``anlamlı değildir'' demek eksiktir.
+Tam yanıt, tahminin 4 puan olduğunu, $[-1;9]$ aralığının sıfırı içerdiğini,
+verinin küçük ters farklardan önemli pozitif farklara kadar geniş bir kümeyle
+uyumlu olduğunu ve sonucun eşitlik kanıtı sayılamayacağını birlikte belirtir.

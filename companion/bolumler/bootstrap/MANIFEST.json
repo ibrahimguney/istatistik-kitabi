@@ -1,0 +1,24 @@
+{
+  "algorithm": "SHA-256",
+  "files": {
+    "DOGRULAMA.md": "6cd69272edc9fe5f99f9cdee8c8a18eea30e9b9d3f75904122daae4c0408f0e2",
+    "README.md": "9bc09cab6f9ed00a637534948d2c1017c30c14f2a32ccc8aacb3d978db445b73",
+    "alistirmalar.md": "c7dbd20c2b9a537f7b071f52b4358173e1ca992faf8d2597f8426bb69fd675f2",
+    "cozumler.md": "7a6c7f66209dc1b416a141298d80bc65e524422b42278b6e3f94294838695d34",
+    "ornek-01/README.md": "05370190eb969b1349ecdac545c380da10c7362c329856f9d329a7457f43661d",
+    "ornek-01/analiz.sps": "2731d20a950cb3fc9f924b3c6e12974e1ab6dbf94a94d2f57c4f9f1c0a9d3b7f",
+    "ornek-01/analiz.sps.txt": "2731d20a950cb3fc9f924b3c6e12974e1ab6dbf94a94d2f57c4f9f1c0a9d3b7f",
+    "ornek-01/beklenen-sonuclar.csv": "4c8a60e2b41f4a19dc62d0629b8934d01274adb02b609655eb37d2c8984333e4",
+    "ornek-01/bootstrap-plan.csv": "869710c7b18b9d25212667d1af03a921867827c36b90b98f808f36bc0c9d53c3",
+    "ornek-01/ciktilar/python/bootstrap-permutasyon.png": "f263e94858d536a6a8912f17095d54d51d816940bed9a133faefaa73e0301e57",
+    "ornek-01/cozum.R": "6261beb5131a65261898c5676d6d81531215765d104872e1e79eaf302ea8d13c",
+    "ornek-01/cozum.md": "a268047ca7431ed2585138bba2968b900097d3ee200fd2c16e6c2b2ee46ea07f",
+    "ornek-01/cozum.py": "bf559f071550b321e906d0fd6feabedb57e7618a9ebe287c4011712096e9b287",
+    "ornek-01/permutasyon-plan.csv": "781d6dbcea6b929cd1802d01f4f8d792ff793f2bd34e83ef29a9e56bf629dbe4",
+    "ornek-01/permutasyon.csv": "3ac8085be612e57b4608c8106f8b0ee88983a969a659dd5c05d78792b9def739",
+    "ornek-01/uret.py": "bfe243ba21bbad8640941d2eaf26b581bc399bed47b9df69b0133c60fd19199d",
+    "ornek-01/uretim-kaydi.json": "259566ea84c200d4021aef5a382c307db127576100b9eaeac691b16a2504ecee",
+    "ornek-01/veri-sozlugu.csv": "49f7513b82a5015010b679fdabeb75172c23314f9c6e7da3d4564728ce8bbe9d",
+    "ornek-01/veri.csv": "32d4a800f8dfd1bcf79381a03795d532145f6791a603615fb4ea175f1a41f30a"
+  }
+}

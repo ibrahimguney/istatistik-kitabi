@@ -1,0 +1,392 @@
+\chapter{Nokta Tahmini; Parametre, Tahmin Edici ve Tahmin}
+\label{ch:point-estimation}
+
+\begin{prismbox}[PrismLight]{Öğrenme çıktıları}
+Bu bölümün sonunda:
+\begin{itemize}
+  \item parametre, tahmin edici ve gerçekleşmiş tahmini ayırt edebilecek,
+  \item ortalama, oran, varyans ve farklar için nokta tahmini hesaplayabilecek,
+  \item tahmin edicileri yanlılık, varyans, MSE ve tutarlılık bakımından karşılaştırabilecek,
+  \item bir nokta tahminini uygun hassasiyet ve belirsizlik bilgisiyle raporlayabileceksiniz.
+\end{itemize}
+\end{prismbox}
+
+\begin{prerequisitebox}
+Parametre ve istatistik ayrımı, örnekleme dağılımı, beklenen değer, varyans
+ve standart hata kavramları bilinmelidir.
+\end{prerequisitebox}
+
+Parametre--istatistik ayrımı Bölüm~\ref{sec:population-parameter}'de,
+örnekleme dağılımı ve standart hata ise Bölüm~\ref{ch:sampling-distributions}
+ile Bölüm~\ref{sec:standard-error}'da geliştirilmiştir.
+
+\section{Parametre, tahmin edici ve tahmin}
+\label{sec:estimator-estimate}
+
+\begin{definitionbox}
+Parametre evrene ait sabit fakat bilinmeyen bir niceliktir. Tahmin edici,
+örneklemden hesaplanan rassal bir kuraldır; tahmin ise gözlenen örneklem için
+bu kuralın aldığı sayısal değerdir. Örneğin $\bar X$ evren ortalaması $\mu$
+için bir tahmin edici, $\bar x=72{,}4$ ise elde edilen tahmindir.
+\end{definitionbox}
+
+\section{Sık kullanılan nokta tahminleri}
+
+\begin{table}[H]
+\centering
+\caption{Parametreler ve doğal örneklem tahminleri.}
+\label{tab:natural-estimators}
+\begin{tabular}{p{0.38\textwidth}p{0.36\textwidth}}
+\toprule
+Hedef parametre & Nokta tahmini \\
+\midrule
+Evren ortalaması $\mu$ & Örneklem ortalaması $\bar x$ \\
+Evren oranı $p$ & Örneklem oranı $\hat p=x/n$ \\
+Evren varyansı $\sigma^2$ & Örneklem varyansı $s^2$ \\
+İki evren ortalaması farkı & $\bar x_1-\bar x_2$ \\
+Korelasyon $\rho$ & Örneklem korelasyonu $r$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Tek bir nokta tahmini belirsizliği göstermez. $\bar x=72$ sonucu, örneklem
+hacmi 10 olduğunda ve 1000 olduğunda aynı görünür; oysa tahminlerin hassasiyeti
+çok farklıdır. Bu nedenle nokta tahmini standart hata veya güven aralığıyla
+birlikte verilmelidir.
+
+\section{Yanlılık}
+\label{sec:estimator-bias}
+
+Bir tahmin edici için
+\[
+\text{Yanlılık}(\hat\theta)
+=\E[\hat\theta]-\theta
+\]
+tanımlanır. Beklenen değeri hedef parametreye eşitse tahmin edici yansızdır.
+Yansızlık uzun dönemli bir özelliktir; tek bir örneklemde tahminin parametreye
+eşit olacağını söylemez.
+
+\section{Varyans, standart hata ve ortalama karesel hata}
+\label{sec:estimator-mse}
+
+Tahmin edicinin örneklemden örnekleme değişkenliği varyansıyla ölçülür.
+Standart hata bu varyansın kareköküdür. Yanlılık ile değişkenliği birleştiren
+ortalama karesel hata
+\[
+\MSE(\hat\theta)=\Var(\hat\theta)
++\text{Yanlılık}(\hat\theta)^2
+\]
+eşitliğini sağlar.
+
+\begin{sezgibox}
+Hedef tahtasında atışların merkezi gerçek parametreyi temsil etsin. Atışların
+merkezden sistematik kayması yanlılık, birbirinden uzaklığı varyanstır. İyi bir
+tahmin edici hem hedefe yakın hem de tekrarlarda kararlı olmalıdır.
+\end{sezgibox}
+
+Şekil~\ref{fig:estimator-bias-spread}, aynı hedef parametre için dört
+şematik örnekleme dağılımını gösterir. Soldaki dağılımların merkezi hedefte,
+sağdakilerin merkezi hedefin sağındadır. Üst sıradaki dar eğriler daha küçük
+varyansı gösterir. Dolayısıyla dar bir dağılım tek başına yansızlık anlamına
+gelmez; geniş bir yansız dağılım da tek örneklemde hedefe yakınlığı garanti etmez.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[font=\footnotesize]
+  \foreach \sx/\sy/\center/\spread/\heading in {
+    -2.7/0/0/0.4/{Yansız, düşük varyans},
+    2.7/0/0.85/0.4/{Yanlı, düşük varyans},
+    -2.7/-3.2/0/0.85/{Yansız, yüksek varyans},
+    2.7/-3.2/0.85/0.85/{Yanlı, yüksek varyans}}{
+    \begin{scope}[shift={(\sx,\sy)}]
+      \node[font=\small\bfseries] at (0,2.1) {\heading};
+      \draw[->,PrismGray] (-2.2,0)--(2.3,0);
+      \draw[PrismBlue,dashed,line width=0.7pt] (0,0)--(0,1.65);
+      \draw[PrismBlue,line width=1pt,domain=-2.15:2.15,samples=90,smooth]
+        plot (\x,{0.56/\spread*exp(-((\x-\center)^2)/(2*\spread^2))});
+      \node[below] at (0,0) {$\theta$};
+      \node[below,align=center] at (0,-0.4) {Tahmin değeri};
+    \end{scope}
+  }
+\end{tikzpicture}
+\caption{Yanlılık ve varyansın ayrı özellikler olarak okunması. Kesikli
+dikey çizgi gerçek parametreyi, eğriler tekrarlı örneklemlerdeki tahmin
+dağılımlarını gösterir; çizimler şematiktir.}
+\label{fig:estimator-bias-spread}
+\end{figure}
+
+\section{Tutarlılık}
+
+Örneklem hacmi büyüdükçe tahmin edici gerçek parametre çevresinde yoğunlaşıyorsa
+tutarlı olarak adlandırılır. Örneklem ortalaması, sonlu varyans altında evren
+ortalaması için tutarlıdır. Tutarlılık büyük örneklem özelliğidir ve küçük
+örneklem performansını tek başına garanti etmez.
+
+\section{Etkinlik ve sağlamlık}
+
+Aynı parametreyi tahmin eden iki yansız tahmin ediciden varyansı daha küçük
+olan, daha \textbf{etkin} kabul edilir. Ancak düşük varyans her koşulda en iyi
+uygulamalı tercih anlamına gelmez. Örneğin örneklem ortalaması normal veya
+yaklaşık simetrik verilerde etkinken, medyan ağır kuyruklu ve aykırı değerli
+dağılımlarda daha \textbf{sağlam} olabilir.
+
+Bu nedenle tahmin edici seçimi yalnız tek bir matematiksel özelliğe değil,
+hedef parametreye, veri üretim sürecine ve olası model sapmalarına dayanır.
+Yansızlık, düşük varyans, küçük MSE ve sağlamlık bazen aynı tahmin edicide
+birleşirken bazen aralarında bir denge kurulması gerekir.
+Bu ölçütlerin karar kuramı ve tahmin kuramı içindeki ilişkisi için
+\citet{hogg2015} temel bir başvuru kaynağıdır.
+
+\section{Raporlama hassasiyeti}
+
+Nokta tahmini, ölçme aracının hassasiyetini ve tahmin belirsizliğini aşan
+ondalık basamaklarla raporlanmamalıdır. Standart hatası 2,4 puan olan bir
+ortalamanın 72,4387 biçiminde verilmesi gerçek bilgi düzeyini olduğundan
+yüksek gösterir. Genellikle tahmin ile standart hata aynı ondalık basamakta
+sunulur ve kullanılan ağırlıklandırma ya da örnekleme tasarımı belirtilir.
+
+\section{Bir tahmini değerlendirirken}
+
+\begin{enumerate}
+  \item Hedef parametre açık mı?
+  \item Örnekleme tasarımı hedef evrene uygun mu?
+  \item Tahminin standart hatası veya güven aralığı verilmiş mi?
+  \item Aykırı değerler ya da eksik veriler tahmini belirgin etkiliyor mu?
+  \item Tahmin bağlama uygun birim ve hassasiyetle raporlanmış mı?
+\end{enumerate}
+
+\section{Çözümlü örnek: aynı tahmin, farklı hassasiyet}
+
+İki araştırmada olumlu yanıt oranı $\hat p=0{,}60$ bulunsun. İlk araştırmada
+$n=25$, ikincisinde $n=400$ kişi vardır. Büyük örneklem yaklaşımıyla
+\[
+\SE(\hat p)=\sqrt{\frac{\hat p(1-\hat p)}{n}}
+\]
+olduğundan standart hatalar sırasıyla yaklaşık $0{,}098$ ve $0{,}024$'tür.
+Nokta tahminleri aynı olsa da ikinci sonuç çok daha hassastır. Bununla
+birlikte ikinci örneklem kolayda örnekleme ile seçilmişse düşük standart hata
+temsil yanlılığı sorununu ortadan kaldırmaz.
+
+\begin{outputguidebox}
+Bir tahmin tablosunda önce hedef parametreyi ve birimi belirleyin. Ardından
+örneklem hacmini, nokta tahminini, standart hatayı ve varsa güven aralığını
+birlikte okuyun. Gereğinden fazla ondalık basamak sahte hassasiyet yaratır.
+\end{outputguidebox}
+
+\section{Yazılım uygulaması: tahmin ve standart hata}
+
+\begin{softwarebox}
+\begin{lstlisting}
+import numpy as np
+
+responses = np.array([1, 0, 1, 1, 0, 1, 1, 0, 1, 0])
+p_hat = responses.mean()
+se = np.sqrt(p_hat * (1 - p_hat) / len(responses))
+
+print("Oran tahmini:", p_hat)
+print("Yaklasik standart hata:", se)
+
+rng = np.random.default_rng(2026)
+simulated = rng.binomial(1, .40, size=(10000, 50))
+estimates = simulated.mean(axis=1)
+print("Tahminlerin merkezi:", estimates.mean())
+print("Ampirik standart hata:", estimates.std(ddof=1))
+\end{lstlisting}
+İkili kodlamada 1 olayın gerçekleşmesini, 0 gerçekleşmemesini gösterdiğinde
+aritmetik ortalama örneklem oranına eşittir. Benzetimde tahminlerin merkezi
+0,40'a, standart sapması ise kuramsal $\sqrt{0{,}40(0{,}60)/50}$ değerine
+yaklaşmalıdır.
+\end{softwarebox}
+
+\begin{mistakebox}
+Bir tahminin yansız olması her örneklemde doğru değeri vereceği anlamına
+gelmez. Yansızlık, aynı süreç çok kez tekrarlandığında tahminlerin merkezine
+ilişkin bir özelliktir.
+\end{mistakebox}
+
+\begin{assumptionbox}
+Standart hata hesabı kullanılan tahmin ediciye ve örnekleme tasarımına
+bağlıdır. Ağırlıklı, kümeli veya bağımlı verilerde basit rastgele örneklem
+formülleri belirsizliği olduğundan küçük gösterebilir.
+\end{assumptionbox}
+
+\section{Çözümlü problemler}
+
+\subsection*{Problem 1: Parametre, tahmin edici ve tahmin}
+
+Bir üniversitedeki öğrencilerin çevrim içi derslere düzenli katılım oranı
+araştırılmaktadır. Rastgele seçilen 80 öğrencinin 54'ü düzenli katılmıştır.
+Parametreyi, tahmin ediciyi ve gerçekleşmiş tahmini belirleyin.
+
+\textbf{Çözüm.} Üniversitedeki bütün öğrencilerin düzenli katılım oranı
+bilinmeyen parametre $p$'dir. $X$ örneklemde düzenli katılan öğrenci sayısı
+olmak üzere
+\[
+\hat p=\frac{X}{n}
+\]
+örneklem oranı bir tahmin edicidir; örneklem seçilmeden önce rassaldır.
+Gözlenen örnekteki gerçekleşmiş tahmin
+\[
+\hat p=\frac{54}{80}=0{,}675
+\]
+olur. Buna göre örneklemde düzenli katılım oranı yüzde 67,5'tir. Bu değer
+evren oranının kesin değeri değil, örneklemden elde edilen nokta tahminidir.
+
+\textbf{Raporlama örneği.} ``Rastgele seçilen 80 öğrencinin 54'ü düzenli
+katılım göstermiş; evren oranı için nokta tahmini yüzde 67,5 bulunmuştur.''
+
+\subsection*{Problem 2: İki yansız tahmin edicinin karşılaştırılması}
+
+$X_1$ ve $X_2$, ortalaması $\mu$ ve varyansı $\sigma^2$ olan bir evrenden
+bağımsız iki gözlem olsun. $T_1=X_1$ ve
+$T_2=(X_1+X_2)/2$ tahmin edicilerini yansızlık ve varyans bakımından
+karşılaştırın.
+
+\textbf{Çözüm.} Beklenen değerlerin doğrusallığından
+\[
+\E[T_1]=\E[X_1]=\mu
+\]
+ve
+\[
+\E[T_2]=\frac{\E[X_1]+\E[X_2]}{2}
+=\frac{\mu+\mu}{2}=\mu
+\]
+olur. Her iki tahmin edici de yansızdır. Varyansları ise
+\[
+\Var(T_1)=\sigma^2,
+\qquad
+\Var(T_2)=\frac{\sigma^2+\sigma^2}{4}
+=\frac{\sigma^2}{2}
+\]
+biçimindedir. $T_2$ aynı hedef için yarı varyansa sahip olduğundan daha
+etkindir. İkinci gözlemi kullanmak tahminin örneklemden örnekleme
+değişkenliğini azaltmıştır.
+
+\textbf{Yorum.} İki tahmin edicinin de yansız olması onları eşit kalitede
+yapmaz; değişkenlik de karşılaştırılmalıdır.
+
+\subsection*{Problem 3: MSE ile yanlılık--varyans dengesi}
+
+Aynı $\theta$ parametresi için A tahmin edicisinin yanlılığı 0 ve varyansı 9;
+B tahmin edicisinin yanlılığı 2 ve varyansı 3 olsun. Her iki tahmin edicinin
+MSE değerini hesaplayıp kare hata ölçütüne göre karşılaştırın.
+
+\textbf{Çözüm.} A tahmin edicisi için
+\[
+\MSE(A)=9+0^2=9.
+\]
+B tahmin edicisi için
+\[
+\MSE(B)=3+2^2=7.
+\]
+A yansız olmasına rağmen yüksek varyansı nedeniyle MSE değeri daha büyüktür.
+B iki birim yanlıdır; ancak değişkenliğindeki azalma yanlılığın karesinden
+daha ağır bastığı için toplam karesel hata 7'ye düşmüştür. Kare hata kaybı
+altında B tercih edilir.
+
+Bu sonuç ``yanlı tahmin edici her zaman daha iyidir'' anlamına gelmez. Tercih,
+yanlılık ve varyansın büyüklüklerine, örneklem hacmine ve yanlış tahminlerin
+uygulamadaki maliyetine bağlıdır.
+
+\subsection*{Problem 4: Örneklem varyansında neden $n-1$ kullanılır?}
+
+$2,4,6$ gözlemleri için örneklem ortalamasını, kareli sapmalar toplamını ve
+$n-1$ bölenli örneklem varyansını hesaplayın. Aynı toplam $n$'ye bölünürse
+hangi değer elde edilir?
+
+\textbf{Çözüm.} Örneklem ortalaması
+\[
+\bar x=\frac{2+4+6}{3}=4
+\]
+ve kareli sapmalar toplamı
+\[
+(2-4)^2+(4-4)^2+(6-4)^2=4+0+4=8
+\]
+olur. Örneklem varyansı
+\[
+s^2=\frac{8}{3-1}=4
+\]
+olarak hesaplanır. Aynı toplam $n=3$'e bölünürse $8/3\approx2{,}67$ elde
+edilir.
+
+Sapmalar örneklem ortalamasına göre hesaplandığında bir serbestlik derecesi
+kullanılmış olur. $n-1$ düzeltmesi, bağımsız ve aynı dağılımlı örneklemede
+$s^2$'yi evren varyansı $\sigma^2$ için yansız tahmin edici yapar. Tek bir
+örnekte 4 değerinin gerçek evren varyansına eşit olması gerekmez; yansızlık
+tekrarlı örnekleme özelliğidir.
+
+\subsection*{Problem 5: Alt gruplardan birleşik ortalama tahmini}
+
+Bir araştırmada 40 lisans öğrencisinin ortalama çalışma süresi 70 dakika,
+60 lisansüstü öğrencinin ortalaması 80 dakika bulunmuştur. Bütün 100
+öğrencinin birleşik ortalamasını hesaplayın. Grup ortalamalarının basit
+ortalamasını almak neden yanlış olur?
+
+\textbf{Çözüm.} Birleşik toplam çalışma süresi
+\[
+40(70)+60(80)=2800+4800=7600
+\]
+dakikadır. Bu nedenle birleşik ortalama
+\[
+\bar x=\frac{7600}{100}=76
+\]
+dakika olur. Grup ortalamalarının basit ortalaması $(70+80)/2=75$ dakika
+olurdu; ancak bu hesap iki grubun eşit büyüklükte olduğunu varsayar. Burada
+lisansüstü grup daha büyük olduğu için 80 dakikalık ortalama birleşik tahminde
+daha fazla ağırlık taşır.
+
+\textbf{Varsayım kontrolü.} Bu birleşik ortalama gözlenen 100 kişi için
+doğrudur. Gruplar evrende farklı oranlarda bulunuyor veya farklı seçilme
+olasılıklarıyla örneklenmişse evren ortalaması için tasarım ağırlıkları ayrıca
+kullanılmalıdır.
+
+\begin{outputguidebox}
+Bir tahmin çıktısında tahmin edilen büyüklüğün ortalama, oran, fark veya başka
+bir parametre olup olmadığını belirleyin. Nokta tahminiyle birlikte standart
+hata, örneklem hacmi, kullanılan ağırlıklar ve yuvarlama düzeyini kontrol
+edin. Küçük standart hata, kötü örnekleme tasarımından gelen yanlılığı ortadan
+kaldırmaz.
+\end{outputguidebox}
+
+\input{chapters/spss/b07}
+
+\input{chapters/r/b07}
+
+\section{Bölüm özeti}
+
+\begin{itemize}
+  \item Parametre hedef büyüklük, tahmin edici rassal kural, tahmin gözlenen sayısal sonuçtur.
+  \item İyi bir tahmin edici yanlılık ve değişkenlik bakımından birlikte değerlendirilir.
+  \item MSE, varyans ile yanlılığın karesini aynı ölçüde birleştirir.
+  \item Nokta tahmini standart hata veya güven aralığı olmadan hassasiyeti göstermez.
+  \item Aynı parametreyi tahmin eden yansız tahmin ediciler varyanslarına göre
+  etkinlik bakımından karşılaştırılabilir.
+  \item Birleşik tahminlerde alt grup büyüklükleri ve seçilme olasılıkları
+  uygun ağırlıklarla hesaba katılmalıdır.
+\end{itemize}
+
+\section*{Alıştırmalar}
+
+\begin{enumerate}
+  \item Tahmin edici ile tahmin arasındaki farkı açıklayın.
+  \item Yansız fakat yüksek varyanslı bir tahmin edicinin sorununu belirtin.
+  \item Nokta tahmininin neden tek başına yeterli olmadığını açıklayın.
+  \item $\hat p=0{,}40$ ve $n=100$ için yaklaşık standart hatayı hesaplayın.
+  \item Düşük standart hatanın neden düşük yanlılık garantisi olmadığını açıklayın.
+  \item 120 öğrencinin 78'inin olumlu yanıt verdiği bir araştırmada parametreyi,
+  tahmin ediciyi ve gerçekleşmiş tahmini yazın.
+  \item Yanlılığı $-1$ ve varyansı 5 olan bir tahmin edicinin MSE değerini bulun.
+  \item A tahmin edicisinin yanlılığı 0, varyansı 12; B'nin yanlılığı 2,
+  varyansı 4 ise MSE ölçütüne göre karşılaştırın.
+  \item $3,5,7,9$ verisi için $n-1$ bölenli örneklem varyansını hesaplayın.
+  \item Tutarlı bir tahmin edicinin küçük örneklemde neden yine de zayıf
+  performans gösterebileceğini açıklayın.
+  \item Örneklem ortalaması ile medyanı aykırı değerlere sağlamlık bakımından
+  karşılaştırın.
+  \item 30 kişilik grubun ortalaması 60, 70 kişilik grubun ortalaması 75 ise
+  birleşik ortalamayı bulun.
+  \item Standart hatası 0,08 olan bir oran tahminini dört ondalık basamakla
+  raporlamanın neden sahte hassasiyet oluşturabileceğini açıklayın.
+  \item Benzetim kullanarak bir tahmin edicinin yanlılık ve standart hatasını
+  incelemek için izlenecek adımları yazın.
+\end{enumerate}

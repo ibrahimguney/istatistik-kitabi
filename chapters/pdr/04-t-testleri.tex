@@ -1,0 +1,636 @@
+\chapter{Ortalamaların Karşılaştırılması: t Testleri}
+\label{ch:power-one-sample}
+\label{ch:two-sample}
+\index{t testi@$t$ testi}
+
+\begin{hedefler}
+Bu bölümün sonunda okuyucu:
+\begin{itemize}
+  \item araştırma tasarımına göre tek örneklem, bağımsız örneklem ve eşleştirilmiş örneklem $t$ testini seçebilecek,
+  \item her test için hedef parametreyi ve hipotezleri açıkça yazabilecek,
+  \item test istatistiği, serbestlik derecesi, $p$-değeri ve güven aralığını birlikte yorumlayabilecek,
+  \item bağımsız gruplarda klasik ve Welch $t$ testini ayırabilecek,
+  \item eşleştirilmiş testte analizin neden fark puanları üzerinden yürütüldüğünü açıklayabilecek,
+  \item bağımsızlık, dağılım biçimi, aykırı değer ve varyans yapısını uygun biçimde değerlendirebilecek,
+  \item Cohen'in $d$ değeri ve ham ortalama farkıyla uygulamalı önemi tartışabilecek,
+  \item Python ve SPSS çıktılarından eksiksiz bir bulgu raporu oluşturabilecektir.
+\end{itemize}
+\end{hedefler}
+
+\begin{hazirlik}
+Bir grubun ön-test ve son-test puanlarını karşılaştırmak ile iki farklı grubun
+puanlarını karşılaştırmak neden aynı tasarım değildir? Gözlemlerin birbirine
+bağlı veya bağımsız olması açısından düşünün.
+\end{hazirlik}
+
+\section{PDR vakası: Üç farklı ortalama sorusu}
+
+Bir üniversitenin psikolojik danışma merkezi aynı yalnızlık ölçeğiyle üç
+araştırma sorusu sormaktadır:
+
+\begin{enumerate}
+  \item Birinci sınıf öğrencilerinin ortalama puanı norm değeri 50'den farklı mıdır?
+  \item Grup danışmanlığına katılan öğrenciler ile karşılaştırma grubundaki farklı öğrencilerin son-test ortalamaları farklı mıdır?
+  \item Programa katılan aynı öğrencilerin ön-test ve son-test ortalamaları değişmiş midir?
+\end{enumerate}
+
+Üç soru da ortalamaya ilişkindir; fakat veri yapıları farklıdır. İlk soruda
+bir örneklem ortalaması sabit bir değerle, ikinci soruda farklı kişilerin iki
+ortalaması, üçüncü soruda ise aynı kişilerin iki ölçümü karşılaştırılır. Test
+seçimi yalnız değişken sayısına değil, gözlemlerin nasıl üretildiğine dayanır.
+
+\begin{figure}[htbp]
+\centering
+\resizebox{0.98\linewidth}{!}{%
+\begin{tikzpicture}[alt={Veri yapısına göre tek örneklem, bağımsız örneklem ve eşleştirilmiş örneklem t testi seçim şeması},node distance=0cm]
+  \node[draw=PrismBlue,fill=PrismLight,rounded corners,align=center,minimum width=3.3cm,minimum height=0.8cm] (q) at (0,2.4) {Karşılaştırmanın veri yapısı nedir?};
+  \node[draw=PrismBlue!70,fill=white,rounded corners,align=center,minimum width=3.0cm,minimum height=0.8cm] (one) at (-4,0.5) {Bir grup\\sabit değer};
+  \node[draw=PrismBlue!70,fill=white,rounded corners,align=center,minimum width=3.0cm,minimum height=0.8cm] (ind) at (0,0.5) {İki farklı\\bağımsız grup};
+  \node[draw=PrismBlue!70,fill=white,rounded corners,align=center,minimum width=3.0cm,minimum height=0.8cm] (pair) at (4,0.5) {Aynı veya\\eşleştirilmiş birimler};
+  \node[font=\small\bfseries,text=PrismBlue] at (-4,-0.7) {Tek örneklem t};
+  \node[font=\small\bfseries,text=PrismBlue] at (0,-0.7) {Welch / bağımsız t};
+  \node[font=\small\bfseries,text=PrismBlue] at (4,-0.7) {Eşleştirilmiş t};
+  \draw[->,thick,PrismBlue] (q)--(one);
+  \draw[->,thick,PrismBlue] (q)--(ind);
+  \draw[->,thick,PrismBlue] (q)--(pair);
+\end{tikzpicture}%
+}
+\caption{Araştırma tasarımına göre temel $t$ testi seçimi.}
+\end{figure}
+
+\begin{mistakebox}
+Aynı öğrencilerin ön-test ve son-test ölçümlerini iki bağımsız grup gibi
+analiz etmek eşleşme bilgisini kaybeder ve standart hatayı yanlış hesaplar.
+Tersine, birbirinden farklı öğrencileri yalnız grup büyüklükleri eşit diye
+eşleştirilmiş kabul etmek de geçersizdir.
+\end{mistakebox}
+
+\section{t testlerinin ortak mantığı}
+\index{t testi@$t$ testi!test istatistiği}
+\index{serbestlik derecesi}
+
+Bütün $t$ testleri gözlenen bir tahmini sıfır hipotezindeki değerle
+karşılaştırır \cite{casella2002,wasserman2004}:
+\[
+t=\frac{\text{gözlenen tahmin}-\text{$H_0$ altındaki değer}}
+        {\text{tahminin standart hatası}}.
+\]
+
+Pay araştırmanın ilgilendiği farkı, payda ise bu farkın örnekleme
+değişkenliğini gösterir. Mutlak $t$ değeri büyüdükçe gözlenen sonuç $H_0$
+değerinden standart hata birimleriyle daha uzakta bulunur. İşaret farkın
+yönünü gösterir; kanıtın derecesi çift yönlü testte mutlak değer üzerinden
+değerlendirilir.
+
+\begin{table}[htbp]
+\centering
+\caption{Üç $t$ testinin hedefleri ve analiz birimleri.}
+\begin{tabular}{@{}p{0.22\textwidth}p{0.25\textwidth}p{0.31\textwidth}@{}}
+\toprule
+Test & Hedef parametre & Analize giren temel değer \\
+\midrule
+Tek örneklem & $\mu-\mu_0$ & Her katılımcının ham puanı \\
+Bağımsız örneklem & $\mu_1-\mu_2$ & İki farklı gruptaki ham puanlar \\
+Eşleştirilmiş örneklem & $\mu_D$ & Her eşleşme için fark puanı $D_i$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Testin sonunda yalnız $p$-değeri değil, hedef farkın nokta tahmini ve güven
+aralığı da raporlanır. Böylece farkın yönü, olası büyüklüğü ve tahmin
+hassasiyeti görünür olur.
+
+\section{Tek örneklem t testi}
+\index{t testi@$t$ testi!tek örneklem}
+
+Tek örneklem $t$ testi, bir evren ortalamasını önceden tanımlanmış bir referans
+değerle karşılaştırır. Hipotezler
+\[
+H_0:\mu=\mu_0,
+\qquad
+H_1:\mu\neq\mu_0
+\]
+ve test istatistiği
+\[
+t=\frac{\bar X-\mu_0}{s/\sqrt n},
+\qquad sd=n-1
+\]
+biçimindedir.
+
+Referans değer araştırma verisinden keyfî olarak seçilmemelidir. Ölçeğin norm
+ortalaması, program hedefi veya kuramsal eşik olabilir; kaynağı ve güncelliği
+açıklanmalıdır. Eski ya da farklı bir norm grubunun ortalaması, yeni öğrenci
+evreni için anlamlı bir karşılaştırma oluşturmayabilir.
+
+\subsection{Adım adım tek örneklem örneği}
+
+Yirmi beş öğrencinin akademik kaygı puanı ortalaması 54,8 ve standart sapması
+8 olsun. Güncel ve uygun norm ortalaması 50 ile çift yönlü karşılaştırılacaktır.
+
+\adimbaslik{1. Hipotezler}
+\[
+H_0:\mu=50,
+\qquad H_1:\mu\neq50.
+\]
+
+\adimbaslik{2. Standart hata ve test istatistiği}
+\[
+SE(\bar X)=\frac{8}{\sqrt{25}}=1{,}6,
+\qquad
+t=\frac{54{,}8-50}{1{,}6}=3{,}00.
+\]
+
+Serbestlik derecesi 24'tür ve çift yönlü $p$-değeri yaklaşık 0,006'dır.
+
+\adimbaslik{3. Güven aralığı}
+
+Yüzde 95 güven düzeyinde $t^*\approx2{,}064$ olduğundan
+\[
+54{,}8\pm2{,}064(1{,}6)
+=[51{,}50;\ 58{,}10]
+\]
+elde edilir. Aralık 50'yi dışlar ve test kararıyla uyumludur.
+
+\adimbaslik{4. Etki büyüklüğü}
+
+Tek örneklem için standartlaştırılmış fark
+\[
+d=\frac{\bar x-\mu_0}{s}
+=\frac{4{,}8}{8}=0{,}60
+\]
+olur. Sonuç norm değerinden istatistiksel olarak belirgin ve yaklaşık 0,60
+standart sapma yüksek bir ortalamaya işaret eder. Bunun klinik anlamı ölçeğin
+yorum kılavuzu ve PDR bağlamıyla ayrıca değerlendirilmelidir.
+
+\begin{researchbox}
+Bir grubun ortalamasının klinik eşikten yüksek olması, gruptaki bütün
+öğrencilerin eşik üzerinde olduğu anlamına gelmez. Ortalama karşılaştırması
+bireysel sınıflandırma yapmaz; puan dağılımı ve eşik üzerindeki öğrenci oranı
+ayrıca incelenmelidir.
+\end{researchbox}
+
+\section{Bağımsız örneklem t testi}
+\index{t testi@$t$ testi!bağımsız örneklem}
+\index{bağımsız gruplar}
+
+Bağımsız örneklem testinde iki gruptaki kişiler farklıdır ve bir kişinin
+puanı diğer gruptaki kişinin puanını belirlemez. Hedef parametre
+$\mu_1-\mu_2$ farkıdır:
+\[
+H_0:\mu_1-\mu_2=0,
+\qquad
+H_1:\mu_1-\mu_2\neq0.
+\]
+
+Bağımsızlık, veriye bakılarak sınanan sıradan bir dağılım varsayımı değildir;
+örnekleme ve araştırma tasarımından anlaşılır. Aynı sınıftaki öğrenciler,
+kardeş çiftleri veya bir danışmanın danışanları kümelenmiş olabilir. Böyle bir
+yapıda sıradan bağımsız $t$ testi standart hatayı küçümseyebilir.
+
+\subsection{Klasik havuzlanmış test ve Welch testi}
+\index{t testi@$t$ testi!havuzlanmış}
+\index{Welch t testi@Welch $t$ testi}
+\index{varyans eşitliği}
+
+Klasik bağımsız örneklem testi iki evren varyansının eşit olduğunu varsayar ve
+birleşik varyans kullanır. Welch testi ise standart hatayı
+\[
+SE(\bar X_1-\bar X_2)
+=\sqrt{\frac{s_1^2}{n_1}+\frac{s_2^2}{n_2}}
+\]
+ile hesaplar ve serbestlik derecesini varyanslarla grup büyüklüklerine göre
+ayarlar:
+\[
+t=\frac{\bar X_1-\bar X_2}
+{\sqrt{s_1^2/n_1+s_2^2/n_2}}.
+\]
+
+Welch testi eşit varyans varsayımı olmadan çalışır ve varyanslar eşit olduğunda
+da genellikle çok az güç kaybeder. Bu nedenle özellikle grup büyüklükleri veya
+standart sapmalar farklıysa güvenli bir varsayılan seçenektir
+\cite{maxwell2018}.
+
+\begin{mistakebox}
+Levene testinde $p>0{,}05$ bulunması varyansların kesin eşit olduğunu
+kanıtlamaz; küçük örneklemde testin gücü düşük olabilir. $p<0{,}05$ bulunması
+da verinin analiz edilemeyeceği anlamına gelmez. Welch testi varyans eşitsizliği
+için doğrudan bir çözüm sunar.
+\end{mistakebox}
+
+\subsection{Adım adım bağımsız grup örneği}
+
+Program grubunda $n_1=40$, $\bar x_1=38{,}5$, $s_1=8{,}0$; karşılaştırma
+grubunda $n_2=35$, $\bar x_2=44{,}0$, $s_2=10{,}0$ olsun. Fark ``program
+eksi karşılaştırma'' olarak tanımlanmıştır.
+
+\adimbaslik{1. Nokta tahmini}
+\[
+\bar x_1-\bar x_2=38{,}5-44{,}0=-5{,}5.
+\]
+
+\adimbaslik{2. Standart hata ve Welch istatistiği}
+\[
+SE=\sqrt{\frac{8^2}{40}+\frac{10^2}{35}}
+\approx2{,}11,
+\qquad
+t=\frac{-5{,}5}{2{,}11}\approx-2{,}61.
+\]
+
+Welch serbestlik derecesi yaklaşık 65 ve çift yönlü $p$-değeri yaklaşık
+0,011'dir.
+
+\adimbaslik{3. Güven aralığı}
+
+Yaklaşık kritik değer 2,00 alınırsa
+\[
+-5{,}5\pm2{,}00(2{,}11)
+=[-9{,}72;\ -1{,}28]
+\]
+elde edilir. Veri program grubunda yaklaşık 1,3 ile 9,7 puan arasında daha
+düşük evren ortalamasıyla uyumludur.
+
+\adimbaslik{4. Standartlaştırılmış fark}
+
+Birleşik standart sapma yaklaşık 8,99 olduğundan
+\[
+d=\frac{-5{,}5}{8{,}99}\approx-0{,}61.
+\]
+Negatif işaret program grubunun daha düşük puan aldığını, mutlak değer ise
+farkın yaklaşık 0,61 standart sapma olduğunu gösterir.
+
+\section{Eşleştirilmiş örneklem t testi}
+\index{t testi@$t$ testi!eşleştirilmiş örneklem}
+\index{fark puanı}
+
+Eşleştirilmiş testte iki ölçüm aynı kişiye veya anlamlı biçimde eşleştirilmiş
+birimlere aittir. Her birim için
+\[
+D_i=X_{i,\text{sonra}}-X_{i,\text{önce}}
+\]
+farkı hesaplanır. Hipotez ve test istatistiği
+\[
+H_0:\mu_D=0,
+\qquad
+t=\frac{\bar D}{s_D/\sqrt n},
+\qquad sd=n-1
+\]
+biçimindedir. Dolayısıyla eşleştirilmiş $t$ testi, fark puanlarına uygulanan
+tek örneklem $t$ testidir.
+
+Eşleştirme, kişiler arası sabit farklılıkları fark hesabında ortadan kaldırır.
+Ön-test ile son-test yüksek ilişkiliyse farkın standart hatası küçülebilir ve
+aynı sayıda bağımsız gözleme göre daha hassas bir karşılaştırma elde edilir.
+
+\subsection{Adım adım ön-test--son-test örneği}
+
+Otuz öğrencinin son-test eksi ön-test farklarının ortalaması $\bar d=-4{,}5$
+ve standart sapması $s_D=6{,}0$ olsun.
+
+\[
+SE(\bar D)=\frac{6}{\sqrt{30}}\approx1{,}10,
+\qquad
+t=\frac{-4{,}5}{1{,}10}\approx-4{,}11.
+\]
+
+Serbestlik derecesi 29 ve çift yönlü $p<0{,}001$'dir. Yüzde 95 güven aralığı
+yaklaşık
+\[
+-4{,}5\pm2{,}045(1{,}10)
+=[-6{,}74;\ -2{,}26]
+\]
+olur. Eşleştirilmiş standartlaştırılmış değişim
+\[
+d_z=\frac{\bar d}{s_D}=-0{,}75
+\]
+olarak hesaplanabilir.
+
+\begin{sezgibox}
+Eşleştirilmiş analiz, ``son-test grubunun ortalaması ön-test grubundan farklı
+mı?'' sorusundan çok ``aynı öğrenciler tipik olarak ne kadar değişti?''
+sorusunu yanıtlar. Analizin temel verisi iki ayrı sütun değil, her satırdaki
+değişimdir.
+\end{sezgibox}
+
+\section{Eşleştirilmiş tasarımda dikkat edilmesi gerekenler}
+
+Ön-test--son-test farkı bulunması değişimin yalnız programdan kaynaklandığını
+göstermez. Zaman, olgunlaşma, sınanma etkisi, dış olaylar ve ortalamaya dönüş
+değişime katkıda bulunabilir. Nedensel etki için uygun karşılaştırma grubu ve
+tercihen rastgele atama gerekir.
+
+Ayrıca:
+
+\begin{itemize}
+  \item Normallik iki ölçümün ayrı ayrı değil, fark puanlarının dağılımı için değerlendirilir.
+  \item Bir öğrencinin ölçümlerinden biri eksikse o eşleşme klasik tam durum analizine giremez.
+  \item Farkın yönü açıkça tanımlanmalıdır; ``sonra eksi önce'' ile ``önce eksi sonra'' işaretleri ters üretir.
+  \item Üç veya daha fazla zaman noktası ayrı ayrı çok sayıda eşleştirilmiş testle incelenmemelidir.
+  \item Gruplu ön-test--son-test araştırmasında yalnız her grubun kendi içindeki değişime bakmak, grupların değişim farkını doğrudan sınamaz.
+\end{itemize}
+
+Son madde özellikle önemlidir. Bir grupta $p<0{,}05$, diğerinde $p>0{,}05$
+olması grupların değişimlerinin birbirinden anlamlı ölçüde farklı olduğunu
+kanıtlamaz. Asıl hedef, değişim farkı veya uygun bir regresyon/ANCOVA modeliyle
+grup etkisidir.
+
+\begin{researchbox}
+Ön-test puanları ölçüm hatası içeriyorsa yalnız uç puanlı öğrencileri seçmek
+ortalamaya dönüş üretebilir. Son-testte daha ılımlı puan görülmesi program
+etkisiyle karıştırılmamalıdır. Kontrol grubu ve ölçüm güvenirliği bu ayrımda
+kritiktir.
+\end{researchbox}
+
+\section{Hangi t testi kullanılmalı?}
+
+\begin{table}[htbp]
+\centering
+\caption{Araştırma durumuna göre test seçimi.}
+\begin{tabular}{@{}p{0.28\textwidth}p{0.24\textwidth}p{0.27\textwidth}@{}}
+\toprule
+Durum & Uygun test & Sık yapılan hata \\
+\midrule
+Bir grubun ortalaması norm değerine karşı & Tek örneklem $t$ & Norm değerini örneklemden seçmek \\
+Farklı öğrencilerden iki grup & Welch bağımsız $t$ & Grupları eşleştirilmiş saymak \\
+Aynı öğrencilerin iki ölçümü & Eşleştirilmiş $t$ & Ölçümleri bağımsız analiz etmek \\
+Üç bağımsız grup & ANOVA & Üç ayrı ikili test yürütmek \\
+Üç veya daha fazla tekrarlı ölçüm & Tekrarlı ölçüm modeli & Çok sayıda eşleştirilmiş test yapmak \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Bir nicel sonuç ile iki kategorili bir grup değişkeni bulunması bağımsız $t$
+testini otomatik olarak uygun yapmaz. Grup üyeliğinin gerçekten bağımsız olup
+olmadığı ve sonuç değişkeninin anlamlı bir ortalamaya sahip olup olmadığı
+değerlendirilmelidir.
+
+\begin{etkinlik}
+Şu durumların her biri için test seçin ve analiz birimini açıklayın: (a) bir
+sınıfın kaygı ortalamasını norm değeriyle karşılaştırma, (b) kadın ve erkek
+öğrencilerin uyku süresini karşılaştırma, (c) aynı danışanların ilk ve sekizinci
+oturum puanlarını karşılaştırma, (d) üç terapi yaklaşımının ortalamalarını
+karşılaştırma.
+\end{etkinlik}
+
+\section{Varsayımlar ve veri inceleme}
+\index{varsayım kontrolü}
+\index{bağımsızlık}
+\index{normallik}
+
+Üç $t$ testi için ortak ve tasarıma özgü kontroller vardır:
+
+\begin{description}
+  \item[Ölçme düzeyi] Sonuç değişkeninin ortalama ve fark işlemlerini anlamlı kılan nicel bir yapısı olmalıdır.
+  \item[Bağımsızlık] Tek ve bağımsız testte gözlemler tasarıma uygun bağımsızdır; eşleştirilmiş testte çiftler birbirinden bağımsızdır.
+  \item[Dağılım biçimi] Küçük örneklemde güçlü çarpıklık ve ağır kuyruklar daha önemlidir.
+  \item[Aykırı değer] Ortalama ve standart sapmayı etkileyerek test sonucunu değiştirebilir.
+  \item[Varyans yapısı] Klasik bağımsız test eşit varyans varsayar; Welch testi bu koşulu gerektirmez.
+  \item[Örnekleme] Uygun olmayan seçim süreci, doğru hesaplanan testi hedef evrene genellenemez hâle getirebilir.
+\end{description}
+
+Histogram, kutu grafiği ve Q--Q grafiği sayısal özetlerle birlikte incelenir.
+Küçük örneklemde tek bir aykırı değer sonucu güçlü biçimde etkileyebilir. Büyük
+örneklemde $t$ testi orta düzey dağılım sapmalarına daha dayanıklıdır; ancak
+bağımsızlık ihlaline veya sistematik yanlılığa dayanıklı değildir.
+
+\begin{assumptionbox}
+Normallik testi anlamlı değil diye dağılımın normal olduğu kanıtlanmış sayılmaz;
+anlamlı çıktı diye de otomatik olarak parametrik olmayan teste geçilmez.
+Örneklem hacmini, sapmanın biçimini, aykırı değerleri ve $t$ testinin
+sağlamlığını birlikte değerlendirin.
+\end{assumptionbox}
+
+\section{Aykırı değer ve duyarlılık analizi}
+\index{aykırı değer}
+\index{duyarlılık analizi}
+
+Aykırı bir puan önce veri kaydı, puanlama ve katılımcı bağlamı bakımından
+incelenmelidir. Gerçek bir gözlem gerekçesiz biçimde silinmemelidir. Sonuç uç
+gözleme duyarlıysa:
+
+\begin{itemize}
+  \item gözlem dahil ve hariç sonuçlar karşılaştırılabilir,
+  \item ham fark yanında medyan ve IQR verilebilir,
+  \item sağlam veya yeniden örneklemeye dayalı aralıklar düşünülebilir,
+  \item uygun parametrik olmayan yöntemle sonuçların yönü incelenebilir.
+\end{itemize}
+
+Duyarlılık analizi, istenen $p$-değerini veren seçeneği seçme yolu değildir.
+Ana analiz önceden belirlenmeli, alternatif sonuçlar şeffaf biçimde
+raporlanmalıdır.
+
+\section{Parametrik olmayan seçenekler}
+\index{parametrik olmayan yöntem}
+
+Tek örneklem veya eşleştirilmiş durumda işaret testi ya da Wilcoxon işaretli
+sıra testi; bağımsız iki grupta Mann--Whitney testi düşünülebilir. Bu testler
+``ortalamaların parametrik olmayan $t$ testi'' olarak görülmemelidir.
+Yorumları dağılım, sıralama ve bazı ek koşullar altında konum farkına dayanır.
+
+Yöntem seçerken şu sorular sorulur:
+
+\begin{itemize}
+  \item Araştırmanın hedefi ortalama farkı mı, medyan veya sıralama davranışı mı?
+  \item Dağılım sorunu birkaç veri hatasından mı, gerçek çarpıklıktan mı kaynaklanıyor?
+  \item Örneklem hacmi ve $t$ testinin sağlamlığı yeterli mi?
+  \item Sağlam ortalama, permütasyon veya bootstrap yöntemi daha doğrudan bir hedef sunuyor mu?
+\end{itemize}
+
+Parametrik olmayan yöntemler Bölüm 13'te ayrıntılı olarak ele alınacaktır.
+
+\section{Etki büyüklüğü ve ham fark}
+\index{etki büyüklüğü}
+\index{Cohen d@Cohen'in $d$ değeri}
+\index{ham ortalama farkı}
+
+Ham ortalama farkı ölçme aracının özgün biriminde doğrudan yorumlanır.
+Standartlaştırılmış fark ise farklı ölçek veya çalışmalar arasında
+karşılaştırmayı kolaylaştırır. Bağımsız gruplarda yaygın ölçü
+\[
+d=\frac{\bar x_1-\bar x_2}{s_{\text{birleşik}}}
+\]
+biçimindedir. Küçük örneklemde Cohen'in $d$ değerinin yanlılığını azaltan
+Hedges'in $g$ değeri kullanılabilir.
+
+Eşleştirilmiş tasarımda standartlaştırma için fark puanlarının standart
+sapmasını kullanan $d_z=\bar d/s_D$ yaygındır. Ancak bağımsız ve eşleştirilmiş
+tasarımlardaki $d$ ölçüleri farklı paydalara dayanabilir; raporda kullanılan
+formül belirtilmelidir.
+
+\begin{mistakebox}
+``$d=0{,}50$ orta etkidir'' etiketi bağlamın yerine geçmez. Beş puanlık fark
+bir ölçekte önemsiz, başka bir ölçekte hizmet kararını değiştirecek kadar
+önemli olabilir. Ham fark, güven aralığı ve uygulamada anlamlı en küçük değişim
+birlikte verilmelidir.
+\end{mistakebox}
+
+\section{Örneklem hacmi ve güç}
+\index{örneklem hacmi}
+\index{test gücü}
+
+Bir $t$ testinin gücü gerçek etki büyüklüğü, örneklem hacmi, değişkenlik,
+anlamlılık düzeyi ve tasarımdan etkilenir. Bağımsız iki grupta toplam örneklem
+aynı olsa bile grupların dengeli olması çoğunlukla daha yüksek hassasiyet
+sağlar. Eşleştirilmiş tasarımda ölçümler arası ilişki arttıkça fark puanının
+değişkenliği azalabilir.
+
+Örneklem hacmi ``en az 30 kişi'' gibi evrensel bir kuralla belirlenmemelidir.
+Planlamada:
+
+\begin{itemize}
+  \item uygulamada anlamlı en küçük fark,
+  \item beklenen standart sapma,
+  \item hedef güç ve $\alpha$ düzeyi,
+  \item tek veya çift yönlü test,
+  \item grup oranı, kümelenme ve beklenen veri kaybı
+\end{itemize}
+
+birlikte değerlendirilir. Etki büyüklüğünü önceki küçük çalışmanın iyimser
+sonucundan doğrudan almak yetersiz örneklem planına yol açabilir.
+
+\begin{researchbox}
+Etik açıdan gereğinden küçük örneklem, katılımcı yüküne rağmen araştırma
+sorusunu yanıtlayamayabilir. Gereğinden büyük örneklem de kaynak ve katılımcı
+zamanı tüketebilir. Güç analizi yalnız teknik değil, etik bir planlama
+aracıdır.
+\end{researchbox}
+
+\section{Python ile üç t testi}
+
+Aşağıdaki kod özet istatistiklerden tek örneklem ve bağımsız Welch testini,
+ham fark verisinden eşleştirilmiş testi yeniden üretir:
+
+\begin{lstlisting}
+import numpy as np
+from scipy import stats
+
+# 1) Tek orneklem: xbar=54.8, s=8, n=25, mu0=50
+n, xbar, s, mu0 = 25, 54.8, 8.0, 50
+se = s / np.sqrt(n)
+t_tek = (xbar - mu0) / se
+p_tek = 2 * stats.t.sf(abs(t_tek), df=n - 1)
+kritik = stats.t.ppf(0.975, df=n - 1)
+ga_tek = (xbar - kritik * se, xbar + kritik * se)
+
+# 2) Bagimsiz gruplar: ozetlerden Welch testi
+welch = stats.ttest_ind_from_stats(
+    mean1=38.5, std1=8.0, nobs1=40,
+    mean2=44.0, std2=10.0, nobs2=35,
+    equal_var=False
+)
+
+# 3) Eslestirilmis test: her ogrencinin sonra-once farki
+farklar = np.array([-8, -3, -5, 2, -6, -4, -9, -1,
+                    -7, -2, -5, -6, -3, -8, 0, -4])
+esli = stats.ttest_1samp(farklar, popmean=0)
+
+print("Tek orneklem:", t_tek, p_tek, ga_tek)
+print("Welch testi:", welch)
+print("Eslestirilmis test:", esli)
+print("Ortalama degisim:", farklar.mean())
+\end{lstlisting}
+
+Gerçek veri analizinde koddan önce değişken tanımları, eksik gözlemler,
+olanaksız değerler ve grafikler incelenmelidir. Sonuçlar yazılım nesnesinden
+alınırken farkın yönü ve varsayılan alternatif hipotez doğrulanmalıdır.
+
+\section{SPSS ile uygulama ve çıktı okuma}
+
+\subsection*{Tek örneklem t testi}
+
+\begin{enumerate}
+  \item \textbf{Analyze $>$ Compare Means $>$ One-Sample T Test} yolunu izleyin.
+  \item Nicel değişkeni \textbf{Test Variable(s)} alanına taşıyın.
+  \item \textbf{Test Value} alanına kuramsal veya norm değerini girin.
+  \item Çıktıda ortalama, standart sapma, $t$, $sd$, $p$, ortalama farkı ve fark güven aralığını okuyun.
+\end{enumerate}
+
+\subsection*{Bağımsız örneklem t testi}
+
+\begin{enumerate}
+  \item \textbf{Independent-Samples T Test} menüsünü açın.
+  \item Sonuç değişkenini test alanına, grup değişkenini gruplama alanına taşıyın.
+  \item \textbf{Define Groups} ile iki grup kodunu doğru tanımlayın.
+  \item Grup özetlerini ve farkın hangi grup eksi hangi grup olduğunu kontrol edin.
+  \item Varyans yapısına uygun satırdan, tercihen Welch sonucundan, test ve güven aralığını okuyun.
+\end{enumerate}
+
+\subsection*{Eşleştirilmiş örneklem t testi}
+
+\begin{enumerate}
+  \item \textbf{Paired-Samples T Test} menüsünde ön-test ve son-test değişkenlerini bir çift olarak tanımlayın.
+  \item Değişkenlerin sıraya göre hangi farkı ürettiğini doğrulayın.
+  \item Eşleşmiş gözlem sayısını ve eksik çiftleri kontrol edin.
+  \item Fark ortalaması, fark standart sapması, $t$, $sd$, $p$ ve güven aralığını birlikte okuyun.
+\end{enumerate}
+
+\begin{outputguidebox}
+SPSS çıktısını şu sırayla okuyun: (1) geçerli grup veya çift sayıları, (2)
+ortalamalar ve standart sapmalar, (3) farkın yönü, (4) standart hata, (5)
+$t$, serbestlik derecesi ve kesin $p$-değeri, (6) farkın güven aralığı, (7)
+ayrıca hesaplanan etki büyüklüğü. Levene tablosunu ana araştırma sonucu gibi
+raporlamayın.
+\end{outputguidebox}
+
+\section{Üç örnek raporlama kalıbı}
+
+\subsection*{Tek örneklem}
+
+``Öğrencilerin akademik kaygı ortalaması ($\bar x=54{,}8$, $SS=8{,}0$,
+$n=25$), norm değeri 50'den yüksektir, $t(24)=3{,}00$, $p=0{,}006$,
+yüzde 95 GA $[51{,}50;58{,}10]$, $d=0{,}60$.''
+
+\subsection*{Bağımsız örneklem}
+
+``Program grubunun yalnızlık ortalaması ($\bar x=38{,}5$, $SS=8{,}0$,
+$n=40$), karşılaştırma grubundan ($\bar x=44{,}0$, $SS=10{,}0$, $n=35$)
+5,5 puan daha düşüktür. Welch testi fark için kanıt göstermiştir,
+$t(65)=-2{,}61$, $p=0{,}011$, yüzde 95 GA $[-9{,}72;-1{,}28]$,
+$d=-0{,}61$.''
+
+\subsection*{Eşleştirilmiş örneklem}
+
+``Otuz öğrencinin son-test puanı ön-testten ortalama 4,5 puan daha düşüktür
+($SS_{fark}=6{,}0$). Değişim istatistiksel olarak belirgindir,
+$t(29)=-4{,}11$, $p<0{,}001$, yüzde 95 GA $[-6{,}74;-2{,}26]$,
+$d_z=-0{,}75$.''
+
+Bu kalıplar tasarımın nedensel yoruma izin verdiği anlamına gelmez. Atama,
+örnekleme ve kayıp katılımcı süreçleri yöntem ve sınırlılıklar bölümünde
+ayrıca açıklanmalıdır.
+
+\section{Bir t testi araştırmasını değerlendirirken}
+
+\begin{enumerate}
+  \item Karşılaştırma sabit değerle mi, bağımsız gruplar arasında mı, eşleşmiş ölçümler arasında mı yapılmıştır?
+  \item Hedef farkın yönü ve sıfır hipotezi açık mıdır?
+  \item Bağımsızlık yapısı araştırma tasarımıyla uyumlu mudur?
+  \item Dağılım, aykırı değer, varyans ve eksik veri sorunları incelenmiş midir?
+  \item Bağımsız gruplarda Welch yaklaşımı veya eşit varyans gerekçesi belirtilmiş midir?
+  \item Ham fark, güven aralığı ve uygun etki büyüklüğü $p$-değeriyle birlikte verilmiş midir?
+  \item Sonuç araştırma tasarımının izin verdiğinden daha güçlü bir nedensel ya da klinik dille sunulmuş mudur?
+\end{enumerate}
+
+\input{chapters/r/b11}
+\input{chapter-exercises/08-t-testleri}
+
+\bolumkaynaklari{\cite{casella2002,maxwell2018,cohen1988,wasserman2004}}
+
+\section*{Hatırla--Uygula--Yansıt}
+
+\begin{enumerate}
+\renewcommand{\labelenumi}{\textbf{\Alph{enumi}.}}
+  \item \textbf{Hatırla:} Tek örneklem, bağımsız örneklem ve eşleştirilmiş örneklem $t$ testlerinin hedef parametrelerini yazın.
+  \item \textbf{Seç:} Bir sınıfın ortalamasını normla, iki farklı sınıfı ve aynı öğrencilerin iki ölçümünü karşılaştırmak için uygun testleri belirleyin.
+  \item \textbf{Hesapla:} $\bar x=62$, $s=10$, $n=25$ ve $\mu_0=58$ için tek örneklem $t$ istatistiğini bulun.
+  \item \textbf{Yorumla:} Tek örneklem farkı için yüzde 95 güven aralığı $[1{,}2;6{,}8]$ olduğunda sonucu açıklayın.
+  \item \textbf{Welch:} $n_1=30$, $s_1=6$, $n_2=45$, $s_2=10$ için ortalama farkının standart hatasını hesaplayın.
+  \item \textbf{Eşleştir:} $D=$ sonra eksi önce olarak tanımlandığında $\bar D=-3$ ne anlama gelir? Fark yönü ters seçilirse ne değişir?
+  \item \textbf{Varsayım:} Bağımsızlık varsayımının neden Shapiro--Wilk veya Levene testiyle sınanamayacağını açıklayın.
+  \item \textbf{Eleştir:} ``Levene testi anlamlı olmadığı için varyanslar kesinlikle eşittir'' ifadesini düzeltin.
+  \item \textbf{Etki büyüklüğü:} Ortalama fark 7 ve birleşik standart sapma 14 ise Cohen'in $d$ değerini hesaplayıp bağlamla yorumlayın.
+  \item \textbf{Ön--son tasarım:} Bir grupta değişim anlamlı, diğerinde anlamsız bulunduğunda neden grupların değişimlerinin farklı olduğu sonucuna doğrudan varılamaz?
+  \item \textbf{Duyarlılık:} Tek güçlü aykırı değerin grup ortalaması, standart sapma, $t$ ve $d$ üzerindeki olası etkilerini tartışın.
+  \item \textbf{Uygula:} Python kodunda grup standart sapmalarını ve örneklem sayılarını değiştirerek Welch sonucunu inceleyin.
+  \item \textbf{Raporla:} İki bağımsız grup için $n$, ortalama, standart sapma, fark, $t$, $sd$, $p$, güven aralığı ve $d$ içeren kısa bir bulgu paragrafı yazın.
+  \item \textbf{Yansıt:} PDR programında istatistiksel olarak anlamlı ortalama azalmanın neden her öğrencinin iyileştiği anlamına gelmediğini açıklayın.
+\end{enumerate}

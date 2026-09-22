@@ -1,0 +1,4 @@
+degisken,aciklama,veri_turu,birim,gecerli_degerler,eksik_deger_kurali
+grup,Bagimsiz grup etiketi,Nominal,Kategori,Birinci; Ikinci,Eksik kabul edilmez
+sonuc,Basari kategorisi,Nominal,Kategori,Basarili; Basarisiz,Eksik kabul edilmez
+frekans,Hucredeki bagimsiz gozlem sayisi; yuzde veya ornekleme agirligi degil,Sayisal,Gozlem,Negatif olmayan tam sayi; her satir ve sutun toplami pozitif,Eksik kabul edilmez

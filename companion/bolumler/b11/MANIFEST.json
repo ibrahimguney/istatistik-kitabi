@@ -1,0 +1,21 @@
+{
+  "algorithm": "SHA-256",
+  "files": {
+    "DOGRULAMA.md": "eb646b8f9c88700967ca16303b8b2b2a922cef0ca62354aadce299f5ab913d66",
+    "README.md": "45b17e9dae5db344c299bbaafb1c8595773bbb982703360fc07c9d3e66695483",
+    "alistirmalar.md": "1c79c1ec098a3b9f998b31d363290dbff055485783e4f31476bcafadac62d99e",
+    "cozumler.md": "015f9b5bba7e053afeb33557f5f91f505858478ccc3cc85205572abb646b949a",
+    "ornek-01/README.md": "cd10c92ad36cbe3604548c42c1cbb46600c4af712a3da4e0bb4bcbe9cc493bb3",
+    "ornek-01/analiz.sps": "d458b1fea14ee5a5b1a0adae904e4d6b9ede1b31f785823f5d3cba83f184280e",
+    "ornek-01/analiz.sps.txt": "d458b1fea14ee5a5b1a0adae904e4d6b9ede1b31f785823f5d3cba83f184280e",
+    "ornek-01/beklenen-sonuclar.csv": "f5f797e8a3f6688b5a0989fa2611e0a2926361ebd87f2c42db9f5f0feb3d7812",
+    "ornek-01/ciktilar/python/fark-araliklari.png": "bccc08816895d4490d714b64d7425e4a74ab314ea431ee857c5c589b9aa72c20",
+    "ornek-01/cozum.R": "f3b81a05024c2010f89b2f72914af4f778bb74a71e0a55931e103fb54327e5aa",
+    "ornek-01/cozum.md": "dbb579ae74b0212bf3f69d7ab71eec92152889c6c19bb591f8a4a828cac2c1b4",
+    "ornek-01/cozum.py": "7df8f9fc92b16814213a10a9219ce0b02461d8d5f01be330a6b65c56a39fcd17",
+    "ornek-01/grafik-aciklamasi.md": "c5b52fd4baaa152b2ffc3a425ab2ba2de4a8a929cccff5ee6594c970c5afea8e",
+    "ornek-01/kaynak-kaydi.json": "b95b7417aca2059c37f67eecf9125b8d704ac6ad80c9dcb1ac0cb4214943f91b",
+    "ornek-01/veri-sozlugu.csv": "792bc02e9e0f16bbf4fba19dc10d608443f4156d5c75eac891feacc70d384adb",
+    "ornek-01/veri.csv": "a4d69cbf8d968f4b204c740020ae39750916642e1c788f501dee7f85c1307785"
+  }
+}

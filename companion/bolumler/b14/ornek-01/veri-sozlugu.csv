@@ -1,0 +1,5 @@
+degisken,aciklama,veri_turu,birim,gecerli_degerler,eksik_deger_kurali
+cift_sayisi,Ayni kisilerin tam on/son ciftlerinin sayisi,Sayisal,Tam cift,Tam sayi >= 2,Eksik kabul edilmez
+ortalama_fark,Son-on farklarinin orneklem ortalamasi,Sayisal,Puan,Sonlu sayi; negatif veya sifir olabilir,Eksik kabul edilmez
+fark_sapmasi,Bireysel son-on farklarinin orneklem standart sapmasi,Sayisal,Puan,Pozitif sonlu sayi,Eksik kabul edilmez
+alfa,Onceden belirlenen anlamlilik duzeyi,Sayisal,Olasilik,0 < alfa < 1,Eksik kabul edilmez

@@ -1,0 +1,97 @@
+GET DATA /TYPE=TXT /FILE='veri.csv' /ENCODING='UTF8'
+ /ARRANGEMENT=DELIMITED /DELCASE=LINE /DELIMITERS="," /QUALIFIER='"'
+ /FIRSTCASE=2 /VARIABLES=saat F16.8 devamsizlik F16.8 puan F16.8.
+DATASET NAME CokluHam.
+FILTER OFF.
+USE ALL.
+WEIGHT OFF.
+SPLIT FILE OFF.
+VARIABLE LEVEL saat devamsizlik puan (SCALE).
+COMPUTE satir=$CASENUM.
+EXECUTE.
+REGRESSION /MISSING LISTWISE /STATISTICS COEFF R ANOVA CI(95) COLLIN TOL
+ /DEPENDENT puan /METHOD=ENTER saat devamsizlik
+ /SAVE PRED(uydurulan_spss) RESID(artik_spss).
+AGGREGATE /OUTFILE=* MODE=ADDVARIABLES /BREAK=
+ /hacim=N /xort=MEAN(saat) /zort=MEAN(devamsizlik) /yort=MEAN(puan).
+COMPUTE xx=(saat-xort)**2.
+COMPUTE zz=(devamsizlik-zort)**2.
+COMPUTE xz=(saat-xort)*(devamsizlik-zort).
+COMPUTE xy=(saat-xort)*(puan-yort).
+COMPUTE zy=(devamsizlik-zort)*(puan-yort).
+COMPUTE yy=(puan-yort)**2.
+AGGREGATE /OUTFILE=* MODE=ADDVARIABLES /BREAK=
+ /sxx=SUM(xx) /szz=SUM(zz) /sxz=SUM(xz) /sxy=SUM(xy) /szy=SUM(zy) /sst=SUM(yy).
+COMPUTE determinant=sxx*szz-sxz**2.
+COMPUTE b1=(sxy*szz-szy*sxz)/determinant.
+COMPUTE b2=(szy*sxx-sxy*sxz)/determinant.
+COMPUTE b0=yort-b1*xort-b2*zort.
+COMPUTE uydurulan=b0+b1*saat+b2*devamsizlik.
+COMPUTE artik=puan-uydurulan.
+COMPUTE kare_artik=artik**2.
+AGGREGATE /OUTFILE=* MODE=ADDVARIABLES /BREAK= /sse=SUM(kare_artik).
+COMPUTE serbestlik=hacim-3.
+COMPUTE mse=sse/serbestlik.
+COMPUTE artik_sd=SQRT(mse).
+COMPUTE r_kare=1-sse/sst.
+COMPUTE duzeltilmis_r_kare=1-(1-r_kare)*(hacim-1)/serbestlik.
+COMPUTE f_degeri=((sst-sse)/2)/mse.
+COMPUTE p_f=CDF.F(1/f_degeri,serbestlik,2).
+COMPUTE alfa=.05.
+COMPUTE kritik_t=IDF.T(1-alfa/2,serbestlik).
+COMPUTE se0=SQRT(mse*(1/hacim+(szz*xort**2-2*sxz*xort*zort+sxx*zort**2)/determinant)).
+COMPUTE se1=SQRT(mse*szz/determinant).
+COMPUTE se2=SQRT(mse*sxx/determinant).
+COMPUTE t0=b0/se0.
+COMPUTE t1=b1/se1.
+COMPUTE t2=b2/se2.
+COMPUTE p0=2*CDF.T(-ABS(t0),serbestlik).
+COMPUTE p1=2*CDF.T(-ABS(t1),serbestlik).
+COMPUTE p2=2*CDF.T(-ABS(t2),serbestlik).
+COMPUTE alt0=b0-kritik_t*se0.
+COMPUTE ust0=b0+kritik_t*se0.
+COMPUTE alt1=b1-kritik_t*se1.
+COMPUTE ust1=b1+kritik_t*se1.
+COMPUTE alt2=b2-kritik_t*se2.
+COMPUTE ust2=b2+kritik_t*se2.
+COMPUTE vif_saat=sxx*szz/determinant.
+COMPUTE vif_devamsizlik=vif_saat.
+FORMATS uydurulan artik uydurulan_spss artik_spss (F16.10).
+SORT CASES BY satir.
+LIST VARIABLES=satir uydurulan artik uydurulan_spss artik_spss.
+DATASET COPY CokluOzet.
+DATASET ACTIVATE CokluOzet.
+SELECT IF (satir=1).
+EXECUTE.
+FORMATS hacim serbestlik sse sst mse artik_sd r_kare duzeltilmis_r_kare
+ f_degeri alfa kritik_t b0 se0 t0 alt0 ust0 b1 se1 t1 alt1 ust1
+ b2 se2 t2 alt2 ust2 vif_saat vif_devamsizlik (F18.10).
+FORMATS p0 p1 p2 p_f (E18.10).
+LIST VARIABLES=hacim serbestlik sse sst mse artik_sd r_kare duzeltilmis_r_kare
+ f_degeri p_f alfa kritik_t.
+LIST VARIABLES=b0 se0 t0 p0 alt0 ust0 b1 se1 t1 p1 alt1 ust1
+ b2 se2 t2 p2 alt2 ust2 vif_saat vif_devamsizlik.
+COMPUTE anahtar=1.
+SORT CASES BY anahtar.
+GET DATA /TYPE=TXT /FILE='yeni.csv' /ENCODING='UTF8'
+ /ARRANGEMENT=DELIMITED /DELCASE=LINE /DELIMITERS="," /FIRSTCASE=2
+ /VARIABLES=yeni_saat F16.8 yeni_devamsizlik F16.8.
+DATASET NAME CokluYeni.
+COMPUTE anahtar=1.
+SORT CASES BY anahtar.
+MATCH FILES /FILE=* /TABLE=CokluOzet /BY anahtar.
+COMPUTE dx=yeni_saat-xort.
+COMPUTE dz=yeni_devamsizlik-zort.
+COMPUTE h_yeni=1/hacim+(szz*dx**2-2*sxz*dx*dz+sxx*dz**2)/determinant.
+COMPUTE ongoru=b0+b1*yeni_saat+b2*yeni_devamsizlik.
+COMPUTE se_ortalama=SQRT(mse*h_yeni).
+COMPUTE se_birey=SQRT(mse*(1+h_yeni)).
+COMPUTE ortalama_alt=ongoru-kritik_t*se_ortalama.
+COMPUTE ortalama_ust=ongoru+kritik_t*se_ortalama.
+COMPUTE birey_alt=ongoru-kritik_t*se_birey.
+COMPUTE birey_ust=ongoru+kritik_t*se_birey.
+FORMATS yeni_saat yeni_devamsizlik ongoru h_yeni se_ortalama se_birey
+ ortalama_alt ortalama_ust birey_alt birey_ust (F18.10).
+LIST VARIABLES=yeni_saat yeni_devamsizlik ongoru h_yeni se_ortalama se_birey
+ ortalama_alt ortalama_ust birey_alt birey_ust.
+DATASET ACTIVATE CokluHam.

@@ -1,0 +1,45 @@
+\section{R ile basit doğrusal regresyon}
+\label{sec:r-regression}
+
+\textbf{Soru.} Uyku süresinden kaygı puanını yordayan doğrusal modeli kurun;
+katsayı aralıklarını, yedi saat için ortalama güven aralığını, bireysel tahmin
+aralığını ve temel tanı grafiklerini üretin.
+
+\begin{lstlisting}[style=prismR]
+veri <- data.frame(
+  uyku = c(4.5,5.0,5.2,5.5,5.8,6.0,6.1,6.3,6.5,6.7,
+           6.8,7.0,7.1,7.3,7.5,7.6,7.8,8.0,8.2,8.5),
+  kaygi = c(68,52,75,60,66,48,70,55,64,58,
+            45,62,53,46,60,43,55,49,57,40)
+)
+model <- lm(kaygi ~ uyku, data = veri)
+summary(model)
+confint(model)
+
+yeni <- data.frame(uyku = 7)
+predict(model, newdata = yeni, interval = "confidence")
+predict(model, newdata = yeni, interval = "prediction")
+
+par(mfrow = c(2, 2))
+plot(model)
+par(mfrow = c(1, 1))
+influence.measures(model)
+\end{lstlisting}
+
+\begin{outputguidebox}
+\textbf{Çözüm ve kontrol değerleri.} Model
+$\widehat{\text{Kaygı}}=89{,}5403-4{,}9836\,\text{Uyku}$ biçimindedir.
+Eğim standart hatası 1,6290, $t(18)=-3{,}061$ ve $p=0{,}00675$'tir.
+$R^2=0{,}3421$ olur. Yedi saat için nokta tahmini yaklaşık 54,66'dır;
+ortalama ve bireysel aralıklar ayrı \texttt{predict} çağrılarından okunur.
+\end{outputguidebox}
+
+\textbf{Yorum.} 
+\texttt{interval="confidence"} aynı uyku süresindeki ortalama kaygı için,
+\texttt{interval="prediction"} yeni bir öğrencinin puanı için aralık verir.
+İkinci aralık bireysel değişkenliği içerdiğinden daha geniştir. Model tanıları
+eğim anlamlı bulundu diye atlanmamalıdır.
+
+\textbf{Pekiştirme ve yanıt.} Veri 4,5--8,5 saat aralığındadır. On iki saat
+için öngörü hesaplanabilse bile güçlü bir dışa taşırmadır ve bilimsel olarak
+ayrıca gerekçelendirilmelidir.

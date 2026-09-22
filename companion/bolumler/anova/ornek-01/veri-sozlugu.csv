@@ -1,0 +1,15 @@
+dosya,degisken,anlam,birim,duzey,eksik_kurali
+veri.csv,grup,Klasik ornegin A B C grup etiketi,etiket,nominal,kabul edilmez
+veri.csv,n,Grubun bireysel gozlem sayisi en az 2,tam sayi,oran,kabul edilmez
+veri.csv,ortalama,Grup ortalamasi,puan,scale,kabul edilmez
+veri.csv,standart_sapma,Grup icinde n-1 paydali orneklem standart sapmasi,puan,oran,kabul edilmez
+welch.csv,grup,Ayri Welch orneginin A B C etiketi,etiket,nominal,kabul edilmez
+welch.csv,n,Grubun bireysel gozlem sayisi en az 2,tam sayi,oran,kabul edilmez
+welch.csv,ortalama,Grup ortalamasi,puan,scale,kabul edilmez
+welch.csv,standart_sapma,Grup icinde n-1 paydali orneklem standart sapmasi,puan,oran,kabul edilmez
+ciftler.csv,cift,1=A-B 2=A-C 3=B-C karsilastirma kimligi,etiket,nominal,kabul edilmez
+ciftler.csv,ilk,Ilk grup 1=A 2=B 3=C,etiket,nominal,kabul edilmez
+ciftler.csv,ikinci,Ikinci grup 1=A 2=B 3=C,etiket,nominal,kabul edilmez
+beklenen-sonuclar.csv,degisken,Girdi yontem veya karsilastirma etiketi,etiket,nominal,kabul edilmez
+beklenen-sonuclar.csv,olcu,Kontrol olcusunun adi,etiket,nominal,kabul edilmez
+beklenen-sonuclar.csv,deger,Beklenen sonlu sayisal deger,olcuye bagli,scale,kabul edilmez

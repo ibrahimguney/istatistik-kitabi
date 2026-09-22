@@ -1,0 +1,11 @@
+degisken,aciklama,veri_turu,birim,gecerli_degerler,eksik_deger_kurali
+hacim_1,Bagimsiz Grup 1 hacmi,Sayisal,Kisi veya tam cift,Tam sayi >= 2,Eksik kabul edilmez
+ortalama_1,Grup 1 orneklem ortalamasi,Sayisal,Puan,Sonlu sayi,Eksik kabul edilmez
+standart_sapma_1,Grup 1 orneklem standart sapmasi,Sayisal,Puan,Pozitif sonlu sayi,Eksik kabul edilmez
+hacim_2,Bagimsiz Grup 2 hacmi,Sayisal,Kisi veya tam cift,Tam sayi >= 2,Eksik kabul edilmez
+ortalama_2,Grup 2 orneklem ortalamasi,Sayisal,Puan,Sonlu sayi,Eksik kabul edilmez
+standart_sapma_2,Grup 2 orneklem standart sapmasi,Sayisal,Puan,Pozitif sonlu sayi,Eksik kabul edilmez
+cift_sayisi,Ayri eslestirilmis ornekte tam cift sayisi,Sayisal,Kisi veya tam cift,Tam sayi >= 2,Eksik kabul edilmez
+ortalama_fark,Kisi bazli son-on farklarinin ortalamasi,Sayisal,Puan,Sonlu sayi,Eksik kabul edilmez
+fark_sapmasi,Kisi bazli son-on farklarinin orneklem standart sapmasi,Sayisal,Puan,Pozitif sonlu sayi,Eksik kabul edilmez
+alfa,Iki ayri testin ortak anlamlilik duzeyi,Sayisal,Olasilik,0 < alfa < 1,Eksik kabul edilmez

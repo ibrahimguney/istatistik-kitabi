@@ -1,0 +1,2 @@
+program_n,comparison_n,observed_proportion_difference,repetitions,extreme_repetitions,two_sided_p_value
+14,18,0.40476190476190477,20000,534,0.026748662566871657

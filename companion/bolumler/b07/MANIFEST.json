@@ -1,0 +1,24 @@
+{
+  "algorithm": "SHA-256",
+  "files": {
+    "DOGRULAMA.md": "468b5ce3d271fbf886375cc9ae0fdcdc3b35f0e5ac7d47abd477cbb9c5eb978b",
+    "README.md": "e88f550fc02771df359e4d642e0b5aad522ab699e2222d7f6cc4f6403d69b2e7",
+    "alistirmalar.md": "753850f9e4bc04227925e0dee058f09ddb964d13ae313415eef9219cd6d108b8",
+    "cozumler.md": "921a4af0037cbb61d1d533b966cf579286dea470cdb98153d024b351cba0f14f",
+    "ornek-01/README.md": "e955422e24c1fb282341a03e274dc9e46b2271e94ef808255b11c4125e0f0b41",
+    "ornek-01/analiz.sps": "237100ac862e6b70b6b1db14c3da907272406ffb775d0cd05edd7be583442424",
+    "ornek-01/analiz.sps.txt": "237100ac862e6b70b6b1db14c3da907272406ffb775d0cd05edd7be583442424",
+    "ornek-01/beklenen-sonuclar.csv": "02ba6b3761d2f7c0de2d4dcc87bb7fbce9651bbc66dd30dec57055a4f59a766b",
+    "ornek-01/benzetim.R": "daa4cc37d11bc831e1234c71ee690d435c8f8c4ca848ae945eb03abda6cfe807",
+    "ornek-01/benzetim.csv": "dd17d0282b2bf50be7da1a6b13429dd94503ac1b030c3682fa850188bd59f228",
+    "ornek-01/ciktilar/python/oran-tahmini.png": "9885042c49981b8a071844ed19573ffe50c8b55d6e30a62397d0029820fd376a",
+    "ornek-01/cozum.R": "f23a85dccb02226db48cb813d182320e236822aad46948cabd3997aa6cbcdf92",
+    "ornek-01/cozum.md": "623d6c6992d59a80df85910a4b0b29e4eafbe476721738e40b7dd3888db5408f",
+    "ornek-01/cozum.py": "d986d1b1d5a41ab217326fd3fcc8baf853bf38e0df65b9787fada15cec770434",
+    "ornek-01/grafik-aciklamasi.md": "98a46686557049216423ad2ea371e1953b2792b41e8a8ebf9c8846c278426654",
+    "ornek-01/uret.py": "09072bca834280a25447baa154fc9a04d026fbbab9ed937487759a901e57b0b6",
+    "ornek-01/uretim-kaydi.json": "54f4a8b2a109c1abd7dadb4412cec80f18d9d69eb5aa9ac4bc562b36aa8f83b8",
+    "ornek-01/veri-sozlugu.csv": "9acd6a100e6de9dc3d95c4d522e571510b51627c58560184964b41e6d40c4864",
+    "ornek-01/veri.csv": "f3189ab01e3039452778e791c2e4c39fe3a46099a49a9cb2f1fd5abf2553d6b9"
+  }
+}

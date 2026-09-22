@@ -1,0 +1,208 @@
+{
+  "tarih_utc": "2026-09-10T01:46:09.976685+00:00",
+  "tasinabilirlik_ve_negatif_kontrol": [
+    {
+      "paket": "b01",
+      "bagimsiz_kopya_gecti": true,
+      "degistirilmis_referans_reddedildi": true,
+      "negatif_stderr": "Traceback (most recent call last):\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-a9apffpd/bagimsiz-ornek/cozum.py\", line 70, in <module>\n    main()\n    ~~~~^^\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-a9apffpd/bagimsiz-ornek/cozum.py\", line 65, in main\n    raise ValueError(f\"Sonuc uyusmazligi: {hesaplanan} != {hedef}\")\nValueError: Sonuc uyusmazligi: 5.0 != 6.0\n"
+    },
+    {
+      "paket": "b02",
+      "bagimsiz_kopya_gecti": true,
+      "degistirilmis_referans_reddedildi": true,
+      "negatif_stderr": "Traceback (most recent call last):\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-phv8tg6n/bagimsiz-ornek/cozum.py\", line 81, in <module>\n    main()\n    ~~~~^^\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-phv8tg6n/bagimsiz-ornek/cozum.py\", line 76, in main\n    raise ValueError(f\"Sonuc uyusmazligi: {hesaplanan} != {hedef}\")\nValueError: Sonuc uyusmazligi: 4.0 != 5.0\n"
+    },
+    {
+      "paket": "b03",
+      "bagimsiz_kopya_gecti": true,
+      "degistirilmis_referans_reddedildi": true,
+      "negatif_stderr": "Traceback (most recent call last):\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-fja1xyna/bagimsiz-ornek/cozum.py\", line 134, in <module>\n    main()\n    ~~~~^^\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-fja1xyna/bagimsiz-ornek/cozum.py\", line 127, in main\n    kontrol_et(sonuc, pd.read_csv(\"beklenen-sonuclar.csv\"))\n    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-fja1xyna/bagimsiz-ornek/cozum.py\", line 89, in kontrol_et\n    raise ValueError(f\"Kontrol degeri uyusmuyor: {gercek} != {hedef}\")\nValueError: Kontrol degeri uyusmuyor: 5.0 != 6.0\n"
+    },
+    {
+      "paket": "b04",
+      "bagimsiz_kopya_gecti": true,
+      "degistirilmis_referans_reddedildi": true,
+      "negatif_stderr": "Traceback (most recent call last):\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-r5e6ahh0/bagimsiz-ornek/cozum.py\", line 135, in <module>\n    main()\n    ~~~~^^\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-r5e6ahh0/bagimsiz-ornek/cozum.py\", line 128, in main\n    kontrol_et(sonuc, pd.read_csv(\"beklenen-sonuclar.csv\"))\n    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-r5e6ahh0/bagimsiz-ornek/cozum.py\", line 90, in kontrol_et\n    raise ValueError(f\"Kontrol uyusmazligi: {gercek} != {hedef}\")\nValueError: Kontrol uyusmazligi: 4.0 != 5.0\n"
+    },
+    {
+      "paket": "b06",
+      "bagimsiz_kopya_gecti": true,
+      "degistirilmis_referans_reddedildi": true,
+      "negatif_stderr": "Traceback (most recent call last):\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-kbpicdnq/bagimsiz-ornek/cozum.py\", line 113, in <module>\n    main()\n    ~~~~^^\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-kbpicdnq/bagimsiz-ornek/cozum.py\", line 106, in main\n    kontrol_et(sonuc, pd.read_csv(\"beklenen-sonuclar.csv\"))\n    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-kbpicdnq/bagimsiz-ornek/cozum.py\", line 67, in kontrol_et\n    raise ValueError(f\"Kontrol uyusmazligi: {gercek} != {hedef}\")\nValueError: Kontrol uyusmazligi: 12.0 != 13.0\n"
+    },
+    {
+      "paket": "b07",
+      "bagimsiz_kopya_gecti": true,
+      "degistirilmis_referans_reddedildi": true,
+      "negatif_stderr": "Traceback (most recent call last):\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-ix40c9le/bagimsiz-ornek/cozum.py\", line 126, in <module>\n    main()\n    ~~~~^^\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-ix40c9le/bagimsiz-ornek/cozum.py\", line 119, in main\n    kontrol_et(sonuc, pd.read_csv(\"beklenen-sonuclar.csv\"))\n    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-ix40c9le/bagimsiz-ornek/cozum.py\", line 80, in kontrol_et\n    raise ValueError(f\"Kontrol uyusmazligi: {gercek} != {hedef}\")\nValueError: Kontrol uyusmazligi: 10.0 != 11.0\n"
+    },
+    {
+      "paket": "b08",
+      "bagimsiz_kopya_gecti": true,
+      "degistirilmis_referans_reddedildi": true,
+      "negatif_stderr": "Traceback (most recent call last):\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-6hdx6nvo/bagimsiz-ornek/cozum.py\", line 120, in <module>\n    main()\n    ~~~~^^\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-6hdx6nvo/bagimsiz-ornek/cozum.py\", line 113, in main\n    kontrol_et(sonuc, pd.read_csv(\"beklenen-sonuclar.csv\"))\n    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-6hdx6nvo/bagimsiz-ornek/cozum.py\", line 71, in kontrol_et\n    raise ValueError(f\"Kontrol uyusmazligi: {gercek} != {hedef}\")\nValueError: Kontrol uyusmazligi: 25.0 != 26.0\n"
+    },
+    {
+      "paket": "b09",
+      "bagimsiz_kopya_gecti": true,
+      "degistirilmis_referans_reddedildi": true,
+      "negatif_stderr": "Traceback (most recent call last):\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-lwjbxal_/bagimsiz-ornek/cozum.py\", line 130, in <module>\n    main()\n    ~~~~^^\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-lwjbxal_/bagimsiz-ornek/cozum.py\", line 123, in main\n    kontrol_et(sonuc, pd.read_csv(\"beklenen-sonuclar.csv\"))\n    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-lwjbxal_/bagimsiz-ornek/cozum.py\", line 72, in kontrol_et\n    raise ValueError(f\"Kontrol uyusmazligi: {gercek} != {hedef}\")\nValueError: Kontrol uyusmazligi: 2.1 != 3.1\n"
+    },
+    {
+      "paket": "b10",
+      "bagimsiz_kopya_gecti": true,
+      "degistirilmis_referans_reddedildi": true,
+      "negatif_stderr": "Traceback (most recent call last):\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-f4akhdqy/bagimsiz-ornek/cozum.py\", line 164, in <module>\n    main()\n    ~~~~^^\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-f4akhdqy/bagimsiz-ornek/cozum.py\", line 157, in main\n    kontrol_et(sonuc, pd.read_csv(\"beklenen-sonuclar.csv\"))\n    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-f4akhdqy/bagimsiz-ornek/cozum.py\", line 114, in kontrol_et\n    raise ValueError(\"Kontrol degerleri uyusmuyor.\")\nValueError: Kontrol degerleri uyusmuyor.\n"
+    },
+    {
+      "paket": "b11",
+      "bagimsiz_kopya_gecti": true,
+      "degistirilmis_referans_reddedildi": true,
+      "negatif_stderr": "Traceback (most recent call last):\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-9hxyjrwt/bagimsiz-ornek/cozum.py\", line 135, in <module>\n    main()\n    ~~~~^^\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-9hxyjrwt/bagimsiz-ornek/cozum.py\", line 128, in main\n    kontrol_et(sonuc, pd.read_csv(\"beklenen-sonuclar.csv\"))\n    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-9hxyjrwt/bagimsiz-ornek/cozum.py\", line 85, in kontrol_et\n    raise ValueError(\"Kontrol degerleri uyusmuyor.\")\nValueError: Kontrol degerleri uyusmuyor.\n"
+    },
+    {
+      "paket": "b12",
+      "bagimsiz_kopya_gecti": true,
+      "degistirilmis_referans_reddedildi": true,
+      "negatif_stderr": "Traceback (most recent call last):\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-p55pe3ng/bagimsiz-ornek/cozum.py\", line 133, in <module>\n    main()\n    ~~~~^^\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-p55pe3ng/bagimsiz-ornek/cozum.py\", line 126, in main\n    kontrol_et(sonuc, pd.read_csv(\"beklenen-sonuclar.csv\"))\n    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-p55pe3ng/bagimsiz-ornek/cozum.py\", line 81, in kontrol_et\n    raise ValueError(\"Kontrol degerleri uyusmuyor.\")\nValueError: Kontrol degerleri uyusmuyor.\n"
+    },
+    {
+      "paket": "b13",
+      "bagimsiz_kopya_gecti": true,
+      "degistirilmis_referans_reddedildi": true,
+      "negatif_stderr": "Traceback (most recent call last):\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-nfo_el71/bagimsiz-ornek/cozum.py\", line 154, in <module>\n    main()\n    ~~~~^^\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-nfo_el71/bagimsiz-ornek/cozum.py\", line 147, in main\n    kontrol_et(sonuc, pd.read_csv(\"beklenen-sonuclar.csv\"))\n    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-nfo_el71/bagimsiz-ornek/cozum.py\", line 93, in kontrol_et\n    raise ValueError(f\"Kontrol uyusmazligi: {olcu}\")\nValueError: Kontrol uyusmazligi: hacim\n"
+    },
+    {
+      "paket": "b14",
+      "bagimsiz_kopya_gecti": true,
+      "degistirilmis_referans_reddedildi": true,
+      "negatif_stderr": "Traceback (most recent call last):\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-82qpj1u2/bagimsiz-ornek/cozum.py\", line 116, in <module>\n    main()\n    ~~~~^^\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-82qpj1u2/bagimsiz-ornek/cozum.py\", line 109, in main\n    kontrol_et(sonuc, pd.read_csv(\"beklenen-sonuclar.csv\"))\n    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-82qpj1u2/bagimsiz-ornek/cozum.py\", line 69, in kontrol_et\n    raise ValueError(\"Kontrol degerleri uyusmuyor.\")\nValueError: Kontrol degerleri uyusmuyor.\n"
+    },
+    {
+      "paket": "coklu-regresyon",
+      "bagimsiz_kopya_gecti": true,
+      "degistirilmis_referans_reddedildi": true,
+      "negatif_stderr": "Traceback (most recent call last):\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-dv4omgm2/bagimsiz-ornek/cozum.py\", line 157, in <module>\n    main()\n    ~~~~^^\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-dv4omgm2/bagimsiz-ornek/cozum.py\", line 147, in main\n    kontrol_et(sonuc, pd.read_csv(\"beklenen-sonuclar.csv\"))\n    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-dv4omgm2/bagimsiz-ornek/cozum.py\", line 115, in kontrol_et\n    raise ValueError(f\"Kontrol uyusmazligi: {olcu}: {gercek} != {hedef}\")\nValueError: Kontrol uyusmazligi: n: 12.0 != 13.0\n"
+    },
+    {
+      "paket": "anova",
+      "bagimsiz_kopya_gecti": true,
+      "degistirilmis_referans_reddedildi": true,
+      "negatif_stderr": "Traceback (most recent call last):\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-yisliwx2/bagimsiz-ornek/cozum.py\", line 164, in <module>\n    main()\n    ~~~~^^\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-yisliwx2/bagimsiz-ornek/cozum.py\", line 157, in main\n    kontrol_et(sonuc, pd.read_csv(\"beklenen-sonuclar.csv\"))\n    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/codex_workspace/86dc62dd-65c3-440c-baf5-2cb43ef4946b/.toplu-kontrol-yisliwx2/bagimsiz-ornek/cozum.py\", line 115, in kontrol_et\n    raise ValueError(f\"Kontrol uyusmazligi: {olcu}: {deger} != {hedef}\")\nValueError: Kontrol uyusmazligi: n: 10.0 != 11.0\n"
+    }
+  ],
+  "png": [
+    {
+      "dosya": "companion/bolumler/b03/ornek-01/ciktilar/python/betimsel-grafikler.png",
+      "boyut": [
+        1500,
+        600
+      ],
+      "dogrulandi": true
+    },
+    {
+      "dosya": "companion/bolumler/b04/ornek-01/ciktilar/python/ornekleme-dagilimi.png",
+      "boyut": [
+        1500,
+        600
+      ],
+      "dogrulandi": true
+    },
+    {
+      "dosya": "companion/bolumler/b06/ornek-01/ciktilar/python/secim-haritasi.png",
+      "boyut": [
+        1500,
+        525
+      ],
+      "dogrulandi": true
+    },
+    {
+      "dosya": "companion/bolumler/b07/ornek-01/ciktilar/python/oran-tahmini.png",
+      "boyut": [
+        1500,
+        600
+      ],
+      "dogrulandi": true
+    },
+    {
+      "dosya": "companion/bolumler/b08/ornek-01/ciktilar/python/guven-araliklari.png",
+      "boyut": [
+        1350,
+        525
+      ],
+      "dogrulandi": true
+    },
+    {
+      "dosya": "companion/bolumler/b09/ornek-01/ciktilar/python/test-ve-aralik.png",
+      "boyut": [
+        1650,
+        600
+      ],
+      "dogrulandi": true
+    },
+    {
+      "dosya": "companion/bolumler/b10/ornek-01/ciktilar/python/guc-egrisi.png",
+      "boyut": [
+        1200,
+        675
+      ],
+      "dogrulandi": true
+    },
+    {
+      "dosya": "companion/bolumler/b11/ornek-01/ciktilar/python/fark-araliklari.png",
+      "boyut": [
+        1500,
+        600
+      ],
+      "dogrulandi": true
+    },
+    {
+      "dosya": "companion/bolumler/b12/ornek-01/ciktilar/python/oranlar-artiklar.png",
+      "boyut": [
+        1500,
+        600
+      ],
+      "dogrulandi": true
+    },
+    {
+      "dosya": "companion/bolumler/b13/ornek-01/ciktilar/python/regresyon-tani.png",
+      "boyut": [
+        1500,
+        1200
+      ],
+      "dogrulandi": true
+    },
+    {
+      "dosya": "companion/bolumler/b14/ornek-01/ciktilar/python/son-on-araligi.png",
+      "boyut": [
+        1200,
+        450
+      ],
+      "dogrulandi": true
+    },
+    {
+      "dosya": "companion/bolumler/coklu-regresyon/ornek-01/ciktilar/python/coklu-regresyon-tani.png",
+      "boyut": [
+        1500,
+        600
+      ],
+      "dogrulandi": true
+    },
+    {
+      "dosya": "companion/bolumler/anova/ornek-01/ciktilar/python/anova-tukey.png",
+      "boyut": [
+        1650,
+        600
+      ],
+      "dogrulandi": true
+    }
+  ],
+  "eksik_yerel_baglantilar": [],
+  "denetleyici_hash_siniflama": {
+    "gecti": true,
+    "senaryo_sayisi": 5
+  },
+  "degisen_paket_dosyalari": [],
+  "eklenen_paket_dosyalari": []
+}

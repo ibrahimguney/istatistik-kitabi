@@ -1,0 +1,40 @@
+GET DATA /TYPE=TXT /FILE='veri.csv' /ENCODING='UTF8'
+ /ARRANGEMENT=DELIMITED /DELCASE=LINE /DELIMITERS="," /QUALIFIER='"'
+ /FIRSTCASE=2 /VARIABLES=id F8.0 sinif F8.0 basit F8.0 tabakali F8.0.
+DATASET NAME B06Ornek.
+FILTER OFF.
+USE ALL.
+WEIGHT OFF.
+SPLIT FILE OFF.
+VARIABLE LEVEL id basit tabakali (NOMINAL) sinif (ORDINAL).
+VALUE LABELS basit tabakali 0 'Secilmedi' 1 'Secildi'.
+COMPUTE pi_basit=6/12.
+COMPUTE pi_tabakali=2/4.
+COMPUTE agirlik_basit=1/pi_basit.
+COMPUTE agirlik_tabakali=1/pi_tabakali.
+SORT CASES BY id (A).
+EXECUTE.
+DISPLAY DICTIONARY.
+LIST VARIABLES=id sinif basit tabakali.
+FREQUENCIES VARIABLES=sinif basit tabakali.
+TEMPORARY.
+SELECT IF (basit=1).
+LIST VARIABLES=id sinif pi_basit agirlik_basit.
+TEMPORARY.
+SELECT IF (basit=1).
+FREQUENCIES VARIABLES=sinif.
+TEMPORARY.
+SELECT IF (basit=1).
+DESCRIPTIVES VARIABLES=agirlik_basit /STATISTICS=MIN MAX SUM.
+TEMPORARY.
+SELECT IF (tabakali=1).
+LIST VARIABLES=id sinif pi_tabakali agirlik_tabakali.
+TEMPORARY.
+SELECT IF (tabakali=1).
+FREQUENCIES VARIABLES=sinif.
+TEMPORARY.
+SELECT IF (tabakali=1).
+DESCRIPTIVES VARIABLES=agirlik_tabakali /STATISTICS=MIN MAX SUM.
+FILTER OFF.
+WEIGHT OFF.
+SPLIT FILE OFF.

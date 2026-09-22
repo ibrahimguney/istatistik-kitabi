@@ -1,0 +1,644 @@
+\chapter{Nokta Tahmini ve Tahmin Edicinin Niteliği}
+\label{ch:point-estimation}
+\index{nokta tahmini}
+\index{tahmin edici}
+
+\begin{hedefler}
+Bu bölümün sonunda okuyucu:
+\begin{itemize}
+  \item araştırma sorusuna karşılık gelen hedef parametreyi açıkça tanımlayabilecek,
+  \item parametre, tahmin edici, tahmin ve tahmin hatasını ayırt edebilecek,
+  \item ortalama, oran, varyans, fark ve korelasyon için temel nokta tahminlerini hesaplayabilecek,
+  \item yanlılık, varyans, standart hata, MSE, tutarlılık ve sağlamlık ölçütlerini yorumlayabilecek,
+  \item örnekleme tasarımının ağırlıklı tahmin üzerindeki etkisini açıklayabilecek,
+  \item nokta tahminini belirsizliği ve PDR bağlamıyla birlikte raporlayabilecektir.
+\end{itemize}
+\end{hedefler}
+
+\begin{hazirlik}
+Aynı evren için iki örneklemden 68 ve 74 ortalamaları elde edilmesi bir veri
+hatası mıdır? Örnekleme değişkenliğiyle ilişkilendirin.
+\end{hazirlik}
+
+\section{PDR vakası: Yalnızlık düzeyi ve yardım gereksinimini tahmin etmek}
+
+Bir üniversitenin psikolojik danışma merkezi iki bilgiye gereksinim duymaktadır:
+
+\begin{enumerate}
+  \item Birinci sınıf öğrencilerinin ortalama yalnızlık puanı nedir?
+  \item Yüksek risk eşiğinin üzerinde puan alan öğrencilerin oranı nedir?
+\end{enumerate}
+
+Bütün öğrencileri ölçmek mümkün olmadığı için olasılıklı yöntemle 120 öğrenci
+seçilmiştir. Örneklem ortalaması 43,6, standart sapması 9,8; yüksek risk
+grubundaki öğrenci sayısı 36 bulunmuştur. Buna göre ortalama için nokta tahmini
+$\bar{x}=43{,}6$, yüksek risk oranı için
+\[
+\hat p=\frac{36}{120}=0{,}30
+\]
+olur.
+
+Bu iki sayı örneklemde gözlenen sonucu özetler; evren değerlerini kesin olarak
+bildirmez. Başka bir 120 kişilik örneklem biraz farklı ortalama ve oran
+verecektir. Tahminin niteliği, kullanılan formül kadar örnekleme ve ölçme
+sürecine de bağlıdır.
+
+\begin{researchbox}
+``Yüksek risk oranı'' ancak risk eşiği, ölçme aracının geçerliği, hedef evren
+ve ölçüm zamanı açıkça tanımlandığında anlamlı bir parametredir. İstatistiksel
+tahmin, klinik sınıflandırmanın niteliğini tek başına güvenceye almaz.
+\end{researchbox}
+
+\section{Önce tahmin hedefini tanımlamak}
+\index{hedef büyüklük}
+\index{estimand@\textit{estimand}}
+
+Tahmin edilmek istenen evren özelliğine \emph{hedef büyüklük} veya
+\emph{estimand} denir. ``Öğrencilerin yalnızlık düzeyi'' ifadesi tek başına
+yeterince açık değildir. Hedef şu bileşenleri belirtmelidir
+\cite{casella2002,hogg2019}:
+
+\begin{itemize}
+  \item hangi öğrenci evreni,
+  \item hangi ölçme aracı ve puanlama yöntemi,
+  \item hangi zaman dönemi,
+  \item ortalama, medyan, oran veya fark gibi hangi özet,
+  \item eksik ve kapsam dışı gözlemlerin nasıl ele alınacağı.
+\end{itemize}
+
+Örneğin ``2026--2027 güz döneminde kayıtlı birinci sınıf öğrencilerinin X
+Yalnızlık Ölçeği toplam puanı ortalaması'' açık bir hedefe daha yakındır.
+``Programa katılanların son-test ortalaması'' ile ``programa atanmış bütün
+öğrencilerin son-test ortalaması'' farklı hedefler olabilir.
+
+Şekil~\ref{fig:nokta-tahmin-akisi}, araştırma sorusundan raporlanabilir bir
+tahmine giderken verilmesi gereken kararları birbirine bağlar. Akışın ilk üç
+adımı belirsiz bırakılırsa doğru hesaplanan bir tahmin bile yanlış hedefi
+yanıtlayabilir.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+  font=\small,
+  box/.style={draw=PrismBlue!75!black, rounded corners=2pt,
+    fill=PrismLight, align=center, minimum height=9mm, text width=3.05cm},
+  arrow/.style={-{Stealth[length=2mm]}, thick, draw=PrismBlue!80!black},
+  node distance=7mm and 8mm
+]
+\node[box] (evren) {Hedef evreni, zamanı ve ölçümü tanımla};
+\node[box, right=of evren] (nicelik) {Hedef niceliği seç\\ortalama, oran, medyan, fark};
+\node[box, right=of nicelik] (tasarim) {Örnekleme, eksik veri ve ağırlıkları belirle};
+\node[box, below=of tasarim] (tahmin) {Uygun tahmin ediciyi ve hesaplama kuralını seç};
+\node[box, left=of tahmin] (rapor) {Tahmin $+$ standart hata / güven aralığı $+$ kapsam};
+\draw[arrow] (evren) -- (nicelik);
+\draw[arrow] (nicelik) -- (tasarim);
+\draw[arrow] (tasarim) -- (tahmin);
+\draw[arrow] (tahmin) -- (rapor);
+\end{tikzpicture}
+\caption{Araştırma hedefinden belirsizliği belirtilmiş tahmine giden akış.}
+\label{fig:nokta-tahmin-akisi}
+\end{figure}
+
+\section{Parametre, tahmin edici ve tahmin}
+\index{parametre}
+\index{tahmin edici}
+\index{tahmin}
+\index{tahmin hatası}
+
+Parametre evrene ait sabit fakat bilinmeyen bir niceliktir. Tahmin edici,
+örneklemden hesaplanan rassal bir kuraldır; tahmin ise gözlenen örneklem için
+bu kuralın aldığı sayısal değerdir. Örneğin $\bar X$ evren ortalaması $\mu$
+için bir tahmin edici, $\bar x=72{,}4$ ise elde edilen tahmindir.
+
+Tahmin hatası
+\[
+\hat\theta-\theta
+\]
+ile gösterilir. Gerçek parametre çoğu uygulamada bilinmediği için tek bir
+araştırmada bu hata doğrudan hesaplanamaz. Tahmin ediciler, aynı veri üretim ve
+örnekleme süreci çok kez yinelendiğinde gösterecekleri kuramsal veya benzetimsel
+davranışla değerlendirilir.
+
+\begin{table}[htbp]
+\centering
+\caption{Tahmin dilinin üç düzeyi.}
+\begin{tabular}{@{}p{0.22\textwidth}p{0.28\textwidth}p{0.34\textwidth}@{}}
+\toprule
+Kavram & Gösterim & Yalnızlık araştırmasındaki karşılığı \\
+\midrule
+Parametre & $\mu$ veya $p$ & Evrenin bilinmeyen ortalaması veya risk oranı \\
+Tahmin edici & $\bar X$ veya $\hat P$ & Örneklemden örnekleme değer alan hesaplama kuralı \\
+Tahmin & $\bar x=43{,}6$, $\hat p=0{,}30$ & Gözlenen örneklemde hesaplanan sayı \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{mistakebox}
+Tahmin edici ile tahmini aynı şey gibi kullanmak kavramsal karışıklık yaratır.
+$\bar X$ henüz örneklem seçilmeden önce rassal bir değişkendir; $\bar x$ ise
+veri toplandıktan sonra elde edilen sabit sayıdır.
+\end{mistakebox}
+
+\section{Sık kullanılan nokta tahminleri}
+\index{nokta tahmini!ortalama}
+\index{nokta tahmini!oran}
+\index{nokta tahmini!varyans}
+\index{nokta tahmini!korelasyon}
+
+\begin{table}[htbp]
+\centering
+\caption{Parametreler ve doğal örneklem tahminleri.}
+\begin{tabular}{p{0.38\textwidth}p{0.36\textwidth}}
+\toprule
+Hedef parametre & Nokta tahmini \\
+\midrule
+Evren ortalaması $\mu$ & Örneklem ortalaması $\bar x$ \\
+Evren oranı $p$ & Örneklem oranı $\hat p=x/n$ \\
+Evren varyansı $\sigma^2$ & Örneklem varyansı $s^2$ \\
+İki evren ortalaması farkı & $\bar x_1-\bar x_2$ \\
+Korelasyon $\rho$ & Örneklem korelasyonu $r$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Oran ve fark tahminleri}
+
+Bir özelliği taşıyan $x$ gözlem $n$ kişilik örneklemde bulunmuşsa evren oranı
+için
+\[
+\hat p=\frac{x}{n}
+\]
+kullanılır. İki grubun ortalama farkı için doğal tahmin
+$\bar x_1-\bar x_2$, iki zaman ölçümündeki ortalama değişim için ise bireysel
+fark puanlarının ortalamasıdır. Hangi yönde fark alındığı işaretin yorumunu
+belirler.
+
+Örneğin program grubunun ortalaması 38, karşılaştırma grubunun ortalaması 44
+ise ``program eksi karşılaştırma'' farkı $38-44=-6$ puandır. Negatif işaret,
+ilk yazılan grubun ortalamasının daha düşük olduğunu gösterir; etkinin iyi ya
+da kötü olduğu sonucunu tek başına vermez.
+
+Tek bir nokta tahmini belirsizliği göstermez. $\bar x=72$ sonucu, örneklem
+hacmi 10 olduğunda ve 1000 olduğunda aynı görünür; oysa tahminlerin hassasiyeti
+çok farklıdır. Bu nedenle nokta tahmini standart hata veya güven aralığıyla
+birlikte verilmelidir.
+
+\section{İyi bir tahmin edicide aranan özellikler}
+\index{yansızlık}
+\index{hassasiyet}
+\index{etkinlik}
+\index{tutarlılık}
+\index{sağlamlık}
+
+Tek bir özellik bütün durumlarda en iyi tahmin ediciyi belirlemez. Araştırmacı
+aşağıdaki ölçütleri hedef ve veri yapısıyla birlikte değerlendirir:
+
+\begin{description}
+  \item[Yansızlık] Tekrarlı örneklemede tahminlerin merkezi hedef parametreye eşittir.
+  \item[Hassasiyet] Tahmin edicinin örnekleme dağılımı dardır; standart hatası küçüktür.
+  \item[Etkinlik] Benzer koşullardaki tahmin ediciler arasında daha düşük varyansa sahiptir.
+  \item[Tutarlılık] Örneklem hacmi büyüdükçe hedef parametre çevresinde yoğunlaşır.
+  \item[Sağlamlık] Aykırı değer veya küçük model sapmalarından aşırı etkilenmez.
+\end{description}
+
+Örneklem ortalaması normal veya yaklaşık simetrik veride etkili olabilir;
+fakat güçlü aykırı değerlere duyarlıdır. Medyan daha sağlamdır, ancak simetrik
+normal koşullarda ortalamadan daha değişken olabilir. Seçim ``hangi formül
+daha gelişmiş?'' sorusuna değil, hedef parametre ve veri yapısına dayanır.
+
+Şekil~\ref{fig:tahmin-edici-secimi}, önce bilimsel hedefi koruyup ardından
+tahmin edicinin örnekleme davranışını denetleyen kısa bir seçim haritasıdır.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+  font=\small,
+  root/.style={draw=PrismBlue!80!black, rounded corners=2pt,
+    fill=PrismBlue!12, align=center, minimum height=9mm, text width=3.2cm},
+  choice/.style={draw=PrismBlue!65!black, rounded corners=2pt,
+    fill=PrismLight, align=center, minimum height=10mm, text width=2.05cm,
+    font=\footnotesize},
+  check/.style={draw=PrismBlue!80!black, rounded corners=2pt,
+    fill=PrismResearchGreen, align=center, minimum height=9mm, text width=7.4cm},
+  arrow/.style={-{Stealth[length=2mm]}, thick, draw=PrismBlue!75!black},
+  node distance=8mm
+]
+\node[root] (hedef) {Hangi evren özelliği hedefleniyor?};
+\node[choice] at (-4,-1.8) (mean) {Ortalama düzey\\$\bar x$};
+\node[choice] at (-1.33,-1.8) (prop) {Olay oranı\\$\hat p=x/n$};
+\node[choice] at (1.33,-1.8) (median) {Tipik sıra / sağlam merkez\\medyan};
+\node[choice] at (4,-1.8) (diff) {Gruplar veya zamanlar arası fark};
+\node[check] at (0,-3.7) (kontrol) {Her aday için: yanlılık, standart hata, MSE, tutarlılık ve aykırı değer duyarlılığını değerlendir};
+\draw[arrow] (hedef) -- (mean);
+\draw[arrow] (hedef) -- (prop);
+\draw[arrow] (hedef) -- (median);
+\draw[arrow] (hedef) -- (diff);
+\draw[arrow] (mean) -- (kontrol);
+\draw[arrow] (prop) -- (kontrol);
+\draw[arrow] (median) -- (kontrol);
+\draw[arrow] (diff) -- (kontrol);
+\end{tikzpicture}
+\caption{Hedef nicelikten tahmin ediciye ve nitelik denetimine geçiş.}
+\label{fig:tahmin-edici-secimi}
+\end{figure}
+
+\section{Yanlılık}
+\index{yanlılık!tahmin edici}
+
+Bir tahmin edici için
+\[
+\text{Yanlılık}(\hat\theta)
+=\E(\hat\theta)-\theta
+\]
+tanımlanır. Beklenen değeri hedef parametreye eşitse tahmin edici yansızdır.
+Yansızlık uzun dönemli bir özelliktir; tek bir örneklemde tahminin parametreye
+eşit olacağını söylemez.
+
+\subsection{Tahmin edici yanlılığı ve veri yanlılığı}
+
+Formülden kaynaklanan tahmin edici yanlılığı ile veri üretim sürecindeki
+yanlılık ayrılmalıdır. Örneklem ortalaması evren ortalaması için kuramsal
+olarak yansız olsa bile yalnız gönüllü öğrencilerden toplanan veride hedef
+evren ortalamasını yanlı tahmin edebilir. Yansız bir formül, yanlı örnekleme
+çerçevesini veya geçersiz ölçümü düzeltemez.
+
+Örneklem varyansında paydanın $n-1$ olması da yansızlıkla ilişkilidir:
+\[
+s^2=\frac{1}{n-1}\sum_{i=1}^n(x_i-\bar x)^2.
+\]
+Sapmalar örneklem ortalaması çevresinde hesaplandığı için bir serbestlik
+derecesi kullanılmış olur. $n$ paydasıyla hesaplanan değer, normal örnekleme
+bağlamında evren varyansını sistematik olarak küçük tahmin eder.
+
+\section{Varyans, standart hata ve ortalama karesel hata}
+\index{tahmin edici!varyans}
+\index{standart hata}
+\index{ortalama karesel hata}
+\index{MSE}
+
+Tahmin edicinin örneklemden örnekleme değişkenliği varyansıyla ölçülür.
+Standart hata bu varyansın kareköküdür. Yanlılık ile değişkenliği birleştiren
+ortalama karesel hata
+\[
+MSE(\hat\theta)=\Var(\hat\theta)
++\text{Yanlılık}(\hat\theta)^2
+\]
+eşitliğini sağlar \cite{shao2003,wasserman2004}.
+
+\begin{ornek}[Yanlılık--varyans ödünleşimi]
+A tahmin edicisinin yanlılığı 0, varyansı 9; B tahmin edicisinin yanlılığı 2,
+varyansı 2 olsun. Ortalama karesel hatalar
+\[
+MSE(A)=9+0^2=9,
+\qquad
+MSE(B)=2+2^2=6
+\]
+olur. B yanlı olmasına rağmen toplam karesel hata bakımından daha iyi sonuç
+verebilir. Bu örnek yansızlığın tek başına yeterli bir seçim ölçütü olmadığını
+gösterir.
+\end{ornek}
+
+\begin{sezgibox}
+Hedef tahtasında atışların merkezi gerçek parametreyi temsil etsin. Atışların
+merkezden sistematik kayması yanlılık, birbirinden uzaklığı varyanstır. İyi bir
+tahmin edici hem hedefe yakın hem de tekrarlarda kararlı olmalıdır.
+\end{sezgibox}
+
+\section{Standart hata: Tahminin hassasiyeti}
+\index{standart hata!ortalama}
+\index{standart hata!oran}
+
+Standart hata, tahmin edicinin tekrarlı örneklemedeki standart sapmasıdır.
+Basit rastgele ve bağımsız örneklemede ortalama ve oran için yaklaşık
+\[
+SE(\bar X)=\frac{\sigma}{\sqrt n},
+\qquad
+SE(\hat p)=\sqrt{\frac{p(1-p)}{n}}
+\]
+olur. Bilinmeyen $sigma$ ve $p$ yerine uygulamada çoğunlukla $s$ ve
+$\hat p$ kullanılır.
+
+Yalnızlık örneğinde ortalamanın tahmini standart hatası
+\[
+\widehat{SE}(\bar X)=\frac{9{,}8}{\sqrt{120}}\approx0{,}89
+\]
+puandır. Risk oranının tahmini standart hatası ise
+\[
+\widehat{SE}(\hat p)
+=\sqrt{\frac{0{,}30(0{,}70)}{120}}
+\approx0{,}042
+\]
+olur. Bunlar bireysel puanların değişkenliğini değil, tahminlerin
+hassasiyetini gösterir.
+
+\begin{mistakebox}
+Küçük standart hata, tahminin mutlaka doğru olduğu anlamına gelmez. Büyük ama
+yanlı bir örneklem yanlış değeri çok hassas biçimde tahmin edebilir. Standart
+hata örnekleme değişkenliğini ölçer; kapsam ve ölçüm yanlılığını içermez.
+\end{mistakebox}
+
+\begin{etkinlik}
+Aynı ortalama ve standart sapmaya sahip $n=25$, $n=100$ ve $n=400$
+örneklemlerinin standart hatalarını karşılaştırın. Hassasiyeti iki kat
+artırmanın örneklem maliyetine etkisini tartışın.
+\end{etkinlik}
+
+\section{Tutarlılık}
+\index{tutarlılık}
+
+Örneklem hacmi büyüdükçe tahmin edici gerçek parametre çevresinde yoğunlaşıyorsa
+tutarlı olarak adlandırılır. Örneklem ortalaması, sonlu varyans altında evren
+ortalaması için tutarlıdır. Tutarlılık büyük örneklem özelliğidir ve küçük
+örneklem performansını tek başına garanti etmez.
+
+\section{Sağlam tahmin ve aykırı değer duyarlılığı}
+\index{sağlam tahmin}
+\index{medyan}
+\index{kırpılmış ortalama}
+\index{aykırı değer}
+
+Ortalama her gözlemin büyüklüğünü kullandığı için uç değerlere duyarlıdır.
+Medyan sıralamaya dayandığından daha sağlamdır. Örneğin
+\[
+20,22,23,24,25,26,27,80
+\]
+verisinin ortalaması 30,875; medyanı 24,5'tir. 80 değerinin kayıt hatası mı,
+farklı bir alt gruba mı ait olduğu araştırılmadan hiçbir tahmin otomatik olarak
+tercih edilmemelidir.
+
+Kırpılmış ortalama, en küçük ve en büyük belirli orandaki gözlemleri dışarıda
+bırakarak hesaplanır ve ortalama ile medyan arasında sağlam bir seçenek
+sunabilir. Ancak dışlama oranı sonuç görüldükten sonra keyfî biçimde
+seçilmemelidir.
+
+\begin{researchbox}
+PDR verilerinde uç puan araştırmanın en önemli katılımcısını temsil edebilir.
+Sağlam tahmin kullanmak, uç gözlemi veri setinden silmekle aynı şey değildir.
+Gözlem korunabilir; ortalama yanında medyan, IQR ve duyarlılık analizi
+raporlanabilir.
+\end{researchbox}
+
+\section{Örnekleme tasarımı ve ağırlıklı tahmin}
+\index{ağırlıklı tahmin}
+\index{örnekleme ağırlığı}
+
+Tabakalar farklı olasılıklarla seçilmişse basit örneklem ortalaması evren
+bileşimini yansıtmayabilir. Evrenin yüzde 80'i A, yüzde 20'si B grubunda olsun.
+Araştırmacı her gruptan eşit sayıda öğrenci seçmiş ve örneklem ortalamalarını
+sırasıyla 40 ve 60 bulmuş olsun. Eşit örneklem sayılarıyla ağırlıksız ortalama
+50'dir; evren paylarıyla ağırlıklı tahmin
+\[
+0{,}80(40)+0{,}20(60)=44
+\]
+olur. İki değer farklı hedefleri temsil eder. Alt grup karşılaştırmasında eşit
+seçim yararlı olabilirken evren geneli tahminde ağırlık gerekebilir.
+
+\begin{mistakebox}
+Örneklemdeki yüzde ile evrendeki yüzde aynı değilse bütün satırlara eşit ağırlık
+vermek evren ortalamasını çarpıtabilir. Ağırlık kullanımı örnekleme planı ve
+hedef parametreyle birlikte açıklanmalıdır.
+\end{mistakebox}
+
+\section{Benzetimle yansızlık ve standart hata}
+
+Aşağıdaki kod, ortalaması 50 ve standart sapması 10 olan bir evrenden 25
+kişilik 5.000 örneklem seçer:
+
+\begin{lstlisting}
+import numpy as np
+
+rng = np.random.default_rng(209)
+tekrar = 5000
+n = 25
+
+ortalamalar = np.array([
+    rng.normal(loc=50, scale=10, size=n).mean()
+    for _ in range(tekrar)
+])
+
+print("Tahminlerin ortalamasi:", ortalamalar.mean())
+print("Benzetim standart hatasi:", ortalamalar.std(ddof=1))
+print("Kuramsal standart hata:", 10 / np.sqrt(n))
+\end{lstlisting}
+
+Tahminlerin ortalaması 50'ye, benzetimdeki standart sapma kuramsal
+$10/\sqrt{25}=2$ değerine yaklaşır. Tek tek örneklem ortalamaları 50'ye eşit
+olmak zorunda değildir; yansızlık tekrarlı örneklemin merkezine ilişkin bir
+özelliktir.
+
+\section{SPSS çıktısında nokta tahmini}
+
+\begin{enumerate}
+  \item \textbf{Analyze $>$ Descriptive Statistics $>$ Explore} menüsünü açın.
+  \item Nicel değişkeni \textbf{Dependent List} alanına taşıyın.
+  \item Ortalama, medyan, varyans, standart sapma ve ortalamanın standart hatasını inceleyin.
+  \item Kategorik oran için \textbf{Analyze $>$ Descriptive Statistics $>$ Frequencies} yolunu kullanın.
+  \item Geçerli ve eksik gözlem sayılarını tahminden önce kontrol edin.
+\end{enumerate}
+
+\begin{outputguidebox}
+\textbf{Mean} gözlenen nokta tahminini, \textbf{Std. Deviation} bireysel
+puanların yayılımını, \textbf{Std. Error} ise ortalama tahmininin hassasiyetini
+gösterir. Bu üç sütun aynı kavram değildir. Geçerli $n$ değeri değişkenler
+arasında farklıysa tahminlerin aynı katılımcı grubuna dayanmadığını unutmayın.
+\end{outputguidebox}
+
+\section{Bütünleştirici çözümlü örnek}
+
+120 öğrencilik yalnızlık araştırmasında $\bar x=43{,}6$, $s=9{,}8$ ve yüksek
+risk sayısı 36 bulunmuştur.
+
+\begin{enumerate}
+  \item Evren ortalaması için nokta tahmini 43,6 puandır.
+  \item Evren risk oranı için nokta tahmini $36/120=0{,}30$, yani yüzde 30'dur.
+  \item Ortalama için tahmini standart hata yaklaşık 0,89 puandır.
+  \item Oran için tahmini standart hata yaklaşık 0,042, yani 4,2 yüzde puandır.
+  \item Sonuç yalnız seçilen ve yanıtlayan öğrencilerin hedef evreni temsil ettiği ölçüde genellenebilir.
+\end{enumerate}
+
+Nokta tahminleri tek başına kesinlik izlenimi verebilir. Bir sonraki bölümde
+standart hataların güven aralıklarına nasıl dönüştürüldüğü ele alınacaktır.
+
+\section{Bilimsel raporlama örneği}
+
+``Olasılıklı yöntemle seçilen 120 birinci sınıf öğrencisinin yalnızlık puanı
+ortalaması 43,6'dır ($SS=9{,}8$, $SH=0{,}89$). Yüksek risk eşiğinin üzerinde
+puan alan 36 öğrenci bulunmaktadır; örneklem oranı yüzde 30'dur
+($SH=0{,}042$). Tahminler ölçme aracının tanımladığı puan ve araştırmanın hedef
+evreniyle sınırlı olarak yorumlanmıştır.''
+
+\section{Bir tahmini değerlendirirken}
+
+\begin{enumerate}
+  \item Hedef parametre açık mı?
+  \item Örnekleme tasarımı hedef evrene uygun mu?
+  \item Tahminin standart hatası veya güven aralığı verilmiş mi?
+  \item Aykırı değerler ya da eksik veriler tahmini belirgin etkiliyor mu?
+  \item Tahmin bağlama uygun birim ve hassasiyetle raporlanmış mı?
+\end{enumerate}
+
+\section{Literatür veri setiyle IBM SPSS laboratuvarı}
+\index{Student Performance veri seti!nokta tahmini}
+\index{SPSS!nokta tahmini}
+\index{oran tahmini!ikili değişken ortalaması}
+\index{standart hata!nokta tahmini}
+
+Bu uygulamada \emph{Student Performance} matematik dosyasından iki hedef
+büyüklük tahmin edilecektir \cite{cortez2008data,cortezsilva2008}:
+
+\begin{enumerate}
+  \item İlgili öğrenci topluluğundaki ortalama yıl sonu matematik notu,
+  \item yıl sonu notu en az 10 olan öğrencilerin oranı.
+\end{enumerate}
+
+Örneklem ortalaması birinci parametre, 0--1 biçiminde kodlanan başarı
+göstergesinin ortalaması ise ikinci parametre için nokta tahmini sağlar.
+Başarı eşiği veri analizinden önce tanımlanmalı ve eğitim sistemindeki anlamı
+kaynakla gerekçelendirilmelidir.
+
+\begin{researchbox}
+Veri setindeki 395 öğrenci iki okuldan gözlenmiştir. Aşağıdaki standart
+hatalar, bu gözlemler uygun bir örneklem gibi ele alındığında oluşacak
+örnekleme değişkenliğini betimler. Okulların veya öğrencilerin seçimindeki
+olası kapsam ve seçim yanlılığını ölçmez; Portekiz'deki bütün öğrencilere
+otomatik genelleme sağlamaz.
+\end{researchbox}
+
+\subsection{Araştırma görevleri}
+
+\begin{enumerate}
+  \item G3 ortalamasını, medyanını ve ortalamanın standart hatasını bulun.
+  \item G3 puanı en az 10 olan öğrenciler için 0--1 başarı göstergesi üretin.
+  \item Başarı göstergesinin ortalamasının neden örneklem oranına eşit olduğunu açıklayın.
+  \item Ortalama ve oran tahminlerinin standart hatalarını ayırın.
+  \item Tahminlerin hedef evrenini ve genelleme sınırını yazın.
+\end{enumerate}
+
+\subsection{SPSS syntax}
+
+Eksik G3 değeri bulunması durumunda karşılaştırma işleminin eksik değeri yanlış
+biçimde 0 olarak kodlamaması için başarı göstergesi önce sistem eksik olarak
+oluşturulmuş, yalnız geçerli G3 değerlerinde hesaplanmıştır.
+
+\begin{lstlisting}[language={}]
+DATASET ACTIVATE StudentMath.
+
+COMPUTE basarili=$SYSMIS.
+IF NOT MISSING(G3) basarili=(G3>=10).
+VARIABLE LABELS basarili 'Yıl sonu notu en az 10'.
+VALUE LABELS basarili 0 'Başarısız' 1 'Başarılı'.
+VARIABLE LEVEL basarili (NOMINAL).
+FORMATS basarili (F1.0).
+EXECUTE.
+
+DESCRIPTIVES VARIABLES=G3 basarili
+ /STATISTICS=MEAN SEMEAN STDDEV MIN MAX.
+
+FREQUENCIES VARIABLES=G3
+ /STATISTICS=MEDIAN
+ /ORDER=ANALYSIS.
+
+FREQUENCIES VARIABLES=basarili
+ /ORDER=ANALYSIS.
+\end{lstlisting}
+
+Menüyle çalışırken G3 için \textbf{Analyze $>$ Descriptive Statistics $>$
+Explore}; başarı oranı için \textbf{Transform $>$ Compute Variable} ve
+ardından \textbf{Analyze $>$ Descriptive Statistics $>$ Frequencies} yolları
+kullanılabilir. Menü seçimleri \textbf{Paste} ile syntax'a aktarılmalı ve
+eşik tanımı analiz günlüğünde saklanmalıdır.
+
+\subsection{SPSS çıktısının erişilebilir özeti}
+
+\begin{table}[htbp]
+\centering
+\caption{G3 ortalaması ve başarı oranı için nokta tahminleri.}
+\begin{tabular}{@{}p{0.34\textwidth}rrrrr@{}}
+\toprule
+Tahmin edilen büyüklük & Geçerli $n$ & Tahmin & SS & SH & Gözlenen aralık \\
+\midrule
+Ortalama G3 puanı & 395 & 10,415 & 4,581 & 0,231 & 0--20 \\
+Başarılı öğrenci oranı & 395 & 0,671 & 0,470 & 0,024 & 0--1 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Frequencies} tablosunda 265 öğrenci başarılı, 130 öğrenci başarısız
+olarak sınıflanır. Bu nedenle örneklem oranı
+\[
+\hat p=\frac{265}{395}=0{,}671
+\]
+veya yüzde 67,1'dir. G3'ün medyanı 11'dir; medyan, ortalamadan farklı bir
+hedef büyüklüğün nokta tahminidir.
+
+\subsection{Çıktının analizi}
+
+G3 için \textbf{Mean}=10,415 örneklem ortalamasını, \textbf{Std.
+Deviation}=4,581 öğrenciler arasındaki puan değişkenliğini ve \textbf{Std.
+Error}=0,231 ortalama tahmininin örneklemden örnekleme değişkenliğini gösterir.
+Standart hata
+\[
+SE(\bar X)=\frac{4{,}581}{\sqrt{395}}\approx0{,}231
+\]
+ile aynı sonucu verir. Tek bir öğrencinin puanının ortalamadan tipik uzaklığı
+0,231 değil, yaklaşık 4,58 puandır.
+
+Başarı göstergesi yalnız 0 ve 1 değerlerini aldığı için ortalaması 1'lerin
+oranına eşittir. SPSS'in bu değişken için verdiği 0,470 standart sapma bireysel
+başarı durumlarının değişkenliğini, yaklaşık 0,024 standart hata ise oran
+tahmininin hassasiyetini gösterir:
+\[
+SE(\hat p)=\sqrt{\frac{0{,}671(1-0{,}671)}{395}}
+\approx0{,}024.
+\]
+
+Ortalamanın standart hatasının küçük olması G3 ortalamasının tam olarak 10,415
+olduğunu veya tahminin hedef evren için yanlı olmadığını kanıtlamaz. Standart
+hata rassal örnekleme değişkenliğine ilişkindir; veri yalnız belirli okullardan
+geldiğinde seçim mekanizması ayrıca tartışılmalıdır.
+
+\begin{mistakebox}
+Yüzde 67,1 başarı oranı ile 10,415 ortalama not aynı parametrenin iki farklı
+gösterimi değildir. İlki önceden belirlenen eşiğe bağlı bir oran, ikincisi ise
+notların bütün büyüklük bilgisini kullanan ortalamadır. Başarı eşiği 10'dan
+12'ye değiştirilirse ortalama değişmez, fakat oran tahmini değişir.
+\end{mistakebox}
+
+\begin{outputguidebox}
+Çıktıyı şu sırayla okuyun: (1) hedef parametre, (2) geçerli ve eksik $n$,
+(3) nokta tahmini, (4) bireysel değişkenliği gösteren standart sapma,
+(5) tahmin değişkenliğini gösteren standart hata, (6) kodlama ve eşik,
+(7) hedef evren ve örnekleme sınırı. Küçük standart hatayı temsil gücünün
+kanıtı olarak yorumlamayın.
+\end{outputguidebox}
+
+\subsection{Örnek bulgu paragrafı}
+
+``İki okuldan gözlenen 395 öğrencinin yıl sonu matematik notu ortalama
+10,42'dir ($SS=4{,}58$, $SH=0{,}23$); medyan 11'dir. Notu en az 10 olan 265
+öğrenci bulunmaktadır ve örneklem başarı oranı yüzde 67,1'dir
+($SH=2{,}4$ yüzde puan). Bu değerler ortalama not ve önceden tanımlanan başarı
+oranı için nokta tahminleridir. Öğrencilerin seçimi bütün ülkeyi temsil eden
+olasılıklı bir tasarıma dayanmadığından standart hatalar seçim yanlılığını
+kapsamaz ve sonuçlar iki okul bağlamıyla sınırlı yorumlanmıştır.''
+
+\input{chapters/r/b07}
+\input{chapter-exercises/05-nokta-tahmini}
+
+\bolumkaynaklari{\cite{casella2002,hogg2019,shao2003,wasserman2004,cortez2008data,cortezsilva2008}}
+
+\section*{Hatırla--Uygula--Yansıt}
+
+\begin{enumerate}
+\renewcommand{\labelenumi}{\textbf{\Alph{enumi}.}}
+  \item \textbf{Hatırla:} Parametre, tahmin edici, tahmin ve tahmin hatasını aynı örnek üzerinde açıklayın.
+  \item \textbf{Tanımla:} ``PDR öğrencilerinin tükenmişliği'' için açık bir hedef parametre yazın.
+  \item \textbf{Hesapla:} 200 öğrencinin 46'sı bir hizmete başvurmuşsa oran tahminini ve tahmini standart hatayı bulun.
+  \item \textbf{Karşılaştır:} Yansızlık, hassasiyet, etkinlik, tutarlılık ve sağlamlık kavramlarını ayırın.
+  \item \textbf{MSE:} Yanlılığı 1, varyansı 8 olan A ile yanlılığı 2, varyansı 3 olan B tahmin edicisini MSE bakımından karşılaştırın.
+  \item \textbf{Duyarlılık:} $12,13,14,15,16,50$ verisinde ortalama ve medyanı hesaplayıp uç değerin etkisini yorumlayın.
+  \item \textbf{Ağırlıklandır:} Evren payları yüzde 70 ve 30, grup ortalamaları 45 ve 60 ise ağırlıklı evren ortalamasını bulun.
+  \item \textbf{Eleştir:} ``Standart hata küçük olduğu için tahmin kesinlikle doğrudur'' ifadesini düzeltin.
+  \item \textbf{Uygula:} Python benzetiminde $n=25$ yerine 100 kullanarak standart hatadaki değişimi inceleyin.
+  \item \textbf{Raporla:} Bir ortalama ve bir oran tahminini örneklem hacmi, standart hata ve hedef evrenle birlikte yazın.
+\end{enumerate}

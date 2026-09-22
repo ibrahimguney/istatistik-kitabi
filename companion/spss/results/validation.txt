@@ -1,0 +1,3 @@
+PASS: 14 XLSX/CSV round trips, raw-data checks, numerical cross-checks,
+28 SPSS file paths and regression ordering, 14 chapter listings, source/manifest hashes.
+IBM SPSS and Excel were not executed; runtime/import validation remains external.

@@ -1,0 +1,20 @@
+{
+  "tarih": "2026-09-09",
+  "kaynak": "Kitap Bolum 7 Python listesi; gozlenen yanitlar R listesiyle de ayni",
+  "tohum": 2026,
+  "ureteci": "numpy.random.default_rng / PCG64",
+  "gercek_oran": 0.4,
+  "orneklem_hacmi": 50,
+  "tekrar_sayisi": 10000,
+  "uretim": "binomial(1, .40, size=(10000, 50)); satir basari toplamlari saklandi",
+  "ham_cekim_sayisi": 500000,
+  "python": "3.13.15",
+  "numpy": "2.4.1",
+  "pandas": "2.3.3",
+  "dosyalar": {
+    "veri.csv": "f3189ab01e3039452778e791c2e4c39fe3a46099a49a9cb2f1fd5abf2553d6b9",
+    "benzetim.csv": "dd17d0282b2bf50be7da1a6b13429dd94503ac1b030c3682fa850188bd59f228"
+  },
+  "r_calistirildi": false,
+  "spss_calistirildi": false
+}

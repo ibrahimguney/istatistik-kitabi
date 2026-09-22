@@ -1,0 +1,130 @@
+\phantomsection
+\chapter*{Ortak Veri ve Yazılım Uygulamaları}
+\markboth{Ortak Veri ve Yazılım Uygulamaları}{Ortak Veri ve Yazılım Uygulamaları}
+\addcontentsline{toc}{chapter}{Ortak Veri ve Yazılım Uygulamaları}
+\label{sec:spss-guide}
+
+Kitabın ortak literatür veri uygulamaları, \citet{cortez2008data} tarafından
+paylaşılan \emph{Student Performance} veri setinin matematik dosyasını
+kullanır. Veri, Portekiz'deki iki ortaöğretim okulunun öğrenci kayıtları ve
+anketlerinden derlenmiştir. Yüklenen dosyada 395 satır ve 33 değişken vardır.
+Böylece aynı araştırma bağlamı veri tanımından sonuç raporlamaya kadar izlenir;
+her uygulama için farklı bir araştırmadan veri getirildiği iddia edilmez.
+
+\begin{researchbox}
+Bu veri iki okuldan gözlemsel kayıtlardır; Türkiye'deki öğrencilerin veya
+Portekiz'deki bütün öğrencilerin olasılıklı örneklemi olarak sunulamaz.
+Uygulamalardaki standart hatalar, güven aralıkları ve testler, bağımsız
+benzer gözlemler modelinin öğretim amaçlı sonuçlarıdır. Okul ve sınıf içi
+bağımlılık, seçilim ve karıştırıcı değişkenler gerçek bir araştırmada ayrıca
+ele alınmalıdır. Dosyanın tamamını kullanmak, hedef evrenin tam sayımı
+anlamına gelmez.
+\end{researchbox}
+
+\section*{Dosya düzeni ve çalıştırma}
+
+Eşlikçi paketin \texttt{companion/spss} klasöründe
+\texttt{csv/bXX.csv}, \texttt{excel/bXX.xlsx}, \texttt{syntax/bXX.sps},
+\texttt{r/bXX.R} ve \texttt{python/bXX.py} bulunur; XX, 01--14'tür.
+Excel dosyalarının \texttt{veri}, \texttt{sozluk} ve \texttt{kaynak}
+sayfaları veri, sözlük ve kaynak bilgisini taşır. Üç dilin analiz kodları
+ilgili bölümün basılı bloklarından üretilir. Uygulama kodları sabittir;
+kapsamlı kitapta kod ile basılı bölüm numarası farklı olabilir.
+
+Paketi bilgisayarınıza klasör yapısını koruyarak alın.
+SPSS'te çalışma dizinini \texttt{companion} klasörünün bulunduğu proje kökü
+olarak ayarlayın (\texttt{CD} komutunun dizinini kendi bilgisayarınıza göre
+belirtin). \emph{File > Open > Syntax} ile ilgili \texttt{bXX.sps} dosyasını
+açıp \emph{Run > All} seçin. B01, CSV açan \texttt{open-b01.sps}
+dosyasını çağırır. B02/B03 de bu hazırlığı yeniden çalıştırır ve oluşan
+\texttt{sav/b01.sav} dosyasını kullanır. B08'in \texttt{open-b08.sps}
+dosyası Excel'in \texttt{veri} sayfasını açar; diğer güncel analizler
+CSV'yi doğrudan açan bloklarla başlar. Etiketler ve ölçme düzeyleri
+açma kodunda tanımlanır. Hazır SPSS veri/çıktı dosyası dağıtılmaz;
+\texttt{.sav} dosyaları ilgili açma komutuyla SPSS'te oluşturulur.
+Önceki analizden kalan filtre, ağırlık ve grup ayrımı kapatılır.
+Her uygulamaya kendi komut dosyasını baştan çalıştırarak başlayın.
+Komut sözdizimi için \citet{ibmspsssyntax} temel alınmıştır.
+
+\textbf{Menü adımlarıyla çalışma.} Numaralı, açık zeminli kutular menüde
+izlenecek işlemleri gösterir. Önce çalışma dizinini yukarıda belirtildiği
+gibi ayarlayın. Bölümde ayrı veri açma bloğu varsa onu
+\texttt{EXECUTE} dahil çalıştırın. B01--B03 için \texttt{open-b01.sps},
+B08 için \texttt{open-b08.sps} kullanın. Bu hazırlık veriyi ve etiketleri
+yükler, analizi başlatmaz. Ardından kutulu menü adımlarını izleyin.
+Alternatif olarak \texttt{bXX.sps} dosyasının
+tamamını çalıştırabilirsiniz; ayrıca menüden aynı analizi yapmanız gerekmez.
+Özellikle seçim ve birleştirme sonrasında iki yolu karıştırmayın.
+
+Kutularda İngilizce arayüz adları kullanılmıştır. \emph{Compare Means}
+menüsü yeni sürümlerde \emph{Compare Means and Proportions} olarak
+görünebilir. Sayısal girişlerde SPSS'in ondalık ayarına uygun ayırıcıyı
+kullanın; verilen komutlarda ondalık nokta kullanılır. \emph{Continue}
+alt penceredeki seçimi onaylar, \emph{OK} işlemi çalıştırır.
+Menü açıklamaları IBM'in temel analiz ve kullanıcı kılavuzlarıyla birlikte
+okunmalıdır \citep{ibmspssbase,ibmspsscore}. Çıktı kutularından sonraki kısa
+raporların doğrulama kapsamı ilgili bölümde belirtilir. Paylaşılan
+çıktılardan hazırlanmış özetler ile yalnız beklenen kontrol değerlerini
+ayırt edin; bunlar burada yeni bir SPSS çalıştırıldığı anlamına gelmez.
+
+
+\textbf{R ve Python ile çalışma.} Her uygulamanın R ve Python kodu,
+\path{companion/spss/csv/bXX.csv} dosyasını okur. Bu dosya SPSS için
+hazırlanan Excel kitabının \texttt{veri} sayfasıyla aynı kayıt ve sütunları
+içerir; sözlük ve kaynak bilgisi Excel'in diğer sayfalarındadır. Çalışma
+dizinini proje kökü olarak ayarlayıp kod bloklarını sırayla çalıştırın.
+Eşlikçi \texttt{r/bXX.R} ve \texttt{python/bXX.py} dosyaları aynı blokları
+birleştirir. R'deki \texttt{file.choose()} satırı yalnız yol sorunu için
+alternatiftir; toplu çalıştırılan R dosyasına ikinci veri açma olarak eklenmez.
+R örnekleri temel R ile \texttt{stats}, \texttt{utils} ve \texttt{graphics}
+işlevlerini; Python örnekleri pandas, NumPy, SciPy ve gerektiğinde Matplotlib'i
+kullanır. Python'daki test aralıkları için SciPy 1.11 veya sonrası gerekir.
+İşlevlerin seçenekleri için resmi belgeler temel alınmıştır
+\citep{rstatsmanual,scipystatsmanual}.
+
+Ortak CSV'lerde eksik hücre yoktur; başlangıç kontrolleri eksik değer varsa
+işlemi durdurur. Bu, farklı yazılımların sessizce farklı kayıtları analiz
+etmesini önlemek içindir; yeni veride eksik değerlerin nasıl ele alınacağı
+ayrıca kararlaştırılmalıdır. Sıfır notlar eksik sayılmaz. Benzetim verilerinde
+hazır tekrarlar, örnekleme uygulamasında hazır seçim bayrakları kullanılır;
+aynı tohumun farklı yazılımlarda aynı örneklemi üreteceği varsayılmaz.
+
+Bu gerçek veri uygulamalarını, bölümdeki ayrı öğretim örneklerinden ayırın.
+R ve SPSS'in burada yeniden çalıştırılmasıyla, kullanıcının paylaştığı
+çıktıların karşılaştırılması aynı işlem değildir. Üç yazılımın
+sonuçları aynı test türü, fark yönü, güven düzeyi ve düzeltme seçeneğiyle
+karşılaştırılmalıdır. Hangi çıktının incelendiği bölüm içinde açıklanır.
+
+\begin{mistakebox}
+SPSS ve R bu ortamda çalıştırılmamıştır. İlgili bölümlerde kullanıcının
+paylaştığı çıktılar Python hesaplarıyla karşılaştırılmıştır; kitap tabloları
+bu çıktıların düzenlenmiş özetidir, yeni yazılım çıktısı değildir.
+Excel dosyalarının XML/hücre eşitliği gerçek Excel/SPSS içe aktarma
+denemesinin yerine geçmez. B01'de bildirilen Excel açma sorunu çözülmüş
+sayılmaz; doğrulanan yol CSV'dir. B08'in Excel yolu da yerel SPSS'te
+ayrıca denenmelidir. Menü ve tablo başlıkları sürüm/dile göre değişebilir.
+\end{mistakebox}
+
+\textbf{Değişkenleri doğru okuyun.} \texttt{id} yalnız dosya içi sıra
+numarasıdır. \texttt{school}: 1=GP, 2=MS;
+\texttt{sex}: kaynakta F ve M olarak verilen kategorilerin 1 ve 2 kodlarıdır.
+\texttt{studytime} saat sayısı değil, sıralı süre kategorisidir.
+\texttt{g1}, \texttt{g2}, \texttt{g3} sırasıyla birinci dönem, ikinci dönem ve
+yıl sonu notlarıdır (0--20). \texttt{pass10}, öğretim için
+$\texttt{g3}\geq10$ olduğunda 1, diğer durumda 0 olarak türetilmiştir;
+kurumun bireysel öğrenci kararının yerine geçmez.
+
+Kaynak dosyada boş hücre yoktur. Bununla birlikte bu durum bütün ölçümlerin
+hatasız olduğunu göstermez. Yıl sonu notundaki 38 sıfır, eksik değer kodu
+olarak değiştirilmemiştir. \texttt{absences} için kaynağın devamsızlık sayımı
+korunur; gün veya saat birimi varsayılmaz. Benzetim uygulamalarında satırlar
+öğrenci değil tekrar, örnekleme uygulamasında seçim bayrakları ve ağırlıklar
+sonradan eklenen öğretim değişkenleridir.
+
+\textbf{Kaynak ve yeniden üretim.} UCI kaydı veriyi CC BY 4.0 lisansıyla
+sunar. Kaynak atfı, lisans ve dönüşümler her Excel dosyasına işlenmiştir.
+\texttt{build\_package.py} veri paketini ve kontrol değerlerini yeniden
+üretir; \texttt{results/checks.json} hesapları ve kaynak dosya özetlerini
+saklar. Özgün 33 sütun \texttt{raw/student-mat.csv} içinde korunur.
+Not: Daha sonra Portekizce ders dosyası da alınırsa dosyalar bağımsız iki
+öğrenci grubu sayılmamalı, yapay \texttt{id} üzerinden eşleştirilmemelidir.

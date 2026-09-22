@@ -1,0 +1,15 @@
+\section{Bölüm sonu çözümlü problemler}
+
+\begin{enumerate}
+  \item \textbf{Beklenen frekans.} 120 öğrencilik bir tabloda program satır toplamı 50, ``başvurdu'' sütun toplamı 36'dır. Bağımsızlık altında bu hücrenin beklenen frekansını bulun.
+
+  \textbf{Çözüm:} $E=(50\cdot36)/120=15$'tir. Gözlenen sayı bu değerden ayrıldıkça hücrenin ki-kare istatistiğine katkısı artar.
+
+  \item \textbf{Ki-kare katkısı.} Önceki hücrede gözlenen frekans 21 ise hücre katkısını hesaplayın.
+
+  \textbf{Çözüm:} Katkı $(O-E)^2/E=(21-15)^2/15=36/15=2{,}40$'tır. Toplam $\chi^2$, bütün hücre katkılarının toplamıdır.
+
+  \item \textbf{Cramér V.} $2\times3$ tabloda $\chi^2=12$, $N=150$ olsun. Cramér $V$ değerini bulun.
+
+  \textbf{Çözüm:} $\min(r-1,c-1)=\min(1,2)=1$ olduğundan $V=\sqrt{12/(150\cdot1)}=\sqrt{0{,}08}\approx0{,}283$'tür. Uygulamalı önem bağlama göre değerlendirilir.
+\end{enumerate}

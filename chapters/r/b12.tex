@@ -1,0 +1,42 @@
+\section{R ile çözümlü uygulama}
+\label{sec:r-b12}
+
+\textbf{Soru.} Birinci grupta 30 başarılı, 10 başarısız; ikinci grupta
+20 başarılı, 20 başarısız gözlem vardır. Pearson bağımsızlık testini,
+beklenen frekansları ve Cramér $V$ değerini bulun.
+
+\begin{lstlisting}[style=prismR]
+gozlenen <- matrix(c(30, 10, 20, 20), nrow = 2,
+                    byrow = TRUE,
+                    dimnames = list(
+                      grup = c("Birinci", "Ikinci"),
+                      sonuc = c("Basarili", "Basarisiz")))
+sonuc <- chisq.test(gozlenen, correct = FALSE)
+print(sonuc)
+sonuc$expected
+katkilar <- (gozlenen - sonuc$expected)^2 / sonuc$expected
+katkilar
+sonuc$residuals
+cramer_v <- sqrt(as.numeric(sonuc$statistic) /
+                 (sum(gozlenen) * (min(dim(gozlenen)) - 1)))
+cramer_v
+prop.table(gozlenen, margin = 1)
+stopifnot(all(sonuc$expected >= 5))
+\end{lstlisting}
+
+\begin{outputguidebox}
+\textbf{Çözüm ve kontrol değerleri.} Her satır için beklenen sayılar
+$(25,15)$; hücre katkıları $(1;1{,}6667)$'dir. Böylece
+$\chi^2(1)=5{,}3333$, $p=0{,}02092$ ve $V=0{,}2582$ olur. Başarı oranları
+birinci grupta 0,75, ikinci grupta 0,50'dir. Pearson artıkları ilk satırda
+$(1;-1{,}2910)$, ikinci satırda $(-1;1{,}2910)$'dır.
+\end{outputguidebox}
+
+\textbf{Yorum.} \texttt{correct = FALSE} bölümdeki düzeltmesiz Pearson
+hesabını üretir; ikiye iki tablolarda varsayılan süreklilik düzeltmesiyle aynı
+sonuç beklenmez. Bağımsız gözlemler ve uygun örnekleme modeli gerekir;
+beklenen frekans denetimi yalnız sayısal koşullardan biridir.
+
+\textbf{Pekiştirme ve yanıt.} Sonuç nesnesinin \texttt{residuals} bileşeni
+Pearson artıklarını, \texttt{stdres} bileşeni farklı bir ölçeklendirmeyi verir. Bunları aynı
+artık türü gibi raporlamayın. Ki-kare testi ilişkinin nedensel olduğunu göstermez.

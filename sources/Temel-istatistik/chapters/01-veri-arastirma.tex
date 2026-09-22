@@ -1,0 +1,555 @@
+\chapter{İstatistiksel Düşünme, Veri ve Araştırma Süreci}
+\index{istatistiksel düşünme@İstatistiksel düşünme}
+
+\begin{hedefler}
+Bu bölümün sonunda okuyucu:
+\begin{itemize}
+  \item bir PDR problemini betimsel, karşılaştırmalı veya ilişkisel araştırma sorusuna dönüştürebilecek,
+  \item yapı, değişken ve işlemsel tanım arasındaki ilişkiyi açıklayabilecek,
+  \item evren, örneklem, analiz birimi, parametre ve istatistiği ayırt edebilecek,
+  \item ölçme düzeyi, araştırma tasarımı ve örnekleme yöntemine uygun bir analiz planı kurabilecek,
+  \item veri toplama ve raporlama kararlarını etik ve eleştirel biçimde değerlendirebilecektir.
+\end{itemize}
+\end{hedefler}
+
+\begin{hazirlik}
+``Öğrencilerin kaygısı yüksektir'' cümlesini ölçülebilir bir araştırma
+sorusuna dönüştürün. Kimlerin, hangi kaygının ve hangi ölçümün kastedildiğini
+yazın.
+\end{hazirlik}
+
+\section{PDR vakası: Üniversiteye uyum programı}
+
+Bir üniversitenin psikolojik danışma birimi, birinci sınıf öğrencileri için
+dört haftalık bir uyum programı hazırlamıştır. Birim yöneticisi programın
+``öğrencilerin uyumunu artırıp artırmadığını'' bilmek istemektedir. İlk bakışta
+basit görünen bu cümle çok sayıda araştırma kararı içerir:
+
+\begin{itemize}
+  \item Uyum hangi boyutları kapsar ve nasıl ölçülecektir?
+  \item Sonuç hangi öğrenci grubuna genellenecektir?
+  \item Programa katılanlarla katılmayanlar başlangıçta karşılaştırılabilir midir?
+  \item Uyum ne zaman ölçülecektir: program öncesinde, sonrasında veya her ikisinde mi?
+  \item Gözlenen değişim programa mı, zamana mı, başka deneyimlere mi bağlanabilir?
+\end{itemize}
+
+İstatistiksel düşünme, bu soruları bir yazılım menüsü seçmeden önce
+yanıtlamaktır. Bölüm boyunca bu vaka, soyut kavramları somut bir araştırma
+planına bağlamak için kullanılacaktır.
+
+\section{İstatistik neden yalnızca hesaplama değildir?}
+\index{istatistik}
+\index{veri üretim süreci}
+
+İstatistik, eldeki sayılara bir formül uygulamaktan önce verinin nasıl
+üretildiğini sorgulayan bir düşünme biçimidir. Sağlam bir analiz şu zinciri
+izler:
+\begin{center}
+\begin{tikzpicture}[
+  alt={Sağlam bir analizin beş adımı: araştırma sorusu, ölçülebilir değişkenler, veri toplama tasarımı, analiz ve bağlamsal yorum.},
+  x=0.20\linewidth,
+  adim/.style={draw=PrismBlue,fill=PrismLight,rounded corners=3pt,
+    text width=0.155\linewidth,minimum height=1.2cm,inner sep=4pt,
+    align=center,font=\small\sffamily},
+  ok/.style={->,thick,PrismBlue}
+]
+  \node[adim] (soru) at (0,0) {Araştırma\\sorusu};
+  \node[adim] (degisken) at (1,0) {Ölçülebilir\\değişkenler};
+  \node[adim] (tasarim) at (2,0) {Veri toplama\\tasarımı};
+  \node[adim] (analiz) at (3,0) {Analiz};
+  \node[adim] (yorum) at (4,0) {Bağlamsal\\yorum};
+  \draw[ok] (soru.east)--(degisken.west);
+  \draw[ok] (degisken.east)--(tasarim.west);
+  \draw[ok] (tasarim.east)--(analiz.west);
+  \draw[ok] (analiz.east)--(yorum.west);
+\end{tikzpicture}
+\end{center}
+Zincirin ilk halkalarında yapılan bir hata, daha sonra kullanılan yöntem ne
+kadar gelişmiş olursa olsun giderilemez. Örneğin yalnız gönüllü öğrencilerden
+toplanan bir memnuniyet anketinde örnekleme yanlılığı varsa, çok küçük bir
+$p$-değeri bu yanlılığı ortadan kaldırmaz \cite{longford2008,lohr2021}.
+
+\subsection{Değişkenlik neden merkezîdir?}
+\index{değişkenlik}
+
+PDR verilerinde bireyler; yaşantı, sosyal destek, ölçüm hatası ve bağlamsal
+koşullar nedeniyle birbirinden farklıdır. Aynı bireyin puanı bile farklı
+zamanlarda değişebilir. İstatistik bu değişkenliği yok saymaz; kaynağını,
+büyüklüğünü ve sonuç üzerindeki etkisini anlamaya çalışır.
+
+Bir araştırmada gözlenen fark kabaca şu bileşenlerin birleşimi olarak
+düşünülebilir:
+\[
+\text{gözlenen farklılık}
+=\text{sistematik etki}+\text{bireysel farklılık}+\text{ölçüm ve örnekleme hatası}.
+\]
+İyi bir tasarım sistematik etkiyi diğer kaynaklardan ayırmayı kolaylaştırır;
+istatistiksel yöntem ise kalan belirsizliği görünür kılar.
+
+\begin{sezgibox}
+İstatistik ``veride fark var mı?'' sorusundan önce ``bu fark hangi süreçlerle
+oluşmuş olabilir?'' sorusunu sorar. Hesaplama, veri üretim sürecinin yerini
+tutmaz.
+\end{sezgibox}
+
+\section{Araştırma probleminden araştırma sorusuna}
+\index{araştırma problemi}
+\index{araştırma sorusu}
+
+``Ergenlerin yalnızlığı'', ``okul iklimi'' veya ``kariyer kararsızlığı'' birer
+araştırma alanıdır; tek başına yanıtlanabilir araştırma sorusu değildir.
+İyi bir soru hedef grubu, değişkenleri ve amaçlanan karşılaştırma ya da ilişkiyi
+açık eder.
+
+\begin{table}[htbp]
+\centering
+\caption{Araştırma amacına göre soru örnekleri.}
+\begin{tabular}{@{}p{0.20\textwidth}p{0.66\textwidth}@{}}
+\toprule
+Soru türü & PDR örneği \\
+\midrule
+Betimsel & Birinci sınıf öğrencilerinin akademik kaygı puanları nasıl dağılmaktadır? \\
+Gruplar arası & Uyum programına katılan ve katılmayan öğrencilerin son-test uyum puanları farklı mıdır? \\
+İlişkisel & Algılanan sosyal destek ile yalnızlık puanı arasında ilişki var mıdır? \\
+Yordayıcı & Haftalık uyku süresi akademik kaygı puanını ne ölçüde yordamaktadır? \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Betimsel soru örneklemdeki düzeyi veya dağılımı açıklar. Karşılaştırmalı soru
+gruplar ya da zamanlar arasındaki farkı, ilişkisel soru değişkenlerin birlikte
+değişimini, yordayıcı soru ise bir değişkenden diğerine ilişkin öngörüyü
+inceler. İlişki ve yordama dili, tek başına nedensellik anlamına gelmez.
+
+\subsection{Araştırma sorusu ve hipotez}
+\index{hipotez}
+
+Araştırma sorusu neyin öğrenilmek istendiğini belirtir. İstatistiksel hipotez
+ise evren parametresi hakkında sınanabilir bir önerme kurar. Örneğin
+``program gruplarının ortalama uyum puanları farklı mıdır?'' sorusu için
+\[
+H_0:\mu_{\text{program}}-\mu_{\text{karşılaştırma}}=0,
+\qquad
+H_1:\mu_{\text{program}}-\mu_{\text{karşılaştırma}}\ne0
+\]
+yazılabilir. Hipotezler veriyi gördükten sonra sonuca uygun biçimde
+değiştirilmemelidir.
+
+\section{Temel kavramlar}
+\index{evren}
+\index{örneklem}
+\index{parametre}
+\index{istatistik}
+
+\begin{description}
+  \item[Evren (anakütle)] Araştırma sonucunun genellenmek istendiği bütün birimlerdir.
+  \item[Örneklem] Evrenden gözlenen veya ölçülen birimler kümesidir.
+  \item[Parametre] Evrene ait, çoğu zaman bilinmeyen sayısal özelliktir.
+  \item[İstatistik] Örneklem verisinden hesaplanan sayısal özettir.
+  \item[Değişken] Birimden birime farklı değer alabilen ölçülen özelliktir.
+  \item[Analiz birimi] Veri tablosundaki her satırın temsil ettiği kişi, grup, kurum veya ölçümdür.
+  \item[Gözlem] Bir analiz birimi için kaydedilen değişken değerlerinin bütünüdür.
+\end{description}
+
+Bir üniversitedeki bütün birinci sınıf öğrencilerinin matematik kaygısı
+ortalaması bir parametre, seçilen 120 öğrencinin ortalaması ise bir
+istatistiktir. İstatistik, parametre hakkında bilgi edinmek için kullanılır.
+
+\begin{etkinlik}
+Uyum programı vakasında hedef evreni, erişilebilir evreni, örneklemi, analiz
+birimini, temel parametreyi ve bu parametreyi tahmin edecek istatistiği ayrı
+ayrı yazın. Hedef evren ile erişilebilir evrenin neden farklı olabileceğini
+tartışın.
+\end{etkinlik}
+
+\section{Yapıdan ölçülebilir değişkene}
+\index{yapı}
+\index{operasyonel tanım}
+\index{ölçme}
+
+Kaygı, öz-yeterlik, psikolojik dayanıklılık ve okul aidiyeti doğrudan
+gözlenemeyen kuramsal yapılardır. Araştırmacı önce yapının hangi anlamda
+kullanıldığını kavramsal olarak açıklar, sonra onu gözlenebilir bir değişkene
+dönüştüren işlemsel tanımı kurar.
+
+\begin{table}[htbp]
+\centering
+\caption{Kuramsal yapıdan işlemsel tanıma geçiş.}
+\begin{tabular}{@{}p{0.20\textwidth}p{0.31\textwidth}p{0.34\textwidth}@{}}
+\toprule
+Yapı & Kavramsal anlam & Olası işlemsel tanım \\
+\midrule
+Akademik kaygı & Akademik değerlendirmelerle ilişkili endişe ve gerilim & Geçerliği desteklenmiş ölçeğin toplam puanı \\
+Okula aidiyet & Öğrencinin okul topluluğuna kabul ve bağlılık algısı & Aidiyet ölçeği ortalama puanı \\
+Yardım arama & Psikolojik destek kaynağına yönelme davranışı & Son altı ayda danışma birimine başvuru: evet/hayır \\
+Devamlılık & Öğrencinin programa katılım düzeyi & Katıldığı oturum sayısı: 0--4 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Aynı yapı farklı biçimlerde işlemselleştirilebilir. Kaygıyı tek maddelik bir
+soruyla, klinik görüşmeyle veya çok maddeli ölçekle ölçmek aynı veri kalitesini
+üretmez. İşlemsel tanım, hem istatistiksel yöntemi hem de sonucun hangi anlamda
+genellenebileceğini sınırlar.
+
+\section{Değişken türleri ve ölçme düzeyleri}
+\index{değişken}
+\index{ölçme düzeyi}
+\index{nominal ölçek}
+\index{sıralı ölçek}
+\index{aralıklı ölçek}
+\index{oranlı ölçek}
+
+\begin{table}[htbp]
+\centering
+\caption{Ölçme düzeyleri ve uygun temel özetler.}
+\begin{tabular}{p{0.18\textwidth}p{0.31\textwidth}p{0.35\textwidth}}
+\toprule
+Düzey & Örnek & Uygun özetler \\
+\midrule
+Nominal & Program türü, cinsiyet kategorisi & Frekans, yüzde, mod \\
+Sıralı & Memnuniyet düzeyi, Likert maddesi & Frekans, medyan, yüzdelikler \\
+Aralık & Standartlaştırılmış test puanı & Ortalama, standart sapma, fark \\
+Oran & Süre, yaş, doğru cevap sayısı & Tüm aritmetik özetler ve oranlar \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Sayısal kod verilmesi bir değişkeni otomatik olarak nicel yapmaz. ``Hiç
+katılmıyorum'' ile ``tamamen katılıyorum'' seçeneklerine 1--5 kodlarının
+verilmesi kategoriler arasında bir sıra oluşturur; fakat tek bir madde için
+ardışık kategoriler arasındaki uzaklıkların kesinlikle eşit olduğu sonucunu
+garanti etmez.
+
+\subsection{Değişkenlerin araştırmadaki rolleri}
+
+Ölçme düzeyi değişkenin nasıl kaydedildiğini, araştırmadaki rol ise analizde
+nasıl kullanıldığını anlatır. Bir değişken aşağıdaki rollerden birini veya
+birkaçını üstlenebilir:
+
+\begin{description}
+  \item[Yanıt değişkeni] Açıklanmak, karşılaştırılmak veya yordanmak istenen sonuçtur.
+  \item[Açıklayıcı değişken] Yanıtla ilişkisi incelenen grup, özellik veya ölçümdür.
+  \item[Karıştırıcı değişken] Hem açıklayıcı değişkenle hem yanıtla ilişkili olup gözlenen ilişkiyi çarpıtabilir.
+  \item[Kimlik değişkeni] Kayıtları ayırır; genellikle analizde sayısal büyüklük olarak kullanılmaz.
+\end{description}
+
+Uyum programında son-test uyum puanı yanıt, program grubu açıklayıcı değişken
+olabilir. Programa gönüllü katılım başlangıç motivasyonuyla ilişkiliyse
+motivasyon olası bir karıştırıcıdır.
+
+\begin{mistakebox}
+Öğrenci numarası rakamlardan oluşsa da nicel bir değişken değildir. Bu
+numaraların ortalamasını hesaplamak araştırma açısından anlam taşımaz.
+\end{mistakebox}
+
+\section{Araştırma tasarımını tanımak}
+\index{araştırma tasarımı}
+\index{deneysel tasarım}
+\index{gözlemsel araştırma}
+
+\begin{description}
+  \item[Kesitsel tasarım] Değişkenler belirli bir zaman kesitinde ölçülür.
+  \item[Boylamsal tasarım] Aynı birimler zaman içinde tekrar ölçülür.
+  \item[Gözlemsel tasarım] Araştırmacı var olan özellikleri gözler, müdahale atamaz.
+  \item[Deneysel tasarım] Araştırmacı müdahaleyi düzenler ve ideal olarak birimleri koşullara rastgele atar.
+\end{description}
+
+Gözlemsel bir çalışmada programa gönüllü katılanlarla katılmayanların
+karşılaştırılması seçim yanlılığı taşıyabilir. Rastgele atama, başlangıçta
+bilinen ve bilinmeyen özellikleri dengeleme olasılığını artırır. Ancak rastgele
+atama tek başına ölçüm kalitesi, kayıp gözlem veya etik sorunları çözmez.
+
+\begin{mistakebox}
+``Ön-test ve son-test arasında anlamlı fark bulundu; program kesinlikle
+etkilidir'' sonucu her tasarımda savunulamaz. Karşılaştırma grubu yoksa zaman,
+olgunlaşma, başka yaşantılar ve ölçüme alışma gibi alternatif açıklamalar
+elenemeyebilir.
+\end{mistakebox}
+
+\section{İstatistiksel araştırma döngüsü}
+\index{araştırma döngüsü}
+
+\begin{enumerate}
+  \item Araştırma problemi ve hedef evren açıkça tanımlanır.
+  \item Değişkenler işlemsel olarak tanımlanır ve ölçme düzeyleri belirlenir.
+  \item Örnekleme ve veri toplama yöntemi seçilir.
+  \item Veri temizlenir; eksik, olanaksız ve aykırı değerler incelenir.
+  \item Önce grafiksel ve betimsel, sonra uygun çıkarımsal analiz yapılır.
+  \item Belirsizlik, etki büyüklüğü, sınırlılıklar ve bağlam birlikte raporlanır.
+\end{enumerate}
+
+Bu döngü doğrusal görünse de uygulamada yinelemelidir. İlk grafikler veri
+toplama hatasını gösterebilir; ölçme aracının yapısı araştırma sorusunu
+daraltabilir; varsayım incelemesi analiz planını değiştirebilir. Yapılan her
+değişiklik gerekçesiyle kaydedilmelidir.
+
+\section{Veri matrisi ve kod kitabı}
+\index{veri matrisi}
+\index{kod kitabı}
+\index{analiz birimi}
+
+İyi tasarlanmış bir veri dosyasında çoğunlukla her satır bir analiz birimini,
+her sütun bir değişkeni temsil eder. Değişken adı, açıklaması, ölçme düzeyi,
+kodları, birimi, olası değer aralığı ve eksik değer gösterimi kod kitabında
+belirtilir.
+
+\begin{table}[htbp]
+\centering
+\caption{Uyum programı için örnek veri matrisi.}
+\begin{tabular}{@{}rrrrr@{}}
+\toprule
+\texttt{id} & \texttt{grup} & \texttt{uyum\_on} & \texttt{uyum\_son} & \texttt{oturum} \\
+\midrule
+101 & 1 & 42 & 55 & 4 \\
+102 & 1 & 51 & 57 & 3 \\
+103 & 0 & 48 & 49 & 0 \\
+104 & 0 & 54 & 52 & 0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Burada \texttt{grup} için 1 program, 0 karşılaştırma grubunu; \texttt{oturum}
+ise katılım sayısını göstermektedir. Bu dört satır analiz için yeterli değildir;
+tablo yalnız veri yapısını göstermektedir.
+
+\begin{lstlisting}
+import pandas as pd
+
+veri = pd.DataFrame({
+    "id": [101, 102, 103, 104],
+    "grup": [1, 1, 0, 0],
+    "uyum_on": [42, 51, 48, 54],
+    "uyum_son": [55, 57, 49, 52],
+    "oturum": [4, 3, 0, 0]
+})
+
+print(veri.info())
+print(veri.isna().sum())
+print(veri.describe())
+\end{lstlisting}
+
+Bu ilk inceleme analiz sonucu üretmez; değişken türlerini, eksikleri ve değer
+aralıklarını denetler. Kimlik değişkeninin ortalaması yazılım tarafından
+hesaplansa bile araştırma açısından yorumlanmaz.
+
+\section{Örnekleme ve yanlılık}
+\index{örnekleme}
+\index{yanlılık}
+
+Basit rastgele örneklemede her birimin bilinen bir seçilme şansı vardır.
+Tabakalı örneklemede önemli alt gruplar ayrı ayrı temsil edilir. Küme
+örneklemesinde doğal gruplar, örneğin sınıflar veya okullar seçilir. Kolayda
+örnekleme hızlıdır; ancak hedef evreni temsil etme gücü çoğu zaman sınırlıdır.
+
+\begin{researchbox}
+Yanlılık örneklem hacmi büyütülerek otomatik olarak giderilemez. Yanlı bir
+seçim mekanizmasından gelen 10.000 gözlem, iyi tasarlanmış daha küçük bir
+örneklemden daha yanıltıcı olabilir.
+\end{researchbox}
+
+Örnekleme yöntemleri bir sonraki bölümde ayrıntılı ele alınacaktır. Bu aşamada
+temel ilke, örneklemden evrene yapılacak her genellemenin seçim mekanizmasına
+dayandığını fark etmektir.
+
+\section{Etik ve eleştirel veri okuryazarlığı}
+\index{araştırma etiği}
+\index{veri okuryazarlığı}
+
+İstatistiksel sonuçlar kişisel verilerin korunması, katılımcı onamı, eksik
+verilerin açıklanması ve analiz kararlarının şeffaflığıyla birlikte
+değerlendirilir. Yalnız anlamlı sonuçları seçerek raporlamak, korelasyonu
+nedensellik gibi sunmak veya analiz sonrasında hipotezi önceden belirlenmiş
+gibi göstermek bilimsel güvenilirliği zedeler.
+
+PDR verileri ruh sağlığı, travma, aile ilişkileri veya yardım arama davranışı
+gibi hassas bilgiler içerebilir. Etik bir veri yönetimi en az şu soruları
+yanıtlamalıdır:
+
+\begin{itemize}
+  \item Katılımcı neye onay verdi ve çalışmadan çekilme hakkını biliyor mu?
+  \item Kimliği belirleyebilecek değişkenler analiz dosyasından ayrıldı mı?
+  \item Küçük alt grupların tablolarda yeniden tanınma riski var mı?
+  \item Veriye kimler, hangi amaçla ve ne kadar süre erişebilecek?
+  \item Bulgular damgalayıcı veya suçlayıcı bir dille sunuluyor mu?
+\end{itemize}
+
+\subsection{Şeffaflık ve yeniden üretilebilirlik}
+\index{şeffaflık}
+\index{yeniden üretilebilirlik}
+
+Araştırma soruları, dışlama ölçütleri ve temel analiz planı mümkün olduğunca
+veri görülmeden önce yazılmalıdır. Veri temizleme kararları, kullanılan yazılım
+ve analiz adımları kaydedilmelidir. Yeniden üretilebilirlik katılımcı verisini
+herkese açmak anlamına gelmez; hassas veriler korunurken anonimleştirilmiş
+örnek veri, kod ve karar günlüğü paylaşılabilir.
+
+\section{Çözümlü araştırma planı}
+
+Uyum programı vakası için savunulabilir bir başlangıç planı şöyledir:
+
+\begin{enumerate}
+  \item \textbf{Soru:} Program ve karşılaştırma gruplarının uyum puanındaki değişimleri farklı mıdır?
+  \item \textbf{Evren:} İlgili üniversitedeki yeni kayıtlı birinci sınıf öğrencileri.
+  \item \textbf{Analiz birimi:} Programa uygun her öğrenci.
+  \item \textbf{Yanıt:} Geçerliği desteklenmiş uyum ölçeğinin son-test veya değişim puanı.
+  \item \textbf{Açıklayıcı değişken:} Program grubu; 1 program, 0 karşılaştırma.
+  \item \textbf{Tasarım:} Ön-test--son-test ve karşılaştırma gruplu tasarım; atama yönteminin açıkça belirtilmesi gerekir.
+  \item \textbf{İlk analiz:} Eksik veri ve değer aralığı kontrolü; gruplara göre grafik, ortalama, standart sapma, medyan ve IQR.
+  \item \textbf{Çıkarım:} Tasarıma ve varsayımlara uygun grup/zaman karşılaştırması; etki büyüklüğü ve güven aralığı.
+  \item \textbf{Sınırlılık:} Gönüllü katılım varsa seçilim etkisi ve nedensel yorum sınırı.
+  \item \textbf{Etik:} Bilgilendirilmiş onam, gizlilik, destek gereksinimi belirlenen öğrenci için yönlendirme protokolü.
+\end{enumerate}
+
+\begin{outputguidebox}
+Bir yazılım çıktısı araştırma planındaki boşlukları tamamlayamaz. Çıktıda
+``anlamlı'' bir değer bulunması hedef evreni, ölçme aracının geçerliğini,
+karıştırıcı değişkenleri veya etik raporlama sorumluluğunu otomatik olarak
+çözmez.
+\end{outputguidebox}
+
+\section{Literatür veri setiyle IBM SPSS laboratuvarı}
+\index{Student Performance veri seti}
+\index{SPSS!veri içe aktarma}
+\index{veri sözlüğü}
+
+Bu ve izleyen bölümlerde yöntemler arasındaki bağı görünür kılmak için Cortez
+ve Silva'nın ortaöğretimde öğrenci başarısını incelediği çalışmayla ilişkili
+\emph{Student Performance} veri setinin matematik dersi dosyası
+kullanılacaktır \cite{cortezsilva2008,cortez2008data}. Veri, iki Portekiz
+okulundaki okul kayıtları ve öğrenci anketlerinden oluşturulmuştur. Matematik
+dosyasında 395 öğrenci ve 33 değişken bulunur. Veri seti CC BY 4.0 lisansıyla
+yayımlanmıştır; bu nedenle kaynak gösterilerek öğretim amacıyla kullanılabilir.
+
+\begin{softwarebox}
+UCI deposundan \texttt{student.zip} dosyasını indirip içindeki
+\texttt{student-mat.csv} dosyasını çalışma klasörüne çıkarın. Kitapta veri
+dosyasının tamamı yeniden basılmamış; lisans, özgün değişken adları ve kaynak
+künyesi korunmuştur. Bu yaklaşım hem sürüm denetimini hem de atfı açık tutar.
+\end{softwarebox}
+
+\subsection{Bu bölümdeki araştırma görevi}
+
+Bu ilk uygulamanın amacı bir hipotez sınamak değil, veri üretim süreci ile
+değişkenlerin analizdeki rollerini tanımaktır. Öğrenci şu soruları
+yanıtlamalıdır:
+
+\begin{enumerate}
+  \item Her satır ve her sütun neyi temsil etmektedir?
+  \item Sayısal kodlanan değişkenlerin hangileri nominal, sıralı veya niceldir?
+  \item Dönem notları \texttt{G1}, \texttt{G2} ve \texttt{G3} aynı öğrenciye ait olduğundan hangi bağımlılık yapısını taşır?
+  \item Değer aralıkları ve eksik gözlemler veri sözlüğüyle uyumlu mudur?
+  \item Gözlemsel veri hangi yorumlara izin verir, hangilerine vermez?
+\end{enumerate}
+
+\subsection{SPSS syntax ile içe aktarma ve denetim}
+
+Aşağıdaki syntax noktalı virgülle ayrılmış CSV dosyasını okur, değişkenlerin
+ölçme düzeylerini tanımlar ve ilk kalite kontrol tablolarını üretir. Dosya yolu
+kullanıcının klasör yapısına göre düzenlenmelidir.
+
+\begin{lstlisting}[language={}]
+GET DATA
+ /TYPE=TXT
+ /FILE='student-mat.csv'
+ /ENCODING='UTF8'
+ /DELCASE=LINE
+ /DELIMITERS=";"
+ /QUALIFIER='"'
+ /ARRANGEMENT=DELIMITED
+ /FIRSTCASE=2
+ /VARIABLES=
+ school A2 sex A1 age F2.0 address A1 famsize A3 Pstatus A1
+ Medu F1.0 Fedu F1.0 Mjob A8 Fjob A8 reason A10 guardian A6
+ traveltime F1.0 studytime F1.0 failures F1.0
+ schoolsup A3 famsup A3 paid A3 activities A3 nursery A3
+ higher A3 internet A3 romantic A3
+ famrel F1.0 freetime F1.0 goout F1.0 Dalc F1.0 Walc F1.0
+ health F1.0 absences F3.0 G1 F2.0 G2 F2.0 G3 F2.0.
+
+DATASET NAME StudentMath WINDOW=FRONT.
+
+VALUE LABELS studytime
+ 1 '2 saatten az' 2 '2--5 saat'
+ 3 '5--10 saat' 4 '10 saatten fazla'.
+
+VARIABLE LEVEL
+ school sex address famsize Pstatus Mjob Fjob reason guardian
+ schoolsup famsup paid activities nursery higher internet
+ romantic (NOMINAL)
+ Medu Fedu traveltime studytime failures famrel freetime
+ goout Dalc Walc health (ORDINAL)
+ age absences G1 G2 G3 (SCALE).
+
+DISPLAY DICTIONARY.
+FREQUENCIES VARIABLES=school sex studytime higher.
+DESCRIPTIVES VARIABLES=age absences G1 G2 G3
+ /STATISTICS=MEAN STDDEV MIN MAX.
+\end{lstlisting}
+
+Menüyle çalışılacaksa \textbf{File $>$ Import Data $>$ CSV Data} yolunda
+ayraç olarak noktalı virgül seçilir. İçe aktarmadan sonra \textbf{Variable
+View} ekranında dize genişlikleri, etiketler ve ölçme düzeyleri syntax ile
+karşılaştırılır. Menü ayarları \textbf{Paste} düğmesiyle syntax'a
+dönüştürülerek analiz kaydı saklanmalıdır.
+
+\subsection{Çıktının erişilebilir özeti}
+
+SPSS Viewer görüntüsü yerine, ekran okuyucuyla da izlenebilen yeniden kurulmuş
+çıktı tablosu verilmiştir. Aşağıdaki değerler özgün
+\texttt{student-mat.csv} dosyasındaki \textbf{Descriptives} sonucudur.
+
+\begin{table}[htbp]
+\centering
+\caption{Student Performance matematik verisi için temel SPSS betimsel çıktısı.}
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+Değişken & Geçerli $n$ & Ortalama & SS & En küçük & En büyük \\
+\midrule
+Yaş & 395 & 16,70 & 1,28 & 15 & 22 \\
+Devamsızlık & 395 & 5,71 & 8,00 & 0 & 75 \\
+Birinci dönem notu (G1) & 395 & 10,91 & 3,32 & 3 & 19 \\
+İkinci dönem notu (G2) & 395 & 10,71 & 3,76 & 0 & 19 \\
+Yıl sonu notu (G3) & 395 & 10,42 & 4,58 & 0 & 20 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Çıktının analizi}
+
+Bütün değişkenlerde geçerli gözlem sayısının 395 olması, UCI veri sözlüğündeki
+``eksik değer yok'' bilgisiyle uyumludur. Bu sonuç ölçüm hatası veya yanlılık
+bulunmadığını göstermez; yalnız dosyada sistem eksik değer olmadığını gösterir.
+Notların gözlenen aralıkları tanımlanan 0--20 sınırları içindedir. G1'in en
+küçük değerinin 3, G2 ve G3'ün en küçük değerlerinin 0 olması veri hatası
+kanıtı değildir; dönemler farklı ölçüm zamanlarıdır.
+
+\texttt{studytime} değişkeni 1--4 sayılarıyla kodlanmış olsa da süre
+kategorileri arasındaki aralıklar eşit değildir; bu nedenle ölçme düzeyi
+\emph{sıralı} olarak tanımlanmıştır. Buna karşılık G3, bu kitapta nicel yanıt
+değişkeni olarak ele alınacaktır. G1, G2 ve G3 aynı öğrenciye ait tekrarlı
+notlardır; 1.185 bağımsız öğrenci gözlemi gibi yorumlanamaz.
+
+Son olarak bu veri gözlemseldir. Örneğin çalışma süresi ile başarı arasında
+ilişki bulunması, daha uzun çalışmanın tek başına daha yüksek nota neden
+olduğunu kanıtlamaz. Önceki başarı, okul, aile özellikleri ve başka değişkenler
+gözlenen ilişkiye katkıda bulunabilir. Sonraki bölümlerde üretilecek her SPSS
+çıktısı bu tasarım sınırı içinde yorumlanacaktır.
+
+\input{chapter-exercises/01-veri-arastirma}
+
+\bolumkaynaklari{\cite{degroot2012,longford2008,lohr2021,anscombe1973,cortezsilva2008,cortez2008data}}
+
+\section*{Hatırla--Uygula--Yansıt}
+
+\begin{enumerate}
+\renewcommand{\labelenumi}{\textbf{\Alph{enumi}.}}
+  \item \textbf{Hatırla:} Evren, örneklem, parametre, istatistik ve analiz birimi kavramlarını tek bir PDR örneği üzerinde açıklayın.
+  \item \textbf{Dönüştür:} ``Lise öğrencilerinde kariyer kararsızlığı'' konusunu betimsel, karşılaştırmalı ve ilişkisel üç soruya dönüştürün.
+  \item \textbf{İşlemselleştir:} Okul aidiyeti yapısı için iki farklı işlemsel tanım önerin; güçlü ve sınırlı yönlerini karşılaştırın.
+  \item \textbf{Sınıflandır:} Sınıf düzeyi, yaş, ölçek maddesi, toplam ölçek puanı ve danışmanlığa başvuru değişkenlerinin ölçme düzeylerini gerekçelendirin.
+  \item \textbf{Eleştir:} Yalnız gönüllü öğrencilerle yürütülen çevrim içi kaygı anketinin hedef evrene genellenmesindeki sorunları yazın.
+  \item \textbf{Tasarla:} Bir akran zorbalığı önleme programı için soru, evren, değişken, tasarım, örnekleme ve analiz birimlerini içeren kısa plan hazırlayın.
+  \item \textbf{Etik karar:} Çok küçük bir alt grupta yüksek riskli davranış oranını raporlamanın gizlilik ve damgalama risklerini tartışın.
+  \item \textbf{Yansıt:} Güçlü bir istatistiksel yöntemin zayıf veri üretim sürecini neden telafi edemeyeceğini açıklayın.
+\end{enumerate}

@@ -1,0 +1,384 @@
+\chapter{Güven Aralığı Tahmini ve Güven Aralıkları; Güven Düzeyi ve Doğru Yorumlama}
+\label{ch:confidence-intervals}
+
+\begin{prismbox}[PrismLight]{Öğrenme çıktıları}
+Bu bölümün sonunda:
+\begin{itemize}
+  \item ortalama, oran ve grup farkı için güven aralığı kurabilecek,
+  \item güven düzeyi, standart hata ve örneklem hacminin aralık genişliğine etkisini açıklayabilecek,
+  \item güven aralığının uzun dönemli kapsama anlamını doğru yorumlayabilecek,
+  \item hata payına göre örneklem hacmi planlayıp sonucu uygulamalı önemle değerlendirebileceksiniz.
+\end{itemize}
+\end{prismbox}
+
+\begin{prerequisitebox}
+Nokta tahmini, standart hata, örnekleme dağılımı, normal dağılım ve Student
+$t$ kritik değeri kavramları hatırlanmalıdır.
+\end{prerequisitebox}
+
+Nokta tahmini ve tahmin edicinin belirsizliği için Bölüm~\ref{ch:point-estimation},
+standart hata ve $t$ yaklaşımının temeli için Bölüm~\ref{ch:clt-se} kullanılmalıdır.
+
+\section{Nokta tahmininden aralık tahminine}
+
+\begin{definitionbox}
+Nokta tahmini parametre için tek bir en iyi değeri verir. Güven aralığı ise
+tahminin örnekleme değişkenliğini görünür kılan, belirli bir kapsama yöntemiyle
+üretilmiş alt ve üst sınırlar kümesidir.
+\end{definitionbox}
+Güven aralığının genel yapısı
+\[
+\text{tahmin}\ \pm\ \text{kritik değer}\times\text{standart hata}
+\]
+biçimindedir.
+
+\section{Ortalama için güven aralığı}
+\label{sec:ci-mean}
+
+Evren standart sapması bilinmediğinde ve koşullar uygun olduğunda
+\[
+\bar x\pm t_{1-\alpha/2,n-1}\frac{s}{\sqrt n}
+\]
+aralığı kullanılır. Örneğin $\bar x=40$, $s=8$, $n=64$ ve yaklaşık kritik
+değer 2 ise hata payı $2(8/8)=2$ ve yaklaşık yüzde 95 güven aralığı
+$[38,42]$ olur.
+
+\subsection{Çözümlü örnek}
+
+$n=25$ öğrencinin puan ortalaması $\bar x=72$, standart sapması $s=10$
+olsun. $sd=24$ için yüzde 95 güven düzeyindeki kritik değer yaklaşık
+$t_{0{,}975,24}=2{,}064$'tür. Standart hata 2, hata payı
+$2{,}064\times2=4{,}128$ olur. Güven aralığı
+\[
+72\pm4{,}128=[67{,}87;76{,}13]
+\]
+olarak bulunur. Sonuç, yöntemin varsayımları altında evren ortalaması için
+makul değerlerin yaklaşık 67,87 ile 76,13 arasında olduğunu gösterir.
+
+\section{Güven düzeyinin doğru anlamı}
+\label{sec:ci-interpretation}
+
+Yüzde 95 güven, hesaplanan belirli aralığın parametreyi yüzde 95 olasılıkla
+içerdiği anlamına gelmez. Klasik yaklaşımda parametre sabittir. Aynı örnekleme
+ve aralık kurma işlemi çok kez tekrarlandığında kurulan aralıkların yaklaşık
+yüzde 95'i gerçek parametreyi kapsar. Güven aralıklarının yalnız ikili bir
+``anlamlı/anlamsız'' kararı yerine tahmin belirsizliğini göstermede
+kullanılması özellikle önerilmektedir \citep{cumming2014,appelbaum2018}.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[x=0.9cm,y=0.52cm]
+  \draw[PrismBlue,very thick] (5,0.25) -- (5,10.55);
+  \node[above,font=\scriptsize,text=PrismBlue] at (5,10.55) {gerçek $\mu$};
+  \foreach \y/\lo/\hi/\m in {
+    1/3.7/5.8/4.75,2/4.1/6.0/5.05,3/3.9/5.5/4.70,4/4.4/6.3/5.35,
+    5/3.5/4.8/4.15,6/4.3/5.7/5.00,7/3.8/5.3/4.55,8/4.5/6.1/5.30,
+    9/3.6/5.4/4.50,10/5.2/6.7/5.95}
+    {\draw[PrismBlue,line width=1.2pt] (\lo,\y)--(\hi,\y); \fill[PrismBlue] (\m,\y) circle (1.7pt);}
+  \draw[PrismWarnOrange!90!black,line width=1.6pt] (5.2,10)--(6.7,10);
+  \fill[PrismWarnOrange!90!black] (5.95,10) circle (1.9pt);
+  \node[right,font=\scriptsize,text=PrismWarnOrange!80!black] at (6.75,10) {kapsamıyor};
+\end{tikzpicture}
+\caption{Tekrarlı örneklemlerde güven aralıklarının kapsama mantığı.}
+\label{fig:ci-coverage}
+\end{figure}
+
+Şekil~\ref{fig:ci-coverage}'de okunabilirlik için yalnız on tekrar gösterilmiştir.
+Yüzde 95 kapsama
+özelliği on aralıktan mutlaka 9 veya 10'unun değil, çok sayıda tekrar boyunca
+aralıkların yaklaşık yüzde 95'inin parametreyi kapsamasını ifade eder.
+
+\begin{mistakebox}
+Güven aralığının $H_0$ değerini içermesi, iki grubun aynı olduğunun kanıtı
+değildir. Veri, farkın sıfır olmasıyla uyumludur; fakat aralığın genişliği
+önemli büyüklükteki farkları da içeriyor olabilir.
+\end{mistakebox}
+
+\section{Aralık genişliğini belirleyen etkenler}
+
+\begin{itemize}
+  \item Güven düzeyi yükseldikçe kritik değer ve aralık genişliği artar.
+  \item Örneklem hacmi arttıkça standart hata ve aralık genişliği azalır.
+  \item Verideki değişkenlik arttıkça aralık genişler.
+  \item Kümeleme, ağırlıklandırma ve bağımlı gözlemler standart hata hesabını değiştirir.
+\end{itemize}
+
+\section{Oran ve fark için aralıklar}
+\label{sec:ci-proportion-difference}
+
+Örneklem oranı için büyük örneklem yaklaşımında standart hata
+\[
+\SE(\hat p)=\sqrt{\frac{\hat p(1-\hat p)}{n}}
+\]
+olur. İki grubun karşılaştırılmasında yalnız ayrı grup aralıklarına bakmak
+yerine doğrudan $\mu_1-\mu_2$ veya $p_1-p_2$ farkı için güven aralığı
+hesaplanmalıdır.
+
+Bağımsız iki grubun ortalama farkı için yaklaşık standart hata
+\[
+\SE(\bar X_1-\bar X_2)
+=\sqrt{\frac{s_1^2}{n_1}+\frac{s_2^2}{n_2}}
+\]
+biçimindedir. Eşleştirilmiş ölçümlerde ise iki ayrı grup ortalaması yerine
+her birim için hesaplanan farkların ortalaması kullanılır:
+\[
+\bar d\pm t_{1-\alpha/2,n-1}\frac{s_d}{\sqrt n}.
+\]
+Bağımsız ve eşleştirilmiş tasarımlar aynı veri yapısı değildir; standart hata
+araştırma tasarımına göre seçilmelidir.
+
+\section{İstatistiksel ve uygulamalı önem}
+\label{sec:ci-practical}
+
+Aralığın sıfırı dışlaması istatistiksel kanıta, genişliği tahminin
+hassasiyetine, uç noktaları ise uygulamada makul etkilerin aralığına ilişkin
+bilgi verir. Sonuç, yalnız ``anlamlı/anlamsız'' biçiminde sınıflandırılmamalıdır.
+
+\section{Planlama bakımından hata payı}
+
+Ortalama için normal yaklaşım altında hedef hata payı $h$ ise yaklaşık
+örneklem hacmi
+\[
+n\approx\left(\frac{z_{1-\alpha/2}\sigma}{h}\right)^2
+\]
+ile planlanabilir. Kullanılan $\sigma$ değeri önceki araştırma veya pilot
+çalışmadan gelmelidir. Tasarım etkisi, beklenen yanıtlamama ve alt grup
+analizleri varsa ham hesap artırılmalıdır. Örneklem planında bilimsel olarak
+önemli en küçük etkinin önceden belirlenmesi için bkz. \citet{lakens2022}.
+
+\begin{outputguidebox}
+Yazılım çıktısında güven düzeyini, tahmini, alt ve üst sınırı, kullanılan
+standart hata yöntemini ve örneklem hacmini kontrol edin. Aralık ters yönde
+yazılmış bir fark tanımına dayanıyorsa işaretin yorumu da tersine döner.
+\end{outputguidebox}
+
+\section{Yazılım uygulaması: ortalama güven aralığı}
+
+\begin{softwarebox}
+\begin{lstlisting}
+from scipy import stats
+import numpy as np
+
+n, mean, sd = 25, 72, 10
+se = sd / np.sqrt(n)
+interval = stats.t.interval(
+    confidence=.95, df=n-1, loc=mean, scale=se)
+print(interval)
+\end{lstlisting}
+Çıktı yaklaşık $(67{,}87;76{,}13)$ değerlerini verir. Kodda güven düzeyi,
+serbestlik derecesi, merkez ve standart hata ayrı ayrı görülebilmelidir.
+\end{softwarebox}
+
+\begin{assumptionbox}
+Ortalama için t aralığı gözlemlerin bağımsızlığını ve özellikle küçük
+örneklemlerde dağılımın aşırı çarpık ya da etkili aykırı değerli olmamasını
+gerektirir. Güven aralığı seçim yanlılığını veya ölçüm hatasını kapsamaz.
+\end{assumptionbox}
+
+\section{Çözümlü problemler}
+
+\subsection*{Problem 1: Ortalama için t güven aralığı}
+
+Bağımsız seçilen 36 öğrencinin bir ölçekten aldığı puanların ortalaması 85,
+standart sapması 12'dir. $sd=35$ için yüzde 95 kritik değerini
+$t_{0{,}975,35}=2{,}030$ alarak evren ortalaması için güven aralığını bulun.
+
+\textbf{Çözüm.} Evren standart sapması bilinmediği için t aralığı kullanılır.
+Standart hata
+\[
+\SE(\bar X)=\frac{12}{\sqrt{36}}=2
+\]
+ve hata payı
+\[
+h=2{,}030(2)=4{,}06
+\]
+olur. Güven aralığı
+\[
+85\pm4{,}06=[80{,}94;89{,}06]
+\]
+biçimindedir.
+
+\textbf{Yorum.} Aynı örnekleme ve aralık kurma yöntemi çok kez
+tekrarlansaydı, elde edilen aralıkların yaklaşık yüzde 95'i gerçek evren
+ortalamasını kapsardı. Gözlenen veride evren ortalaması için makul değerler
+yaklaşık 80,94 ile 89,06 arasındadır.
+
+\subsection*{Problem 2: Oran için büyük örneklem güven aralığı}
+
+Rastgele seçilen 400 öğrencinin 260'ı bir dijital öğrenme aracını yararlı
+bulmuştur. Evren oranı için yaklaşık yüzde 95 güven aralığını hesaplayın.
+
+\textbf{Çözüm.} Örneklem oranı
+\[
+\hat p=\frac{260}{400}=0{,}65
+\]
+ve tahmini standart hata
+\[
+\SE(\hat p)=\sqrt{\frac{0{,}65(0{,}35)}{400}}
+\approx0{,}02385
+\]
+olur. Yüzde 95 normal kritik değeri 1,96 ile hata payı
+\[
+h=1{,}96(0{,}02385)\approx0{,}0467
+\]
+ve güven aralığı
+\[
+0{,}65\pm0{,}0467=[0{,}603;0{,}697]
+\]
+olarak bulunur. Yaklaşık yüzde 95 aralık yüzde 60,3 ile yüzde 69,7'dir.
+
+Başarı ve başarısızlık sayıları sırasıyla 260 ve 140 olduğundan büyük örneklem
+yaklaşımı için sayısal koşullar güçlüdür. Küçük örneklemde veya oran sıfıra ya
+da bire yakınsa Wilson ya da kesin aralık gibi daha uygun yöntemler
+düşünülmelidir.
+
+\subsection*{Problem 3: İki bağımsız ortalama farkı}
+
+A öğretim yöntemini kullanan grubun ortalaması 78, B grubunun ortalaması
+72'dir. $\mu_A-\mu_B$ farkının tahmini standart hatası 2,5 ve uygun serbestlik
+derecesi için yüzde 95 kritik t değeri 2,021 olsun. Fark için güven aralığını
+bulup yorumlayın.
+
+\textbf{Çözüm.} Gözlenen ortalama farkı
+\[
+\bar x_A-\bar x_B=78-72=6
+\]
+puandır. Hata payı
+\[
+h=2{,}021(2{,}5)=5{,}0525
+\]
+olduğundan güven aralığı
+\[
+6\pm5{,}0525=[0{,}95;11{,}05]
+\]
+biçimindedir. Aralık sıfırı dışladığı için aynı çift yönlü test yaklaşık
+$\alpha=0{,}05$ düzeyinde fark için kanıt verir. Bununla birlikte gerçek
+farkın bir puana yakın da 11 puana yakın da olabileceği görülmektedir;
+uygulamalı önem bu aralığın tamamı dikkate alınarak değerlendirilmelidir.
+
+Fark B eksi A olarak tanımlansaydı tahmin ve uç noktaların işareti değişir,
+aralık $[-11{,}05;-0{,}95]$ olurdu; bilimsel sonuç değişmezdi.
+
+\subsection*{Problem 4: Güven düzeyi ile aralık genişliği}
+
+Bir tahmin 50 ve standart hatası 2 olsun. Normal yaklaşım altında yüzde 90,
+yüzde 95 ve yüzde 99 güven aralıklarını sırasıyla 1,645, 1,96 ve 2,576 kritik
+değerleriyle hesaplayın.
+
+\textbf{Çözüm.}
+
+\begin{center}
+\small
+\begin{tabular}{lrrl}
+\toprule
+Güven düzeyi & Kritik değer & Hata payı & Güven aralığı \\
+\midrule
+Yüzde 90 & 1,645 & 3,29 & $[46{,}71;53{,}29]$ \\
+Yüzde 95 & 1,960 & 3,92 & $[46{,}08;53{,}92]$ \\
+Yüzde 99 & 2,576 & 5,15 & $[44{,}85;55{,}15]$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Standart hata ve tahmin değişmediği hâlde daha yüksek güven düzeyi daha büyük
+kritik değer ve daha geniş aralık üretmiştir. Daha yüksek kapsama hedefinin
+maliyeti daha düşük hassasiyettir.
+
+\subsection*{Problem 5: Hedef hata payına göre örneklem planı}
+
+Bir başarı ölçeğinin standart sapması önceki çalışmalarda yaklaşık 12 puan
+bulunmuştur. Yüzde 95 güven düzeyinde ortalama için hata payının en fazla 2
+puan olması isteniyor. Gerekli örneklem hacmini bulun. Yüzde 20 yanıtlamama
+bekleniyorsa kaç kişi çalışmaya davet edilmelidir?
+
+\textbf{Çözüm.} Normal yaklaşım altında
+\[
+n\approx\left(\frac{1{,}96(12)}{2}\right)^2
+=11{,}76^2=138{,}30
+\]
+olur. Hedef hata payını aşmamak için yukarı yuvarlanır ve en az 139 geçerli
+gözlem gerekir.
+
+Yanıt oranının yüzde 80 olması bekleniyorsa davet edilecek sayı
+\[
+n_{\mathrm{davet}}=\frac{139}{0{,}80}=173{,}75
+\]
+olduğundan en az 174 kişiye ulaşılması planlanmalıdır. Bu artış yalnız beklenen
+yanıt kaybını karşılar; küme tasarımı veya alt grup analizleri varsa ek
+düzeltme gerekir.
+
+\subsection*{Problem 6: Sıfırı içeren aralığın yorumu}
+
+İki öğretim yönteminin ortalama puan farkı A eksi B olarak 3,5 puan, yüzde 95
+güven aralığı $[-1{,}5;8{,}5]$ bulunmuştur. Uygulamada en az 5 puanlık farkın
+önemli kabul edildiği varsayılsın. Sonucu istatistiksel ve uygulamalı açıdan
+yorumlayın.
+
+\textbf{Çözüm.} Aralık sıfırı içerdiği için yüzde 5 düzeyindeki çift yönlü
+testte sıfır fark hipotezi reddedilemez. Bu sonuç yöntemlerin eşit olduğunu
+kanıtlamaz. Aralık B'nin A'dan 1,5 puan daha iyi olmasından A'nın B'den 8,5
+puan daha iyi olmasına kadar geniş bir değer kümesini içermektedir.
+
+Uygulamalı önem eşiği 5 puan olduğundan aralık hem önemsiz farkları hem A
+lehine önemli kabul edilecek farkları kapsamaktadır. Dolayısıyla çalışma
+``etki yok'' sonucundan çok, yön ve büyüklük hakkında yetersiz hassasiyet
+göstermektedir. Daha büyük veya daha iyi tasarlanmış bir çalışma belirsizliği
+azaltabilir.
+
+\begin{mistakebox}
+Sıfırı içeren geniş bir güven aralığını ``iki yöntem aynıdır'' biçiminde
+yorumlamak hatalıdır. Eşdeğerlik göstermek için önceden belirlenmiş uygulamalı
+sınırlar ve buna uygun eşdeğerlik analizi gerekir.
+\end{mistakebox}
+
+\begin{outputguidebox}
+Güven aralığı çıktısında önce farkın hangi yönde tanımlandığını, güven
+düzeyini ve kullanılan standart hata yöntemini kontrol edin. Ardından aralığın
+sıfır gibi referans değerleri ve uygulamalı önem sınırlarını içerip
+içermediğini değerlendirin. Yalnız \pval-değerine göre yorum yapmayın.
+\end{outputguidebox}
+
+\input{chapters/spss/b08}
+
+\input{chapters/r/b08}
+
+\section{Bölüm özeti}
+
+\begin{itemize}
+  \item Güven aralığı tahmin, kritik değer ve standart hatayı birleştirir.
+  \item Güven düzeyi belirli tek bir aralığa değil, aralık kurma yönteminin uzun dönem başarısına ilişkindir.
+  \item Güven düzeyi, değişkenlik ve örneklem hacmi aralık genişliğini belirler.
+  \item Aralık hem istatistiksel kanıtı hem uygulamada makul etki büyüklüklerini gösterir.
+  \item Grup karşılaştırmalarında ayrı grup aralıkları yerine doğrudan fark
+  için güven aralığı kurulmalıdır.
+  \item Sıfırı içeren geniş bir aralık eşitliği kanıtlamaz; çoğu zaman
+  çalışmanın hassasiyetinin sınırlı olduğunu gösterir.
+\end{itemize}
+
+\section*{Alıştırmalar}
+
+\begin{enumerate}
+  \item Güven düzeyi yüzde 95'ten yüzde 99'a çıkarılırsa aralık nasıl değişir?
+  \item Örneklem hacmi dört katına çıkarsa hata payı yaklaşık nasıl değişir?
+  \item Güven aralığının hem istatistiksel hem uygulamalı yorumunu açıklayın.
+  \item Çözümlü örnekte standart sapma 15 olsaydı aralık nasıl değişirdi?
+  \item Güven aralığının dar olmasına rağmen neden yanıltıcı olabileceği bir durum yazın.
+  \item $n=49$, $\bar x=60$, $s=14$ ve kritik değer 2,01 için ortalama güven
+  aralığını hesaplayın.
+  \item 500 öğrencinin 310'unun olumlu yanıt verdiği bir araştırmada oran için
+  yaklaşık yüzde 95 güven aralığını bulun.
+  \item Tahmin 24 ve standart hata 3 ise yüzde 90 ve yüzde 95 normal güven
+  aralıklarını karşılaştırın.
+  \item Ortalama farkı 4, standart hatası 1,5 ve kritik t değeri 2 ise fark
+  güven aralığını hesaplayıp sıfır bakımından yorumlayın.
+  \item $\sigma=16$, hedef hata payı 2 ve yüzde 95 güven düzeyi için yaklaşık
+  örneklem hacmini belirleyin.
+  \item Gerekli geçerli örneklem 240 ve beklenen yanıt oranı yüzde 75 ise kaç
+  kişinin davet edilmesi gerektiğini hesaplayın.
+  \item Yüzde 99 güven aralığının neden yüzde 95 aralığından daha geniş
+  olduğunu kapsama--hassasiyet dengesiyle açıklayın.
+  \item $[-2;12]$ biçimindeki bir fark aralığını istatistiksel anlamlılık,
+  etki yönü ve uygulamalı önem bakımından yorumlayın.
+  \item Ayrı iki grup güven aralığının örtüşmesine bakmanın neden doğrudan fark
+  aralığının yerini tutmadığını açıklayın.
+\end{enumerate}

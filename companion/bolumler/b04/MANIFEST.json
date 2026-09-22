@@ -1,0 +1,21 @@
+{
+  "algorithm": "SHA-256",
+  "files": {
+    "DOGRULAMA.md": "72363a9dc1a4e924bca247c6e6bacce29dda3e85b081caf193c447945fab9226",
+    "README.md": "ba5d16e70cfab3f65a7e138e1317ea78d1da169b564c842ded1761fa0869bac5",
+    "alistirmalar.md": "bae11045b27ff3b38531da4fd540de97b5e8abdf3770d10056f0e772b343c0fc",
+    "cozumler.md": "5c8ebe83c0b2e2b54e7097570d162ced1cf9dcbad9d856508cb957167ca63465",
+    "ornek-01/README.md": "9919516ea49777abc35027145451d92cecaea618d0dd8c975df1231d2fa604f4",
+    "ornek-01/analiz.sps": "fbcbf811489dfc6cc40ac6c74ee4692cd84c7b4591305cb929b102dfe71a27d7",
+    "ornek-01/analiz.sps.txt": "fbcbf811489dfc6cc40ac6c74ee4692cd84c7b4591305cb929b102dfe71a27d7",
+    "ornek-01/beklenen-sonuclar.csv": "a4777034f5fd3e55b7cff903d41b876c4e55356d5aa329ab4ae7db29ffc8e852",
+    "ornek-01/ciktilar/python/ornekleme-dagilimi.png": "125b57b6a494bba0fc1820f2925a04b4dbe85b3b2efebd82dff6a8bedfab7635",
+    "ornek-01/cozum.R": "17cef342947db7afc84882f1175b9d0bc97492fe250aae278ffa9bb2556d5d1d",
+    "ornek-01/cozum.md": "e35a04cca825c6aa47895bcb041bc617fd78b59c528f4516726ed44b2c13594f",
+    "ornek-01/cozum.py": "67e4587608253b27867174da1583e16dc7ac2f0ff838714ab0b14612f343db50",
+    "ornek-01/evren.csv": "b881a2bb0bf5a8e60c3c11db43df539e75fd8da969278923760ebcb564a502b6",
+    "ornek-01/grafik-aciklamasi.md": "668cd95bba852a61da3c27b651873d4b5707a84c50b69aff79ab935b0495a1bd",
+    "ornek-01/veri-sozlugu.csv": "4c90df4d74fbb0855c369a2b20203fbe3531ce01a058a80df1b5267a58819ebb",
+    "ornek-01/veri.csv": "43c6cc388850e085824f5311a722aad85a19f24e095ce1bd249a18c55a40f82a"
+  }
+}

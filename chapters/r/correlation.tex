@@ -1,0 +1,43 @@
+\section{R ile korelasyon uygulaması}
+\label{sec:r-correlation}
+
+\textbf{Soru.} Bölümdeki 20 öğrencinin uyku süresi ve kaygı puanları için
+saçılım grafiğini, Pearson ve Spearman korelasyonlarını ve Pearson güven
+aralığını üretin.
+
+\begin{lstlisting}[style=prismR]
+uyku <- c(4.5,5.0,5.2,5.5,5.8,6.0,6.1,6.3,6.5,6.7,
+          6.8,7.0,7.1,7.3,7.5,7.6,7.8,8.0,8.2,8.5)
+kaygi <- c(68,52,75,60,66,48,70,55,64,58,
+           45,62,53,46,60,43,55,49,57,40)
+
+plot(uyku, kaygi, pch = 19,
+     xlab = "Uyku suresi", ylab = "Kaygi puani")
+abline(lm(kaygi ~ uyku), col = "blue", lwd = 2)
+
+pearson <- cor.test(uyku, kaygi, method = "pearson")
+spearman <- cor.test(uyku, kaygi, method = "spearman",
+                     exact = FALSE)
+pearson
+spearman
+
+# Tek gozlemin duyarlilik etkisi
+cor(uyku[-3], kaygi[-3], method = "pearson")
+\end{lstlisting}
+
+\begin{outputguidebox}
+\textbf{Çözüm ve kontrol değerleri.} Pearson korelasyonu
+$r=-0{,}5849$, $t(18)=-3{,}061$, $p=0{,}00675$'tir. Spearman katsayısı
+yaklaşık $\rho_s=-0{,}5493$, $p=0{,}0121$ olur. Kesin güven aralığı
+\texttt{cor.test} çıktısından okunur. Katsayıların yönü aynıdır; sayısal
+büyüklüklerinin farklı olması bir yazılım hatası değildir.
+\end{outputguidebox}
+
+\textbf{Yorum.} Pearson doğrusal birlikte değişimi, Spearman sıraların tekdüze
+ilişkisini özetler. İki katsayıyı sonuçtan sonra daha küçük $p$-değerini seçmek
+için değil, veri yapısı ve araştırma hedefi doğrultusunda kullanın. Gözlemsel
+kesitsel veri nedensel uyku etkisini göstermez.
+
+\textbf{Pekiştirme ve yanıt.} Üçüncü gözlemi çıkarmak yalnız duyarlılık
+karşılaştırmasıdır. Kayıt hatası veya önceden belirlenmiş bir dışlama gerekçesi
+yoksa gözlem sırf katsayı değiştiği için silinmemelidir.

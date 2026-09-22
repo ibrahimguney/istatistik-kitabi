@@ -1,0 +1,186 @@
+\section{Literatür verisiyle yazılım uygulamaları}
+\label{sec:spss-b01}
+
+\textbf{Amaç ve veri.} İki okulun matematik verisinde bir satırın ve bir
+sütunun anlamını belirleyelim. \texttt{b01.csv}, 395 öğrencinin seçilmiş
+10 değişkenini içerir. Kaynak ve veri üretim süreci için
+\citet{cortez2008data} ve sayfa~\pageref{sec:spss-guide}'teki rehber kullanılır.
+
+
+\textbf{Ortak veri.} Doğrulanan B01 pilotunda üç yazılım da
+\nolinkurl{companion/spss/csv/b01.csv} dosyasındaki aynı kayıtları kullanır.
+\texttt{b01.xlsx} aynı verinin alternatif kopyasıdır; bu karşılaştırma
+Excel içe aktarmanın doğrulandığı anlamına gelmez. Kodları
+\texttt{companion} klasörünü içeren paket kökünden çalıştırın; veri sözlüğü
+ve hazırlık için bkz. sayfa~\pageref{sec:spss-guide}.
+
+\subsection{IBM SPSS uygulaması}
+\textbf{Başlamadan önce.} B01 CSV pilot paketindeki
+\texttt{open-b01.sps} dosyasını çalıştırın; CSV verisi etiketleriyle açılır.
+Menü yolu ve aşağıdaki tam komut dosyası alternatif uygulama yollarıdır.
+
+\begin{spssadimlar}
+\spssadim{\emph{Variable View} sekmesinde etiket ve ölçme düzeylerini kontrol edin: \texttt{school} ve \texttt{sex} nominal, \texttt{studytime} sıralı, notlar Scale olmalıdır.}
+\spssadim{\emph{Analyze $\to$ Descriptive Statistics $\to$ Frequencies} yolunu açın; \texttt{school} ve \texttt{sex} değişkenlerini \emph{Variable(s)} alanına taşıyın.}
+\spssadim{\emph{Display frequency tables} seçili kalsın; \emph{OK} ile tabloları alın. Her tablonun geçerli gözlem toplamını kontrol edin.}
+\spssadim{\emph{Analyze $\to$ Descriptive Statistics $\to$ Descriptives} yolunda \texttt{age}, \texttt{g1}, \texttt{g2}, \texttt{g3} değişkenlerini seçin.}
+\spssadim{\emph{Options} içinde \emph{Mean}, \emph{Std. deviation}, \emph{Minimum}, \emph{Maximum} seçin; \emph{Continue $\to$ OK} ile özetleri alın.}
+\end{spssadimlar}
+
+{\raggedright
+\noindent\textbf{Komutların görevi.} \texttt{DISPLAY DICTIONARY} veri tanımlarını, \texttt{FREQUENCIES} kategori sayımlarını, \texttt{DESCRIPTIVES} nicel özetleri verir.\par}
+
+\par\noindent\begin{minipage}{\linewidth}
+\textbf{Uygulama kodu:} \texttt{b01}. Veri: \texttt{csv/b01.csv};
+komut: \texttt{syntax/b01.sps} (\texttt{companion/spss} altında).
+
+% Derleme harici .sps dosyasına bağlı değildir. Eşlikçi kopya:
+% companion/spss/syntax/b01.sps
+\begin{lstlisting}[style=prismSPSS]
+INSERT FILE='companion/spss/syntax/open-b01.sps'
+ ERROR=STOP.
+DISPLAY DICTIONARY.
+FREQUENCIES VARIABLES=school sex.
+DESCRIPTIVES VARIABLES=age g1 g2 g3
+ /STATISTICS=MEAN STDDEV MIN MAX.
+\end{lstlisting}
+
+\end{minipage}\par
+
+\begin{outputguidebox}
+\textbf{Çıktıyı okuma ve kontrol.}
+\emph{Dictionary} çıktısında \texttt{school} ve \texttt{sex} nominal,
+\texttt{studytime} sıralı, notlar ise Scale olarak görünmelidir.
+Frekans tablosunda GP için 349, MS için 46; F için 208, M için 187 kayıt
+beklenir. Her iki tablonun toplamı 395'tir. \emph{Descriptives} tablosunda
+yıl sonu notunun ortalaması \SPMatMean, standart sapması \SPMatSD\ olur.
+Bu özetler yalnız gözlenen öğrencileri betimler; 395 satır bulunması
+öğrencilerin rastgele seçildiğini veya bağımsız olduğunu kanıtlamaz.
+\end{outputguidebox}
+
+
+\par\noindent\begin{minipage}{\linewidth}
+\subsection{R uygulaması}
+\label{sec:r-gercek-b01}
+
+\texttt{str} veri türünü, \texttt{is.na} eksikleri, \texttt{table} frekansları gösterir. Nominal ve sıralı değişkenler açıkça tanımlanır.
+
+\begin{lstlisting}[style=prismR]
+d <- read.csv("companion/spss/csv/b01.csv")
+stopifnot(!anyNA(d))
+d$school <- factor(d$school, 1:2, c("GP", "MS"))
+d$sex <- factor(d$sex, 1:2, c("F", "M"))
+d$studytime <- ordered(d$studytime, levels=1:4)
+str(d)
+print(colSums(is.na(d)))
+print(table(d$school)); print(table(d$sex))
+x <- d[c("age", "g1", "g2", "g3")]
+print(sapply(x, function(v) c(n=length(v),
+  mean=mean(v), sd=sd(v), min=min(v), max=max(v))))
+\end{lstlisting}
+
+\textbf{Çıktıyı okuma.} R çıktısında \texttt{n}, \texttt{mean},
+\texttt{sd}, \texttt{min} ve \texttt{max} satırlarını aşağıdaki ortak
+tablonun sütunlarıyla eşleştirin. Paylaşılan R çıktısındaki frekanslar
+ve bu beş özet doğrulanmıştır; eksik değer sayımları paylaşılan dosyada
+yer almamaktadır.
+\end{minipage}\par
+
+\par\noindent\begin{minipage}{\linewidth}
+\subsection{Python uygulaması}
+\label{sec:python-b01}
+
+\texttt{info} sütun yapısını, \texttt{isna} eksikleri, \texttt{agg} seçilen özetleri verir. Kategori kodlarının ortalaması alınmaz.
+
+\begin{lstlisting}[style=prismPythonApp]
+import pandas as pd
+import numpy as np
+from scipy import stats
+
+d = pd.read_csv("companion/spss/csv/b01.csv")
+assert not d.isna().any().any()
+d["school"] = pd.Categorical(d.school.map({1:"GP", 2:"MS"}))
+d["sex"] = pd.Categorical(d.sex.map({1:"F", 2:"M"}))
+d["studytime"] = pd.Categorical(
+    d.studytime, categories=[1, 2, 3, 4], ordered=True)
+d.info()
+print(d.isna().sum())
+print(d.school.value_counts()); print(d.sex.value_counts())
+print(d[["age", "g1", "g2", "g3"]].agg(
+    ["count", "mean", "std", "min", "max"]))
+\end{lstlisting}
+
+\textbf{Çıktıyı okuma.} Python çıktısı 395 satır ve 10 sütun gösterir;
+her sütunda eksik değer sayısı sıfırdır. \texttt{count}, \texttt{mean},
+\texttt{std}, \texttt{min} ve \texttt{max} satırlarını ortak tabloyla
+karşılaştırın. Bu uygulama betimseldir; bir hipotez testi veya $p$ değeri
+üretmez.
+\end{minipage}\par
+
+\subsection{Sonuçların karşılaştırılması ve ortak rapor}
+12 Eylül 2026'da paylaşılan SPSS ekran görüntüleri ile R ve Python
+metin çıktıları karşılaştırılmıştır. R ve Python'daki 20 betimsel hücre
+gösterilen altı ondalık basamakta eşleşmiş; SPSS'in yuvarlanmış
+değerleriyle de uyum sağlanmıştır. Aşağıdaki tablolar bu çıktıların
+ortak, kitap düzenine uyarlanmış özetidir; ekran görüntüsü değildir.
+
+\begin{table}[htbp]
+\centering
+\caption{B01 verisinde okul ve kaynak cinsiyet kodlarının dağılımı}
+\label{tab:b01-dogrulanmis-frekans}
+\begin{tabular}{@{}llrr@{}}
+\toprule
+Değişken & Kategori & Frekans & Yüzde \\
+\midrule
+Okul & GP & 349 & 88,4 \\
+     & MS & 46 & 11,6 \\
+\midrule
+Cinsiyet kodu & F & 208 & 52,7 \\
+              & M & 187 & 47,3 \\
+\bottomrule
+\end{tabular}
+\par\smallskip
+{\footnotesize Her değişken için toplam 395 kayıt ve yüzde 100'dür.
+Yüzdeler kategori sayısının 395'e bölünmesiyle hesaplanmıştır.\par}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{B01 verisinin doğrulanmış betimsel istatistikleri}
+\label{tab:b01-dogrulanmis-betimsel}
+\small
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+Değişken & $n$ & Ortalama & Std. sapma & Min. & Maks. \\
+\midrule
+Yaş & 395 & 16,70 & 1,276 & 15 & 22 \\
+\texttt{g1} & 395 & 10,91 & 3,319 & 3 & 19 \\
+\texttt{g2} & 395 & 10,71 & 3,762 & 0 & 19 \\
+\texttt{g3} & 395 & 10,42 & 4,581 & 0 & 20 \\
+\bottomrule
+\end{tabular}
+\par\smallskip
+{\footnotesize Ortalamalar iki, örneklem standart sapmaları üç ondalık
+basamağa yuvarlanmıştır. SPSS'te ortak geçerli gözlem sayısı
+(Valid N, listwise) 395'tir.\par}
+\end{table}
+
+\begin{outputguidebox}
+Tablo~\ref{tab:b01-dogrulanmis-frekans}, öğrencilerin okullara eşit
+dağılmadığını gösterir. Tablo~\ref{tab:b01-dogrulanmis-betimsel} içinde yıl
+sonu notu ortalaması 10,42, standart sapması 4,581 puandır. Standart sapma
+öğrenci notlarının yayılımını, ortalama ise merkezini özetler; bu iki
+sayı aynı bilgiyi vermez. Üç yazılımın uyumu hesapların tutarlılığını
+destekler; örneklemin evreni temsil ettiğini veya nedenselliği kanıtlamaz.
+Dosya türü ile ölçme düzeyi farklı kavramlardır.
+\end{outputguidebox}
+
+\textbf{Raporlama örneği (doğrulanmış çıktılarla).}
+``İki okuldan 395 öğrenci kaydının 349'u (\%88,4) GP, 46'sı (\%11,6)
+MS okuluna aittir. Öğrencilerin yaş ortalaması 16,70 yıl
+($s=1{,}276$), yıl sonu matematik notu ortalaması 10,42 puandır
+($s=4{,}581$). Yıl sonu notları 0 ile 20 arasında değişmektedir.
+Bu betimleme daha geniş bir öğrenci evrenine doğrudan genellenmemiştir.''
+
+
+\textbf{Görev.} Raporlama örneğine hedef evren tanımını ekleyin; okul kodlarının ortalamasının neden raporlanmayacağını açıklayın.

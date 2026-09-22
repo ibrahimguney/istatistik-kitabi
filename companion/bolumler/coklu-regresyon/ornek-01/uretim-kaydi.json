@@ -1,0 +1,64 @@
+{
+  "date": "2026-09-09",
+  "package": "coklu-regresyon",
+  "edition": "kapsamli",
+  "chapter": 15,
+  "kind": "12 satirlik yapay ogretim verisi; gercek ogrenci veya okul bolgesi verisi degil",
+  "sources": {
+    "chapters/r/multiple.tex": "ec10844df86ff510af306ad42a10b700e550baaf935ea0785e766240735b18c3",
+    "chapters/15-coklu-regresyon.tex": "65f726a1f59afb7a45a34a9390854f3a941690537b4c308ec892cc848cee4f6d"
+  },
+  "grid": {
+    "saat": [
+      2,
+      4,
+      6,
+      8
+    ],
+    "devamsizlik": [
+      0,
+      1,
+      2
+    ],
+    "order": "saat hizli degisir; R expand.grid ile ayni"
+  },
+  "error": [
+    1,
+    -1,
+    -1,
+    1,
+    -2,
+    2,
+    2,
+    -2,
+    1,
+    -1,
+    -1,
+    1
+  ],
+  "formula": "puan = 40 + 2*saat - 3*devamsizlik + hata",
+  "random_seed": null,
+  "randomness": "Yok; hata dizisi deterministik",
+  "new_point": {
+    "saat": 5,
+    "devamsizlik": 2
+  },
+  "confidence_level": 0.95,
+  "python_method": "NumPy QR; SciPy t ve F kuyruklari",
+  "independent_verification": "SymPy tam kesirli normal denklem hesabi; statsmodels OLS ve get_prediction",
+  "runtime": {
+    "python": "3.13.15",
+    "numpy": "2.4.1",
+    "pandas": "2.3.3",
+    "scipy": "1.17.0",
+    "matplotlib": "3.10.8",
+    "sympy": "1.14.0",
+    "statsmodels": "0.14.6"
+  },
+  "data_sha256": {
+    "veri.csv": "3a199713427b6dad357013bffe805fc0b651d8771d8a74f2432b9e2607cc7763",
+    "yeni.csv": "673a767edec8e6adc715b651ed54d60c8dd74b5fde233394515f3231d0a7d637"
+  },
+  "R_executed": false,
+  "SPSS_executed": false
+}

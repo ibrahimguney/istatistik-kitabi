@@ -1,0 +1,18 @@
+{
+  "tarih": "2026-09-09",
+  "kaynak": "Kitap Bolum 8 Python ve R ozet istatistik ornegi",
+  "girdi_turu": "Tek satir ozet; ham gozlemler verilmedi ve uretilmedi",
+  "n": 25,
+  "ortalama": 72,
+  "orneklem_sd": 10,
+  "guven_duzeyleri": [
+    0.95,
+    0.99
+  ],
+  "rastgele_islem": false,
+  "referans_yontemi": "Student t yogunlugunu sayisal integralle ve kok bulmayla tersleme; df=24. Cozumdeki stats.t.ppf cagrisi kullanilmadi.",
+  "scipy": "1.17.0",
+  "csv_sha256": "516589740616c9e9baff58c6cb35e3458c23e542f318d89b4485f57976fb50bf",
+  "r_calistirildi": false,
+  "spss_calistirildi": false
+}

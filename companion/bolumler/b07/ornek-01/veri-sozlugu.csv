@@ -1,0 +1,4 @@
+dosya,degisken,aciklama,veri_turu,olcme_duzeyi,gecerli_degerler,eksik_deger_kurali
+veri.csv,yanit,Yapay ikili yanit,Tam sayi,Nominal,0 olumsuz; 1 olumlu,Eksik kabul edilmez; 0 eksik degildir
+benzetim.csv,tekrar,Benzetim tekrar kimligi,Tam sayi,Nominal,1 ile B arasinda benzersiz,Eksik kabul edilmez
+benzetim.csv,basari,Elli Bernoulli cekimindeki olumlu sayisi,Tam sayi,Oran,0 ile 50 arasinda,Eksik kabul edilmez

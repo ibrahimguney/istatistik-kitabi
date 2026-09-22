@@ -1,0 +1,23 @@
+{
+  "algorithm": "SHA-256",
+  "files": {
+    "DOGRULAMA.md": "b1a9f389bccbac086500c20c4dd0a86324ce331e6943749f48af6b8abe796a1e",
+    "README.md": "6c900168fdaf7305522660e35d1d4a61dd958ad804457e15d3d54cf09219f9f2",
+    "alistirmalar.md": "748ccc71f301c2fd9bb3e85310459ad172146e5353764f53244cf0ba9bceb464",
+    "cozumler.md": "b8c9aeb9c98efd5b99f55ebf6bce4e2e556a678c27783395aa3fbb469547462c",
+    "ornek-01/README.md": "e3cab96b3c31b13ee0e8bdabf2aaf436d611455f9016c3d29da3b4674439b7b9",
+    "ornek-01/analiz.sps": "90b55d87d61dfaf021ab235f0d23ff544f47c39e603e62d0a1433b64e9ab9da1",
+    "ornek-01/analiz.sps.txt": "90b55d87d61dfaf021ab235f0d23ff544f47c39e603e62d0a1433b64e9ab9da1",
+    "ornek-01/beklenen-sonuclar.csv": "bc7264bf7300146144873152a8ae68bcb45524aa01e162d3ffc4d44222956f3d",
+    "ornek-01/ciktilar/python/secim-haritasi.png": "8940e9c821be6832f7f015d97a365fba3debf833b984d3942e0d00c47881e932",
+    "ornek-01/cozum.R": "dbc5b3eb3487a0c7e9072e60551270c57fa8119573db3aa4e38955c68af9a72d",
+    "ornek-01/cozum.md": "33b0a1ede4c1f591dd768919b5c154434488c20fdfec2b69bcd403c01545bd43",
+    "ornek-01/cozum.py": "2da322c09340041a27a7c079a8dd465fc941e5ded5e9aa7d215407882aaa3e14",
+    "ornek-01/grafik-aciklamasi.md": "63a0a5fdeddc83347c7f3a9209a6e157196a990927a6ddc75da4bfb82fcc0460",
+    "ornek-01/secim.R": "8fbfcad1770c9485c7e75b3367c3d52c7931646cca9f25bd391356c2068656e2",
+    "ornek-01/uret.py": "d0e8e6b62533e4467fb72f8c805f754d2a9f80508bd19e7d88ba5ec45bcfdd79",
+    "ornek-01/uretim-kaydi.json": "bdb5a0f28551c1a6cf395eaeec85957e7a5c6b7f5c492df9283a934269c5a869",
+    "ornek-01/veri-sozlugu.csv": "370e805418040a89442dbcb2573a2f9f04c0d09d6448075d2941f011d95fa4d4",
+    "ornek-01/veri.csv": "63006921fb58048b6f2be636bd341c005fb6dcaa9cec6c5e8695f43ba23a0392"
+  }
+}

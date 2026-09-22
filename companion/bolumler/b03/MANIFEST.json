@@ -1,0 +1,20 @@
+{
+  "algorithm": "SHA-256",
+  "files": {
+    "DOGRULAMA.md": "29b9f7f6b7737ac0ea04dc69743f1ffe135861c4899a275d45d9c4599e3bd852",
+    "README.md": "694be656c877c92682c0680000d7e53cca8fd08bfb496d39df217ec0d1315e3b",
+    "alistirmalar.md": "b581f6353b03abd7232dc434b611b9aefc03cdc538550552ca056cc81a1e0ea7",
+    "cozumler.md": "7bbe3536f0896b7f549791e4afbaf9a15488a29b6955e46470d514436b3cf701",
+    "ornek-01/README.md": "e1da92e278486ae2af3d82e0d5bba113f0224676e1fc55123a9473e4e525b560",
+    "ornek-01/analiz.sps": "a46260736ca3b1945d9ddeb0b4485170fe9dc523f0c8a8077d2aeddb98b25677",
+    "ornek-01/analiz.sps.txt": "a46260736ca3b1945d9ddeb0b4485170fe9dc523f0c8a8077d2aeddb98b25677",
+    "ornek-01/beklenen-sonuclar.csv": "c5f34287d8490f3e0013363e81d0a829f1e33c7e5f34149fc1e3f0ef6483096b",
+    "ornek-01/ciktilar/python/betimsel-grafikler.png": "a9a4642342afd7dfd03fd59f657e1b35ad1f09817a08d9a42762a3fd18587149",
+    "ornek-01/cozum.R": "4a33f9a49fe411326c7dcb2fd1f5a66d384b7374c8a4d7c0fb9e2fc46fe41e3b",
+    "ornek-01/cozum.md": "2dfd792363c850bf6bde9ebd2c460e5459cd6aedbcfddbf4aab19577e47503bb",
+    "ornek-01/cozum.py": "1d78b9d6e554f75a4fe308cce2fc7cefb93896821a1ff9d61de52da1db8a074f",
+    "ornek-01/grafik-aciklamasi.md": "ef14aac287ed48f92ed74e432a5b8591511fcbf787cd2824dea19ead7821d418",
+    "ornek-01/veri-sozlugu.csv": "0a1b1b396a2c5c4181885119343467495a58856c53aa406237b9ed4489a72676",
+    "ornek-01/veri.csv": "fc45e474ceb5877956626a30fda12236ad4e3edbecf83e0acda52cead50427cb"
+  }
+}

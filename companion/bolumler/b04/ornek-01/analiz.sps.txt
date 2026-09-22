@@ -1,0 +1,36 @@
+GET DATA /TYPE=TXT /FILE='veri.csv' /ENCODING='UTF8'
+ /ARRANGEMENT=DELIMITED /DELCASE=LINE /DELIMITERS="," /QUALIFIER='"'
+ /FIRSTCASE=2 /VARIABLES=ilk F16.0 ikinci F16.0.
+DATASET NAME B04Ornek.
+FILTER OFF.
+USE ALL.
+WEIGHT OFF.
+SPLIT FILE OFF.
+VARIABLE LABELS ilk 'Geri koymali ilk cekim' ikinci 'Geri koymali ikinci cekim'.
+VARIABLE LEVEL ilk ikinci (SCALE).
+EXECUTE.
+DISPLAY DICTIONARY.
+CROSSTABS /TABLES=ilk BY ikinci /CELLS=COUNT.
+COMPUTE ortalama=(ilk+ikinci)/2.
+COMPUTE en_az_7=(ortalama>=7).
+COMPUTE esit_5=(ortalama=5).
+AGGREGATE /OUTFILE=* MODE=ADDVARIABLES /BREAK=
+ /mu=MEAN(ilk) /merkez=MEAN(ortalama) /sirali_sayi=N.
+COMPUTE kare_evren=(ilk-mu)**2.
+COMPUTE kare_ortalama=(ortalama-merkez)**2.
+AGGREGATE /OUTFILE=* MODE=ADDVARIABLES /BREAK=
+ /evren_varyansi=MEAN(kare_evren) /dagilim_varyansi=MEAN(kare_ortalama)
+ /p_en_az_7=MEAN(en_az_7) /p_esit_5=MEAN(esit_5).
+COMPUTE evren_sd=SQRT(evren_varyansi).
+COMPUTE standart_hata=SQRT(dagilim_varyansi).
+COMPUTE kuramsal_sh=evren_sd/SQRT(2).
+COMPUTE yanlilik=merkez-mu.
+FORMATS mu merkez evren_varyansi dagilim_varyansi evren_sd
+ standart_hata kuramsal_sh yanlilik p_en_az_7 p_esit_5 (F12.6).
+EXECUTE.
+TEMPORARY.
+SELECT IF ($CASENUM=1).
+LIST VARIABLES=sirali_sayi mu evren_varyansi evren_sd merkez dagilim_varyansi
+ standart_hata kuramsal_sh yanlilik p_en_az_7 p_esit_5.
+FREQUENCIES VARIABLES=ortalama /ORDER=ANALYSIS.
+GRAPH /BAR(SIMPLE)=PCT BY ortalama.

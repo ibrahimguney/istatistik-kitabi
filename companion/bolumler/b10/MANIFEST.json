@@ -1,0 +1,22 @@
+{
+  "algorithm": "SHA-256",
+  "files": {
+    "DOGRULAMA.md": "66b37afe730de4b9c0e8b3aefc2e60c276ea0fa3d32d9f1bd8efe5d885d10056",
+    "README.md": "fb60821b6aceb3fd39e0638e43702e6764cc7b7862e80061ae4bfe1494aba18a",
+    "alistirmalar.md": "dda583d503fc6b10ab478a9c05267c8511e991e9059f00c254de2e8200097dad",
+    "cozumler.md": "57df98f6f3ca542b9548d79f87e612cef75f437cb7f8f6df5541268866684cd1",
+    "ornek-01/README.md": "f06afda9a2ba583060ec90c7b698136d728f4e1b77204ce1ba90db4afe071993",
+    "ornek-01/analiz.sps": "e10e570f0f90a48f79579af7d275743be501594bf0e5485cc926c5d4d0a49859",
+    "ornek-01/analiz.sps.txt": "e10e570f0f90a48f79579af7d275743be501594bf0e5485cc926c5d4d0a49859",
+    "ornek-01/beklenen-sonuclar.csv": "5d79478a9fa9a6a101ab65023b1b1188c044725d87fcb98eae0f2326b7bc7b85",
+    "ornek-01/ciktilar/python/guc-egrisi.png": "df16a81eb7655f5396d084a57210b80a226c24a17de6427d60467db3474ede16",
+    "ornek-01/cozum.R": "e7630bd298d956d648c373976e541106bbb48642331e5dbce2430728c9bdb06c",
+    "ornek-01/cozum.md": "aa3d6ef0003a720764302457cc9b8d235582ca88427795f5ca2e87fbc5cd9b5e",
+    "ornek-01/cozum.py": "a74c1593e74e1415d6f3595c6e99d604f436c8e350ca41e54add1fdd0d196b4e",
+    "ornek-01/grafik-aciklamasi.md": "55c38e63f0dc8176d007cb65bd67a1ba7202bfa86992af0c8cede808fab5fe3e",
+    "ornek-01/kaynak-kaydi.json": "84dda2d1ba6af285d5ff546915096af1b029a29d8e2e1a45584fcd85b8a7063a",
+    "ornek-01/plan.csv": "a77da5caca5a7837a8e25696c0e98ecbdb709f4bf429e210adea45415ebe02c5",
+    "ornek-01/veri-sozlugu.csv": "96003f161afba0fdbdcdae208db1d672b195d5affded13401e3fe4ba14c2d35c",
+    "ornek-01/veri.csv": "c06d918caa8c54980cf436cedb690e178f7141b98cbe183f71978124f0912aaf"
+  }
+}

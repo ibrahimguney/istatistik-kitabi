@@ -1,0 +1,17 @@
+{
+  "tarih": "2026-09-09",
+  "paket": "B09",
+  "konu": "Hipotez testleri",
+  "ders_bolumu": 9,
+  "kapsamli_bolum": 10,
+  "kaynaklar": [
+    "chapters/09-hipotez-testleri.tex",
+    "chapters/r/b09.tex"
+  ],
+  "veri_turu": "Öğretim amaçlı tek özet satırı; ham gözlem değildir.",
+  "orneklem_buyuklugu": "Verilmedi; df=49 tek başına örneklem büyüklüğünü belirlemez.",
+  "veri_sha256": "66afa14471c33079b26566b757e91458bdb71e1e1b45c12120889d2cf6f4ce27",
+  "kontrol_yontemi": "t yoğunluğu lgamma ile açık formülden hesaplandı; scipy.integrate.quad ile kuyruk olasılığı, scipy.optimize.brentq ile 0.975 kuantili bulundu. Çözümün stats.t.sf/ppf sonuçları kopyalanmadı.",
+  "rastgele_islem": false,
+  "kontrol_sayisi": 20
+}

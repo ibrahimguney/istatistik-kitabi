@@ -1,0 +1,23 @@
+{
+  "records": 9254,
+  "adults": 5569,
+  "older": 2150,
+  "strata": 15,
+  "psus": 30,
+  "adult_strata": 15,
+  "adult_psus": 30,
+  "weighted_numerator": 69595747.79229385,
+  "weighted_denominator": 238737538.90033254,
+  "weighted_proportion": 0.2915157294192786,
+  "unweighted_proportion": 0.3860657209552882,
+  "taylor_variance": 0.00024115515966554595,
+  "standard_error": 0.01552917124850988,
+  "design_df": 15,
+  "confidence_level": 0.95,
+  "t_critical": 2.131449545559776,
+  "ci_lower": 0.25841608441872227,
+  "ci_upper": 0.32461537441983496,
+  "method": "Full-design Taylor linearization; no FPC; domain df; approximate t-Wald interval",
+  "source_xpt_sha256": "c0b46e0345ea19404928656277c8b0d10b0cca348a9b2fe4fc3c67e8b7ee73ec",
+  "complete_delivery_accepted": false
+}

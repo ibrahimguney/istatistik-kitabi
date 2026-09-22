@@ -1,0 +1,4 @@
+degisken,aciklama,veri_turu,birim,gecerli_degerler,eksik_deger_kurali
+n,Ozetlenen orneklemdeki gozlem sayisi,Tam sayi,Kisi,En az 2,Eksik kabul edilmez
+ortalama,Ozetlenen orneklemin aritmetik ortalamasi,Sayisal,Puan,Sonlu sayi,Eksik kabul edilmez
+s,Ozetlenen orneklemin n-1 bolenli standart sapmasi,Sayisal,Puan,Pozitif sonlu sayi,Eksik kabul edilmez

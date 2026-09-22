@@ -1,0 +1,168 @@
+{
+  "tarih": "2026-09-10",
+  "SPSS_calistirildi": false,
+  "R_hazirlayici_calistirildi": false,
+  "paketler": {
+    "b01": {
+      "kaynak": "companion/bolumler/b01/ornek-01/analiz.sps.txt",
+      "sha256": "a71aa1b0fc3dd9060ed6568435d12474be2caf7df79b01c4c3473c9e281c308a",
+      "csv": [
+        "beklenen-sonuclar.csv",
+        "veri.csv"
+      ],
+      "referans_sayisi": 18
+    },
+    "b02": {
+      "kaynak": "companion/bolumler/b02/ornek-01/analiz.sps.txt",
+      "sha256": "9562a2d7dd7688f7c614724e322295d80d912d092c11f9724118212c927cbd6f",
+      "csv": [
+        "beklenen-sonuclar.csv",
+        "veri.csv"
+      ],
+      "referans_sayisi": 23
+    },
+    "b03": {
+      "kaynak": "companion/bolumler/b03/ornek-01/analiz.sps.txt",
+      "sha256": "4b9a0e46b1ada89250c2379c9ce7d9701138c159ca6e336c4948f376bd549ee3",
+      "csv": [
+        "beklenen-sonuclar.csv",
+        "veri.csv"
+      ],
+      "referans_sayisi": 26
+    },
+    "b04": {
+      "kaynak": "companion/bolumler/b04/ornek-01/analiz.sps.txt",
+      "sha256": "47ae091af6b7a16d240ed8b53d1ee7caf04917a7abf292fb75e520262ebfb58c",
+      "csv": [
+        "beklenen-sonuclar.csv",
+        "veri.csv"
+      ],
+      "referans_sayisi": 28
+    },
+    "b05": {
+      "kaynak": "companion/bolumler/b05/ornek-01/analiz.sps.txt",
+      "sha256": "f1affad38b9373f8c05373948d578e5177a8c97555388375c5a268148b670d01",
+      "csv": [
+        "beklenen-sonuclar.csv",
+        "veri.csv"
+      ],
+      "referans_sayisi": 24
+    },
+    "b06": {
+      "kaynak": "companion/bolumler/b06/ornek-01/analiz.sps.txt",
+      "sha256": "e9ae0c3a6bddb2aab165c8f038e0eeb200da9cfdb68a4fc85a0820fe7418675f",
+      "csv": [
+        "beklenen-sonuclar.csv",
+        "veri.csv"
+      ],
+      "referans_sayisi": 29
+    },
+    "b07": {
+      "kaynak": "companion/bolumler/b07/ornek-01/analiz.sps.txt",
+      "sha256": "a8d77a1762e833bb95afccc467cffe7a4e7d4d5dfb469a95fb00c84505161fab",
+      "csv": [
+        "beklenen-sonuclar.csv",
+        "benzetim.csv",
+        "veri.csv"
+      ],
+      "referans_sayisi": 21
+    },
+    "b08": {
+      "kaynak": "companion/bolumler/b08/ornek-01/analiz.sps.txt",
+      "sha256": "35a970ce3d48e3f267a1295deadd77d2279437c5c10b95a6f2aad9bda55342f6",
+      "csv": [
+        "beklenen-sonuclar.csv",
+        "veri.csv"
+      ],
+      "referans_sayisi": 19
+    },
+    "b09": {
+      "kaynak": "companion/bolumler/b09/ornek-01/analiz.sps.txt",
+      "sha256": "ef606de5ae597e9b9faebdf8c65a7263bae165bc7e7b45e05c3118c61ea9d41a",
+      "csv": [
+        "beklenen-sonuclar.csv",
+        "veri.csv"
+      ],
+      "referans_sayisi": 20
+    },
+    "b10": {
+      "kaynak": "companion/bolumler/b10/ornek-01/analiz.sps.txt",
+      "sha256": "95de0db62b3ab4ae5f92b6d7699533ab683e4702e626b9ebc627f128b5649561",
+      "csv": [
+        "beklenen-sonuclar.csv",
+        "plan.csv",
+        "veri.csv"
+      ],
+      "referans_sayisi": 30
+    },
+    "b11": {
+      "kaynak": "companion/bolumler/b11/ornek-01/analiz.sps.txt",
+      "sha256": "923f8ed6f2c3f41675c0ee5e1ab2b71db954eb76d289c3fc634c4bcc355971b0",
+      "csv": [
+        "beklenen-sonuclar.csv",
+        "veri.csv"
+      ],
+      "referans_sayisi": 34
+    },
+    "b12": {
+      "kaynak": "companion/bolumler/b12/ornek-01/analiz.sps.txt",
+      "sha256": "b733e00bea4d1faf24e4a7fbfae524e0c08aad18745974e8a693a4abbbb520de",
+      "csv": [
+        "beklenen-sonuclar.csv",
+        "veri.csv"
+      ],
+      "referans_sayisi": 32
+    },
+    "b13": {
+      "kaynak": "companion/bolumler/b13/ornek-01/analiz.sps.txt",
+      "sha256": "2ab3d4a98d4a6f9c002e9354cdd86f9c509d622055e2e8d354e5f1d293619d18",
+      "csv": [
+        "beklenen-sonuclar.csv",
+        "veri.csv"
+      ],
+      "referans_sayisi": 62
+    },
+    "b14": {
+      "kaynak": "companion/bolumler/b14/ornek-01/analiz.sps.txt",
+      "sha256": "b2ef3edec092816e6adbee27715454d8dfe831ab5c8d9735a60af686d6b678a1",
+      "csv": [
+        "beklenen-sonuclar.csv",
+        "veri.csv"
+      ],
+      "referans_sayisi": 17
+    },
+    "bootstrap": {
+      "kaynak": "companion/bolumler/bootstrap/ornek-01/analiz.sps.txt",
+      "sha256": "40059cc094f08c1ac025dcab5cb59baf1cfb33d807ecce6ae4556cf9474fd6ea",
+      "csv": [
+        "beklenen-sonuclar.csv",
+        "bootstrap-plan.csv",
+        "permutasyon-plan.csv",
+        "permutasyon.csv",
+        "veri.csv"
+      ],
+      "referans_sayisi": 26
+    },
+    "coklu-regresyon": {
+      "kaynak": "companion/bolumler/coklu-regresyon/ornek-01/analiz.sps.txt",
+      "sha256": "dd9f37f80c1979a5611f2a190349a8dd3688c0137ffa7266bd1e3d4e2c6b70e7",
+      "csv": [
+        "beklenen-sonuclar.csv",
+        "veri.csv",
+        "yeni.csv"
+      ],
+      "referans_sayisi": 66
+    },
+    "anova": {
+      "kaynak": "companion/bolumler/anova/ornek-01/analiz.sps.txt",
+      "sha256": "2098e68267bea831643df9a43efcc5d62d97171a5fb025d803be15f92ed7a6a0",
+      "csv": [
+        "beklenen-sonuclar.csv",
+        "ciftler.csv",
+        "veri.csv",
+        "welch.csv"
+      ],
+      "referans_sayisi": 70
+    }
+  }
+}

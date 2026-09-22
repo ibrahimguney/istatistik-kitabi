@@ -1,0 +1,5 @@
+variable,source,description_tr,unit,missing_rule
+source_row,DATA Excel row,İzlenebilirlik için eklenen satır numarası; fiziksel parsel kimliği değildir,satır,eksik kabul edilmez
+block,Block,Kaynak blok kodu ONE TWO THREE,kategori,eksik kabul edilmez
+treatment,Treatment,Kaynak rejim adı No Fertilizer FYM NPK NPK+FYM,kategori,eksik kabul edilmez
+dry_matter_g_m2,Mean dry matter (2011-2014),2011–2014 parsel başına ortalama kuru madde verimi,g/m2,eksik kabul edilmez; sıfır otomatik dışlanmaz

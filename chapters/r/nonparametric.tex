@@ -1,0 +1,47 @@
+\section{R ile parametrik olmayan testler}
+\label{sec:r-nonparametric}
+
+\textbf{Soru.} İki bağımsız grup için Mann--Whitney, aynı kişilerin iki
+ölçümü için Wilcoxon işaretli sıra ve üç bağımsız grup için Kruskal--Wallis
+testlerini R ile uygulayın.
+
+\begin{lstlisting}[style=prismR]
+# Iki bagimsiz grup
+a <- c(7, 8, 9, 10, 11)
+b <- c(1, 2, 3, 4, 5)
+wilcox.test(a, b, alternative = "two.sided",
+            exact = TRUE, correct = FALSE)
+
+# Ayni kisilerin iki olcumu
+once <- c(10, 12, 15, 18, 20, 22)
+sonra <- c(12, 13, 18, 19, 24, 25)
+wilcox.test(sonra, once, paired = TRUE,
+            alternative = "two.sided", exact = TRUE,
+            correct = FALSE)
+
+# Uc bagimsiz grup
+puan <- c(1,2,3, 4,5,6, 7,8,9)
+grup <- factor(rep(c("A", "B", "C"), each = 3))
+kruskal.test(puan ~ grup)
+pairwise.wilcox.test(puan, grup,
+                     p.adjust.method = "holm",
+                     exact = TRUE)
+\end{lstlisting}
+
+\begin{outputguidebox}
+\textbf{Çözüm ve kontrol değerleri.} Bağımsız iki grupta sıra toplamına
+dayalı istatistik $W=25$ ve kesin iki yönlü $p=0{,}00794$'tür.
+Eşleştirilmiş örnekte bütün farklar pozitif olduğundan $V=21$ ve kesin
+$p=0{,}03125$ bulunur. Üç grup için $H(2)=7{,}20$, $p=0{,}02732$'dir.
+Genel test hangi çiftlerin farklı olduğunu tek başına göstermez.
+\end{outputguidebox}
+
+\textbf{Yorum.} R, bağlı sıra veya sıfır fark bulunduğunda kesin yöntemi
+kullanamayabilir ve uyarı verebilir. Bu durumda asimptotik yaklaşımın veya
+Monte Carlo yönteminin kullanıldığı raporda belirtilmelidir. Mann--Whitney
+sonucu, dağılım biçimleri için ek koşul olmadan otomatik ``medyan testi''
+olarak sunulmamalıdır.
+
+\textbf{Pekiştirme ve yanıt.} İkili karşılaştırmalarda
+\texttt{p.adjust.method="holm"} aile içindeki çoklu test sorununu kontrol
+eder. Düzeltilmemiş $p$-değerlerinden yalnız anlamlı olanları seçmeyin.

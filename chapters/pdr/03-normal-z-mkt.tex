@@ -1,0 +1,623 @@
+\chapter{Normal Dağılım, Standart Puanlar ve Örnekleme Değişkenliği}
+\label{ch:clt-se}
+\index{normal dağılım}
+\index{standart puan}
+\index{örnekleme değişkenliği}
+
+\begin{hedefler}
+Bu bölümün sonunda okuyucu:
+\begin{itemize}
+  \item normal dağılımın merkez, yayılım, simetri ve alan özelliklerini açıklayabilecek,
+  \item ham puanı $z$ ve T puanına dönüştürerek göreli konumu yorumlayabilecek,
+  \item standart puan ile yüzdelik sırasını birbirinden ayırabilecek,
+  \item bireysel puan dağılımı ile bir istatistiğin örnekleme dağılımını karşılaştırabilecek,
+  \item standart sapma ve standart hatayı doğru bağlamda kullanabilecek,
+  \item Merkezi Limit Teoreminin koşullarını ve söylemediği şeyleri açıklayabilecektir.
+\end{itemize}
+\end{hedefler}
+
+\begin{hazirlik}
+Bir öğrencinin puanının ortalamadan 10 puan yüksek olması tek başına yeterli
+bilgi midir? Standart sapmanın neden gerekli olduğunu açıklayın.
+\end{hazirlik}
+
+\section{PDR vakası: Farklı ölçeklerdeki puanları karşılaştırmak}
+
+Bir öğrencinin akademik kaygı ölçeğinden 72, psikolojik dayanıklılık ölçeğinden
+60 puan aldığı düşünülmektedir. Kaygı puanının yüksek, dayanıklılık puanının
+daha düşük görünmesi yalnız ham puanlara bakılarak söylenebilir mi? Ölçeklerin
+puan aralıkları, norm grubundaki ortalamaları ve standart sapmaları bilinmeden
+bu iki sayı doğrudan karşılaştırılamaz.
+
+Kaygı ölçeğinde norm ortalaması 50 ve standart sapma 10; dayanıklılık ölçeğinde
+ortalama 40 ve standart sapma 8 olsun. Öğrencinin göreli konumları
+\[
+z_{\text{kaygı}}=\frac{72-50}{10}=2{,}20,
+\qquad
+z_{\text{dayanıklılık}}=\frac{60-40}{8}=2{,}50
+\]
+olarak bulunur. Öğrenci her iki ölçekte de ortalamanın üzerindedir; norm grubu
+içindeki göreli konumu dayanıklılıkta biraz daha yüksektir. Bununla birlikte
+yüksek $z$ puanı tek başına klinik tanı veya müdahale gereksinimi göstermez.
+
+Bu vaka bölümün ilk yarısında bireysel puanın konumunu, ikinci yarısında ise
+bir öğrenci grubundan hesaplanan ortalamanın belirsizliğini anlamak için
+kullanılacaktır.
+
+\section{Normal dağılım}
+\index{normal dağılım!özellikleri}
+\index{yoğunluk fonksiyonu}
+
+Normal dağılım $\mu$ ortalaması çevresinde simetrik, çan biçimli sürekli bir
+dağılımdır. $\sigma$ küçüldükçe eğri daralır; büyüdükçe yayılır. Yaklaşık
+normal bir dağılımda gözlemlerin yaklaşık yüzde 68'i $\mu\pm\sigma$, yüzde
+95'i $\mu\pm2\sigma$ aralığındadır \cite{degroot2012,hogg2019}.
+
+Normal dağılımın yoğunluk fonksiyonu
+\[
+f(x)=\frac{1}{\sigma\sqrt{2\pi}}
+\exp\!\left[-\frac{(x-\mu)^2}{2\sigma^2}\right],
+\qquad -\infty<x<\infty
+\]
+biçimindedir. Temel İstatistik düzeyinde formülün ezberlenmesinden çok şu
+özellikler önemlidir:
+
+\begin{itemize}
+  \item Eğri $mu$ çevresinde simetriktir; ortalama, medyan ve mod çakışır.
+  \item Eğri altındaki toplam alan 1'dir ve alanlar olasılıkları temsil eder.
+  \item $mu$ konumu, $sigma$ yayılımı belirler.
+  \item Eğrinin kuyrukları eksene yaklaşır, fakat kuramsal olarak eksene değmez.
+  \item Belirli tek bir değerin olasılığı değil, bir aralığın alanı yorumlanır.
+\end{itemize}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[alt={Normal dağılım eğrisi üzerinde ortalama ve bir ile iki standart sapmalık aralıklar},x=1cm,y=1cm]
+  \draw[->,PrismGray] (-4.2,0) -- (4.4,0) node[right,font=\scriptsize]{$x$};
+  \draw[PrismBlue,very thick,smooth,samples=100,domain=-4:4]
+    plot (\x,{2.8*exp(-\x*\x/2)});
+  \fill[PrismSubheadingBlue!18,smooth,samples=80,domain=-1:1]
+    (-1,0) -- plot (\x,{2.8*exp(-\x*\x/2)}) -- (1,0) -- cycle;
+  \draw[PrismBlue,dashed] (0,0) -- (0,2.85);
+  \foreach \x/\lab in {-2/{\mu-2\sigma},-1/{\mu-\sigma},0/\mu,1/{\mu+\sigma},2/{\mu+2\sigma}}
+    \draw (\x,0.08)--(\x,-0.08) node[below,font=\scriptsize]{$\lab$};
+  \node[font=\scriptsize,text=PrismBlue] at (0,1.05) {yaklaşık \%68};
+\end{tikzpicture}
+\caption{Normal dağılımda merkez ve standart sapma birimleri.}
+\end{figure}
+
+\subsection{68--95--99,7 kuralı}
+\index{68--95--99,7 kuralı}
+
+Yaklaşık normal bir dağılımda gözlemlerin yaklaşık yüzde 68'i
+$\mu\pm\sigma$, yüzde 95'i $\mu\pm2\sigma$ ve yüzde 99,7'si
+$\mu\pm3\sigma$ aralığındadır. Ortalaması 50, standart sapması 10 olan bir
+ölçekte puanların yaklaşık yüzde 68'i 40--60, yüzde 95'i 30--70 arasında
+beklenir.
+
+Bu kural yaklaşık bir betimleme sağlar. Gözlenen verinin belirgin çarpıklık,
+çoklu tepe veya ağır kuyruk göstermesi durumunda normal eğriye dayalı bu
+yüzdeler uygun olmayabilir.
+
+\begin{etkinlik}
+Ortalaması 40, standart sapması 6 olan yaklaşık normal bir puan dağılımında
+$\mu\pm\sigma$, $\mu\pm2\sigma$ ve $\mu\pm3\sigma$ aralıklarını yazın.
+Aralıkların her birinde yaklaşık kaç öğrencinin bulunacağını 1.000 kişilik bir
+grup için tahmin edin.
+\end{etkinlik}
+
+\section{Normal eğri altında olasılık}
+\index{normal dağılım!alan ve olasılık}
+
+Sürekli dağılımda olasılık, iki değer arasında kalan alandır. Simetri
+nedeniyle ortalamanın solunda ve sağında alanın yarısı bulunur:
+\[
+P(X<\mu)=P(X>\mu)=0{,}50.
+\]
+Standartlaştırma sonrasında bütün normal dağılımlar standart normal dağılım
+tablosu veya yazılımıyla incelenebilir. Örneğin $z=1$ değerinin solundaki alan
+yaklaşık 0,8413, sağındaki alan 0,1587'dir.
+
+\begin{mistakebox}
+Yoğunluk eğrisinin dikey yüksekliği doğrudan olasılık değildir. Olasılığı
+eğrinin altında bir aralık boyunca kalan alan verir. Sürekli bir değişkende
+tam olarak tek bir değeri gözleme olasılığı kuramsal olarak sıfırdır.
+\end{mistakebox}
+
+\section{Standart puan}
+\index{z puanı@$z$ puanı}
+
+Bir $x$ gözleminin ortalamadan kaç standart sapma uzakta olduğunu gösteren
+standart puan
+\[
+z=\frac{x-\mu}{\sigma}
+\]
+biçimindedir. Örneklem özetleri kullanıldığında $z=(x-\bar{x})/s$ hesaplanır.
+Pozitif $z$ ortalamanın üzerinde, negatif $z$ altında bir gözlemi gösterir.
+
+$z$ puanının işareti yönü, mutlak değeri ortalamaya uzaklığı gösterir:
+
+\begin{description}
+  \item[$z=0$] Puan ortalamaya eşittir.
+  \item[$z=1{,}5$] Puan ortalamanın 1,5 standart sapma üzerindedir.
+  \item[$z=-0{,}8$] Puan ortalamanın 0,8 standart sapma altındadır.
+\end{description}
+
+Ham puana geri dönüş
+\[
+x=\mu+z\sigma
+\]
+ile yapılır. Örneğin $mu=50$, $sigma=10$ ve $z=-1{,}2$ için
+$x=50-12=38$ bulunur.
+
+\subsection{T puanı ve yüzdelik sırası}
+\index{T puanı@$T$ puanı}
+\index{yüzdelik sırası}
+\index{norm grubu}
+
+Negatif ve ondalıklı değerleri azaltmak için bazı ölçme uygulamalarında
+\[
+T=50+10z
+\]
+dönüşümü kullanılır. Kaygı örneğindeki $z=2{,}20$, $T=72$ değerine karşılık
+gelir. Bu dönüşüm göreli konumu değiştirmez; yalnız ölçeğin başlangıç ve birim
+değerini değiştirir.
+
+Normal dağılım varsayımı altında $z=1{,}50$ yaklaşık 93,3. yüzdeliğe karşılık
+gelir. Bu, puanın norm grubunun yaklaşık yüzde 93,3'ünden yüksek olduğu
+anlamındadır. ``Yüzde 93,3 doğru yaptı'' veya ``özelliğin yüzde 93,3'üne
+sahiptir'' anlamına gelmez.
+
+Farklı ölçeklerdeki puanlar standartlaştırılarak karşılaştırılabilir; ancak
+standartlaştırma ölçümlerin güvenilirlik veya içerik bakımından eşdeğer olduğu
+anlamına gelmez.
+
+\begin{researchbox}
+Standart puan her zaman kullanılan norm grubuna görelidir. Bir üniversitenin
+öğrencilerinden elde edilen ortalama ve standart sapmayla hesaplanan $z$ puanı,
+ülke genelindeki öğrenciler için aynı göreli konumu göstermeyebilir. Norm
+grubunun kimlerden, ne zaman ve hangi koşullarda oluştuğu raporlanmalıdır.
+\end{researchbox}
+
+\section{Dağılımın normalliğini değerlendirmek}
+\index{normallik}
+\index{Q--Q grafiği}
+\index{Shapiro--Wilk testi}
+
+Normal dağılım varsayımı tek bir karar kutusuna indirgenmemelidir. Histogram,
+kutu grafiği ve normal Q--Q grafiği birlikte incelenir. Q--Q grafiğinde
+noktaların yaklaşık bir doğru çevresinde ilerlemesi normal dağılımla uyumu;
+sistematik eğrilik, ağır kuyruk veya belirgin uç noktalar sapmayı düşündürür.
+
+Küçük örneklemde grafik düzensiz görünebilir; büyük örneklemde ise önemsiz bir
+sapma normallik testinde anlamlı bulunabilir. Bu nedenle yalnız Shapiro--Wilk
+gibi bir testin $p$-değerine bakarak yöntem değiştirmek dengeli bir yaklaşım
+değildir. Araştırma tasarımı, örneklem hacmi, sapmanın biçimi, aykırı değerler
+ve kullanılacak yöntemin sağlamlığı birlikte değerlendirilir.
+
+\begin{mistakebox}
+``Normallik testi anlamlı değilse veri normaldir'' sonucu kesin değildir.
+Anlamlı olmayan sonuç, özellikle küçük örneklemde sapmayı gösterecek yeterli
+kanıt bulunmadığını söyler; kusursuz normalliği kanıtlamaz.
+\end{mistakebox}
+
+\section{Bireysel dağılım ve örnekleme dağılımı}
+\index{evren dağılımı}
+\index{örneklem dağılımı}
+\index{örnekleme dağılımı}
+\index{standart hata}
+
+Ham puanların dağılımı bireyler arasındaki değişkenliği gösterir. Aynı evrenden
+tekrar tekrar $n$ birimlik örneklemler seçip her örneklemde $\bar X$
+hesaplarsak, bu ortalamaların dağılımına $\bar X$'ın örnekleme dağılımı denir.
+Bu iki dağılım birbirine karıştırılmamalıdır.
+
+Üç düzeyi ayrı tutmak yararlıdır:
+
+\begin{description}
+  \item[Evren dağılımı] Hedef evrendeki bütün bireysel puanların dağılımıdır.
+  \item[Örneklem dağılımı] Seçilen tek örneklemdeki bireysel puanların dağılımıdır.
+  \item[Örnekleme dağılımı] Aynı büyüklükteki bütün olası örneklemlerden hesaplanan bir istatistiğin dağılımıdır.
+\end{description}
+
+Örnekleme dağılımını doğrudan gözlemlemeyiz; gerçekte çoğunlukla yalnız bir
+örneklem seçilir. Kuramsal sonuçlar veya bilgisayar benzetimleri, istatistiğin
+tekrarlı örneklemedeki davranışını anlamamızı sağlar.
+
+Bağımsız ve aynı dağılımlı gözlemler için
+\[
+\E(\bar X)=\mu,
+\qquad
+\Var(\bar X)=\frac{\sigma^2}{n},
+\qquad
+SE(\bar X)=\frac{\sigma}{\sqrt n}.
+\]
+Uygulamada $\sigma$ bilinmiyorsa $SE(\bar X)\approx s/\sqrt n$ kullanılır.
+
+Bu eşitlikler örneklem ortalamasının uzun dönemde evren ortalaması çevresinde
+merkezlendiğini ve $n$ arttıkça dağılımının daraldığını gösterir. Bireysel
+puanların standart sapması küçülmek zorunda değildir; daralan, ortalamaların
+örnekleme dağılımıdır.
+
+\begin{mistakebox}
+Standart sapma bireysel gözlemlerin, standart hata ise bir tahmin edicinin
+örneklemden örnekleme değişkenliğini ölçer. İkisi aynı nicelik değildir.
+\end{mistakebox}
+
+\section{Merkezi Limit Teoremi}
+\index{Merkezi Limit Teoremi}
+
+Sonlu varyans altında örneklem hacmi arttıkça standartlaştırılmış örneklem
+ortalaması
+\[
+\frac{\bar X-\mu}{\sigma/\sqrt n}
+\]
+yaklaşık standart normal dağılıma yaklaşır. Bu sonuç, ham veri tam olarak
+normal olmasa bile birçok güven aralığı ve test yönteminin neden büyük
+örneklemlerde çalıştığını açıklar.
+
+MLT'nin uygulanmasında üç nokta önemlidir:
+
+\begin{enumerate}
+  \item Gözlemler bağımsız veya bağımlılık analizde dikkate alınmış olmalıdır.
+  \item Evren dağılımının varyansı sonlu olmalıdır.
+  \item Gerekli örneklem hacmi dağılımın biçimine bağlıdır; evrensel bir ``$n=30$ yeterlidir'' kuralı yoktur.
+\end{enumerate}
+
+Evren yaklaşık simetrikse küçük örneklemlerde bile ortalama dağılımı normal
+yaklaşıma uygun olabilir. Güçlü çarpıklık, seyrek fakat çok büyük değerler veya
+bağımlı gözlemler daha fazla dikkat gerektirir.
+
+MLT, ``her veri seti normal olur'' demez. Yaklaşık normallik kazanan nicelik,
+uygun koşullar altında örneklem ortalamasının örnekleme dağılımıdır.
+Teoremin koşulları ve yakınsama çerçevesi için bkz.\
+\cite{billingsley1995,dasgupta2011}.
+
+\begin{ornek}[Örneklem ortalaması için olasılık]
+Bir PDR ölçeğinin evren ortalaması 50, standart sapması 12 olsun. Bağımsız
+$n=36$ öğrencilik örneklemlerde
+\[
+E(\bar X)=50,
+\qquad
+SE(\bar X)=\frac{12}{\sqrt{36}}=2
+\]
+olur. Örneklem ortalamasının 54'ten büyük olma olasılığı için
+\[
+z=\frac{54-50}{2}=2
+\]
+hesaplanır. Standart normal dağılımda sağ kuyruk alanı yaklaşık 0,0228'dir.
+Yani evren ortalaması gerçekten 50 ise, 36 kişilik örneklemlerin yaklaşık
+yüzde 2,3'ünde ortalama 54'ten büyük olur.
+\end{ornek}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[alt={Örneklem hacmi büyüdükçe örneklem ortalaması dağılımının daralmasını gösteren üç eğri},x=0.86cm,y=0.86cm]
+  \draw[->,PrismGray] (-4.2,0) -- (4.4,0);
+  \draw[PrismGray!65,thick,smooth,samples=100,domain=-4:4]
+    plot (\x,{1.25*exp(-\x*\x/8)});
+  \draw[PrismSubheadingBlue,thick,smooth,samples=100,domain=-3:3]
+    plot (\x,{2.0*exp(-\x*\x/2)});
+  \draw[PrismBlue,very thick,smooth,samples=100,domain=-2:2]
+    plot (\x,{2.85*exp(-2*\x*\x)});
+  \node[font=\scriptsize,text=PrismGray] at (3.25,1.15) {$n$ küçük};
+  \node[font=\scriptsize,text=PrismSubheadingBlue] at (2.35,1.75) {$n$ orta};
+  \node[font=\scriptsize,text=PrismBlue] at (1.25,2.75) {$n$ büyük};
+\end{tikzpicture}
+\caption{Örneklem hacmi arttıkça ortalamanın örnekleme dağılımının daralması.}
+\end{figure}
+
+\section{Karekök yasası}
+\index{karekök yasası}
+\index{örneklem hacmi!standart hata ilişkisi}
+
+Standart hata $1/\sqrt n$ oranında azalır. Belirsizliği yarıya indirmek için
+örneklem hacmini yaklaşık dört katına çıkarmak gerekir. Bu nedenle daha fazla
+verinin getirisi vardır; fakat getiri doğrusal değildir.
+
+\begin{table}[htbp]
+\centering
+\caption{$\sigma=12$ için örneklem hacmi ve standart hata ilişkisi.}
+\begin{tabular}{@{}rrrr@{}}
+\toprule
+$n$ & 9 & 36 & 144 \\
+\midrule
+$SE(\bar X)=12/\sqrt n$ & 4 & 2 & 1 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Örneklem hacmi 9'dan 36'ya, yani dört katına çıktığında standart hata 4'ten
+2'ye düşer. Standart hatayı yeniden yarıya indirmek için örneklem hacmini
+144'e çıkarmak gerekir. Bu ilişki örneklem planlamasında maliyet ile hassasiyet
+arasındaki ödünleşimi gösterir.
+
+\section{Python ile örnekleme dağılımı benzetimi}
+
+Aşağıdaki kod, belirgin biçimde sağa çarpık bir evrenden farklı büyüklüklerde
+örneklemler seçer ve örneklem ortalamalarını saklar:
+
+\begin{lstlisting}
+import numpy as np
+import matplotlib.pyplot as plt
+
+rng = np.random.default_rng(209)
+tekrar = 5000
+
+fig, ax = plt.subplots(1, 3, figsize=(9, 3))
+for panel, n in zip(ax, [1, 10, 40]):
+    ortalamalar = np.array([
+        rng.exponential(scale=10, size=n).mean()
+        for _ in range(tekrar)
+    ])
+    panel.hist(ortalamalar, bins=30, edgecolor="white")
+    panel.set_title(f"n = {n}")
+    panel.set_xlabel("örneklem ortalaması")
+
+plt.tight_layout()
+plt.show()
+\end{lstlisting}
+
+$n=1$ paneli evrenin çarpık biçimini yansıtır. $n=10$ ve özellikle $n=40$
+için ortalamaların dağılımı daha simetrik olur ve daralır. Benzetim MLT'nin
+iki sonucunu görünür kılar: biçim normale yaklaşırken standart hata
+$1/\sqrt n$ oranında azalır.
+
+\section{SPSS ile standart puan ve normallik incelemesi}
+
+\begin{enumerate}
+  \item Standart puan üretmek için \textbf{Analyze $>$ Descriptive Statistics $>$ Descriptives} yolunu izleyin.
+  \item İlgili değişkeni seçip \textbf{Save standardized values as variables} seçeneğini işaretleyin.
+  \item Dağılımı incelemek için \textbf{Analyze $>$ Descriptive Statistics $>$ Explore} menüsünü açın.
+  \item \textbf{Plots} bölümünde histogram ve normality plots seçeneğini kullanın.
+  \item Histogram, Q--Q grafiği, aykırı değerler ve örneklem hacmini birlikte yorumlayın.
+\end{enumerate}
+
+\begin{outputguidebox}
+Çıktıda önce ortalama ve standart sapmanın kullanılan norm grubuna ait olup
+olmadığını kontrol edin. Sonra gözlenen minimum--maksimum, çarpıklık, histogram
+ve Q--Q grafiğini inceleyin. Normallik testinin $p$-değerini tek başına karar
+kuralı yapmayın. Standartlaştırılmış değişkende ortalamanın yaklaşık 0,
+standart sapmanın yaklaşık 1 olması hesaplamanın iç denetimidir.
+\end{outputguidebox}
+
+\section{Bütünleştirici çözümlü örnek}
+
+Akademik kaygı ölçeğinde norm ortalaması 50, standart sapma 10'dur. Bir
+öğrenci 65 puan almış; 64 kişilik bir sınıfın ortalaması 53, standart sapması
+8 bulunmuştur.
+
+\begin{enumerate}
+  \item Öğrencinin norm grubuna göre standart puanı $(65-50)/10=1{,}50$'dir.
+  \item Normal yaklaşım altında öğrenci yaklaşık 93,3. yüzdeliktedir.
+  \item Sınıf ortalamasının tahmini standart hatası $8/\sqrt{64}=1$'dir.
+  \item Bireysel puanın $z$ değeri öğrencinin göreli konumunu; standart hata ise sınıf ortalamasının örnekleme belirsizliğini anlatır.
+\end{enumerate}
+
+\begin{researchbox}
+Bir öğrencinin yüksek standart puanı, ölçeğin geçerli ve güvenilir biçimde
+uygulandığı, uygun norm grubunun kullanıldığı ve puanın görüşme bağlamında
+değerlendirildiği varsayımıyla anlam kazanır. İstatistiksel sıra, bireyin
+gereksinimlerini tek başına tanımlamaz.
+\end{researchbox}
+
+\section{Bilimsel raporlama örneği}
+
+``Akademik kaygı puanları yaklaşık simetrik bir dağılım göstermiştir
+($\bar{x}=53{,}0$, $SS=8{,}0$, $n=64$). Sınıf ortalamasının tahmini standart
+hatası 1,0 puandır. Norm ortalaması 50 ve standart sapması 10 olan ölçekte 65
+puan alan öğrencinin standart puanı $z=1{,}50$'dir. Bu değer norm grubuna göre
+yüksek bir göreli konumu göstermekle birlikte klinik karar olarak
+yorumlanmamıştır.''
+
+\section{Literatür veri setiyle IBM SPSS laboratuvarı}
+\index{Student Performance veri seti!z puanı}
+\index{SPSS!standartlaştırılmış değer}
+\index{z puanı!SPSS uygulaması}
+\index{Merkezi Limit Teoremi!benzetim}
+\index{örnekleme dağılımı!SPSS benzetimi}
+
+Bu laboratuvarda \emph{Student Performance} matematik dosyasındaki yıl sonu
+notu \texttt{G3} kullanılacaktır \cite{cortez2008data,cortezsilva2008}.
+Uygulamanın ilk kısmı öğrencilerin G3 puanlarını örneklem ortalaması ve
+standart sapmasına göre standartlaştırır. İkinci kısmı, gözlenen G3
+dağılımından yerine koyarak 36 kişilik 5.000 örnek seçer ve örneklem
+ortalamalarının dağılımını oluşturur.
+
+\begin{researchbox}
+Bu uygulamadaki z-puanları dışsal bir norm grubuna değil, gözlenen 395
+öğrencinin ortalaması ve standart sapmasına dayanır. Dolayısıyla öğrencinin
+bu veri dosyasındaki göreli konumunu gösterir; ulusal norm puanı veya klinik
+eşik değildir.
+\end{researchbox}
+
+\subsection{Araştırma görevleri}
+
+\begin{enumerate}
+  \item G3 için standartlaştırılmış değişkeni üretip ortalama ve standart sapmasını denetleyin.
+  \item Ham puanı 15 ve 5 olan öğrencilerin z-puanlarını yorumlayın.
+  \item Ham G3 dağılımının normal olmak zorunda olmadığını grafiklerle gösterin.
+  \item G3 dağılımından 36 kişilik 5.000 örnek seçerek örneklem ortalamalarını kaydedin.
+  \item Örneklem ortalamalarının merkezi ve standart sapmasını kuramsal değerlerle karşılaştırın.
+\end{enumerate}
+
+\subsection{SPSS syntax: z-puanları}
+
+IBM SPSS \textbf{Descriptives} yordamındaki \textbf{Save standardized values
+as variables} seçeneği syntax'ta \texttt{/SAVE} alt komutuyla kullanılır.
+G3 için oluşturulan değişken varsayılan olarak \texttt{ZG3} adını alır.
+
+\begin{lstlisting}[language={}]
+DATASET ACTIVATE StudentMath.
+
+DESCRIPTIVES VARIABLES=G3
+ /SAVE
+ /STATISTICS=MEAN STDDEV MIN MAX.
+
+DESCRIPTIVES VARIABLES=ZG3
+ /STATISTICS=MEAN STDDEV MIN MAX.
+
+EXAMINE VARIABLES=G3 ZG3
+ /PLOT HISTOGRAM NPPLOT
+ /STATISTICS DESCRIPTIVES
+ /CINTERVAL 95
+ /MISSING LISTWISE.
+\end{lstlisting}
+
+\subsection{Z-puanı çıktısının erişilebilir özeti}
+
+\begin{table}[htbp]
+\centering
+\caption{G3 ve standartlaştırılmış G3 değişkeninin kontrol özeti.}
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+Değişken & $n$ & Ortalama & SS & En küçük & En büyük \\
+\midrule
+G3 & 395 & 10,42 & 4,58 & 0 & 20 \\
+ZG3 & 395 & 0,00 & 1,00 & $-2,27$ & 2,09 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Standartlaştırılmış değişkenin ortalamasının yuvarlama düzeyinde 0 ve standart
+sapmasının 1 olması hesaplamanın iç denetimidir. Örneğin G3 puanı 15 olan bir
+öğrenci için
+\[
+z=\frac{15-10{,}415}{4{,}581}\approx1{,}00,
+\]
+yani puan örneklem ortalamasının yaklaşık bir standart sapma üzerindedir.
+G3 puanı 5 için $z\approx-1{,}18$ bulunur. Bu işaret ve büyüklük göreli konumu
+gösterir; başarının nedeni veya öğrencinin gelecekteki performansı hakkında
+tek başına açıklama sağlamaz.
+
+\begin{mistakebox}
+ZG3 değişkeninin ortalamasının 0 ve standart sapmasının 1 olması, G3
+dağılımının normal olduğunu kanıtlamaz. Doğrusal standartlaştırma dağılımın
+biçimini değiştirmez; G3'teki yığılmalar ve sınırlar ZG3'te de korunur.
+\end{mistakebox}
+
+\subsection{SPSS syntax: örneklem ortalamalarının dağılımı}
+
+Aşağıdaki MATRIX programı G3 sütununu belleğe alır. Her tekrarda gözlenen 395
+değer arasından yerine koyarak 36 seçim yapar, ortalamayı kaydeder ve sonuçları
+ayrı bir SPSS veri dosyasına yazar. Dosya adı ve yolu gerektiğinde kullanıcı
+tarafından değiştirilmelidir.
+
+\begin{lstlisting}[language={}]
+DATASET ACTIVATE StudentMath.
+SET SEED=2092026.
+
+MATRIX.
+ GET g3 /VARIABLES=G3.
+ COMPUTE N=NROW(g3).
+ COMPUTE B=5000.
+ COMPUTE m=36.
+ COMPUTE ortalamalar=MAKE(B,1,0).
+
+ LOOP i=1 TO B.
+  COMPUTE toplam=0.
+  LOOP j=1 TO m.
+   COMPUTE k=TRUNC(RV.UNIFORM(0,1)*N)+1.
+   COMPUTE toplam=toplam+g3(k,1).
+  END LOOP.
+  COMPUTE ortalamalar(i,1)=toplam/m.
+ END LOOP.
+
+ SAVE ortalamalar
+  /OUTFILE='g3-orneklem-ortalamalari.sav'
+  /VARIABLES=ortalama_G3.
+END MATRIX.
+
+GET FILE='g3-orneklem-ortalamalari.sav'.
+DATASET NAME OrneklemOrtalamalari WINDOW=FRONT.
+
+DESCRIPTIVES VARIABLES=ortalama_G3
+ /STATISTICS=MEAN STDDEV MIN MAX.
+
+EXAMINE VARIABLES=ortalama_G3
+ /PLOT HISTOGRAM NPPLOT
+ /STATISTICS DESCRIPTIVES
+ /CINTERVAL 95.
+
+DATASET ACTIVATE StudentMath.
+\end{lstlisting}
+
+\subsection{MLT çıktısının analizi}
+
+G3'ün gözlenen ortalaması 10,42 ve standart sapması 4,58 olduğundan 36 kişilik
+örneklem ortalamasının beklenen standart hatası
+\[
+SE(\bar X)=\frac{4{,}581}{\sqrt{36}}\approx0{,}764
+\]
+olur. SPSS benzetiminde 5.000 ortalamanın merkezi yaklaşık 10,42, standart
+sapması ise yaklaşık 0,76 olmalıdır. Rassal seçim nedeniyle son basamaklarda
+küçük farklılıklar beklenir.
+
+Normal yaklaşım altında örneklem ortalamalarının yaklaşık yüzde 95'i
+\[
+10{,}415\pm1{,}96(0{,}764)
+=[8{,}92;\ 11{,}91]
+\]
+aralığında beklenir. Bu aralık tek tek öğrencilerin yüzde 95'ini kapsayan bir
+puan aralığı değildir; 36 kişilik tekrar örneklemlerin \emph{ortalamalarına}
+ilişkindir.
+
+\begin{table}[htbp]
+\centering
+\caption{MLT benzetimi için kuramsal ve SPSS çıktı denetimleri.}
+\begin{tabular}{@{}p{0.34\textwidth}p{0.25\textwidth}p{0.25\textwidth}@{}}
+\toprule
+Denetim & Kuramsal hedef & Benzetimde beklenen \\
+\midrule
+Ortalamanın merkezi & $\mu_{\bar X}=10{,}42$ & 10,42'ye yakın \\
+Ortalamaların standart sapması & $SE\approx0{,}764$ & 0,76'ya yakın \\
+Dağılım biçimi & Yaklaşık normal & Histogram ve Q--Q yaklaşık doğrusal \\
+Tekrar sayısı & --- & 5.000 geçerli ortalama \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Ham G3 dağılımında 0 puanında yığılma ve 0--20 sınırları bulunmasına rağmen,
+36 bağımsız seçimin ortalamaları ham puanlardan daha düzgün ve daha dar bir
+dağılım gösterir. MLT'nin anlattığı normal yaklaşım ham gözlemlere değil,
+belirli koşullar altında örneklem ortalamasının örnekleme dağılımına aittir.
+
+\begin{outputguidebox}
+İki çıktıyı karıştırmayın: \textbf{ZG3} öğrencilerin standartlaştırılmış ham
+puanlarını, \textbf{ortalama\_G3} ise tekrar örneklemlerin ortalamalarını
+gösterir. İlkinde standart sapmanın 1 olması tanım gereğidir; ikincisinde
+standart sapmanın yaklaşık 0,76 olması örneklem ortalamasının standart
+hatasını gösterir.
+\end{outputguidebox}
+
+\subsection{Örnek bulgu paragrafı}
+
+``Yıl sonu matematik notlarının ortalaması 10,42 ve standart sapması 4,58'dir
+($n=395$). Örneklem içi standartlaştırmada puanı 15 olan bir öğrencinin
+z-puanı yaklaşık 1,00'dır. Gözlenen dağılımdan yerine koyarak seçilen 36
+kişilik 5.000 örneklemin ortalamaları yaklaşık 10,42 çevresinde ve 0,76
+standart sapmayla dağılmıştır. Örneklem ortalamalarının histogramı ham G3
+dağılımından daha düzgün görünmüştür. Bu sonuç ham notların normal olduğunu
+değil, örneklem ortalamasının dağılımının MLT uyarınca normal biçime
+yaklaştığını göstermektedir.''
+
+\input{chapters/r/b05}
+\input{chapter-exercises/04-normal-z-mkt}
+
+\bolumkaynaklari{\cite{degroot2012,billingsley1995,wasserman2004,hogg2019,cortez2008data,cortezsilva2008}}
+
+\section*{Hatırla--Uygula--Yansıt}
+
+\begin{enumerate}
+\renewcommand{\labelenumi}{\textbf{\Alph{enumi}.}}
+  \item \textbf{Hatırla:} Normal dağılımın beş temel özelliğini açıklayın.
+  \item \textbf{Hesapla:} $\bar x=70$, $s=10$ olan dağılımda $x=85$ için $z$ ve T puanını bulun.
+  \item \textbf{Ters dönüştür:} $\mu=40$, $\sigma=6$ ve $z=-1{,}5$ için ham puanı hesaplayın.
+  \item \textbf{Yorumla:} $z=1{,}28$ değerinin yaklaşık 90. yüzdelik olması ne anlama gelir, ne anlama gelmez?
+  \item \textbf{Ayır:} Standart sapma ile standart hatayı aynı PDR veri seti üzerinden karşılaştırın.
+  \item \textbf{Hesapla:} $s=12$ için $n=36$ ve $n=144$ durumlarında standart hataları bulun.
+  \item \textbf{Eleştir:} ``Örneklem 30'dan büyük olduğu için veriler normaldir'' ifadesini düzeltin.
+  \item \textbf{Tanıla:} Histogram yaklaşık simetrik, Q--Q grafiğinde tek güçlü aykırı değer varsa hangi kontrolleri yaparsınız?
+  \item \textbf{Uygula:} Python benzetiminde $n=5,20,80$ değerlerini kullanıp biçim ve yayılım değişimini karşılaştırın.
+  \item \textbf{Yansıt:} PDR uygulamasında standart puanın neden tek başına tanı veya müdahale kararı veremeyeceğini tartışın.
+\end{enumerate}

@@ -1,0 +1,35 @@
+\phantomsection
+\chapter*{R Uygulamalarıyla Çalışma}
+\markboth{R Uygulamalarıyla Çalışma}{R Uygulamalarıyla Çalışma}
+\addcontentsline{toc}{chapter}{R Uygulamalarıyla Çalışma}
+\label{sec:r-guide}
+
+Birleşik sürümdeki 20 bölümün her birinde
+\emph{R ile çözümlü uygulama} başlığı altında soru, çalıştırılabilir kod,
+kontrol değerleri, sonuç yorumu ve yanıtlı bir pekiştirme görevi bulunur.
+R uygulamaları Python ve SPSS içeriklerine ektir; onları kaldırmaz.
+Fonksiyonların ayrıntılı açıklamaları R'nin kendi yardım belgelerinden
+izlenebilir \citep{rstatsmanual}.
+
+Kodlar standart R kurulumu ile gelen işlevleri kullanır; ek paket kurulumu,
+internet bağlantısı veya eksik olabilecek eşlikçi veri dosyaları gerektirmez.
+Her bölümün kodunu üstten alta çalıştırın. Girdiler kod içinde açıkça verilir;
+bunlar bölümdeki küçük örnekler, özet istatistikler veya özellikle belirtilmiş
+öğretim verileridir. Gerçek veri örneğiyle aynı sayıda gözlem içermeyen bir
+R örneği, o gerçek veri analizinin yeniden üretimi olarak sunulmaz.
+
+\begin{enumerate}
+  \item Kodu R konsoluna veya bir R betiğine alın; basılı satır numaralarını kopyalamayın.
+  \item Önce girdileri ve değişken türlerini, sonra testin yönünü ve fark tanımını kontrol edin.
+  \item Sayısal çıktıyı çözüm kutusuyla karşılaştırın; yuvarlamayı yalnız raporlama aşamasında yapın.
+  \item Grafik üreten kodlarda grafik penceresini inceleyin; tek başına anlamlılık kararıyla yetinmeyin.
+  \item Çalışmanın sonunda \texttt{sessionInfo()} ile R ve paket sürümlerini kaydedin.
+\end{enumerate}
+
+Benzetimlerde \texttt{set.seed(2026)} kullanılır. Verilen kuramsal hedefler,
+sonlu sayıda tekrardan çıkan değerlerle tam eşit olmak zorunda değildir;
+R ve Python aynı tohumla aynı rastgele örneklemi üretmeyebilir. Özet
+istatistiklerden yapılan testler ham gözlemlerin dağılımını denetleyemez.
+Bu nedenle her çözümde sayısal sonucun yanında varsayımlar ve yorum sınırları
+ayrıca açıklanmıştır. Güvenirlik bölümünde alfa ek paket olmadan hesaplanır;
+omega için kullanılan isteğe bağlı paket komutu ayrıca işaretlenmiştir.

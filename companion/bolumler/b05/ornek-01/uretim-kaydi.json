@@ -1,0 +1,15 @@
+{
+  "python": "3.14.2",
+  "seed": 2026,
+  "B": 10000,
+  "hacimler": [
+    1,
+    5,
+    30
+  ],
+  "generator": "random.Random.expovariate(0.1)",
+  "reference": "fsum/iki gecis varyans; cozum statistics.mean/stdev",
+  "python_check": 24,
+  "R_executed": false,
+  "SPSS_executed": false
+}

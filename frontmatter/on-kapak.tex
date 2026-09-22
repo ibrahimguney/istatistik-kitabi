@@ -1,0 +1,59 @@
+% PDF e-kitap için görsel ön kapak. Basılı dış kapak cover-print.tex'tedir.
+\begin{titlepage}
+\thispagestyle{empty}
+\begin{tikzpicture}[remember picture,overlay]
+  \coordinate (SW) at (current page.south west);
+  \coordinate (NE) at (current page.north east);
+
+  \fill[PrismBlue!92!black] (SW) rectangle (NE);
+  \fill[PrismSubheadingBlue!75!PrismBlue]
+    ($(SW)+(0,47mm)$) rectangle ($(NE)+(0,-166mm)$);
+
+  \node[anchor=north,text=white,align=center]
+    at ($(current page.north)+(0,-27mm)$) {%
+      \begin{minipage}{0.82\paperwidth}
+      \centering
+      {\fontsize{31}{36}\selectfont\sffamily\bfseries
+       \MakeUppercase{\BookTitle}\par}
+      \vspace{5mm}
+      {\fontsize{16}{21}\selectfont \BookSubtitle\par}
+      \end{minipage}
+    };
+
+  \begin{scope}[shift={($(current page.center)+(0,-9mm)$)},x=0.92cm,y=0.72cm]
+    \foreach \height in {0,1,2,3,4}
+      \draw[white!13,line width=0.3pt] (-5.4,\height)--(5.4,\height);
+    \foreach \position in {-5,-4,...,5}
+      \draw[white!8,line width=0.25pt] (\position,0)--(\position,4.25);
+    \foreach \position/\height in {
+      -4.55/.22,-3.85/.48,-3.15/.95,-2.45/1.62,-1.75/2.55,
+      -1.05/3.15,-.35/3.68,.35/3.40,1.05/2.92,1.75/2.15,
+      2.45/1.32,3.15/.76,3.85/.32}
+      \filldraw[fill=white!13,draw=white!38,line width=0.4pt]
+        (\position,0) rectangle +(0.64,\height);
+    \draw[white,line width=1.6pt,smooth,domain=-5.2:5.2,samples=120]
+      plot (\x,{3.95*exp(-\x*\x/5.8)});
+    \draw[white!60,densely dashed,line width=0.6pt] (0,0)--(0,3.95);
+    \fill[white] (0,3.95) circle (2.6pt);
+    \foreach \x/\y in {
+      -4.6/.42,-4.1/.76,-3.5/.65,-3.0/1.18,-2.6/1.45,-2.1/2.18,
+      -1.6/2.42,-1.1/3.18,-.7/3.02,-.2/3.72,.3/3.50,.8/3.08,
+      1.3/2.76,1.8/2.08,2.3/1.92,2.8/1.12,3.4/.95,4.0/.50,4.6/.34}
+      \fill[PrismResearchGreen!85!white] (\x,\y) circle (1.7pt);
+    \draw[PrismResearchGreen!85!white,line width=1pt]
+      (-4.7,.35) .. controls (-2.6,.8) and (-1.9,2.5) .. (-.5,2.9)
+      .. controls (1.1,3.2) and (2.1,1.4) .. (4.7,.55);
+  \end{scope}
+
+  \node[anchor=south,text=white,align=center]
+    at ($(current page.south)+(0,24mm)$) {%
+      \begin{minipage}{0.82\paperwidth}
+      \centering
+      {\fontsize{16}{20}\selectfont\sffamily\bfseries \BookAuthor\par}
+      \vspace{2mm}
+      {\small \BookPublisher\par}
+      \end{minipage}
+    };
+\end{tikzpicture}
+\null
+\end{titlepage}

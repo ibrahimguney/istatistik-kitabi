@@ -1,0 +1,35 @@
+GET DATA
+  /TYPE=TXT
+  /FILE='veri.csv'
+  /ENCODING='UTF8'
+  /ARRANGEMENT=DELIMITED
+  /DELCASE=LINE
+  /DELIMITERS=","
+  /QUALIFIER='"'
+  /FIRSTCASE=2
+  /VARIABLES=
+    okul_turu A6
+    sinif F2.0
+    puan F8.0.
+DATASET NAME B02Ornek.
+FILTER OFF.
+USE ALL.
+WEIGHT OFF.
+SPLIT FILE OFF.
+VARIABLE LABELS
+  okul_turu 'Okul turu'
+  /sinif 'Sirali sinif duzeyi'
+  /puan 'Ogretim ornegindeki sinav puani'.
+VALUE LABELS sinif
+  1 'Birinci sinif' 2 'Ikinci sinif' 3 'Ucuncu sinif'.
+VARIABLE LEVEL okul_turu (NOMINAL)
+  /sinif (ORDINAL)
+  /puan (SCALE).
+EXECUTE.
+DISPLAY DICTIONARY.
+FREQUENCIES VARIABLES=okul_turu sinif
+  /ORDER=ANALYSIS.
+DESCRIPTIVES VARIABLES=puan
+  /STATISTICS=MEAN MIN MAX.
+MEANS TABLES=puan BY okul_turu
+  /CELLS=COUNT MEAN.

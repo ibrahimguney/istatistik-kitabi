@@ -1,0 +1,45 @@
+GET DATA /TYPE=TXT /FILE='veri.csv' /ENCODING='UTF8'
+ /ARRANGEMENT=DELIMITED /DELCASE=LINE /DELIMITERS="," /QUALIFIER='"'
+ /FIRSTCASE=2 /VARIABLES=hacim_1 F24.0 ortalama_1 F24.0 standart_sapma_1 F24.0
+ hacim_2 F24.0 ortalama_2 F24.0 standart_sapma_2 F24.0
+ cift_sayisi F24.0 ortalama_fark F24.0 fark_sapmasi F24.0 alfa F24.0.
+DATASET NAME B11Ozet.
+FILTER OFF.
+USE ALL.
+WEIGHT OFF.
+SPLIT FILE OFF.
+COMPUTE katki_1=standart_sapma_1**2/hacim_1.
+COMPUTE katki_2=standart_sapma_2**2/hacim_2.
+COMPUTE w_fark=ortalama_1-ortalama_2.
+COMPUTE w_se=SQRT(katki_1+katki_2).
+COMPUTE w_df=(katki_1+katki_2)**2/(katki_1**2/(hacim_1-1)+katki_2**2/(hacim_2-1)).
+COMPUTE w_t=w_fark/w_se.
+COMPUTE w_p=2*CDF.T(-ABS(w_t),w_df).
+COMPUTE w_kritik=IDF.T(1-alfa/2,w_df).
+COMPUTE w_pay=w_kritik*w_se.
+COMPUTE w_alt=w_fark-w_pay.
+COMPUTE w_ust=w_fark+w_pay.
+COMPUTE w_genislik=2*w_pay.
+COMPUTE w_reddet=(w_p<alfa).
+COMPUTE es_se=fark_sapmasi/SQRT(cift_sayisi).
+COMPUTE es_df=cift_sayisi-1.
+COMPUTE es_t=ortalama_fark/es_se.
+COMPUTE es_p=2*CDF.T(-ABS(es_t),es_df).
+COMPUTE es_kritik=IDF.T(1-alfa/2,es_df).
+COMPUTE es_pay=es_kritik*es_se.
+COMPUTE es_alt=ortalama_fark-es_pay.
+COMPUTE es_ust=ortalama_fark+es_pay.
+COMPUTE es_genislik=2*es_pay.
+COMPUTE es_reddet=(es_p<alfa).
+COMPUTE dz=ortalama_fark/fark_sapmasi.
+VALUE LABELS w_reddet es_reddet 0 'H0 reddedilemez' 1 'H0 reddedilir'.
+FORMATS hacim_1 ortalama_1 standart_sapma_1 hacim_2 ortalama_2 standart_sapma_2
+ cift_sayisi ortalama_fark fark_sapmasi alfa katki_1 katki_2 w_fark w_se w_df w_t w_p
+ w_kritik w_pay w_alt w_ust w_genislik es_se es_df es_t es_p es_kritik es_pay
+ es_alt es_ust es_genislik dz (F16.10).
+EXECUTE.
+DISPLAY DICTIONARY.
+LIST VARIABLES=hacim_1 ortalama_1 standart_sapma_1 hacim_2 ortalama_2 standart_sapma_2
+ cift_sayisi ortalama_fark fark_sapmasi alfa.
+LIST VARIABLES=katki_1 katki_2 w_fark w_se w_df w_t w_p w_kritik w_pay w_alt w_ust w_genislik w_reddet.
+LIST VARIABLES=es_se es_df es_t es_p es_kritik es_pay es_alt es_ust es_genislik es_reddet dz.

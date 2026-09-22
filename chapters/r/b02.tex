@@ -1,0 +1,35 @@
+\section{R ile çözümlü uygulama}
+\label{sec:r-b02}
+
+\textbf{Soru.} Bölümdeki dört öğrencilik örnekte okul türünü nominal,
+sınıf düzeyini sıralı, puanı nicel değişken olarak tanımlayın. Devlet okulu
+oranını ve ortalama puanı hesaplayın.
+
+\begin{lstlisting}[style=prismR]
+veri <- data.frame(
+  okul_turu = factor(c("Devlet", "Ozel",
+                      "Devlet", "Devlet")),
+  sinif = ordered(c(1, 2, 1, 3), levels = 1:3),
+  puan = c(72, 81, 68, 77)
+)
+str(veri)
+prop.table(table(veri$okul_turu))
+table(veri$sinif)
+mean(veri$puan)
+tapply(veri$puan, veri$okul_turu, mean)
+\end{lstlisting}
+
+\begin{outputguidebox}
+\textbf{Çözüm ve kontrol değerleri.} Devlet okulu payı 0,75, özel okul
+payı 0,25'tir. Sınıf düzeylerinin frekansları sırasıyla 2, 1 ve 1'dir.
+Genel puan ortalaması 74,5; devlet okulundaki üç öğrencinin ortalaması
+72,3333; özel okuldaki tek öğrencinin puanı 81'dir.
+\end{outputguidebox}
+
+\textbf{Yorum.} \texttt{ordered} sınıfların sırasını kaydeder; sınıf
+kodlarının ortalaması başarı ortalaması yerine geçmez. Okul türüne göre
+betimsel fark, tek başına okul türünün nedensel etkisi değildir.
+
+\textbf{Pekiştirme ve yanıt.} Dört kayıt hedef evrenin tamamıysa 74,5
+bir evren ortalamasıdır. Daha geniş bir evrenden seçilmişlerse aynı sayı
+örneklem ortalamasıdır. Bu ayrımı R komutu değil araştırmanın kapsamı belirler.

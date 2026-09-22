@@ -1,0 +1,62 @@
+GET DATA /TYPE=TXT /FILE='veri.csv' /ENCODING='UTF8'
+ /ARRANGEMENT=DELIMITED /DELCASE=LINE /DELIMITERS="," /QUALIFIER='"'
+ /FIRSTCASE=2 /VARIABLES=saat F24.0 puan F24.0.
+DATASET NAME B13Veri.
+FILTER OFF.
+USE ALL.
+WEIGHT OFF.
+SPLIT FILE OFF.
+VARIABLE LEVEL saat puan (SCALE).
+COMPUTE satir=$CASENUM.
+EXECUTE.
+CORRELATIONS /VARIABLES=saat puan /PRINT=TWOTAIL SIG /MISSING=LISTWISE.
+REGRESSION /MISSING LISTWISE /STATISTICS COEFF R ANOVA CI(95)
+ /DEPENDENT puan /METHOD=ENTER saat /SAVE PRED(uydurulan_spss) RESID(artik_spss).
+AGGREGATE OUTFILE=* MODE=ADDVARIABLES /BREAK= /hacim=N /saat_ort=MEAN(saat) /puan_ort=MEAN(puan).
+COMPUTE saat_kare=(saat-saat_ort)**2.
+COMPUTE puan_kare=(puan-puan_ort)**2.
+COMPUTE carpim=(saat-saat_ort)*(puan-puan_ort).
+AGGREGATE OUTFILE=* MODE=ADDVARIABLES /BREAK= /sxx=SUM(saat_kare) /syy=SUM(puan_kare) /sxy=SUM(carpim).
+COMPUTE egim=sxy/sxx.
+COMPUTE sabit=puan_ort-egim*saat_ort.
+COMPUTE uydurulan=sabit+egim*saat.
+COMPUTE artik=puan-uydurulan.
+COMPUTE artik_kare=artik**2.
+AGGREGATE OUTFILE=* MODE=ADDVARIABLES /BREAK= /sse=SUM(artik_kare).
+COMPUTE serbestlik=hacim-2.
+COMPUTE mse=sse/serbestlik.
+COMPUTE korelasyon=sxy/SQRT(sxx*syy).
+COMPUTE r_kare=1-sse/syy.
+COMPUTE se_egim=SQRT(mse/sxx).
+COMPUTE se_sabit=SQRT(mse*(1/hacim+saat_ort**2/sxx)).
+COMPUTE t_egim=egim/se_egim.
+COMPUTE p_egim=2*CDF.T(-ABS(t_egim),serbestlik).
+COMPUTE kritik_t=IDF.T(.975,serbestlik).
+COMPUTE egim_alt=egim-kritik_t*se_egim.
+COMPUTE egim_ust=egim+kritik_t*se_egim.
+COMPUTE sabit_alt=sabit-kritik_t*se_sabit.
+COMPUTE sabit_ust=sabit+kritik_t*se_sabit.
+COMPUTE yeni_saat=6.
+COMPUTE ongoru=sabit+egim*yeni_saat.
+COMPUTE se_ortalama=SQRT(mse*(1/hacim+(yeni_saat-saat_ort)**2/sxx)).
+COMPUTE se_birey=SQRT(mse+se_ortalama**2).
+COMPUTE ortalama_alt=ongoru-kritik_t*se_ortalama.
+COMPUTE ortalama_ust=ongoru+kritik_t*se_ortalama.
+COMPUTE birey_alt=ongoru-kritik_t*se_birey.
+COMPUTE birey_ust=ongoru+kritik_t*se_birey.
+FORMATS uydurulan artik uydurulan_spss artik_spss (F16.10).
+EXECUTE.
+SORT CASES BY satir.
+LIST VARIABLES=satir saat puan uydurulan artik uydurulan_spss artik_spss.
+DATASET COPY B13Ozet.
+DATASET ACTIVATE B13Ozet.
+SELECT IF (satir=1).
+FORMATS hacim saat_ort puan_ort sxx syy sxy sse mse serbestlik korelasyon r_kare egim sabit
+ se_egim se_sabit t_egim kritik_t egim_alt egim_ust sabit_alt sabit_ust yeni_saat ongoru
+ se_ortalama se_birey ortalama_alt ortalama_ust birey_alt birey_ust (F18.10).
+FORMATS p_egim (E18.10).
+EXECUTE.
+LIST VARIABLES=hacim saat_ort puan_ort sxx syy sxy sse mse serbestlik korelasyon r_kare
+ egim sabit se_egim se_sabit t_egim p_egim kritik_t egim_alt egim_ust sabit_alt sabit_ust
+ yeni_saat ongoru se_ortalama se_birey ortalama_alt ortalama_ust birey_alt birey_ust.
+DATASET ACTIVATE B13Veri.

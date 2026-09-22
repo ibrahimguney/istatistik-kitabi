@@ -1,0 +1,6 @@
+"""Historical repair entry point; retained to prevent use of stale templates."""
+raise SystemExit(
+    "Bu eski onarim araci kullanilmiyor. Sirayla build_package.py, "
+    "build_b01_pilot.py ve validate_package.py calistirin. "
+    "Bkz. companion/spss/README.md. Eski manifestler korunur."
+)

@@ -1,0 +1,4 @@
+dosya,degisken,aciklama,veri_turu,olcme_duzeyi,birim,eksik_deger_kurali
+evren.csv,deger,Esit olasilikli yapay evren degeri,Sayisal,Aralik,Soyut sayisal birim,Eksik kabul edilmez
+veri.csv,ilk,Geri koymali ilk cekimin degeri,Sayisal,Aralik,Soyut sayisal birim,Eksik kabul edilmez
+veri.csv,ikinci,Geri koymali ikinci cekimin degeri,Sayisal,Aralik,Soyut sayisal birim,Eksik kabul edilmez

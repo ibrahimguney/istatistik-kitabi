@@ -1,0 +1,48 @@
+\section{R ile çözümlü uygulama}
+\label{sec:r-multiple}
+
+\textbf{Soru.} Bölümdeki $40+2X_1-3X_2$ modelini, açıkça yapay olarak
+oluşturulan 12 satırlık bir öğretim verisi üzerinde tahmin edin. Ayarlanmış
+katsayıları, $R^2$'yi, VIF değerlerini ve beş saat çalışma ile iki gün
+devamsızlık için öngörüyü bulun. Bu veri gerçek okul bölgesi verisi değildir.
+
+\begin{lstlisting}[style=prismR]
+veri <- expand.grid(saat = c(2, 4, 6, 8),
+                     devamsizlik = c(0, 1, 2))
+hata <- c(1, -1, -1, 1, -2, 2, 2, -2, 1, -1, -1, 1)
+veri$puan <- 40 + 2 * veri$saat -
+  3 * veri$devamsizlik + hata
+model <- lm(puan ~ saat + devamsizlik, data = veri)
+summary(model)
+confint(model)
+yardimci_saat <- lm(saat ~ devamsizlik, data = veri)
+yardimci_devam <- lm(devamsizlik ~ saat, data = veri)
+c(VIF_saat = 1 / (1 - summary(yardimci_saat)$r.squared),
+  VIF_devamsizlik =
+    1 / (1 - summary(yardimci_devam)$r.squared))
+yeni <- data.frame(saat = 5, devamsizlik = 2)
+predict(model, newdata = yeni, interval = "confidence")
+predict(model, newdata = yeni, interval = "prediction")
+plot(fitted(model), resid(model),
+     xlab = "Uydurulan deger", ylab = "Artik")
+abline(h = 0, lty = 2)
+qqnorm(resid(model))
+qqline(resid(model))
+\end{lstlisting}
+
+\begin{outputguidebox}
+\textbf{Çözüm ve kontrol değerleri.} Katsayılar sırasıyla 40, 2 ve
+$-3$; $R^2=0{,}9286$ ve düzeltilmiş $R^2=0{,}9127$'dir. Her iki VIF
+1'dir; tasarlanan açıklayıcılar doğrusal olarak ilişkisizdir. Beş saat ve
+iki gün için öngörü $40+2(5)-3(2)=44$ puandır. Saat katsayısının model-temelli
+yüzde 95 güven aralığı yaklaşık $[1{,}5231;2{,}4769]$'dur.
+\end{outputguidebox}
+
+\textbf{Yorum.} Aynı devamsızlıkta bir saatlik fark, modelde iki puanlık
+beklenen farkla ilişkilidir. Yapay hata dizisi katsayıları kolay kontrol
+edebilmek için seçilmiştir; elde edilen $p$ ve güven aralıkları gerçek bir
+evrene ilişkin kanıt değildir. Gerçek çıkarımda hata modeli ve örnekleme
+tasarımı ayrıca gerekçelendirilir. VIF'nin küçük olması bu varsayımları doğrulamaz.
+
+\textbf{Pekiştirme ve yanıt.} Aynı beş saatte devamsızlık bir güne inerse
+öngörü 47 olur. Üç puanlık koşullu farkı otomatik olarak nedensel etki saymayın.

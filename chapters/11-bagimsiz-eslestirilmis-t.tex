@@ -1,0 +1,515 @@
+\chapter{Bağımsız ve Eşleştirilmiş Örneklem t Testleri; Uygun Testin Seçilmesi}
+\label{ch:two-sample}
+
+\begin{prismbox}[PrismLight]{Öğrenme çıktıları}
+Bu bölümün sonunda:
+\begin{itemize}
+  \item bağımsız ve eşleştirilmiş araştırma tasarımlarını gözlem yapısından ayırt edebilecek,
+  \item iki bağımsız ortalama için Welch \tstat testini ve güven aralığını hesaplayabilecek,
+  \item eşleştirilmiş ölçümleri fark puanlarına dönüştürerek uygun \tstat testini uygulayabilecek,
+  \item sonuçları etki büyüklüğü, varsayım kontrolü ve araştırma tasarımıyla birlikte raporlayabileceksiniz.
+\end{itemize}
+\end{prismbox}
+
+\begin{prerequisitebox}
+Tek örneklem \tstat testi, standart hata, serbestlik derecesi, \pval-değeri ve güven
+aralığı kavramları bilinmelidir. Ortalama, varyans ve standart sapma
+hesapları hatırlanmalıdır.
+\end{prerequisitebox}
+
+Tek örneklem testinin karar ve raporlama yapısı Bölüm~\ref{sec:one-sample-t}'de
+kurulmuştur. Bu bölüm aynı mantığı bağımsız grup farklarına ve eşleştirilmiş
+fark puanlarına genişletir.
+\ifimoders\else
+Üç veya daha fazla bağımsız grup ortalamasının
+tek genel testle karşılaştırılması Bölüm~\ref{ch:anova}'da ele alınır.
+\fi
+
+\section{Test seçimini belirleyen temel soru}
+\label{sec:t-test-choice}
+
+İki ortalamayı karşılaştırırken ilk soru ``kaç sütun var?'' değil,
+``ölçümler hangi birimlere aittir?'' sorusudur. Bir gruptaki katılımcı diğer
+grupta yer almıyorsa gruplar bağımsızdır. Aynı kişilerin iki zamanda
+ölçülmesi, bireylerin anlamlı çiftler hâlinde eşleştirilmesi veya aynı birimin
+iki koşulda gözlenmesi ise eşleştirilmiş bir yapı oluşturur.
+
+Yanlış test seçimi standart hatayı değiştirir. Eşleştirilmiş ölçümleri
+bağımsız kabul etmek kişiler arasındaki ortaklığı kaybeder; bağımsız kişileri
+yapay biçimde eşleştirmek ise veride bulunmayan bir bağımlılık varsayar.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Üç \tstat testinin araştırma tasarımı bakımından karşılaştırılması.}
+\label{tab:t-test-design-choice}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{0.23\textwidth}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X@{}}
+\toprule
+Test & Analiz birimi & Hedef parametre \\
+\midrule
+Tek örneklem & Bireysel puan & $\mu-\mu_0$ \\
+Bağımsız örneklem & İki ayrı grubun puanları & $\mu_1-\mu_2$ \\
+Eşleştirilmiş örneklem & Her çiftin fark puanı & $\mu_D$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[x=0.9cm,y=0.55cm]
+  \node[font=\small\bfseries,text=PrismBlue] at (2.1,6.0) {Bağımsız gruplar};
+  \node[font=\scriptsize] at (1.2,5.4) {A};
+  \node[font=\scriptsize] at (3.0,5.4) {B};
+  \foreach \y in {1.2,2.0,2.9,3.8,4.6}
+    \fill[PrismBlue] (1.2,\y) circle (2.2pt);
+  \foreach \y in {1.0,1.7,2.4,3.3,4.2}
+    \draw[PrismSubheadingBlue,thick] (2.92,\y-0.08)--(3.08,\y+0.08)
+      (2.92,\y+0.08)--(3.08,\y-0.08);
+  \node[font=\tiny,align=center,text=PrismGray] at (2.1,0.35)
+    {Farklı bireyler;\\noktalar bağlanmaz};
+
+  \begin{scope}[xshift=6.0cm]
+    \node[font=\small\bfseries,text=PrismBlue] at (2.1,6.0) {Eşleştirilmiş ölçümler};
+    \node[font=\scriptsize] at (1.1,5.4) {Ön};
+    \node[font=\scriptsize] at (3.1,5.4) {Son};
+    \foreach \a/\b in {1.0/1.8,1.7/2.0,2.5/3.5,3.2/3.8,4.1/4.5} {
+      \draw[PrismGray!70] (1.1,\a)--(3.1,\b);
+      \fill[PrismBlue] (1.1,\a) circle (2.1pt);
+      \fill[PrismSubheadingBlue] (3.1,\b) circle (2.1pt);
+    }
+    \node[font=\tiny,align=center,text=PrismGray] at (2.1,0.35)
+      {Aynı bireyin ölçümleri\\bir çizgiyle eşleşir};
+  \end{scope}
+\end{tikzpicture}
+\caption{Bağımsız ve eşleştirilmiş veri yapılarının görsel karşılaştırması.}
+\label{fig:independent-paired-design}
+\end{figure}
+
+Tablo~\ref{tab:t-test-design-choice} yöntemleri analiz birimine göre özetler;
+Şekil~\ref{fig:independent-paired-design} ise eşleşmenin yalnız eşit grup
+büyüklüğü değil, birimler arasında kurulmuş gerçek bir bağ olduğunu gösterir.
+
+\section{Bağımsız örneklemler için Welch \tstat testi}
+\label{sec:welch-test}
+
+İki bağımsız grup için hedef, evren ortalamaları farkı
+$\mu_1-\mu_2$'dir. Varyansların eşit olduğu güçlü biçimde savunulamıyorsa
+Welch testi güvenli bir varsayılan seçimdir \citep{delacre2017}:
+\[
+t=\frac{\bar X_1-\bar X_2}
+{\sqrt{s_1^2/n_1+s_2^2/n_2}}.
+\]
+Standart hata
+\[
+\SE(\bar X_1-\bar X_2)
+=\sqrt{\frac{s_1^2}{n_1}+\frac{s_2^2}{n_2}}
+\]
+ve Welch--Satterthwaite serbestlik derecesi
+\[
+\nu\approx
+\frac{(s_1^2/n_1+s_2^2/n_2)^2}
+{(s_1^2/n_1)^2/(n_1-1)+(s_2^2/n_2)^2/(n_2-1)}
+\]
+ile hesaplanır. Serbestlik derecesinin tam sayı çıkması gerekmez.
+
+Fark için yüzde $100(1-\alpha)$ güven aralığı
+\[
+(\bar x_1-\bar x_2)
+\pm t_{1-\alpha/2,\nu}
+\SE(\bar X_1-\bar X_2)
+\]
+biçimindedir. Farkın yönü analizden önce açıkça tanımlanmalıdır; grup 1 eksi
+grup 2 ile grup 2 eksi grup 1 aynı bilimsel sonucu zıt işaretlerle verir.
+
+\section{Eşleştirilmiş örneklem \tstat testi}
+\label{sec:paired-test}
+
+Her çift için fark
+\[
+d_i=x_{i,\text{son}}-x_{i,\text{ön}}
+\]
+olarak tanımlanır. Eşleştirilmiş \tstat testi, fark puanlarının ortalamasına
+uygulanan tek örneklem \tstat testidir:
+\[
+t=\frac{\bar d}{s_D/\sqrt n},
+\qquad \nu=n-1.
+\]
+Buradaki $n$ tek tek ölçümlerin değil, eksiksiz çiftlerin sayısıdır.
+Normallik koşulu iki ayrı ölçüm dağılımından çok fark puanlarının dağılımı
+için değerlendirilir.
+
+İki ölçümün standart sapmaları $s_1$, $s_2$ ve aralarındaki korelasyon $r$
+ise fark puanlarının varyansı
+\[
+s_D^2=s_1^2+s_2^2-2rs_1s_2
+\]
+ilişkisiyle açıklanabilir. Pozitif korelasyon farkların değişkenliğini ve
+dolayısıyla standart hatayı azaltabilir. Eşleştirilmiş tasarımın kazancı,
+eşleşmenin anlamlı ve ölçümlerin gerçekten aynı birimlere ait olmasına
+bağlıdır.
+
+\section{Etki büyüklüğü}
+\label{sec:t-effect-size}
+
+Bağımsız gruplarda standartlaştırılmış fark çoğunlukla birleşik standart
+sapmaya dayalı Cohen $d$ ile özetlenir:
+\[
+s_p=\sqrt{\frac{(n_1-1)s_1^2+(n_2-1)s_2^2}{n_1+n_2-2}},
+\qquad
+d=\frac{\bar x_1-\bar x_2}{s_p}.
+\]
+Welch testi için çıkarımda eşit varyans varsayılmasa da $s_p$, betimsel bir
+standartlaştırma olarak kullanılabilir; kullanılan tanım mutlaka belirtilir.
+Küçük örneklemlerde Hedges $g$ düzeltmesi düşünülebilir.
+Etki büyüklüğünün tanımı ve belirsizliği açıkça raporlanmalıdır
+\citep{lakens2013}.
+
+Eşleştirilmiş tasarımda yaygın ölçülerden biri
+\[
+d_z=\frac{\bar d}{s_D}
+\]
+değeridir. $d$ ile $d_z$ aynı paydadan üretilmediği için farklı tasarımların
+etki büyüklükleri karşılaştırılırken tanımlar açıkça yazılmalıdır.
+
+\section{Varsayımlar ve tasarım kontrolü}
+
+\begin{itemize}
+  \item Gözlemlerin bağımsızlığı veri toplama tasarımından değerlendirilir.
+  \item Bağımsız gruplarda her katılımcı yalnız bir gruba katkı vermelidir.
+  \item Eşleştirilmiş analizde her satır veya kimlik doğru ölçüm çiftiyle eşleşmelidir.
+  \item Küçük örneklemlerde dağılım biçimi ve etkili aykırı değerler grafiklerle incelenmelidir.
+  \item Eksik çiftlerin nasıl ele alındığı ve analizde kalan çift sayısı raporlanmalıdır.
+  \item Rastgele atama yoksa grup farkı kendiliğinden nedensel etki değildir.
+\end{itemize}
+
+\begin{assumptionbox}
+Test seçimi veri dosyasındaki sütun sayısına göre değil, gözlemlerin nasıl
+ilişkilendiğine göre yapılır. İki sütundaki ölçümler farklı kişilerden
+geliyorsa eşleştirilmiş test; tek sütundaki grup kodları aynı kişilerin iki
+ölçümünü gösteriyorsa bağımsız test uygun değildir.
+\end{assumptionbox}
+
+\begin{mistakebox}
+Levene testi anlamlı değilse klasik \tstat testinin, anlamlıysa Welch testinin
+otomatik seçilmesi güvenilir bir karar kuralı değildir. Welch yaklaşımı eşit
+olmayan varyans ve örneklem hacimlerine karşı daha dayanıklıdır; yöntem seçimi
+tek bir ön teste bağlanmamalıdır.
+\end{mistakebox}
+
+\section{Çözümlü bağımsız grup örneği}
+
+Birinci grupta $n_1=30$, $\bar x_1=78$, $s_1=8$; ikinci grupta
+$n_2=28$, $\bar x_2=72$, $s_2=10$ olsun. Standart hata
+\[
+SE=\sqrt{\frac{8^2}{30}+\frac{10^2}{28}}\approx2{,}39
+\]
+ve test istatistiği
+\[
+t=\frac{78-72}{2{,}39}\approx2{,}51
+\]
+olur. Yaklaşık $sd=51{,}71$ için çift yönlü $p=0{,}015$ ve ortalama farkının
+yüzde 95 güven aralığı $[1{,}21;10{,}79]$ bulunur.
+
+Birleşik standart sapma yaklaşık 9,02 olduğundan Cohen etki büyüklüğü
+$d=6/9{,}02\approx0{,}67$'dir. Veriler birinci grubun ortalamasının daha
+yüksek olduğuna ilişkin kanıt sunmaktadır; fakat deneysel atama yoksa fark
+öğretim yönteminin nedensel etkisi olarak yorumlanamaz.
+
+\section{Çözümlü eşleştirilmiş örnek}
+
+Yirmi öğrencide son test--ön test farkının ortalaması 4,2, standart sapması 5
+olsun. Standart hata $5/\sqrt{20}\approx1{,}118$ ve
+\[
+t=\frac{4{,}2}{1{,}118}\approx3{,}76,
+\qquad sd=19
+\]
+olur. Çift yönlü $p=0{,}001$ ve ortalama değişimin yüzde 95 güven aralığı
+$[1{,}86;6{,}54]$'tür. Standartlaştırılmış değişim
+\[
+d_z=\frac{4{,}2}{5}=0{,}84
+\]
+olarak bulunur. Kontrol grubu yoksa gözlenen artışın yalnız uygulamadan
+kaynaklandığı ileri sürülemez; zaman, test alışkanlığı ve başka olaylar da
+değişime katkı verebilir.
+
+\section{Yazılım uygulaması: özet ve gerçek veri üzerinden test}
+
+\begin{softwarebox}
+\begin{lstlisting}
+from scipy import stats
+import numpy as np
+import pandas as pd
+
+# Ozet istatistiklerden Welch testi
+welch = stats.ttest_ind_from_stats(
+    mean1=78, std1=8, nobs1=30,
+    mean2=72, std2=10, nobs2=28,
+    equal_var=False)
+
+# Eslestirilmis testin fark puanlarindan hesaplanmasi
+n, mean_diff, sd_diff = 20, 4.2, 5
+t_paired = mean_diff / (sd_diff / np.sqrt(n))
+p_paired = 2 * stats.t.sf(abs(t_paired), df=n-1)
+
+# Eslikci paketteki gercek Spector verisi
+data = pd.read_csv("companion/data/clean/spector_program.csv")
+program = data.loc[data.program_participation == 1,
+                   "pre_program_test"]
+comparison = data.loc[data.program_participation == 0,
+                      "pre_program_test"]
+real_welch = stats.ttest_ind(program, comparison,
+                             equal_var=False)
+
+print(welch)
+print(t_paired, p_paired)
+print(real_welch)
+\end{lstlisting}
+Gerçek veri uygulamasında program grubu için $n=14$ ve ortalama 22,43;
+karşılaştırma grubu için $n=18$ ve ortalama 21,56'dır. Welch sonucu yaklaşık
+$t=0{,}62$, $p=0{,}537$ verir. İki yönlü testte 0,05 düzeyinde TUCE
+ortalamalarının eşitliği reddedilmez; bu, grupların eşdeğerliğini veya
+atamanın rastgeleliğini kanıtlamaz. Veri setinin özgün kaynağı için bkz.
+\citet{spector1980}.
+\end{softwarebox}
+
+\Needspace{8\baselineskip}
+\subsection{Spector vakası: hesap ile tasarım kanıtını ayırmak}
+\label{sec:spector-tasarim-vakasi}
+
+\textbf{Analiz tanımı.} Gözlem birimi öğrencidir. Yerel dosyadaki 32 kaydın
+tamamı kullanılır; iki grup farklı öğrencilerden oluşur, satır sırası bir
+eşleşme oluşturmaz. Yanıt TUCE puanı, grup göstergesi PSI katılımıdır.
+Hedeflenen karşılaştırma program eksi karşılaştırma grubu ortalama farkıdır;
+yöntem iki yönlü Welch testidir. Yerel dosyada bu değişkenlerde eksik değer
+yoktur. Bu durum özgün araştırmanın izlem kaybı olmadığını göstermez.
+
+\begin{outputguidebox}
+\textbf{Kaynak sınırı.} Greene'in veri açıklaması TUCE'yi ön test olarak
+tanımlar; burada incelenen belgelerde ölçümün PSI uygulamasına göre zamanı
+kesinleşmemiştir \citep{greeneDiscreteChoice}. Pakette korunan
+\texttt{pre\_program\_test} sütun adı bu zamanlamanın kanıtı değildir.
+Bu nedenle sonuç, program öncesi denklik veya programın öğrenme üzerindeki
+etkisi olarak değil, \emph{TUCE puanlarının gruplar arasında karşılaştırılması}
+olarak okunur.
+
+Özgün makalenin araştırma tasarımı açıklaması, daha önceki PSI ve kontrol
+gruplarından ara düzey makroekonomi dersini almış 32 öğrenciyi ele alır;
+gruplara rastgele atamanın nasıl yapıldığını belirtmez \citep{spector1980}.
+Rastgele atamanın doğrulanamaması, yapılmadığının kanıtı değildir. Buradaki
+Welch hesabı özgün makalenin modelinin yeniden kurulması değildir.
+\end{outputguidebox}
+
+\textbf{Görev ve teslim.} Beş maddelik bir karar kaydı yazın. Her maddede
+sayısal bilgi ile tasarım hakkında gerekli belgeyi ayırın; yeni test seçerek
+daha küçük bir $p$ değeri aramayın.
+\begin{enumerate}[label=\arabic*.]
+\item Analiz birimini, kullanılan kayıtları ve fark yönünü belirtin.
+Neden eşleştirilmiş test seçilmediğini açıklayın.
+\item ``Sütunun adı program öncesi test olduğuna göre zamanlama bellidir''
+iddiasını düzeltin. Hangi ek bilgiye ihtiyaç vardır?
+\item $p=0{,}537$ sonucunu yorumlayın. ``Gruplar denktir; rastgele atama
+başarılıdır'' sonucunun neden elde edilemeyeceğini açıklayın.
+\item Aynı 32 öğrencinin başka bir değişkenini analiz etmek yeni bağımsız
+kanıt mıdır? Atama ile çalışmaya/izleme dahil olmayı ayırın.
+\item Sonucu iki cümleyle raporlayın; ileri sürülemeyecek bir iddia ekleyin.
+\end{enumerate}
+
+\textbf{Gerekçeli kontrol yanıtları.}
+(1) Birim öğrenci, gruplar 14 ve 18 kişidir; fark program eksi
+karşılaştırmadır. Aynı kişilerde iki ölçüm veya belgelenmiş çift yoktur.
+(2) Sütun adı yerel bir etikettir; TUCE ölçümü ile PSI başlangıcını gösteren
+protokol gerekir. (3) Eşit ortalama hipotezi reddedilmez; eşdeğerlik ve
+rastgele atama kanıtlanmaz. Eşdeğerlik sorusu önceden gerekçelendirilmiş bir
+fark sınırı gerektirir. (4) Aynı kayıtların yeniden kullanımı bağımsız tekrar
+değildir; programa atama ve analizde kalma iki ayrı süreçtir.
+(5) Örnek rapor: ``32 kayıtta TUCE ortalamaları program grubunda 22,43,
+karşılaştırma grubunda 21,56'dır. Welch testinde $t\approx0{,}62$ ve
+$p\approx0{,}537$ bulunmuş; zamanlama ve atama açıklığı sağlanmadığından
+sonuç program etkisi veya başlangıç denkliği olarak yorumlanmamıştır.''
+
+\textbf{Değerlendirme ölçütleri (10 puan).} Her madde 2 puandır:
+(1) birim ve kapsam 1, fark yönü ve eşleşme gerekçesi 1;
+(2) etiket--kanıt ayrımı 1, gerekli zamanlama belgesi 1;
+(3) test kararı 1, denklik/atama çıkarımını reddetme 1;
+(4) bağımsız tekrar olmadığını belirtme 1, atama--izleme ayrımı 1;
+(5) sayısal rapor 1, yorum sınırı 1.
+Doğru sayılarla birlikte nedensellik veya denklik iddiası içeren rapor,
+son maddenin yorum puanını alamaz; hata diğer doğru bileşenleri silmez.
+
+\begin{outputguidebox}
+Çıktıda önce test türünü ve farkın yönünü kontrol edin. Ardından grup veya
+eksiksiz çift sayılarını, ortalamaları, standart sapmaları, t değerini,
+serbestlik derecesini, \pval-değerini, güven aralığını ve etki büyüklüğünü birlikte
+okuyun. Eşit varyans varsayan satır ile Welch satırı birbirine
+karıştırılmamalıdır.
+\end{outputguidebox}
+
+\input{chapters/vakalar/v1-colt-park}
+
+\section{Çözümlü problemler}
+
+\subsection*{Problem 1: Uygun \tstat testini seçme}
+
+Aşağıdaki durumlarda uygun testi ve analiz birimini belirleyin:
+
+\begin{enumerate}[label=\alph*)]
+  \item Bir sınıfın ortalama puanı 60 referans değeriyle karşılaştırılıyor.
+  \item Farklı iki sınıfın ortalamaları karşılaştırılıyor.
+  \item Aynı öğrencilerin dönem başı ve dönem sonu puanları karşılaştırılıyor.
+  \item Yaş ve başlangıç puanı bakımından eşleştirilen öğrenci çiftleri iki
+  farklı öğretim yöntemine atanıyor.
+\end{enumerate}
+
+\textbf{Çözüm.} İlk durumda tek örneklem \tstat testi ve bireysel puanlar;
+ikincide bağımsız örneklem Welch testi ve iki grubun puanları; üçüncüde
+eşleştirilmiş \tstat testi ve her öğrencinin son--ön farkı kullanılır. Dördüncü
+durumda eşleştirme araştırma tasarımının parçasıdır; her eşleştirilmiş çift
+içindeki yöntem farkı analiz edilir. Grupların yalnız eşit büyüklükte olması
+eşleştirilmiş tasarım oluşturmaz.
+
+\subsection*{Problem 2: Welch \tstat testinin tam çözümü}
+
+Birinci grupta $n_1=25$, $\bar x_1=84$, $s_1=8$; ikinci grupta
+$n_2=20$, $\bar x_2=78$, $s_2=12$ olsun. Welch testini ve yüzde 95 güven
+aralığını hesaplayın.
+
+\textbf{Çözüm.} Ortalama farkı 6 ve standart hata
+\[
+SE=\sqrt{\frac{8^2}{25}+\frac{12^2}{20}}
+=\sqrt{9{,}76}\approx3{,}12
+\]
+olur. Test istatistiği
+\[
+t=\frac{6}{3{,}12}\approx1{,}92
+\]
+ve Welch serbestlik derecesi yaklaşık 31,74'tür. Çift yönlü \pval-değeri yaklaşık
+0,064 olduğundan yüzde 5 düzeyinde $H_0$ reddedilemez. Kritik değer yaklaşık
+2,04 alınırsa farkın güven aralığı
+\[
+6\pm2{,}04(3{,}12)\approx[-0{,}37;12{,}37]
+\]
+olur. Aralık hem sıfırı hem uygulamada önemli olabilecek pozitif farkları
+içerdiğinden sonuç eşitlikten çok sınırlı hassasiyete işaret eder.
+
+\subsection*{Problem 3: Ham farklardan eşleştirilmiş \tstat testi}
+
+Beş öğrencinin ön ve son test puanları sırasıyla
+\[
+\text{Ön}: 50,55,60,48,57,
+\qquad
+\text{Son}: 56,57,65,52,60
+\]
+biçimindedir. Son test eksi ön test farklarını kullanarak eşleştirilmiş t
+testini, yüzde 95 güven aralığını ve $d_z$ değerini hesaplayın.
+
+\textbf{Çözüm.} Farklar $6,2,5,4,3$ ve ortalama fark
+$\bar d=4$'tür. Farkların örneklem standart sapması
+$s_D\approx1{,}58$, standart hata $1{,}58/\sqrt5\approx0{,}707$ olur.
+Dolayısıyla
+\[
+t=\frac{4}{0{,}707}\approx5{,}66,
+\qquad sd=4.
+\]
+Çift yönlü \pval-değeri yaklaşık 0,0048'dir. $t_{0{,}975,4}=2{,}776$ ile güven
+aralığı
+\[
+4\pm2{,}776(0{,}707)\approx[2{,}04;5{,}96]
+\]
+ve $d_z=4/1{,}58\approx2{,}53$ bulunur. Küçük örneklem nedeniyle dağılım ve
+aykırı farklar ayrıca incelenmelidir.
+
+\subsection*{Problem 4: Eşleşmenin standart hataya katkısı}
+
+Ön ve son ölçümlerin standart sapmaları 10, aralarındaki korelasyon 0,70 ve
+eksiksiz çift sayısı 25 olsun. Fark puanının standart sapmasını ve
+eşleştirilmiş standart hatayı hesaplayın. Ölçümler bağımsız iki grup gibi
+ele alınsaydı standart hata yaklaşık ne olurdu?
+
+\textbf{Çözüm.}
+\[
+s_D^2=10^2+10^2-2(0{,}70)(10)(10)=60,
+\qquad s_D=\sqrt{60}\approx7{,}75.
+\]
+Eşleştirilmiş standart hata $7{,}75/\sqrt{25}=1{,}55$'tir. Her biri 25
+kişilik bağımsız iki grup varsayımında
+\[
+SE_{\text{bağımsız}}
+=\sqrt{\frac{10^2}{25}+\frac{10^2}{25}}
+=\sqrt8\approx2{,}83
+\]
+olurdu. Pozitif ölçüm korelasyonu eşleştirilmiş analizde kişiler arası ortak
+değişkenliği azaltarak daha küçük standart hata sağlamıştır.
+
+\subsection*{Problem 5: Eksik çiftler ve analiz örneklemi}
+
+Bir ön test--son test çalışmasında 30 öğrenci ön teste, 27 öğrenci son teste
+katılmış; yalnız 25 öğrencinin iki ölçümü de tamamlanmıştır. Eşleştirilmiş
+testte kullanılacak örneklem hacmini ve serbestlik derecesini bulun. Eksik
+ölçümlerin doğurabileceği sorunu açıklayın.
+
+\textbf{Çözüm.} Eşleştirilmiş analiz yalnız farkı hesaplanabilen 25 eksiksiz
+çifti kullanır. Bu nedenle $n=25$ ve $sd=24$'tür. Ön testteki 30 ile son
+testteki 27 gözlemi bağımsız gruplar gibi analiz etmek eşleşme bilgisini
+bozar.
+
+Eksik son ölçümler rastlantısal olmayabilir. Örneğin programdan yarar
+görmeyen öğrenciler çalışmayı daha sık bırakmışsa yalnız tamamlayanların
+ortalama değişimi program etkisini olduğundan yüksek gösterebilir. Başlangıç
+özellikleri tamamlayanlarla ayrılanlar arasında karşılaştırılmalı ve eksik
+veri yöntemi raporlanmalıdır.
+
+\subsection*{Problem 6: Yazılım çıktısını bütüncül yorumlama}
+
+Bir Welch testi çıktısında ortalama farkı A eksi B olarak 4,5 puan,
+$t(46{,}8)=2{,}20$, $p=0{,}033$, yüzde 95 güven aralığı
+$[0{,}39;8{,}61]$ ve Hedges $g=0{,}42$ verilmiştir. Araştırma gözlemseldir.
+Sonucu raporlayın.
+
+\textbf{Çözüm.} A grubunun ortalaması B grubundan 4,5 puan daha yüksektir.
+Welch testi sıfır farka karşı kanıt sunmaktadır,
+$t(46{,}8)=2{,}20$, $p=0{,}033$. Güven aralığı gerçek farkın yaklaşık 0,39
+ile 8,61 puan arasında olabileceğini gösterir; alt ve üst sınırlar uygulamalı
+bakımdan farklı sonuçlara yol açabilir. $g=0{,}42$ standartlaştırılmış farkın
+büyüklüğünü özetler.
+
+Çalışma gözlemsel olduğundan grup üyeliğinin puanı artırdığı söylenemez.
+Önceki başarı, seçilme mekanizması veya başka karıştırıcı değişkenler gözlenen
+farka katkı vermiş olabilir.
+
+\input{chapters/spss/b11}
+
+\input{chapters/r/b11}
+
+\input{chapters/vakalar/v3-eslesme}
+
+\section{Bölüm özeti}
+
+\begin{itemize}
+  \item Test seçimi ölçümlerin bağımsız veya eşleştirilmiş oluşuna dayanır.
+  \item Welch testi iki bağımsız ortalamayı eşit varyans zorunluluğu olmadan karşılaştırır.
+  \item Eşleştirilmiş testin analiz birimi bireysel ölçüm değil, fark puanıdır.
+  \item Pozitif eşleşme korelasyonu fark puanının standart hatasını azaltabilir.
+  \item Eksik çiftler analiz örneklemini ve sonuçların temsilini etkileyebilir.
+  \item Ortalama farkı güven aralığı, etki büyüklüğü ve tasarım sınırlarıyla raporlanmalıdır.
+\end{itemize}
+
+\section*{Alıştırmalar}
+
+\begin{enumerate}
+  \item Bağımsız ve eşleştirilmiş tasarıma birer eğitim araştırması örneği verin.
+  \item Eşleştirilmiş testte neden fark puanlarının dağılımının incelendiğini açıklayın.
+  \item Welch testinin klasik eşit varyanslı teste tercih edilme gerekçesini yazın.
+  \item İki grubun eşit örneklem hacmine sahip olmasının neden eşleşme göstermediğini açıklayın.
+  \item Grup 1 eksi grup 2 farkıyla grup 2 eksi grup 1 farkının güven aralıklarını karşılaştırın.
+  \item $n_1=36$, $s_1=12$, $n_2=49$, $s_2=14$ için farkın standart hatasını hesaplayın.
+  \item Ortalama farkı 5 ve standart hatası 2 ise Welch t değerini bulun.
+  \item $n=16$, $\bar d=3$, $s_D=6$ için eşleştirilmiş t değerini hesaplayın.
+  \item Ön test ve son test standart sapmaları 8, korelasyon 0,50 ise farkların standart sapmasını bulun.
+  \item Korelasyon arttıkça eşleştirilmiş testin standart hatasının neden azalabileceğini açıklayın.
+  \item Eşleştirilmiş analizde 40 katılımcıdan yalnız 34'ünün tam çifti varsa $n$ ve $sd$ değerlerini yazın.
+  \item Welch testinde kesirli serbestlik derecesinin neden hata olmadığını açıklayın.
+  \item Güven aralığı $[-1;9]$ olan 4 puanlık grup farkını yorumlayın.
+  \item Anlamlı grup farkının neden rastgele atama olmadan nedensel etki göstermediğini açıklayın.
+  \item Cohen $d$, Hedges $g$ ve $d_z$ değerlerinin tanımlarının neden raporda belirtilmesi gerektiğini tartışın.
+  \item Eşleştirilmiş veriyi bağımsız testle analiz etmenin sonuçlarını standart hata bakımından açıklayın.
+\end{enumerate}

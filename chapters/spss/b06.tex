@@ -1,0 +1,249 @@
+\section{Literatür verisiyle yazılım uygulamaları}
+\label{sec:spss-b06}
+
+\textbf{Amaç ve veri.} \texttt{b06.csv} içinde 395 kayıt, yalnız bu
+uygulama için sonlu bir örnekleme çerçevesidir \citep{cortez2008data}.
+\texttt{srs40} geri koymadan basit rastgele seçilen 40 kaydı;
+\texttt{strat40} GP'den 35, MS'den 5 kayıt seçimini gösterir. Seçimler sabit
+tohumla önceden üretilmiştir.
+
+\textbf{Ortak veri.} Doğrulanan B06 uygulamasında üç yazılım da
+\nolinkurl{companion/spss/csv/b06.csv} dosyasını kullanmıştır. Dosya
+395 satır ve 13 sütun içerir; B01'in öğrenci değişkenlerine seçim
+göstergeleri ve \texttt{strw} ağırlığı eklenmiştir. B01 dosyasını yeniden
+adlandırmak yeterli değildir. Seçimler yeniden üretilmez; aynı hazır
+göstergeler kullanılır. Bu karşılaştırma Excel içe aktarmanın doğrulandığı
+anlamına gelmez. Kodları \texttt{companion} klasörünü içeren paket kökünden
+çalıştırın; veri sözlüğü ve hazırlık için bkz. sayfa~\pageref{sec:spss-guide}.
+
+\subsection{IBM SPSS uygulaması}
+\textbf{Başlamadan önce.} Aşağıdaki komut dosyası B06 CSV verisini
+açar ve analiz eder. Menü yolunu kullanacaksanız önce veri açma ve
+tanımlama komutlarını \texttt{EXECUTE} satırı dahil çalıştırın.
+Dosya açma hatası alırsanız \texttt{/FILE} yolunu ve dosyanın gerçekten
+bu konumda bulunduğunu kontrol edin; veri açılmadan sonraki komutlar
+çalışmaz.
+
+\begin{spssadimlar}
+\spssadim{Henüz filtre ve ağırlık yokken \emph{Analyze $\to$ Descriptive Statistics $\to$ Descriptives} yolunda \texttt{g3} için ortalama ve standart sapmayı alın; tam dosyada 395 kayıt bulunduğunu kontrol edin.}
+\spssadim{\emph{Data $\to$ Select Cases} yolunda \emph{If condition is satisfied $\to$ If} seçin; \texttt{srs40=1} yazın. \emph{Continue} ardından \emph{Filter out unselected cases} ve \emph{OK} seçin; kayıtları silmeyin.}
+\spssadim{\emph{Analyze $\to$ Descriptive Statistics $\to$ Descriptives} yolunda \texttt{g3} için ortalama ve standart sapmayı alın; analizde 40 kayıt kullanıldığını kontrol edin.}
+\spssadim{\emph{Data $\to$ Select Cases} penceresinde önce \emph{All cases} ile filtreyi kapatın. Ardından koşulu \texttt{strat40=1} yaparak yeniden filtreleyin.}
+\spssadim{\emph{Analyze $\to$ Descriptive Statistics $\to$ Frequencies} yolunda \texttt{school} tablosunu alın. Henüz ağırlık vermeden GP=35, MS=5 sayımlarını kontrol edin.}
+\spssadim{\emph{Data $\to$ Weight Cases} yolunda \emph{Weight cases by} seçin, \texttt{strw} değişkenini ağırlık alanına taşıyıp \emph{OK} seçin. \emph{Descriptives} ile \texttt{g3} ortalamasını tekrar alın.}
+\spssadim{Bitirirken \emph{Data $\to$ Weight Cases $\to$ Do not weight cases} ve \emph{Data $\to$ Select Cases $\to$ All cases} seçin. Hem menü hem aşağıdaki komut yolu 395 kaydı korur; kayıtları kalıcı olarak silmeyin.}
+\end{spssadimlar}
+
+{\raggedright
+\noindent\textbf{Komutların görevi.} \texttt{FILTER BY} seçili kayıtları analiz eder, diğerlerini silmez. \texttt{FILTER OFF} tüm kayıtları yeniden etkinleştirir. \texttt{WEIGHT BY} ağırlıklı nokta tahminini hesaplatır; işlem sonunda \texttt{WEIGHT OFF} ile kapatılır.\par}
+
+\textbf{Uygulama kodu:} \texttt{b06}. Doğrulanan veri dosyası
+\texttt{companion/spss} altındaki \texttt{csv/b06.csv} dosyasıdır.
+
+\begin{lstlisting}[style=prismSPSS]
+SET DECIMAL=DOT.
+GET DATA /TYPE=TXT
+ /FILE='companion/spss/csv/b06.csv'
+ /ENCODING='UTF8'
+ /ARRANGEMENT=DELIMITED /DELCASE=LINE
+ /DELIMITERS="," /QUALIFIER='"'
+ /FIRSTCASE=2
+ /VARIABLES=id F8.0 school F8.0 sex F8.0 age F8.0
+ studytime F8.0 absences F8.0 g1 F8.0 g2 F8.0
+ g3 F8.0 pass10 F8.0 srs40 F8.0 strat40 F8.0
+ strw F20.12.
+FILTER OFF.
+WEIGHT OFF.
+SPLIT FILE OFF.
+VARIABLE LABELS
+ g3 'Yil sonu matematik notu'
+ srs40 'Basit rastgele orneklem secimi'
+ strat40 'Tabakali orneklem secimi'
+ strw 'Tabaka agirligi'.
+VALUE LABELS school 1 'GP' 2 'MS'.
+VALUE LABELS srs40 strat40 0 'Secilmedi' 1 'Secildi'.
+VARIABLE LEVEL
+ id school sex pass10 srs40 strat40 (NOMINAL)
+ studytime (ORDINAL)
+ age absences g1 g2 g3 strw (SCALE).
+FORMATS g3 strw (F12.6).
+EXECUTE.
+DESCRIPTIVES VARIABLES=g3 /STATISTICS=MEAN STDDEV.
+FILTER BY srs40.
+DESCRIPTIVES VARIABLES=g3 /STATISTICS=MEAN STDDEV.
+FILTER OFF.
+FILTER BY strat40.
+FREQUENCIES VARIABLES=school.
+WEIGHT BY strw.
+DESCRIPTIVES VARIABLES=g3 /STATISTICS=MEAN.
+WEIGHT OFF.
+FILTER OFF.
+EXECUTE.
+\end{lstlisting}
+
+\begin{outputguidebox}
+\textbf{Paylaşılan SPSS çıktısıyla doğrulanan değerler.}
+Basit rastgele seçilen 40 kaydın not ortalaması \SPSrsMean'dir.
+Tabakalı seçimde GP için $349/35$, MS için $46/5$ ağırlıkları kullanıldığında
+ortalama \SPStratMean\ bulunur. Karşılaştırma değeri, dosyanın tamamının
+\SPMatMean\ ortalamasıdır. Tek bir çekimde hangisinin daha yakın olduğu,
+yöntemlerden birinin her zaman daha iyi olduğunu kanıtlamaz.
+Ağırlıklı çıktıda gösterilen toplam ağırlık 395'tir; gerçek seçilmiş
+öğrenci sayısı yine 40'tır. \texttt{WEIGHT BY} burada yalnız ağırlıklı nokta
+tahminini göstermek içindir, karmaşık örnekleme standart hatası üretmez.
+\end{outputguidebox}
+
+
+\par\noindent\begin{minipage}{\linewidth}
+\subsection{R uygulaması}
+\label{sec:r-gercek-b06}
+
+\texttt{subset} seçili kayıtları ayrı nesneye alır; \texttt{weighted.mean} tabaka ağırlıklı ortalamayı verir.
+
+\begin{lstlisting}[style=prismR]
+veri <- read.csv("companion/spss/csv/b06.csv")
+stopifnot(nrow(veri) == 395, ncol(veri) == 13,
+          !anyNA(veri))
+basit <- subset(veri, srs40 == 1)
+tabakali <- subset(veri, strat40 == 1)
+stopifnot(nrow(basit) == 40, nrow(tabakali) == 40)
+ozet <- function(degerler)
+  c(n=length(degerler), mean=mean(degerler),
+    sd=sd(degerler))
+print(cbind(tam_dosya=ozet(veri$g3),
+            basit_rastgele=ozet(basit$g3)))
+okul <- factor(tabakali$school, c(1, 2), c("GP", "MS"))
+frekans <- table(okul)
+print(frekans); print(100 * prop.table(frekans))
+print(nrow(tabakali)); print(sum(tabakali$strw))
+print(weighted.mean(tabakali$g3, tabakali$strw))
+\end{lstlisting}
+
+\textbf{Çıktıyı okuma.} Paylaşılan R çıktısı 395 satır, 13 sütun ve
+her sütunda sıfır eksik değer gösterir. \texttt{n}, \texttt{mean} ve
+\texttt{sd} satırları tam dosya ile basit rastgele örneklemi karşılaştırır.
+Tabakalı örneklemde okul frekansları ağırlıksızdır; 40 kayıt ile 395
+ağırlık toplamı ayrı yazdırılır. Ana \texttt{veri} nesnesi değişmez.
+\end{minipage}\par
+
+\par\noindent\begin{minipage}{\linewidth}
+\subsection{Python uygulaması}
+\label{sec:python-b06}
+
+\texttt{loc} ve \texttt{copy} seçimi ayrı veri çerçevesinde tutar. \texttt{np.average} ağırlıklı ortalamayı hesaplar.
+
+\begin{lstlisting}[style=prismPythonApp]
+import pandas as pd
+import numpy as np
+
+veri = pd.read_csv("companion/spss/csv/b06.csv")
+assert veri.shape == (395, 13)
+assert not veri.isna().any().any()
+basit = veri.loc[veri.srs40 == 1].copy()
+tabakali = veri.loc[veri.strat40 == 1].copy()
+assert len(basit) == len(tabakali) == 40
+print(pd.DataFrame({
+    "tam_dosya": veri.g3.agg(["count", "mean", "std"]),
+    "basit_rastgele": basit.g3.agg(["count", "mean", "std"])
+}))
+okul = tabakali.school.map({1: "GP", 2: "MS"})
+frekans = okul.value_counts().reindex(["GP", "MS"])
+print(frekans); print(100 * frekans / len(tabakali))
+print(len(tabakali)); print(tabakali.strw.sum())
+print(np.average(tabakali.g3, weights=tabakali.strw))
+\end{lstlisting}
+
+\textbf{Çıktıyı okuma.} Paylaşılan Python çıktısı da 395 satır,
+13 sütun ve her sütunda sıfır eksik değer gösterir. \texttt{count}, R'deki
+\texttt{n}; \texttt{std} ise \texttt{sd} satırına karşılık gelir.
+Okul frekansları, yüzdeler ve ağırlıklı ortalama R ve SPSS ile uyumludur.
+Bu uygulama bir hipotez testi veya $p$ değeri üretmez; ana veri korunur.
+\end{minipage}\par
+
+\subsection{Sonuçların karşılaştırılması ve ortak rapor}
+12 Eylül 2026'da paylaşılan SPSS tabloları ile R ve Python metin
+çıktıları karşılaştırılmıştır. Tam dosya ve basit rastgele örneklemin
+gözlem sayısı, ortalaması ve standart sapmasından oluşan altı hücre ile
+tabakalı seçimin ağırlıklı ortalaması, gösterilen yuvarlama
+hassasiyetlerinde uyumludur. Okul frekansları, yüzdeler, tabakalı
+örneklem büyüklüğü ve ağırlık toplamı da eşleşmiştir. Proje CSV'sinden
+yapılan hesaplar bu değerleri destekler. Aşağıdaki tablolar çıktıların
+kitap düzenine uyarlanmış özetidir; ekran görüntüsü değildir.
+
+\begin{table}[H]
+\centering
+\caption{B06'da tam dosya ve seçilmiş örneklemlerin not özetleri}
+\label{tab:b06-dogrulanmis-betimsel}
+\small
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+İncelenen veri & Kayıt sayısı & Ortalama & Std. sapma \\
+\midrule
+Tam dosya & 395 & 10,415190 & 4,581443 \\
+Basit rastgele örneklem & 40 & 10,275000 & 5,565404 \\
+Tabakalı örneklem (ağırlıklı) & 40 & 10,456347 & --- \\
+\bottomrule
+\end{tabular}
+\par\smallskip
+{\footnotesize Ondalıklı değerler altı basamağa yuvarlanmıştır.
+İlk iki satırın standart sapmaları sırasıyla 394 ve 39 böleniyle
+hesaplanmıştır; standart hata değildir. Son satırda yalnız ağırlıklı
+ortalama raporlanmıştır; çizgi sıfır anlamına gelmez. SPSS'in bu
+satır için gösterdiği $N=395$ ağırlık toplamıdır, gerçek kayıt sayısı
+40'tır.\par}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{B06 tabakalı örnekleminde ağırlıksız okul frekansları}
+\label{tab:b06-dogrulanmis-tabaka}
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Okul & Frekans & Yüzde \\
+\midrule
+GP & 35 & 87,5 \\
+MS & 5 & 12,5 \\
+Toplam & 40 & 100,0 \\
+\bottomrule
+\end{tabular}
+\par\smallskip
+{\footnotesize Yüzdelerin paydası seçilen 40 kayıttır. Okul değişkeninde
+eksik değer olmadığından SPSS'in \emph{Percent} ve \emph{Valid Percent}
+sütunları eşittir. Ağırlıklar bu tablo alındıktan sonra etkinleştirilir.\par}
+\end{table}
+
+\Needspace{15\baselineskip}
+\begin{outputguidebox}
+Tablo~\ref{tab:b06-dogrulanmis-betimsel} içindeki tam dosya ortalaması,
+yalnız bu 395 kayıt eğitim amaçlı sonlu evren kabul edildiğinde bilinen
+evren ortalamasıdır. Basit rastgele örneklemin 10,275000 ve tabakalı
+örneklemin 10,456347 ortalamaları bu değerin iki ayrı tahminidir.
+Bu tek seçimde tabakalı tahmin daha yakındır; bu durum yöntemin her
+örneklemde daha yakın sonuç vereceğini kanıtlamaz.
+
+Tablo~\ref{tab:b06-dogrulanmis-tabaka} içinde GP için 35, MS için 5
+kayıt vardır. Ağırlıklar sırasıyla $349/35$ ve $46/5$ olduğundan
+toplamları $35(349/35)+5(46/5)=395$ olur. Bu işlem 355 yeni öğrenci
+eklemez. Ağırlıklı nokta tahmini, tasarıma uygun standart hata veya
+güven aralığı hesabı değildir.
+
+Seçim göstergeleri öğretim amacıyla hazırlanmıştır; kaynak araştırmanın
+özgün örnekleme tasarımını göstermez. Yazılımların hesaplama uyumu,
+395 kaydın daha geniş bir öğrenci evrenini temsil ettiğini kanıtlamaz.
+\end{outputguidebox}
+
+\textbf{Raporlama örneği (doğrulanmış çıktılarla).}
+``395 kayıtlık öğretim çerçevesinin not ortalaması 10,415190'dır.
+Basit rastgele seçilmiş 40 kaydın ortalaması 10,275000, standart sapması
+5,565404 bulunmuştur. GP'den 35 ve MS'den 5 kayıt içeren ayrı tabakalı
+örneklemde, tabaka ağırlıklarıyla hesaplanan ortalama 10,456347'dir.
+Ağırlıkların toplamı 395 olmakla birlikte gerçek örneklem büyüklüğü
+40'tır. Karşılaştırma tek seçime aittir; yöntemlerin genel üstünlüğü
+veya daha geniş bir evrene genellenebilirlik iddiası taşımamaktadır.''
+
+
+\textbf{Görev.} $\bar x_{\rm tab}=(349/395)\bar x_{GP}+(46/395)\bar x_{MS}$
+ile sonucu elle doğrulayın. Bu seçimlerin kaynak araştırmanın özgün
+örnekleme tasarımı olmadığını raporlayın. Sonraki uygulamaya geçmeden
+filtre ve ağırlığın kapalı olduğunu, etkin dosyanın 395 kaydı koruduğunu
+kontrol edin.

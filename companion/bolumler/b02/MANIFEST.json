@@ -1,0 +1,18 @@
+{
+  "algorithm": "SHA-256",
+  "files": {
+    "DOGRULAMA.md": "d42264bfd2417aed1ea9e404e1fbfaf88fd0046cfa80a7ff919fe8a22e96fcac",
+    "README.md": "78b220e3bdb317a81a9b5f39e88075e7d515061ba1e26d3d5997d2cec1c88a95",
+    "alistirmalar.md": "593735d4f78e38b32cc79c821a6e45205f2779a4c146a45b65040476436a82f0",
+    "cozumler.md": "90da7df3359867d19e66d52cde7bdf1985eff02da0fd8c13fcc9bdd88c600312",
+    "ornek-01/README.md": "e3dc09408d06c18a33521596eddb35c92f3fce5f7abfe2ed5a4e4684c6c457a6",
+    "ornek-01/analiz.sps": "1fb022e6774d7c0dd8ad4fec73e99c9fd16db3a7ac3e66df0cd33748033bfcbb",
+    "ornek-01/analiz.sps.txt": "1fb022e6774d7c0dd8ad4fec73e99c9fd16db3a7ac3e66df0cd33748033bfcbb",
+    "ornek-01/beklenen-sonuclar.csv": "77023e034165caf3b57c26981d8be8954e8b7c8fba070dfd83413554933fcf31",
+    "ornek-01/cozum.R": "4f9432e0287193a643bf47740be69995d4379de6fba0bc5205e3032ac1a8fcb3",
+    "ornek-01/cozum.md": "9359080ce194967c14fc2920c9f64f1ec33244829da7c64fc0d921be0621eb8f",
+    "ornek-01/cozum.py": "46548bb2fb3b87acc8dca944b74d772b9003ce2a9e1481696fd14b853479ddfb",
+    "ornek-01/veri-sozlugu.csv": "a71632e6f21fb6b11c3eff75ed99093da11272fb807bda9abb16c410f6735feb",
+    "ornek-01/veri.csv": "4fa9552dcc330a8663e11a67c547e634cf4a1d19ca46047f4bbe089dfaf2c2e0"
+  }
+}

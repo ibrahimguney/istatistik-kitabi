@@ -1,0 +1,21 @@
+{
+  "algorithm": "SHA-256",
+  "files": {
+    "DOGRULAMA.md": "c59998d223759a7f44831761523f72b4f6d47f4d74f5444795a25e65b073684c",
+    "README.md": "f48e109fe92b373870b027543374a19dcf98ae9cf4e6223f0dd541e52fdf389a",
+    "alistirmalar.md": "c400a740c0b888d7dd5428038d44257aaa483815272778a495a541df3c06fdcc",
+    "cozumler.md": "7eb41f1958f85ecbc68617079a1e9afc359b27d44b53b8e281e3e39a6dff6ef5",
+    "ornek-01/README.md": "9eabc598faf70cb91a884156d15ea4dd5ee145e9feb877a46e118cddbef1c0f6",
+    "ornek-01/analiz.sps": "587c523b3e73c3a67be221ea12f28b18c3be3fcbd159f3e5e3f2da4f8e8f78fd",
+    "ornek-01/analiz.sps.txt": "587c523b3e73c3a67be221ea12f28b18c3be3fcbd159f3e5e3f2da4f8e8f78fd",
+    "ornek-01/beklenen-sonuclar.csv": "fb5b6d0f45a1f14503ca48aac5019aa84c5657566a0a08418a219b016175c598",
+    "ornek-01/ciktilar/python/guven-araliklari.png": "077ca4fd72111136c33dd6b943f455dca49cb89539856e8dea70143585418f89",
+    "ornek-01/cozum.R": "559519d8960e14033ffaa58dfa4dad8a2a92597756a1c627bd7726108389e975",
+    "ornek-01/cozum.md": "df8128341a380269dd95e4752a2708cd8bf95198210acb3d1ad814c753c882e5",
+    "ornek-01/cozum.py": "87536a3bd6dd651b822e9d00175e4100d04ff3dce502e54e255aca59463164a7",
+    "ornek-01/grafik-aciklamasi.md": "7c089961545df1820084d9782b810ff6de83f11ec5f07754f2f2b97de20220e5",
+    "ornek-01/kaynak-kaydi.json": "10c77526fda80b4b4f7b03fb765e8a5ccda213ee4626fb498461bee740f78054",
+    "ornek-01/veri-sozlugu.csv": "689817815cef2999362f4291e1f20a999823a6734884804ed71fbafc8714e79a",
+    "ornek-01/veri.csv": "516589740616c9e9baff58c6cb35e3458c23e542f318d89b4485f57976fb50bf"
+  }
+}

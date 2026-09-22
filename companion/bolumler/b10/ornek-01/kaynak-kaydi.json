@@ -1,0 +1,23 @@
+{
+  "tarih": "2026-09-09",
+  "paket": "B10",
+  "ders_bolumu": 10,
+  "kapsamli_bolum": 11,
+  "kaynaklar": [
+    "chapters/10-hata-guc-tek-orneklem-t.tex",
+    "chapters/r/b10.tex"
+  ],
+  "veri_turu": "Tek örneklem testinin özet istatistikleri; ham gözlem uydurulmadı.",
+  "plan": "Ayrı dosyada, gözlenen d hesabından bağımsız olarak verilmiş ileriye dönük varsayımlar.",
+  "sha256": {
+    "veri.csv": "c06d918caa8c54980cf436cedb690e178f7141b98cbe183f71978124f0912aaf",
+    "plan.csv": "a77da5caca5a7837a8e25696c0e98ecbdb709f4bf429e210adea45415ebe02c5"
+  },
+  "referans_yontemi": "Merkezi t yoğunluğu lgamma açık formülüyle hesaplandı; quad integrali ve brentq ile kuyruk/kuantil bulundu. Güç için T=(Z+lambda)/sqrt(V/df), Z normal, V ki-kare bağımsız temsili kullanıldı; koşullu iki normal kuyruk erfc ile, V yoğunluğu açık gamma formülüyle hesaplanıp quad ile integre edildi. stats.nct ve stats.t.sf/ppf çıktıları referansa kopyalanmadı. n=2..33 güçleri hedef altında, n=34 hedef üstünde doğrulandı.",
+  "kontrol_sayisi": 30,
+  "arama_araligi": [
+    2,
+    10000
+  ],
+  "rastgele_islem": false
+}

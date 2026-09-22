@@ -1,0 +1,14 @@
+{
+  "records": 303,
+  "above_total": 108418,
+  "below_total": 159193,
+  "count_total": 267611,
+  "equal_rate": 0.43697839965905794,
+  "pooled_rate": 0.4051328233891731,
+  "pooled_minus_equal_pp": -3.1845576269884823,
+  "minimum_count": 33,
+  "maximum_count": 38852,
+  "covariance_divided_by_mean_count": -0.03184557626988482,
+  "scope": "local_303_aggregate_records_not_population_inference",
+  "inference_computed": false
+}

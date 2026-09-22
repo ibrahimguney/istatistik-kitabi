@@ -1,0 +1,375 @@
+\chapter{Örnekleme Yöntemleri, Temsil ve Yanlılık}
+\label{ch:sampling-design}
+
+\begin{prismbox}[PrismLight]{Öğrenme çıktıları}
+Bu bölümün sonunda:
+\begin{itemize}
+  \item hedef evren, örnekleme çerçevesi ve örneklem arasındaki farkı açıklayabilecek,
+  \item araştırma bağlamına uygun örnekleme yöntemini seçebilecek,
+  \item seçilme olasılığı, örnekleme aralığı ve örnekleme ağırlığını hesaplayabilecek,
+  \item kümeleşme, yanıtlamama ve kapsam hatasının sonuçlarını değerlendirebileceksiniz.
+\end{itemize}
+\end{prismbox}
+
+\begin{prerequisitebox}
+Hedef evren, erişilebilir evren, gözlem birimi ve örneklem kavramları
+bilinmelidir. Örnekleme değişkenliği ile sistematik yanlılık arasındaki fark
+hatırlanmalıdır.
+\end{prerequisitebox}
+
+Hedef evren ve kapsam kavramları Bölüm~\ref{sec:population-target} ile
+Bölüm~\ref{sec:population-coverage}'de; örnekleme değişkenliği ile yanlılık
+ayrımı Bölüm~\ref{sec:sampling-bias-variance}'ta hazırlanmıştır.
+
+\section{Örnekleme çerçevesi ve kapsam hatası}
+\label{sec:sampling-frame}
+
+Araştırmacının hakkında sonuç üretmek istediği topluluk \textbf{hedef evren},
+seçim yapılırken fiilen erişilebilen birimlerin listesi \textbf{örnekleme
+çerçevesi}, ölçülen birimler ise \textbf{örneklem}dir. Bu üç küme aynı değilse
+genelleme yapılırken kapsam hatası oluşabilir.
+
+Örneğin bir üniversitedeki bütün öğrenciler hedeflenirken anket bağlantısının
+yalnız belirli bir dersin çevrim içi sayfasında paylaşılması, örnekleme
+çerçevesini o dersi alan öğrencilerle sınırlar.
+
+\section{Olasılıklı örnekleme yöntemleri}
+\label{sec:sampling-probability}
+
+\begin{description}[style=nextline,leftmargin=3.7cm,labelwidth=3.4cm]
+  \item[Basit rastgele örnekleme] Her birim bilinen ve eşit seçilme şansına sahiptir.
+  \item[Sistematik örnekleme] Rastgele başlangıçtan sonra listedeki her $k$'ıncı birim seçilir.
+  \item[Tabakalı örnekleme] Evren önemli alt gruplara ayrılır ve her tabakadan örnek alınır.
+  \item[Küme örneklemesi] Bireyler yerine sınıf, okul veya kurum gibi doğal kümeler seçilir.
+  \item[Çok aşamalı örnekleme] Önce kümeler, sonra kümeler içindeki alt birimler seçilir.
+\end{description}
+
+Tabakalama, alt grupların temsilini güvenceye almak için; küme örneklemesi ise
+dağınık bir evrende veri toplama maliyetini azaltmak için kullanılabilir.
+Küme içindeki bireyler birbirine benzediğinde etkili bilgi miktarı, aynı
+sayıdaki bağımsız bireyden daha düşük olur. Bu tasarımların seçim olasılıkları,
+ağırlıklar ve varyans üzerindeki etkileri \citet{cochran1977} ve
+\citet{lohr2021} tarafından ayrıntılı biçimde ele alınır.
+
+Şekil~\ref{fig:strata-clusters} iki yöntemin seçim birimini karşılaştırır.
+Solda her tabakadan ikişer kişi; sağda ise bir küme seçilerek o kümedeki
+altı kişinin tamamı alınmıştır. Her iki örneklem altı kişilik olsa da
+seçim mekanizmaları farklıdır. Sağdaki çizim tek aşamalı küme örneklemesidir;
+çok aşamalı tasarımda seçilen kümenin içinde ayrıca birey seçimi yapılabilir.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[font=\footnotesize]
+  \foreach \shift/\heading in {-2.7/Tabakalı örnekleme,2.7/Küme örneklemesi}{
+    \begin{scope}[xshift=\shift cm]
+      \node[font=\small\bfseries] at (0,0.6) {\heading};
+      \foreach \row in {1,2,3}{
+        \draw[PrismBlue!65,rounded corners=1mm]
+          (-2.35,{-0.85*\row-0.27}) rectangle (2.35,{-0.85*\row+0.27});
+        \foreach \col in {1,...,6}
+          \draw[PrismBlue,fill=white]
+            ({-0.75+0.48*(\col-1)},{-0.85*\row}) circle (2.8pt);
+      }
+    \end{scope}
+  }
+  \foreach \row in {1,2,3}{
+    \node[anchor=west] at (-4.9,{-0.85*\row}) {Tabaka \row};
+    \node[anchor=west] at (0.5,{-0.85*\row}) {Küme \row};
+    \foreach \col in {2,5}
+      \fill[PrismBlue] ({-3.45+0.48*(\col-1)},{-0.85*\row}) circle (2.8pt);
+  }
+  \foreach \col in {1,...,6}
+    \fill[PrismBlue] ({1.95+0.48*(\col-1)},-1.7) circle (2.8pt);
+  \node[align=center] at (-2.7,-3.25) {Her tabakadan birey seçimi};
+  \node[align=center] at (2.7,-3.25) {Seçilen kümenin tüm bireyleri};
+  \fill[PrismBlue] (-2.8,-3.95) circle (2.8pt);
+  \node[anchor=west] at (-2.6,-3.95) {Seçilen};
+  \draw[PrismBlue,fill=white] (0.3,-3.95) circle (2.8pt);
+  \node[anchor=west] at (0.5,-3.95) {Seçilmeyen};
+\end{tikzpicture}
+\caption{Aynı örneklem hacmi, farklı seçim mekanizması: tabakalı ve tek
+aşamalı küme örneklemesi. Dolu noktalar seçilen bireylerdir.}
+\label{fig:strata-clusters}
+\end{figure}
+
+\section{Olasılıksız örnekleme}
+\label{sec:sampling-nonprobability}
+
+Kolayda, gönüllü ve amaçlı örnekleme bazı araştırma bağlamlarında gerekli
+olabilir; ancak birimlerin seçilme olasılıkları bilinmediği için örnekleme
+hatası klasik formüllerle tam olarak hesaplanamaz. Sonuçların hangi gruba
+genellenebileceği açıkça sınırlandırılmalıdır.
+
+\section{Yanlılık kaynakları}
+\label{sec:sampling-bias-sources}
+
+\begin{itemize}
+  \item \textbf{Kapsam yanlılığı:} Çerçeve hedef evrenin bazı kesimlerini dışlar.
+  \item \textbf{Yanıtlamama yanlılığı:} Yanıt verenler vermeyenlerden sistematik olarak farklıdır.
+  \item \textbf{Gönüllülük yanlılığı:} Güçlü görüşü olan kişiler katılmaya daha isteklidir.
+  \item \textbf{Ölçüm yanlılığı:} Soru biçimi, araç veya uygulayıcı yanıtları sistematik etkiler.
+  \item \textbf{Seçim sonrası dışlama:} Analiz ölçütleri belirli sonuçları aşırı temsil eder.
+\end{itemize}
+
+\begin{mistakebox}
+Rastgele örnekleme ile rastgele atama aynı işlem değildir. Rastgele örnekleme
+evrene genellemeyi, rastgele atama ise gruplar arasında nedensel karşılaştırmayı
+destekler.
+\end{mistakebox}
+
+\section{Örneklem hacmi ve temsil}
+
+Büyük örneklem rastgele örnekleme hatasını azaltır; fakat sistematik yanlılığı
+otomatik olarak gidermez. Örneklem hacmi belirlenirken hedeflenen hassasiyet,
+değişkenlik, güven düzeyi, araştırma tasarımı ve ulaşılabilir kaynaklar birlikte
+değerlendirilir.
+
+Basit rastgele örneklemede ortalamanın standart hatası yaklaşık
+\[
+\SE(\bar X)=\frac{s}{\sqrt n}
+\]
+olduğundan belirsizliği yarıya indirmek yaklaşık dört kat gözlem gerektirir.
+
+\section{Seçilme olasılığı ve örnekleme ağırlığı}
+\label{sec:sampling-weights}
+
+Basit rastgele örneklemede $N$ birimlik bir evrenden $n$ birim seçiliyorsa her
+birimin örnekleme dâhil edilme olasılığı
+\[
+\pi_i=\frac{n}{N}
+\]
+olur. Bu olasılığın tersi $w_i=1/\pi_i$ temel örnekleme ağırlığıdır. Örneğin
+2.000 öğrenciden 200'ü eşit olasılıkla seçiliyorsa $\pi_i=0{,}10$ ve her
+öğrencinin temel ağırlığı 10'dur; örnekteki bir öğrenci evrende yaklaşık on
+öğrenciyi temsil eder.
+
+Tabakalar farklı oranlarda örneklenirse seçilme olasılıkları ve ağırlıklar da
+tabakaya göre değişir. Ağırlıkları göz ardı etmek, fazla örneklenen küçük
+grupların evren özetleri üzerindeki etkisini gereğinden fazla artırabilir.
+
+\section{Kümeleşme ve tasarım etkisi}
+\label{sec:sampling-deff}
+
+Küme örneklemesinde aynı sınıf veya okul içindeki bireyler birbirine
+benzeyebilir. Ortalama küme büyüklüğü $m$ ve küme içi korelasyon $\rho$ için
+basit bir tasarım etkisi yaklaşımı
+\[
+\DEFF\approx1+(m-1)\rho
+\]
+biçimindedir. Tasarım etkisinin 1'den büyük olması, aynı sayıda tamamen
+bağımsız gözleme göre varyansın arttığını gösterir. Yaklaşık etkin örneklem
+hacmi $n_{\mathrm{etkin}}\approx n/\DEFF$ ile yorumlanabilir.
+
+Bu formül öğretici bir yaklaşımdır; gerçek analizde eşit olmayan küme
+büyüklükleri, tabakalama, ağırlıklandırma ve çok aşamalı seçim birlikte
+değerlendirilmelidir.
+
+\input{chapters/vakalar/v2-nhanes}
+
+\section{Çözümlü senaryo}
+
+Bir araştırmacı üç sınıf düzeyindeki öğrencilerin okul aidiyeti puanlarını
+karşılaştıracaktır. Her sınıf düzeyinden öğrenci seçmek istendiği için sınıf
+düzeyi tabaka olarak kullanılabilir. Yalnız gönüllülerin katılması durumunda
+her tabakada dahi gönüllülük yanlılığı kalabilir. Bu nedenle seçim ve yanıt
+oranları ayrı ayrı raporlanmalıdır.
+
+\section{Yazılım uygulaması: rastgele ve tabakalı seçim}
+
+\begin{softwarebox}
+\begin{lstlisting}
+import pandas as pd
+
+students = pd.DataFrame({
+    "id": range(1, 13),
+    "sinif": [1]*4 + [2]*4 + [3]*4
+})
+
+simple = students.sample(n=6, random_state=2026)
+stratified = (students.groupby("sinif", group_keys=False)
+              .sample(n=2, random_state=2026))
+
+print(simple)
+print(stratified.groupby("sinif").size())
+\end{lstlisting}
+İkinci seçim her sınıf düzeyinden iki öğrenciyi güvenceye alır. Gerçek bir
+uygulamada seçim olasılıkları ve örnekleme çerçevesinin kaynağı da
+belgelenmelidir.
+\end{softwarebox}
+
+\begin{assumptionbox}
+Rastgele sayı üretmek ancak güncel ve hedef evreni kapsayan bir örnekleme
+çerçevesi üzerinde anlamlıdır. Listede bulunmayan birimlerin seçilme
+olasılığı sıfırdır ve bu kapsam sorunu yazılım tarafından giderilemez.
+\end{assumptionbox}
+
+\section{Çözümlü problemler}
+
+\subsection*{Problem 1: Basit rastgele örnekleme ve seçilme olasılığı}
+
+Bir fakültede 1.200 öğrenci bulunmaktadır. Güncel öğrenci listesinden basit
+rastgele örneklemeyle 120 öğrenci seçilecektir. Her öğrencinin seçilme
+olasılığını, temel örnekleme ağırlığını ve örnekleme oranını bulun.
+
+\textbf{Çözüm.} Basit rastgele örneklemede bütün öğrencilerin dâhil edilme
+olasılığı aynıdır:
+\[
+\pi_i=\frac{120}{1200}=0{,}10.
+\]
+Her öğrencinin örneğe seçilme olasılığı yüzde 10'dur. Temel örnekleme ağırlığı
+\[
+w_i=\frac{1}{0{,}10}=10
+\]
+olur. Örnekleme oranı da $n/N=0{,}10$'dur. Tasarım eksiksiz uygulanır ve
+yanıtlamama olmazsa örneklemdeki her öğrenci evrende yaklaşık on öğrenciyi
+temsil eder.
+
+\textbf{Varsayım kontrolü.} Öğrenci listesinin güncel ve tekilleştirilmiş
+olması gerekir. Listede bulunmayan öğrencilerin seçilme olasılığı sıfırdır;
+yinelenen kayıtların ise seçilme olasılığı yapay biçimde yükselir.
+
+\subsection*{Problem 2: Sistematik örnekleme}
+
+Numaralandırılmış 2.400 öğrencilik bir listeden 120 öğrenci sistematik
+örneklemeyle seçilecektir. Örnekleme aralığını bulun. Rastgele başlangıç 7 ise
+ilk dört ve son seçilen sıra numarasını yazın.
+
+\textbf{Çözüm.} Örnekleme aralığı
+\[
+k=\frac{N}{n}=\frac{2400}{120}=20
+\]
+olur. Rastgele başlangıç 1 ile 20 arasından seçilen 7 olduğuna göre sıra
+numaraları 7, 27, 47, 67, $\ldots$ biçiminde ilerler. Son sıra numarası
+\[
+7+(120-1)20=2387
+\]
+olur.
+
+Listenin sıralanışında her 20 birimde tekrarlanan bir örüntü varsa sistematik
+seçim yanlı sonuç üretebilir. Örneğin liste her sınıfta aynı başarı sırasına
+göre düzenlenmişse periyodiklik kontrol edilmelidir.
+
+\subsection*{Problem 3: Orantılı tabakalı örnekleme}
+
+Bir üniversitedeki 1.000 öğrencinin 600'ü lisans, 300'ü yüksek lisans ve
+100'ü doktora öğrencisidir. Toplam 200 kişilik orantılı tabakalı örneklemde
+her gruptan kaç kişi seçilmelidir?
+
+\textbf{Çözüm.} Her tabakanın evrendeki payı örneklem hacmiyle çarpılır:
+\[
+n_{\text{lisans}}=200\frac{600}{1000}=120,
+\]
+\[
+n_{\text{yüksek lisans}}=200\frac{300}{1000}=60,
+\qquad
+n_{\text{doktora}}=200\frac{100}{1000}=20.
+\]
+Böylece toplam $120+60+20=200$ kişi seçilir. Her tabaka aynı yüzde 20
+oranında örneklendiğinden temel ağırlıklar eşittir. Her tabakanın içinde
+öğrenciler rastgele seçilmelidir; tabaka kotasını dolduran ilk gönüllüleri
+almak olasılıklı örnekleme değildir.
+
+\subsection*{Problem 4: Küme örneklemesinde tasarım etkisi}
+
+Yirmi sınıftan sınıf başına ortalama 25 öğrenci seçilerek toplam 500 öğrenciye
+ulaşılmıştır. Küme içi korelasyonun yaklaşık $\rho=0{,}08$ olduğu varsayılsın.
+Tasarım etkisini, yaklaşık etkin örneklem hacmini ve standart hata çarpanını
+hesaplayın.
+
+\textbf{Çözüm.} Ortalama küme büyüklüğü $m=25$ olduğundan
+\[
+\DEFF\approx1+(25-1)(0{,}08)=1+1{,}92=2{,}92.
+\]
+Yaklaşık etkin örneklem hacmi
+\[
+n_{\mathrm{etkin}}\approx\frac{500}{2{,}92}\approx171
+\]
+olur. Kümeleşmeye göre düzeltilmiş standart hata, basit rastgele örnekleme
+standart hatasının yaklaşık
+\[
+\sqrt{2{,}92}\approx1{,}71
+\]
+katıdır. Dosyada 500 öğrenci bulunmasına rağmen belirsizlik, 500 bağımsız
+öğrenci varmış gibi hesaplanmamalıdır.
+
+\begin{mistakebox}
+Kümeleşme gözlem sayısını silmez; bilgi miktarını ve standart hatayı etkiler.
+Çözüm, sınıf içindeki öğrencilerden rastgele bazılarını veri setinden çıkarmak
+değil, örnekleme tasarımına uygun analiz kullanmaktır.
+\end{mistakebox}
+
+\subsection*{Problem 5: Yanıtlamama ve düzeltme ağırlıkları}
+
+İki fakülteden eşit sayıda, toplam 400 öğrenci seçilmiştir. A fakültesinde
+200 öğrencinin 160'ı, B fakültesinde 200 öğrencinin 120'si ankete yanıt
+vermiştir. Fakülte bazında yanıt oranlarını ve basit yanıtlamama düzeltme
+ağırlıklarını bulun.
+
+\textbf{Çözüm.} Yanıt oranları
+\[
+r_A=\frac{160}{200}=0{,}80,
+\qquad
+r_B=\frac{120}{200}=0{,}60
+\]
+olur. Yanıtlamama düzeltme çarpanları bu oranların tersidir:
+\[
+a_A=\frac{1}{0{,}80}=1{,}25,
+\qquad
+a_B=\frac{1}{0{,}60}\approx1{,}67.
+\]
+Bu ağırlıklarla A fakültesindeki 160 yanıt yaklaşık $160(1{,}25)=200$, B
+fakültesindeki 120 yanıt ise yaklaşık $120(1{,}67)=200$ seçilmiş öğrenciyi
+temsil eder.
+
+Bu düzeltme, her fakülte içinde yanıtlayan ve yanıtlamayan öğrencilerin
+araştırma değişkeni bakımından yeterince benzer olduğu varsayımına dayanır.
+Yanıtlamama örneğin memnuniyetsizlikle doğrudan ilişkiliyse yalnız fakülte
+ağırlığı bütün yanlılığı gideremeyebilir.
+
+\begin{outputguidebox}
+Örnekleme raporunda hedef evreni, çerçevenin kaynağını, seçim aşamalarını,
+başlangıç ve son örneklem hacimlerini, yanıt oranını, ağırlıkları ve küme ya da
+tabaka değişkenlerini kontrol edin. Yalnız ``rastgele seçildi'' ifadesi
+tasarımın yeniden üretilebilmesi için yeterli değildir.
+\end{outputguidebox}
+
+\input{chapters/spss/b06}
+
+\input{chapters/r/b06}
+
+\section{Bölüm özeti}
+
+\begin{itemize}
+  \item Olasılıklı örneklemede birimlerin seçilme olasılıkları bilinir.
+  \item Tabakalama temsili, küme örneklemesi veri toplama verimliliğini destekleyebilir.
+  \item Olasılıksız örneklemede genelleme sınırları açıkça belirtilmelidir.
+  \item Büyük örneklem rastgele hatayı azaltır; kapsam ve yanıtlamama yanlılığını gidermez.
+  \item Eşit olmayan seçilme ve yanıt olasılıkları analizde ağırlıklandırma
+  gerektirebilir.
+  \item Küme içi benzerlik tasarım etkisini ve standart hatayı artırarak etkin
+  örneklem hacmini azaltabilir.
+\end{itemize}
+
+\section*{Alıştırmalar}
+
+\begin{enumerate}
+  \item Hedef evren ile örnekleme çerçevesinin farklı olduğu bir örnek verin.
+  \item Tabakalı ve küme örneklemesini amaçları bakımından karşılaştırın.
+  \item Örneklem hacmini büyütmenin yanlılığı neden gidermediğini açıklayın.
+  \item 5.000 birimlik bir evrenden 250 birim basit rastgele seçildiğinde
+  seçilme olasılığını ve temel ağırlığı hesaplayın.
+  \item $N=1800$ ve $n=90$ için sistematik örnekleme aralığını bulun; rastgele
+  başlangıç 12 ise ilk beş sıra numarasını yazın.
+  \item 700, 200 ve 100 kişilik üç tabakadan toplam 300 kişilik orantılı
+  örneklem için tabaka hacimlerini belirleyin.
+  \item Tabakalı örnekleme ile kota örneklemesi arasındaki temel farkı açıklayın.
+  \item Ortalama küme büyüklüğü 30 ve küme içi korelasyon 0,05 ise yaklaşık
+  tasarım etkisini hesaplayın.
+  \item $n=600$ ve $\DEFF=2{,}5$ için yaklaşık etkin örneklem hacmini bulun.
+  \item Bir ankette başlangıç örneklemi 800, yanıtlayan sayısı 520 ise genel
+  yanıt oranını ve basit düzeltme çarpanını hesaplayın.
+  \item Yanıtlamama ağırlığının yanıtlayanlarla yanıtlamayanlar sistematik
+  olarak farklı olduğunda neden yetersiz kalabileceğini tartışın.
+  \item Çok aşamalı bir ulusal okul araştırması için il, okul, sınıf ve öğrenci
+  düzeylerini içeren bir seçim planı yazın.
+\end{enumerate}

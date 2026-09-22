@@ -1,0 +1,823 @@
+\chapter{Hipotez Testleri, Hata Türleri ve Etki Büyüklüğü}
+\label{ch:hypothesis}
+\index{hipotez testi}
+\index{etki büyüklüğü}
+
+\begin{hedefler}
+Bu bölümün sonunda okuyucu:
+\begin{itemize}
+  \item araştırma sorusunu hedef parametre üzerinden sıfır ve alternatif hipoteze dönüştürebilecek,
+  \item test istatistiğini ve $p$-değerini doğru biçimde açıklayabilecek,
+  \item anlamlılık düzeyi, istatistiksel karar ve bilimsel yorum arasındaki farkı görebilecek,
+  \item Tip I ve Tip II hatayı PDR bağlamında yorumlayıp test gücüyle ilişkilendirebilecek,
+  \item tek ve çift yönlü test seçimini araştırma planına göre gerekçelendirebilecek,
+  \item $p$-değeri, güven aralığı ve etki büyüklüğünü birlikte değerlendirebilecek,
+  \item çoklu test, seçici raporlama ve veri görüldükten sonra hipotez değiştirme risklerini tanıyabilecek,
+  \item hipotez testi sonuçlarını Python ve SPSS çıktılarından okuyup şeffaf biçimde raporlayabilecektir.
+\end{itemize}
+\end{hedefler}
+
+\begin{hazirlik}
+``$p=0{,}03$ ise sıfır hipotezinin doğru olma olasılığı yüzde 3'tür''
+ifadesindeki kavram yanılgısını belirleyin. Bu olasılık ifadesinde koşulun
+hangi yönde kurulması gerektiğini düşünün.
+\end{hazirlik}
+
+\section{PDR vakası: Danışmanlık programı işe yarıyor mu?}
+
+Bir üniversite, birinci sınıf öğrencilerinin yalnızlık düzeyini azaltmak için
+altı haftalık grup danışmanlığı programı uygulamıştır. Program grubunun
+son-test yalnızlık puanı ortalaması karşılaştırma grubundan 4,2 puan daha
+düşüktür. ``Program işe yaradı'' sonucuna yalnız bu gözlenen farktan hareketle
+ulaşılabilir mi?
+
+Örneklem seçimi yeniden yapılsaydı grup ortalamaları ve aralarındaki fark bir
+miktar değişirdi. Hipotez testi, gözlenen farkın sıfır fark varsayımı altında
+ne kadar olağandışı olduğunu değerlendirir. Bununla birlikte araştırmacının
+yanıtlaması gereken sorular bundan daha geniştir:
+
+\begin{enumerate}
+  \item Karşılaştırılan hedef parametre tam olarak nedir?
+  \item Gözlenen fark rastlantısal örnekleme değişkenliğiyle açıklanabilir mi?
+  \item Farkın büyüklüğü öğrenciler açısından anlamlı mıdır?
+  \item Araştırma tasarımı nedensel bir yorum yapmaya izin vermekte midir?
+  \item Sonuç hangi hata ve yanlılık kaynaklarına duyarlıdır?
+\end{enumerate}
+
+Bu bölümde test işlemi bir ``anlamlılık üretme'' aracı olarak değil, önceden
+tanımlanmış bir araştırma sorusunu belirsizlik altında değerlendirme yöntemi
+olarak ele alınacaktır.
+
+\begin{researchbox}
+İstatistiksel olarak belirgin bir azalma, programın her öğrenciye yarar
+sağladığını veya programın tek başına değişime neden olduğunu göstermez.
+Nedensel yorum için karşılaştırma grubu, rastgele atama, uygulama bütünlüğü,
+kayıp katılımcılar ve eş zamanlı müdahaleler de değerlendirilmelidir.
+\end{researchbox}
+
+\section{Araştırma sorusundan sınanabilir hipoteze}
+\index{sıfır hipotezi}
+\index{alternatif hipotez}
+
+Hipotezler örneklemdeki gözlenen sayılar hakkında değil, evren parametreleri
+hakkında kurulur. Program ve karşılaştırma gruplarının evren ortalamaları
+sırasıyla $\mu_P$ ve $\mu_K$ olsun. Fark ``program eksi karşılaştırma'' olarak
+tanımlandığında çift yönlü hipotezler
+\[
+H_0:\mu_P-\mu_K=0,
+\qquad
+H_1:\mu_P-\mu_K\neq0
+\]
+biçimindedir. Programın yalnızlığı azalttığı yönü önceden ve güçlü biçimde
+gerekçelendirilmişse alternatif hipotez $H_1:\mu_P-\mu_K<0$ olarak tek yönlü
+kurulabilir.
+
+\subsection{Sıfır ve alternatif hipotezin rolleri}
+
+\begin{description}
+  \item[Sıfır hipotezi] Test istatistiğinin referans dağılımını kurmak için kullanılan kesin iddiadır; çoğunlukla farkın ya da ilişkinin olmadığını belirtir.
+  \item[Alternatif hipotez] Verinin destekleyip desteklemediği karşıt değerler kümesidir; çift yönlü veya önceden belirlenmiş tek yönlü olabilir.
+\end{description}
+
+Sıfır hipotezinin her zaman ``hiçbir şey olmaz'' biçiminde kurulması gerekmez.
+Bir ölçeğin ortalamasının norm değeri 50 olup olmadığı, bir program etkisinin
+en az 3 puana ulaşıp ulaşmadığı veya iki yöntemin uygulamada eşdeğer olup
+olmadığı farklı sıfır değerleri ve farklı test tasarımları gerektirebilir.
+
+\begin{table}[htbp]
+\centering
+\caption{Araştırma sorusundan hipoteze geçiş örnekleri.}
+\begin{tabular}{@{}p{0.30\textwidth}p{0.23\textwidth}p{0.28\textwidth}@{}}
+\toprule
+Araştırma sorusu & Hedef parametre & Olası hipotez \\
+\midrule
+Program grupları farklı mı? & $\mu_P-\mu_K$ & $H_0:\mu_P-\mu_K=0$ \\
+Başvuru oranı yüzde 20'den yüksek mi? & $p$ & $H_0:p=0{,}20$, $H_1:p>0{,}20$ \\
+Kaygı ile uyku ilişkili mi? & $\rho$ & $H_0:\rho=0$, $H_1:\rho\neq0$ \\
+İki kategorik değişken bağımsız mı? & Dağılımsal ilişki & $H_0$: değişkenler bağımsızdır \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Hipotezler veri görülmeden önce yazılmalıdır. Örneklem sonucu 4,2 puanlık
+azalma gösterdikten sonra ``zaten azalma bekliyorduk'' diyerek çift yönlü
+testi tek yönlüye çevirmek yanlış pozitif riskini artırır.
+
+\section{Hipotez testinin mantığı}
+\index{test istatistiği}
+\index{anlamlılık düzeyi}
+
+Çoğu klasik test aynı düşünceyi izler:
+
+\begin{enumerate}
+  \item Hedef parametreyi, $H_0$ ve $H_1$ hipotezlerini tanımla.
+  \item Anlamlılık düzeyini ve analiz yöntemini önceden belirle.
+  \item Varsayımları ve veri kalitesini incele.
+  \item Gözlenen tahmini ve standart hatayı hesapla.
+  \item Test istatistiğini $H_0$ altındaki referans dağılımla karşılaştır.
+  \item $p$-değeri ve güven aralığıyla istatistiksel kanıtı değerlendir.
+  \item Etki büyüklüğü, uygulamalı önem ve tasarım sınırlılıklarıyla bilimsel yorumu tamamla.
+\end{enumerate}
+
+Birçok test istatistiğinin genel yapısı
+\[
+\text{test istatistiği}
+=\frac{\text{gözlenen tahmin}-\text{$H_0$ değeri}}
+{\text{tahminin standart hatası}}
+\]
+biçimindedir. Mutlak değer büyüdükçe gözlenen sonuç $H_0$ değerinden standart
+hata birimleriyle daha uzakta bulunur.
+
+\begin{sezgibox}
+Test istatistiği bir ``sinyal/gürültü'' oranı gibi düşünülebilir. Paydaki fark
+sinyali, paydadaki standart hata ise örnekleme gürültüsünü temsil eder. Aynı
+fark daha küçük standart hatayla gözlendiğinde $H_0$ altında daha olağandışı
+görünür.
+\end{sezgibox}
+
+\section{Test istatistiği ve p-değeri}
+\index{p-değeri}
+\index{test istatistiği}
+
+$p$-değeri, $H_0$ ve test modelinin diğer varsayımları doğru kabul edildiğinde,
+gözlenen test istatistiği kadar veya ondan daha uç bir sonuç elde etme
+olasılığıdır. Çift yönlü testte ``daha uç'' her iki yöndeki sonuçları kapsar
+\cite{casella2002,wasserman2004}.
+
+Program örneğinde ortalama fark $-4{,}2$ ve farkın standart hatası 1,7 olsun.
+Sıfır fark hipotezi altında
+\[
+t=\frac{-4{,}2-0}{1{,}7}\approx-2{,}47
+\]
+elde edilir. Serbestlik derecesine bağlı kesin değer küçük ölçüde değişmekle
+birlikte çift yönlü $p$-değeri yaklaşık 0,015 civarındadır. Bu sonuç, gerçek
+evren farkı sıfırsa gözlenen kadar veya daha uç bir test istatistiğinin seyrek
+olacağını gösterir.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[alt={Çift yönlü hipotez testinde sıfır dağılımının iki kuyruğunda p-değerini oluşturan alanlar},x=1cm,y=1cm]
+  \draw[->,PrismGray] (-4.3,0)--(4.5,0) node[right,font=\scriptsize]{test istatistiği};
+  \fill[PrismWarnOrange!65,smooth,samples=60,domain=2.47:4]
+    (2.47,0)--plot (\x,{2.5*exp(-\x*\x/2)})--(4,0)--cycle;
+  \fill[PrismWarnOrange!65,smooth,samples=60,domain=-4:-2.47]
+    (-4,0)--plot (\x,{2.5*exp(-\x*\x/2)})--(-2.47,0)--cycle;
+  \draw[PrismBlue,very thick,smooth,samples=100,domain=-4:4]
+    plot (\x,{2.5*exp(-\x*\x/2)});
+  \draw[PrismWarnOrange!90!black,dashed] (-2.47,0)--(-2.47,0.13);
+  \draw[PrismWarnOrange!90!black,dashed] (2.47,0)--(2.47,0.13);
+  \node[font=\scriptsize,text=PrismGray] at (0,1.2) {$H_0$ altındaki dağılım};
+  \node[font=\scriptsize,text=PrismWarnOrange!80!black] at (3.25,0.42) {$p/2$};
+  \node[font=\scriptsize,text=PrismWarnOrange!80!black] at (-3.25,0.42) {$p/2$};
+\end{tikzpicture}
+\caption{Çift yönlü testte $p$-değerini oluşturan iki uç alan.}
+\end{figure}
+
+\subsection{$p$-değeri ne değildir?}
+
+$p$-değeri:
+
+\begin{itemize}
+  \item $H_0$'ın doğru olma olasılığı değildir,
+  \item sonucun yalnız şanstan kaynaklanma olasılığı değildir,
+  \item etkinin büyüklüğünü göstermez,
+  \item sonucun yeniden üretileceği olasılığı vermez,
+  \item araştırma tasarımındaki yanlılıkları veya varsayım ihlallerini ölçmez.
+\end{itemize}
+
+``$p=0{,}03$'' ifadesi, $H_0$ doğru kabul edildiğinde bu kadar veya daha uç
+verinin olasılığının yüzde 3 olduğunu söyler. Aranan $P(H_0\mid\text{veri})$
+değil, hesaplanan $P(\text{veri kadar uç sonuç}\mid H_0)$ olasılığıdır. Bu iki
+koşullu olasılık birbirinin yerine kullanılamaz.
+
+\begin{mistakebox}
+$p=0{,}049$ ile $p=0{,}051$ bilimsel açıdan iki zıt dünya oluşturmaz. Bu
+değerler verinin $H_0$ ile uyumu bakımından birbirine çok yakındır. Keskin
+``var/yok'' sınıflaması yerine kesin $p$-değeri, güven aralığı ve etki
+büyüklüğü birlikte incelenmelidir.
+\end{mistakebox}
+
+\section{Anlamlılık düzeyi ve karar dili}
+\index{anlamlılık düzeyi}
+\index{istatistiksel karar}
+
+Anlamlılık düzeyi $\alpha$, $H_0$ doğru olduğunda uzun dönemde göze alınan Tip
+I hata oranıdır. Yaygın $\alpha=0{,}05$ seçimi doğal bir yasa değildir;
+yanlış pozitif ve yanlış negatif kararların sonuçlarına göre araştırma
+planında gerekçelendirilmelidir.
+
+Önceden belirlenen karar kuralında $p\leq\alpha$ ise $H_0$ reddedilir;
+$p>\alpha$ ise $H_0$'ı reddetmek için yeterli kanıt bulunmadığı söylenir.
+İkinci durumda ``$H_0$ doğrudur'' veya ``gruplar aynıdır'' denmez.
+
+İstatistiksel karar ile bilimsel sonuç ayrılmalıdır:
+
+\begin{description}
+  \item[İstatistiksel karar] Önceden tanımlı test kuralının sonucudur: reddet veya reddetme.
+  \item[Kanıtın gücü] $p$-değeri, güven aralığının konumu ve genişliğiyle dereceli olarak değerlendirilir.
+  \item[Bilimsel yorum] Etki büyüklüğü, tasarım, ölçme niteliği, önceki bilgi ve uygulama bağlamını içerir.
+\end{description}
+
+\section{Güven aralığı ile test arasındaki ilişki}
+\index{güven aralığı!hipotez testi ilişkisi}
+
+Aynı model ve standart hata yöntemi kullanıldığında, yüzde 95 güven aralığının
+sıfır farkını dışlaması $\alpha=0{,}05$ düzeyindeki çift yönlü testte
+$H_0$'ın reddedilmesine karşılık gelir. Program farkı için önceki bölümde
+hesaplanan
+\[
+[-7{,}53;\ -0{,}87]
+\]
+aralığı sıfırı dışlar ve yaklaşık $p=0{,}015$ sonucuyla tutarlıdır.
+
+Güven aralığı test kararından daha fazla bilgi verir. Yalnız ``sıfır
+dışlandı'' demek yerine verinin yaklaşık 0,9 ile 7,5 puanlık azalmalarla
+uyumlu olduğu görülür. Aralığın genişliği, etkinin büyüklüğü hakkındaki
+belirsizliği de ortaya koyar.
+
+\begin{etkinlik}
+Üç çalışma için fark güven aralıkları $[-8;-4]$, $[-5;2]$ ve $[-0{,}5;0{,}4]$
+olsun. Her birini (a) sıfır farkına ilişkin kanıt, (b) tahmin hassasiyeti ve
+(c) uygulamada önemli olabilecek değerler bakımından karşılaştırın.
+\end{etkinlik}
+
+\section{Tip I ve Tip II hata}
+\index{Tip I hata}
+\index{Tip II hata}
+\index{alfa@$\alpha$}
+\index{beta@$\beta$}
+
+Test kararı kesin bilgiye değil, örnekleme dayandığı için iki tür hata
+oluşabilir:
+
+\begin{table}[htbp]
+\centering
+\caption{Test kararları ve olası hata türleri.}
+\begin{tabular}{@{}p{0.25\textwidth}p{0.27\textwidth}p{0.27\textwidth}@{}}
+\toprule
+ & $H_0$ doğru & $H_0$ yanlış \\
+\midrule
+$H_0$ reddedilir & Tip I hata olasılığı $\alpha$ & Doğru karar; olasılığı güç \\
+$H_0$ reddedilmez & Doğru karar & Tip II hata olasılığı $\beta$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{PDR bağlamında hata sonuçları}
+
+Program gerçekte etkisizken etkili sonucuna varmak Tip I hatadır. Kurum bu
+durumda zaman ve bütçeyi yararsız bir programa ayırabilir. Program gerçekte
+yararlı olduğu hâlde yeterli kanıt bulamamak Tip II hatadır; öğrenciler etkili
+bir hizmetten mahrum kalabilir.
+
+Hataların sonuçları bağlama göre eşit değildir. Zararlı yan etkisi veya yüksek
+maliyeti bulunan bir müdahalede yanlış olumlu karar daha ağır görülebilir.
+Erken tarama araştırmasında ise önemli bir riski kaçırmak daha ağır olabilir.
+Bu değerlendirme $\alpha$, hedef güç ve örneklem hacmi planına yansıtılmalıdır.
+
+\begin{mistakebox}
+$\alpha=0{,}05$, yürütülen belirli çalışmada yanlış karar verme olasılığının
+kesin olarak yüzde 5 olduğu anlamına gelmez. Bu değer, $H_0$ doğru olduğunda
+aynı karar kuralının uzun dönemli yanlış ret oranını tanımlar.
+\end{mistakebox}
+
+\section{Test gücü}
+\index{test gücü}
+\index{güç analizi}
+
+Test gücü $1-\beta$ olup belirli bir gerçek etki var olduğunda $H_0$'ı
+reddetme olasılığıdır. Güç tek bir sabit sayı değildir; hangi büyüklükteki
+gerçek etkinin saptanmak istendiğine bağlıdır \cite{cohen1988}.
+
+Gücü artıran başlıca etkenler şunlardır:
+
+\begin{itemize}
+  \item daha büyük gerçek etki,
+  \item daha büyük ve dengeli örneklem,
+  \item daha düşük ölçüm ve bireysel değişkenlik,
+  \item güvenilir ölçme aracı,
+  \item bağımlı tasarımda yüksek ve uygun eşleşme,
+  \item diğer koşullar aynıyken daha yüksek $\alpha$ veya önceden gerekçeli tek yönlü test.
+\end{itemize}
+
+Son iki seçenek yanlış pozitif riskiyle ödünleşim içerir; gücü artırmanın en
+sağlıklı yolu çoğunlukla yeterli örneklem, kaliteli ölçüm ve güçlü araştırma
+tasarımıdır. Araştırma başlamadan önce uygulamada anlamlı en küçük etki,
+beklenen değişkenlik, hedef güç ve anlamlılık düzeyi kullanılarak güç analizi
+yapılabilir. Sosyal bilimlerde yüzde 80 güç sık kullanılan bir başlangıç
+hedefidir; bağlama göre daha yüksek bir değer gerekebilir.
+
+\begin{sezgibox}
+Düşük güçlü bir test, loş ışıkta küçük bir nesneyi aramaya benzer. Nesneyi
+görememek onun bulunmadığını kanıtlamaz. Geniş güven aralığı da çalışmanın hem
+önemsiz hem önemli etkilerle uyumlu olabileceğini gösterir.
+\end{sezgibox}
+
+\section{Tek ve çift yönlü test}
+\index{tek yönlü test}
+\index{çift yönlü test}
+
+Çift yönlü test $H_1:\theta\neq\theta_0$ biçiminde her iki yöndeki sapmayı
+değerlendirir. Tek yönlü test $H_1:\theta>\theta_0$ veya
+$H_1:\theta<\theta_0$ biçiminde yalnız önceden belirtilen yönü sınar.
+
+Tek yönlü test ancak şu koşullarda savunulabilir:
+
+\begin{itemize}
+  \item yön kuramsal ve uygulamalı olarak veri görülmeden önce belirlenmiştir,
+  \item ters yöndeki sonuç araştırma açısından gerçekten aynı iddiayı desteklemeyecektir,
+  \item test yönü analiz planında açıkça kaydedilmiştir.
+\end{itemize}
+
+Program yalnızlığı artırırsa bu sonuç da bilimsel ve etik açıdan önemliyse
+çift yönlü test daha uygundur. Veri görüldükten sonra daha küçük $p$-değeri
+elde etmek amacıyla test yönü değiştirilemez.
+
+\section{Etki büyüklüğü}
+\index{etki büyüklüğü}
+
+Etki büyüklüğü farkın veya ilişkinin örneklem büyüklüğünden daha bağımsız bir
+ölçekte ne kadar büyük olduğunu gösterir. $p$-değeri ``veri sıfır etkiyle ne
+kadar uyumlu?'' sorusuna, etki büyüklüğü ise ``gözlenen fark veya ilişki ne
+kadar büyük?'' sorusuna yaklaşır.
+
+\subsection{Cohen'in $d$ değeri}
+\index{Cohen d@Cohen'in $d$ değeri}
+
+Bağımsız iki grup ortalaması için standartlaştırılmış fark
+\[
+d=\frac{\bar x_1-\bar x_2}{s_{\text{birleşik}}}
+\]
+biçimindedir. Program farkı $-4{,}2$ ve birleşik standart sapma 10 ise
+\[
+d=-0{,}42
+\]
+elde edilir. İşaret yönü, mutlak değer standartlaştırılmış büyüklüğü gösterir.
+
+Cohen'in yaklaşık 0,2, 0,5 ve 0,8 eşikleri bazen küçük, orta ve büyük olarak
+kullanılır; ancak bunlar evrensel karar sınırları değildir. Ölçeğin niteliği,
+müdahalenin maliyeti, önceki çalışmalar ve öğrenciler açısından anlamlı en
+küçük değişim önceliklidir.
+
+\subsection{Diğer yaygın ölçüler}
+
+\begin{table}[htbp]
+\centering
+\caption{Bazı araştırma soruları için yaygın etki büyüklükleri.}
+\begin{tabular}{@{}p{0.27\textwidth}p{0.19\textwidth}p{0.34\textwidth}@{}}
+\toprule
+Araştırma yapısı & Ölçü & Temel yorum \\
+\midrule
+İki ortalamanın farkı & Cohen'in $d$ değeri & Standart sapma biriminde fark \\
+İki nicel değişken & Pearson $r$ & Doğrusal ilişkinin yönü ve derecesi \\
+ANOVA & $\eta^2$, $\omega^2$ & Sonuç değişkenliğinin grupla ilişkili payı \\
+Kategorik ilişki & Cramér $V$ & Çapraz tablodaki ilişkinin derecesi \\
+İki oran veya risk & Risk farkı, risk oranı & Mutlak veya göreli olasılık değişimi \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Etki büyüklüğü de örneklemden tahmin edilir ve belirsizdir. Mümkün olduğunda
+güven aralığıyla birlikte raporlanmalıdır. Küçük bir örneklemde $d=0{,}50$
+bulunması, gerçek etkinin tam 0,50 olduğu anlamına gelmez.
+
+\begin{researchbox}
+PDR uygulamasında ortalama etki bireysel farklılıkları gizleyebilir. Ortalama
+azalma orta büyüklükte olsa bile bazı öğrenciler güçlü yarar, bazıları değişim
+ve bazıları kötüleşme yaşayabilir. Etki büyüklüğü klinik değişim, zarar,
+katılım ve eşitlik göstergeleriyle birlikte değerlendirilmelidir.
+\end{researchbox}
+
+\section{İstatistiksel anlamlılık ve uygulamalı önem}
+\index{istatistiksel anlamlılık}
+\index{uygulamalı önem}
+
+Çok büyük örneklemde önemsiz küçük etkiler düşük $p$-değeri üretebilir. Küçük
+örneklemde ise uygulamada önemli bir etki geniş güven aralığı nedeniyle
+istatistiksel olarak belirgin bulunmayabilir. Bu nedenle sonuç dört bileşenle
+birlikte okunmalıdır:
+
+\begin{enumerate}
+  \item nokta tahmini ve yönü,
+  \item etki büyüklüğü,
+  \item güven aralığının konumu ve genişliği,
+  \item $p$-değeri ve araştırma tasarımı.
+\end{enumerate}
+
+Program için uygulamada anlamlı en küçük azalmanın 3 puan olduğu varsayılsın.
+$[-7{,}53;-0{,}87]$ aralığı hem 3 puandan büyük hem de 3 puandan küçük
+azalmaları içerir. Sonuç sıfır farkına karşı kanıt sunsa da uygulamada önemli
+etkinin büyüklüğü konusunda hâlâ belirsizlik vardır.
+
+\section{Çoklu test sorunu}
+\index{çoklu test}
+\index{aile düzeyinde hata oranı}
+\index{yanlış keşif oranı}
+\index{Bonferroni düzeltmesi}
+\index{Holm düzeltmesi}
+
+Her biri $\alpha=0{,}05$ düzeyinde 20 bağımsız sıfır hipotezi sınanırsa, en az
+bir yanlış pozitif bulma olasılığı yaklaşık
+\[
+1-(1-0{,}05)^{20}\approx0{,}64
+\]
+olur. Testler bağımsız olmasa da temel sorun değişmez: çok sayıda fırsat,
+tesadüfen düşük bir $p$-değeri bulma olasılığını artırır. Aile düzeyindeki
+hata ve yanlış keşif oranı bu çokluk sorununa farklı hedeflerle yaklaşır
+\cite{tukey1953,benjamini1995}.
+
+Sorunu yönetmek için:
+
+\begin{itemize}
+  \item birincil ve ikincil sonuçlar önceden belirlenebilir,
+  \item test ailesi açıkça tanımlanabilir,
+  \item Bonferroni veya daha güçlü Holm düzeltmesi kullanılabilir,
+  \item keşfedici analizler doğrulayıcı analizlerden ayrılabilir,
+  \item bütün sonuçlar yalnız anlamlı olanlar seçilmeden raporlanabilir.
+\end{itemize}
+
+Bonferroni yönteminde $m$ test için her test yaklaşık $\alpha/m$ düzeyinde
+değerlendirilir. Yöntem basit fakat özellikle ilişkili çok sayıda testte
+koruyucu olabilir. Düzeltme seçimi analiz amacına ve yanlış keşif maliyetine
+göre yapılmalıdır.
+
+\section{Seçici analiz ve araştırmacı esnekliği}
+\index{seçici raporlama}
+\index{araştırmacı esnekliği}
+\index{ön kayıt}
+
+Aynı veri üzerinde farklı dışlama kuralları, sonuç değişkenleri, alt gruplar,
+kovaryatlar ve test yönleri denenip yalnız düşük $p$-değerinin raporlanması
+yanlış pozitif oranını görünmez biçimde yükseltir. Bu uygulamalar bazen
+``$p$-değeri avcılığı'' olarak adlandırılır.
+
+Şeffaflığı artırmak için araştırmacı:
+
+\begin{itemize}
+  \item hipotezleri ve temel analiz planını veri incelemesinden önce kaydetmeli,
+  \item veri toplamanın ne zaman duracağını önceden belirlemeli,
+  \item sonuçlara göre yapılan değişiklikleri açıkça belirtmeli,
+  \item duyarlılık analizlerini ana analizden ayırmalı,
+  \item anlamlı ve anlamsız bütün ilgili sonuçları raporlamalıdır.
+\end{itemize}
+
+Ön kayıt kötü bir tasarımı iyi hâle getirmez ve keşfedici araştırmayı
+yasaklamaz. Amacı, önceden öngörülen doğrulayıcı sınamalar ile veriden doğan
+yeni hipotezlerin birbirinden ayırt edilmesini sağlamaktır.
+
+\begin{mistakebox}
+Veriden ilham alan bir hipotez bilimsel olarak değersiz değildir; fakat aynı
+veri hem hipotezi üretmek hem de onu bağımsız biçimde doğrulamak için
+kullanılmış gibi sunulmamalıdır. Yeni hipotez sonraki veriyle sınanmalıdır.
+\end{mistakebox}
+
+\section{Test varsayımları ve sağlamlık}
+
+Her testin sonucu kullanılan veri üretim modeli altında geçerlidir. Yaygın
+kontroller şunlardır:
+
+\begin{itemize}
+  \item örneklem seçimi ve gruplara atama süreci,
+  \item gözlemlerin bağımsızlığı veya bağımlılığın modellenmesi,
+  \item değişkenin ölçme düzeyi ve puanlama niteliği,
+  \item aykırı değerler, dağılım biçimi ve varyans yapısı,
+  \item eksik verinin miktarı ve oluşma mekanizması,
+  \item analiz planıyla veri yapısının uyumu.
+\end{itemize}
+
+Varsayım kontrolü, sonuç anlamlı değilse alternatif test arama işlemi
+değildir. Veri yapısına uygun yöntem araştırma sorusu ve tasarımla birlikte
+seçilmelidir. Parametrik olmayan bir yöntem de otomatik olarak varsayımsız
+değildir; yalnız farklı varsayımlara ve hedeflere dayanır.
+
+\begin{assumptionbox}
+Öğrenciler sınıflar içinde kümelenmişse sıradan bağımsızlık varsayımı standart
+hataları küçültebilir. Çok küçük $p$-değeri bile yanlış standart hata veya
+yanlı tasarımı telafi etmez. Önce analiz birimini ve bağımlılık yapısını
+doğrulayın.
+\end{assumptionbox}
+
+\section{Python ile bütünleştirici analiz}
+
+Aşağıdaki örnek iki bağımsız grubun yalnızlık puanlarını Welch $t$ testiyle
+karşılaştırır, ortalama farkı ve Cohen'in $d$ değerini hesaplar:
+
+\begin{lstlisting}
+import numpy as np
+from scipy import stats
+
+program = np.array([38, 41, 35, 44, 39, 36, 40, 42,
+                    33, 37, 45, 39, 34, 41, 38])
+karsilastirma = np.array([43, 47, 39, 48, 42, 45, 41, 46,
+                         44, 40, 49, 43, 47, 42, 46])
+
+sonuc = stats.ttest_ind(program, karsilastirma,
+                        equal_var=False)
+fark = program.mean() - karsilastirma.mean()
+
+n1, n2 = len(program), len(karsilastirma)
+s1, s2 = program.std(ddof=1), karsilastirma.std(ddof=1)
+birlesik_s = np.sqrt(((n1 - 1) * s1**2 +
+                      (n2 - 1) * s2**2) /
+                     (n1 + n2 - 2))
+d = fark / birlesik_s
+
+print("Ortalamalar:", program.mean(), karsilastirma.mean())
+print("Ortalama farki:", fark)
+print("Welch t testi:", sonuc)
+print("Cohen d:", d)
+\end{lstlisting}
+
+Kod çalıştırıldığında yalnız $p$-değeri raporlanmamalıdır. Grup ortalamaları
+ve standart sapmaları, farkın yönü, serbestlik derecesi, güven aralığı ve etki
+büyüklüğü de verilmelidir. Gerçek araştırmada veri temizleme ve varsayım
+incelemesi test komutundan önce gelir.
+
+\section{SPSS ile hipotez testi çıktısını okuma}
+
+Bağımsız iki grup ortalaması için:
+
+\begin{enumerate}
+  \item \textbf{Analyze $>$ Compare Means $>$ Independent-Samples T Test} yolunu izleyin.
+  \item Sonuç değişkenini \textbf{Test Variable(s)}, grup değişkenini \textbf{Grouping Variable} alanına taşıyın.
+  \item \textbf{Define Groups} ile grup kodlarını doğru tanımlayın.
+  \item Önce grup $n$, ortalama ve standart sapmalarını kontrol edin.
+  \item Varyans yapısına uygun satırdan $t$, serbestlik derecesi, iki yönlü $p$, ortalama farkı ve güven aralığını okuyun.
+  \item Farkın SPSS tarafından hangi grup eksi hangi grup olarak hesaplandığını doğrulayın.
+\end{enumerate}
+
+Levene testinin anlamlı olmaması varyansların kesin eşit olduğunu kanıtlamaz.
+Welch satırı, özellikle grup büyüklükleri veya varyanslar farklı olduğunda
+sağlam bir varsayılan seçenek olabilir. Yöntem seçimi yalnız Levene
+$p$-değerine bağlı mekanik bir karar hâline getirilmemelidir.
+
+\begin{outputguidebox}
+Çıktıyı şu sırayla okuyun: (1) grup tanımları ve örneklem sayıları, (2)
+betimsel istatistikler, (3) farkın yönü, (4) test istatistiği ve serbestlik
+derecesi, (5) kesin $p$-değeri, (6) farkın güven aralığı, (7) ayrıca
+hesaplanan etki büyüklüğü. ``Sig.'' sütununu tek başına sonuç olarak
+raporlamayın.
+\end{outputguidebox}
+
+\section{Bütünleştirici karar örneği}
+
+Program eksi karşılaştırma farkı $-4{,}2$, standart hata 1,7, test
+istatistiği yaklaşık $-2{,}47$, çift yönlü $p=0{,}015$, yüzde 95 güven aralığı
+$[-7{,}53;-0{,}87]$ ve Cohen'in $d=-0{,}42$ olsun.
+
+\begin{enumerate}
+  \item $p<0{,}05$ olduğu ve aralık sıfırı dışladığı için sıfır farkına karşı istatistiksel kanıt vardır.
+  \item Negatif işaret program grubunun ortalamasının daha düşük olduğunu gösterir.
+  \item $d=-0{,}42$ küçük ile orta arasında standartlaştırılmış bir farka işaret eder; bağlamsal yorum gerekir.
+  \item Güven aralığı etkinin küçük veya uygulamada önemli olabilecek büyüklüklerde olabileceğini gösterir.
+  \item Nedensel sonuç, ancak atama ve izleme tasarımı bunu destekliyorsa kurulabilir.
+\end{enumerate}
+
+Bu değerlendirme ``program anlamlıdır'' cümlesinden daha bilgilendiricidir.
+İstatistiksel yöntem, etkiyi, belirsizliği ve tasarımın izin verdiği yorum
+sınırını birlikte görünür kılmalıdır.
+
+\section{Bilimsel raporlama örneği}
+
+``Program grubunun son-test yalnızlık puanı karşılaştırma grubundan ortalama
+4,2 puan daha düşüktür. Welch bağımsız örneklem $t$ testi gruplar arasında
+istatistiksel olarak belirgin bir fark göstermiştir, $t(sd)=-2{,}47$,
+$p=0{,}015$, yüzde 95 GA $[-7{,}53;-0{,}87]$. Standartlaştırılmış fark
+$d=-0{,}42$'dir. Güven aralığı küçük ve uygulamada önemli olabilecek
+azalmaları birlikte içerdiğinden etkinin büyüklüğü ihtiyatla yorumlanmıştır.''
+
+Gerçek raporda $sd$ yerine yazılımın verdiği serbestlik derecesi, her grubun
+$n$, ortalama ve standart sapması yazılmalıdır. $p$-değeri çok küçükse
+$p<0{,}001$ biçimi kullanılabilir; diğer durumlarda mümkün olduğunca kesin
+değer verilmelidir.
+
+\section{Bir hipotez testini değerlendirirken}
+
+\begin{enumerate}
+  \item Hipotezler hedef parametre üzerinden ve veri görülmeden önce kurulmuş mu?
+  \item Test araştırma tasarımına, ölçme düzeyine ve bağımlılık yapısına uygun mu?
+  \item Anlamlılık düzeyi ve tek--çift yön seçimi önceden belirlenmiş mi?
+  \item Tahmin, güven aralığı ve etki büyüklüğü $p$-değeriyle birlikte verilmiş mi?
+  \item Aralık uygulamada önemli değerleri içeriyor mu?
+  \item Çoklu testler ve analiz planından sapmalar açıklanmış mı?
+  \item İstatistiksel sonuç nedensellik veya klinik karar sınırlarını aşmadan yorumlanmış mı?
+\end{enumerate}
+
+\section{Literatür veri setiyle IBM SPSS laboratuvarı}
+\index{Student Performance veri seti!hipotez testi}
+\index{SPSS!tek örneklem t testi@tek örneklem $t$ testi}
+\index{SPSS!binom testi}
+\index{etki büyüklüğü!Cohen d@Cohen $d$}
+\index{etki büyüklüğü!Cohen h@Cohen $h$}
+
+Bu uygulamada \emph{Student Performance} matematik dosyasındaki yıl sonu notu
+\texttt{G3} ve bu nottan üretilen başarı göstergesi kullanılacaktır
+\cite{cortez2008data,cortezsilva2008}. Aynı veri iki farklı hedef parametre
+üzerinden sınanacaktır:
+
+\begin{enumerate}
+  \item Evren ortalama G3 puanı 10'dan farklı mıdır?
+  \item G3 puanı en az 10 olan öğrencilerin evren oranı yüzde 50'den farklı mıdır?
+\end{enumerate}
+
+İki sınama da veri incelenmeden önce belirlenmiş çift yönlü hipotezler ve
+$\alpha=0{,}05$ anlamlılık düzeyiyle yürütülecektir. Referans değerler yalnız
+öğretim amacıyla kullanılmaktadır; 10 puanının veya yüzde 50 oranının resmî
+bir politika hedefi olduğu ileri sürülmemektedir.
+
+\begin{researchbox}
+Ortalama not ile başarı oranı farklı hedef parametrelerdir. Aynı veri
+dosyasından hesaplanmaları aynı test sonucunu vermelerini gerektirmez. Başarı
+oranı ayrıca önceden seçilen 10 puanlık eşiğe bağlıdır; eşik değiştiğinde oran
+testi değişirken ham not ortalaması değişmez.
+\end{researchbox}
+
+\subsection{Hipotezler ve analiz planı}
+
+Ortalama için
+\[
+H_0:\mu_{G3}=10,
+\qquad
+H_1:\mu_{G3}\neq10
+\]
+hipotezleri tek örneklem $t$ testiyle; başarı oranı için
+\[
+H_0:p_{\text{başarı}}=0{,}50,
+\qquad
+H_1:p_{\text{başarı}}\neq0{,}50
+\]
+hipotezleri tek örneklem binom testiyle değerlendirilecektir. Ortalama için
+Cohen'in $d$ değeri, oran için referans orandan fark ve Cohen'in $h$ değeri
+etki büyüklüğü olarak raporlanacaktır.
+
+\subsection{SPSS syntax}
+
+Başarı göstergesi eksik G3 değerlerini yanlışlıkla başarısız olarak
+kodlamamak için önce sistem eksik olarak oluşturulur. Tek örneklem $t$ testi
+ortalama farkını, binom testi ise gözlenen başarı sayısını yüzde 50 referans
+oranıyla karşılaştırır.
+
+\begin{lstlisting}[language={}]
+DATASET ACTIVATE StudentMath.
+
+COMPUTE basarili=$SYSMIS.
+IF NOT MISSING(G3) basarili=(G3>=10).
+VARIABLE LABELS basarili 'Yıl sonu notu en az 10'.
+VALUE LABELS basarili 0 'Başarısız' 1 'Başarılı'.
+VARIABLE LEVEL basarili (NOMINAL).
+FORMATS basarili (F1.0).
+EXECUTE.
+
+T-TEST
+ /TESTVAL=10
+ /MISSING=ANALYSIS
+ /VARIABLES=G3
+ /CRITERIA=CI(.95).
+
+NPAR TESTS
+ /BINOMIAL (.50)=basarili
+ /MISSING ANALYSIS.
+\end{lstlisting}
+
+Etki büyüklükleri aşağıdaki syntax ile doğrudan veri özetlerinden
+hesaplanabilir. \texttt{MODE=ADDVARIABLES} özetleri veri dosyasındaki bütün
+satırlara eklediği için \texttt{LIST} yalnız ilk satırı gösterir.
+
+\begin{lstlisting}[language={}]
+AGGREGATE
+ /OUTFILE=* MODE=ADDVARIABLES
+ /BREAK=
+ /n_G3=N(G3)
+ /ortalama_G3=MEAN(G3)
+ /ss_G3=SD(G3)
+ /n_basarili=N(basarili)
+ /x_basarili=SUM(basarili).
+
+COMPUTE fark_ortalama=ortalama_G3-10.
+COMPUTE cohen_d=fark_ortalama/ss_G3.
+COMPUTE p_hat=x_basarili/n_basarili.
+COMPUTE fark_oran=p_hat-.50.
+COMPUTE cohen_h=2*ARSIN(SQRT(p_hat))
+ -2*ARSIN(SQRT(.50)).
+FORMATS ortalama_G3 ss_G3 fark_ortalama cohen_d
+ p_hat fark_oran cohen_h (F7.3).
+
+LIST VARIABLES=n_G3 ortalama_G3 ss_G3
+ fark_ortalama cohen_d n_basarili x_basarili
+ p_hat fark_oran cohen_h
+ /CASES=FROM 1 TO 1.
+\end{lstlisting}
+
+Menüyle ortalama testi için \textbf{Analyze $>$ Compare Means $>$ One-Sample
+T Test} yolunda G3 test değişkeni, 10 ise \textbf{Test Value} olarak girilir.
+Binom testi için SPSS sürümüne göre \textbf{Analyze $>$ Nonparametric Tests $>$
+Legacy Dialogs $>$ Binomial} yolu kullanılabilir; test oranı 0,50 olarak
+belirlenir. Menü işlemleri \textbf{Paste} düğmesiyle syntax'a aktarılıp analiz
+günlüğünde saklanmalıdır.
+
+\subsection{SPSS çıktısının erişilebilir özeti}
+
+\begin{table}[htbp]
+\centering
+\caption{G3 ortalaması ve başarı oranı için hipotez testi sonuçları.}
+\small
+\begin{tabular}{@{}p{0.27\textwidth}rrrrrr@{}}
+\toprule
+Sınama & $n$ & Tahmin & Fark & İstatistik & $p$ & Etki \\
+\midrule
+G3 ortalaması & 395 & 10,415 & 0,415 & $t(394)=1{,}801$ & 0,072 & $d=0{,}091$ \\
+Başarı oranı & 395 & 0,671 & 0,171 & $x=265$ & $<0{,}001$ & $h=0{,}349$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Ortalama testinde SPSS'nin \textbf{Mean Difference} değeri
+$10{,}415-10=0{,}415$'tir. Farkın yüzde 95 güven aralığı yaklaşık
+$[-0{,}038;0{,}868]$ olup sıfırı içerir. Başarı oranında ise 395 öğrencinin
+265'i başarı eşiğini karşılamış; gözlenen oran yüzde 67,1 olmuştur. Binom
+testinin çift yönlü kesin $p$-değeri çok küçük olduğundan tabloda
+$p<0{,}001$ biçiminde raporlanmıştır.
+
+\subsection{Çıktının analizi}
+
+G3 ortalaması referans değer 10'dan 0,415 puan yüksektir. Bununla birlikte
+$t(394)=1{,}801$ ve $p=0{,}072$ olduğundan yüzde 5 anlamlılık düzeyinde
+$H_0$'a karşı yeterli istatistiksel kanıt yoktur. Bu karar ortalamanın tam
+olarak 10 olduğunu veya iki değer arasında hiç fark bulunmadığını kanıtlamaz.
+Güven aralığı, yaklaşık 0,04 puanlık azalma ile 0,87 puanlık artış arasındaki
+farkların veriyle uyumlu olduğunu gösterir.
+
+Ortalama için $d=0{,}091$ değeri, gözlenen farkın yaklaşık onda bir standart
+sapma olduğunu ve örneklemde çok küçük bir standartlaştırılmış farka işaret
+ettiğini gösterir. Büyük örneklem bulunmasına rağmen $p$-değerinin 0,05'in
+altına düşmemesi yalnız örneklem hacmiyle değil, gözlenen etkinin küçük
+olmasıyla da ilişkilidir.
+
+Başarı oranı yüzde 50 referansından 17,1 yüzde puan yüksektir. Binom testi
+$H_0:p=0{,}50$ hipotezine karşı güçlü istatistiksel kanıt verir
+($p<0{,}001$). Önceki bölümde hesaplanan Wilson yüzde 95 güven aralığı
+$[0{,}623;0{,}715]$ olup 0,50'yi dışlar ve test kararıyla uyumludur.
+Cohen'in $h=0{,}349$ değeri farkın yalnız istatistiksel değil, dikkate değer
+bir büyüklükte olabileceğini gösterir; ancak eğitimsel önemi bağlam ve eşik
+tanımıyla ayrıca değerlendirilmelidir.
+
+Sonuçların farklı görünmesi bir çelişki değildir. Ortalama testi bütün not
+büyüklüklerini ve 10 çevresindeki farkı kullanırken binom testi her notu
+yalnızca eşik altında veya üstünde olarak sınıflandırır. Bu nedenle araştırma
+sorusu ve hedef parametre test seçilmeden önce açıkça belirlenmelidir.
+
+\begin{mistakebox}
+$p=0{,}072$ sonucu ``ortalama kesinlikle 10'dur'', $p<0{,}001$ sonucu da
+``başarı oranı kesinlikle yüzde 67,1'dir'' anlamına gelmez. İlk sonuç sıfır
+hipotezine karşı kanıtın seçilen eşikte yetersiz olduğunu, ikinci sonuç ise
+yüzde 50 referansıyla güçlü bir uyumsuzluk bulunduğunu gösterir. Parametre
+tahmini için güven aralıkları ayrıca okunmalıdır.
+\end{mistakebox}
+
+\begin{outputguidebox}
+Çıktıyı şu sırayla okuyun: (1) hipotez ve referans değer, (2) geçerli $n$,
+(3) gözlenen tahmin ve farkın yönü, (4) test istatistiği, (5) kesin
+$p$-değeri, (6) güven aralığı, (7) etki büyüklüğü, (8) tasarım ve eşik
+sınırlılıkları. Anlamlı ve anlamsız sonuçları yalnız 0,05'in iki tarafında
+yer aldıkları için niteliksel olarak bütünüyle farklıymış gibi sunmayın.
+\end{outputguidebox}
+
+\subsection{Örnek bulgu paragrafı}
+
+``İki okuldan gözlenen 395 öğrencinin yıl sonu matematik notu ortalaması,
+10 referans değerinden istatistiksel olarak belirgin biçimde farklı değildir
+($\bar x=10{,}42$, $SS=4{,}58$), $t(394)=1{,}80$, $p=0{,}072$, ortalama
+farkı için yüzde 95 GA $[-0{,}04;0{,}87]$, $d=0{,}09$. Buna karşılık notu en
+az 10 olan 265 öğrencinin oranı yüzde 67,1'dir ve yüzde 50 referans oranından
+farklıdır, çift yönlü kesin binom $p<0{,}001$, Wilson yüzde 95 GA
+$[\%62{,}3;\%71{,}5]$, $h=0{,}35$. İki analiz farklı hedef parametreleri
+sınadığından sonuçlar birbiriyle çelişkili yorumlanmamıştır. Örneklemin iki
+okulla sınırlı olması nedeniyle ülke geneline doğrudan genelleme
+yapılmamıştır.''
+
+\input{chapters/r/b09}
+\input{chapters/r/b10}
+\input{chapter-exercises/07-hipotez-etki}
+
+\bolumkaynaklari{\cite{casella2002,cohen1988,benjamini1995,tukey1953,cortez2008data,cortezsilva2008}}
+
+\section*{Hatırla--Uygula--Yansıt}
+
+\begin{enumerate}
+\renewcommand{\labelenumi}{\textbf{\Alph{enumi}.}}
+  \item \textbf{Hatırla:} $H_0$, $H_1$, $\alpha$, $p$-değeri, $\beta$ ve güç kavramlarını birbirinden ayırın.
+  \item \textbf{Hipotez kur:} Bir PDR programının kaygı puanını değiştirip değiştirmediği için hedef parametreyi ve çift yönlü hipotezleri yazın.
+  \item \textbf{Hesapla:} Gözlenen fark 6, $H_0$ değeri 0 ve standart hata 2 ise test istatistiğini bulun.
+  \item \textbf{Yorumla:} $p=0{,}03$ sonucunun ne söylediğini ve söylemediğini iki ayrı cümleyle açıklayın.
+  \item \textbf{Karar dili:} $p=0{,}18$ için ``$H_0$ kabul edilir'' yerine bilimsel olarak daha uygun bir ifade yazın.
+  \item \textbf{Hata türleri:} Etkisiz bir programı uygulamaya alma ve etkili bir programı reddetme durumlarını Tip I--Tip II hata ile eşleştirin.
+  \item \textbf{Güç:} Etki büyüklüğü, örneklem hacmi, değişkenlik ve $\alpha$ değiştiğinde gücün nasıl etkileneceğini açıklayın.
+  \item \textbf{Yön seç:} Programın hem yarar hem zarar olasılığının önemli olduğu bir araştırmada neden çift yönlü test seçileceğini tartışın.
+  \item \textbf{Etki büyüklüğü:} Ortalama fark 5 ve birleşik standart sapma 12 ise Cohen'in $d$ değerini hesaplayıp bağlama bağlı yorumlayın.
+  \item \textbf{Aralıkla yorumla:} Fark için yüzde 95 güven aralığı $[-1;9]$ olduğunda ``etki yoktur'' sonucunun neden yetersiz olduğunu açıklayın.
+  \item \textbf{Çoklu test:} 15 sonuç değişkenini ayrı ayrı sınamanın yanlış pozitif riskini ve iki olası çözümü açıklayın.
+  \item \textbf{Uygula:} Python kodundaki veriyi değiştirerek örneklem hacmi ve grup farkının $p$-değeri ile $d$ üzerindeki etkisini inceleyin.
+  \item \textbf{Eleştir:} Yalnız ``$p<0{,}05$ bulundu'' cümlesiyle sunulan bir araştırma sonucunda eksik olan bilgileri listeleyin.
+  \item \textbf{Yansıt:} İstatistiksel olarak anlamlı bir ortalama değişimin neden her öğrenci için klinik veya eğitsel yarar anlamına gelmediğini tartışın.
+  \item \textbf{Raporla:} Tahmin, güven aralığı, test istatistiği, serbestlik derecesi, $p$-değeri, etki büyüklüğü ve yorum sınırını içeren kısa bir bulgu paragrafı yazın.
+\end{enumerate}

@@ -1,0 +1,243 @@
+\section{Literatür verisiyle yazılım uygulamaları}
+\label{sec:spss-b07}
+
+\textbf{Amaç ve veri.} \texttt{b07.csv} üzerinden ortalama ve oran için
+nokta tahmini üretin \citep{cortez2008data}. \texttt{pass10}, yıl sonu notu
+10 veya üzerinde ise 1'dir.
+
+\textbf{Ortak veri.} Doğrulanan B07 uygulamasında üç yazılım da
+\nolinkurl{companion/spss/csv/b07.csv} dosyasını kullanmıştır. Dosya
+395 satır ve 10 sütun içerir. B06'nın seçim göstergeleri ve ağırlığı bu
+uygulamada kullanılmaz; 395 kaydın tamamı analiz edilir. Bu karşılaştırma
+Excel içe aktarmanın doğrulandığı anlamına gelmez. Kodları
+\texttt{companion} klasörünü içeren paket kökünden çalıştırın;
+veri sözlüğü ve hazırlık için bkz. sayfa~\pageref{sec:spss-guide}.
+
+\subsection{IBM SPSS uygulaması}
+\textbf{Başlamadan önce.} Aşağıdaki komut dosyası B07 CSV verisini
+açar ve özetler. Menü yolunu kullanacaksanız önce veri açma ve tanımlama
+komutlarını \texttt{EXECUTE} satırı dahil çalıştırın. Filtre, ağırlık ve
+dosya bölme kapalı olmalıdır. Komut yolundaki \texttt{AGGREGATE}, etkin
+veriyi tek özet satırıyla değiştirir; bu özeti ham veri dosyasının üzerine
+kaydetmeyin. Analizi tekrarlamak için kodu veri açma adımından başlatın.
+
+\begin{spssadimlar}
+\spssadim{\emph{Analyze $\to$ Descriptive Statistics $\to$ Frequencies} yolunda \texttt{pass10} seçin ve tabloyu alın. 1 kategorisinin oranını belirleyin.}
+\spssadim{\emph{Data $\to$ Aggregate} yolunu açın. \emph{Break Variable(s)} alanını boş bırakın; böylece dosyanın tamamı tek grup olarak özetlenir.}
+\spssadim{\texttt{g3} için \emph{Mean} ve \emph{Standard deviation}, \texttt{pass10} için \emph{Mean} işlevlerini seçin. Özetlere sırasıyla \texttt{ort}, \texttt{ss}, \texttt{oran} adlarını verin; grup gözlem sayısını \texttt{n} adıyla ekleyin.}
+\spssadim{Yalnız özet değişkenleri içeren yeni bir veri kümesi oluşturmayı seçin. \emph{OK} sonrasında o veri kümesini etkinleştirin; bir satır bütün dosyanın özetidir.}
+\spssadim{\emph{Transform $\to$ Compute Variable} yolunda sırayla \texttt{sh\_ort=ss/SQRT(n)} ve \texttt{sh\_oran=SQRT(oran*(1-oran)/n)} hesaplarını yapın. Sol tarafı hedef değişken, sağ tarafı sayısal ifade alanına girin.}
+\spssadim{\emph{Data View} içinde özetleri inceleyin. Bir çıktı listesi için aşağıdaki tam komut dosyasını baştan çalıştırın; bu yol ham veriyi yeniden açar ve özet veriyi etkin dosyanın yerine koyar.}
+\end{spssadimlar}
+
+{\raggedright
+\noindent\textbf{Komutların görevi.} \texttt{AGGREGATE}, boş \texttt{BREAK} ile bütün dosyayı tek özet satırına indirir. \texttt{COMPUTE} standart hataları hesaplar; \texttt{FORMATS} görünümü, \texttt{LIST} çıktı listesini düzenler.\par}
+
+\textbf{Uygulama kodu:} \texttt{b07}. Doğrulanan veri dosyası
+\texttt{companion/spss} altındaki \texttt{csv/b07.csv} dosyasıdır.
+
+\begin{lstlisting}[style=prismSPSS]
+SET DECIMAL=DOT.
+GET DATA /TYPE=TXT
+ /FILE='companion/spss/csv/b07.csv'
+ /ENCODING='UTF8'
+ /ARRANGEMENT=DELIMITED /DELCASE=LINE
+ /DELIMITERS="," /QUALIFIER='"'
+ /FIRSTCASE=2
+ /VARIABLES=id F8.0 school F8.0 sex F8.0 age F8.0
+ studytime F8.0 absences F8.0 g1 F8.0 g2 F8.0
+ g3 F8.0 pass10 F8.0.
+FILTER OFF.
+WEIGHT OFF.
+SPLIT FILE OFF.
+VARIABLE LABELS
+ g3 'Yil sonu matematik notu'
+ pass10 'Yil sonu notu 10 veya uzerinde'.
+VALUE LABELS pass10
+ 0 '10 puanin altinda' 1 '10 puan ve uzerinde'.
+VARIABLE LEVEL
+ id school sex pass10 (NOMINAL)
+ studytime (ORDINAL)
+ age absences g1 g2 g3 (SCALE).
+EXECUTE.
+FREQUENCIES VARIABLES=pass10.
+AGGREGATE /OUTFILE=*
+ /BREAK= /n=N /ort=MEAN(g3) /ss=SD(g3)
+ /oran=MEAN(pass10).
+COMPUTE sh_ort=ss/SQRT(n).
+COMPUTE sh_oran=SQRT(oran*(1-oran)/n).
+FORMATS n (F8.0).
+FORMATS ort ss oran sh_ort sh_oran (F14.9).
+LIST VARIABLES=n ort ss sh_ort oran sh_oran.
+\end{lstlisting}
+
+\begin{outputguidebox}
+\textbf{Paylaşılan SPSS çıktısıyla doğrulanan değerler.}
+\texttt{LIST} çıktısında $n=\SPContextN$, ortalama \SPContextMean,
+$s=\SPContextSD$, ortalamanın standart hatası \SPContextSE\ bulunmuştur.
+Eşiği karşılayan \SPContextPass\ öğrenci vardır; oran \SPContextPHat,
+bağımsız Bernoulli modeli altındaki oran standart hatası \SPContextPSE'dır.
+Ortalama ve oran farklı tahmin hedefleridir; örneklem oranı evren oranının
+kesin değeri değildir. \texttt{AGGREGATE} veriyi tek özet satırına indirir;
+çıktıdaki bir satır yalnız bir öğrencinin ölçüldüğü anlamına gelmez.
+\end{outputguidebox}
+
+
+\par\noindent\begin{minipage}{\linewidth}
+\subsection{R uygulaması}
+\label{sec:r-gercek-b07}
+
+İkili \texttt{pass10} değişkeninin ortalaması oran tahminidir. Ortalama ve oran standart hataları farklı formüllerle hesaplanır.
+
+\begin{lstlisting}[style=prismR]
+veri <- read.csv("companion/spss/csv/b07.csv")
+stopifnot(nrow(veri) == 395, ncol(veri) == 10,
+          !anyNA(veri),
+          all(veri$pass10 == as.integer(veri$g3 >= 10)))
+gozlem_sayisi <- nrow(veri)
+ortalama <- mean(veri$g3)
+standart_sapma <- sd(veri$g3)
+oran <- mean(veri$pass10)
+frekans <- table(veri$pass10)
+print(frekans); print(100 * prop.table(frekans))
+print(c(n=gozlem_sayisi, ort=ortalama, ss=standart_sapma,
+  sh_ort=standart_sapma/sqrt(gozlem_sayisi), oran=oran,
+  sh_oran=sqrt(oran*(1-oran)/gozlem_sayisi)))
+print(sum(veri$g3 == 0))
+\end{lstlisting}
+
+\textbf{Çıktıyı okuma.} Paylaşılan R çıktısı 395 satır, 10 sütun ve
+her sütunda sıfır eksik değer gösterir. \texttt{pass10} ile
+\texttt{g3 >= 10} koşulu bütün kayıtlarda uyumludur. \texttt{ort} ve
+\texttt{oran} nokta tahminleri; \texttt{sh\_ort} ve \texttt{sh\_oran}
+ise bunların kullanılan model altındaki standart hatalarıdır.
+Sıfır notlu 38 kayıt analizde tutulmuştur.
+\end{minipage}\par
+
+\par\noindent\begin{minipage}{\linewidth}
+\subsection{Python uygulaması}
+\label{sec:python-b07}
+
+\texttt{ddof=1} örneklem standart sapmasını seçer; \texttt{sh\_ort} ile \texttt{sh\_oran} ayrı belirsizlik ölçüleridir.
+
+\begin{lstlisting}[style=prismPythonApp]
+import pandas as pd
+import numpy as np
+
+veri = pd.read_csv("companion/spss/csv/b07.csv")
+assert veri.shape == (395, 10)
+assert not veri.isna().any().any()
+assert veri.pass10.eq((veri.g3 >= 10).astype(int)).all()
+gozlem_sayisi = len(veri)
+ortalama = veri.g3.mean()
+standart_sapma = veri.g3.std(ddof=1)
+oran = veri.pass10.mean()
+frekans = veri.pass10.value_counts().sort_index()
+print(frekans); print(100 * frekans / gozlem_sayisi)
+print(pd.Series({
+    "n": gozlem_sayisi, "ort": ortalama, "ss": standart_sapma,
+    "sh_ort": standart_sapma / np.sqrt(gozlem_sayisi),
+    "oran": oran,
+    "sh_oran": np.sqrt(oran*(1-oran)/gozlem_sayisi)
+}))
+print(int((veri.g3 == 0).sum()))
+\end{lstlisting}
+
+\textbf{Çıktıyı okuma.} Paylaşılan Python çıktısında da 395 satır,
+10 sütun, sıfır eksik değer ve eşik kodlaması için tam uyum vardır.
+Altı özet değer R ile eşleşir; 130 ve 265 kişilik frekanslar ile
+38 sıfır notlu kayıt da doğrulanmıştır. Bu uygulama bir hipotez testi,
+$p$ değeri veya güven aralığı üretmez. R ve Python ana veriyi korur.
+\end{minipage}\par
+
+\subsection{Sonuçların karşılaştırılması ve ortak rapor}
+12 Eylül 2026'da paylaşılan SPSS tabloları ile R ve Python metin
+çıktıları karşılaştırılmıştır. Gözlem sayısı, ortalama, standart sapma,
+ortalamanın standart hatası, oran ve oranın standart hatasından oluşan
+altı değer R ve Python'da gösterilen 13 ondalık basamakta eşleşmiştir.
+SPSS listesindeki ondalıklı değerler dokuz basamakta aynı sonuçlarla
+uyumludur. Frekanslar aynıdır; yüzdeler gösterilen yuvarlama
+hassasiyetlerinde uyumludur. Proje CSV'sinden yapılan hesaplar da
+bu sonuçları destekler. Aşağıdaki tablolar çıktıların kitap düzenine
+uyarlanmış özetidir; ekran görüntüsü değildir.
+
+\begin{table}[H]
+\centering
+\caption{B07'de yıl sonu notunun 10 puan eşiğine göre dağılımı}
+\label{tab:b07-dogrulanmis-frekans}
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Kategori & Frekans & Yüzde \\
+\midrule
+10 puanın altında & 130 & 32,911392 \\
+10 puan ve üzerinde & 265 & 67,088608 \\
+Toplam & 395 & 100,000000 \\
+\bottomrule
+\end{tabular}
+\par\smallskip
+{\footnotesize Yüzdeler altı ondalık basamağa yuvarlanmıştır.
+Eksik değer olmadığından SPSS'in \emph{Percent} ve \emph{Valid Percent}
+sütunları eşittir; yüzdelerin paydası 395 kayıttır.\par}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{B07'nin doğrulanmış nokta tahminleri ve standart hataları}
+\label{tab:b07-dogrulanmis-tahmin}
+\begin{tabular}{@{}lr@{}}
+\toprule
+Ölçü & Değer \\
+\midrule
+Gözlem sayısı & 395 \\
+Ortalama not & 10,415190 \\
+Notların standart sapması & 4,581443 \\
+Ortalamanın standart hatası & 0,230517 \\
+10 puan eşiğini karşılayanların oranı & 0,670886 \\
+Oranın standart hatası & 0,023643 \\
+\bottomrule
+\end{tabular}
+\par\smallskip
+{\footnotesize Ondalıklı değerler altı basamağa yuvarlanmıştır.
+Standart sapma 394 böleniyle hesaplanmıştır. Standart hatalar
+$s/\sqrt{395}$ ve $\sqrt{\hat p(1-\hat p)/395}$ formüllerine dayanır;
+ara hesaplarda yuvarlanmamış değerler kullanılmıştır.\par}
+\end{table}
+
+\Needspace{15\baselineskip}
+\begin{outputguidebox}
+Tablo~\ref{tab:b07-dogrulanmis-frekans} içindeki 265 kişi,
+$\hat p=265/395$ oranını verir. Tablo~\ref{tab:b07-dogrulanmis-tahmin}
+içindeki 4,581443, bireysel notların yayılımını; 0,230517 ise kullanılan
+bağımsız gözlemler modeli altında ortalama tahmininin standart hatasını
+gösterir. Oranın standart hatası 0,023643, yaklaşık 2,3643 yüzde puanıdır;
+\%0,023643 olarak okunmaz.
+
+Bu standart hatalar öğretim amacıyla kullanılan modelin hesaplarıdır;
+kaynak araştırmanın örnekleme tasarımına uygun belirsizlik hesabının
+veya daha geniş bir evrene genellemenin doğrulandığı anlamına gelmez.
+Yalnız eldeki 395 kaydın betimlenmesi hedefleniyorsa ortalama ve oran
+bu dosyanın özetleridir. Üç yazılımın uyumu temsil gücünü kanıtlamaz.
+
+SPSS'in \texttt{LIST} çıktısındaki bir satır, 395 öğrencinin toplu
+özetidir. Ham dosyada 38 sıfır not vardır; bunlar eksik değer sayılmamış,
+hem ortalama hesabında hem de eşik altı kategorisinde korunmuştur.
+\end{outputguidebox}
+
+\Needspace{9\baselineskip}
+\textbf{Raporlama örneği (doğrulanmış çıktılarla).}
+``395 kayıtta ortalama yıl sonu notu 10,415190, standart sapması
+4,581443 bulunmuştur. Notu 10 veya üzerinde olan 265 kişinin oranı
+0,670886'dır (\%67,088608). Bağımsız gözlemler modeli altında
+ortalamanın standart hatası 0,230517, oranın standart hatası 0,023643
+olarak hesaplanmıştır. Sıfır notlu 38 kayıt analizde tutulmuştur.
+Sonuçlar kaynak dosyayı özetlemektedir; daha geniş bir öğrenci evrenine
+genellenebilirlik iddiası taşımamaktadır.''
+
+
+\textbf{Görev.} Nokta tahminlerinin yanına hedef evren tanımını ekleyin.
+Sıfır notları gerekçesiz biçimde eksik saymanın analiz paydasını ve
+tahmin hedefini nasıl değiştireceğini açıklayın. Yalnız \texttt{g3}
+değişkenini değiştirmek ile aynı kayıtları \texttt{pass10} hesabından da
+çıkarmak arasındaki farkı belirtin; 99 yazmanın tek başına eksik değer
+tanımlamak olmadığını unutmayın. SPSS'te sonraki uygulamaya geçmeden
+önce tek satırlık özet yerine gerekli ham veri dosyasını açın.

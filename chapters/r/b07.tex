@@ -1,0 +1,42 @@
+\section{R ile çözümlü uygulama}
+\label{sec:r-b07}
+
+\textbf{Soru.} Aşağıdaki on ikili yanıt için oran tahminini ve yaklaşık
+standart hatayı bulun. Ardından gerçek oranı 0,40 olan Bernoulli evreninde
+$n=50$ için tahmin edicinin yanlılığını ve MSE'sini benzetimle inceleyin.
+
+\begin{lstlisting}[style=prismR]
+yanit <- c(1, 0, 1, 1, 0, 1, 1, 0, 1, 0)
+oran <- mean(yanit)
+c(oran = oran,
+  standart_hata = sqrt(oran * (1 - oran) / length(yanit)))
+set.seed(2026)
+gercek_oran <- 0.40
+hacim <- 50
+tahminler <- rbinom(10000, size = hacim,
+                    prob = gercek_oran) / hacim
+c(merkez = mean(tahminler),
+  yanlilik = mean(tahminler) - gercek_oran,
+  ampirik_se = sd(tahminler),
+  mse = mean((tahminler - gercek_oran)^2))
+c(kuramsal_se = sqrt(0.40 * 0.60 / hacim),
+  kuramsal_mse = 0.40 * 0.60 / hacim)
+hacimler <- c(25, 400)
+sqrt(0.60 * 0.40 / hacimler)
+\end{lstlisting}
+
+\begin{outputguidebox}
+\textbf{Çözüm ve kontrol değerleri.} On yanıtta altı olumlu sonuç vardır:
+$\hat p=0{,}60$ ve yaklaşık $\widehat{\SE}=0{,}1549$.
+Benzetimin merkezi yaklaşık 0,40, yanlılığı yaklaşık sıfır olmalıdır.
+Kuramsal standart hata 0,06928, MSE 0,0048'dir. $\hat p=0{,}60$ için
+$n=25$ ve $n=400$ kullanılırsa yaklaşık standart hatalar 0,09798 ve 0,02449 olur.
+\end{outputguidebox}
+
+\textbf{Yorum.} İlk hesap bilinmeyen oran yerine örneklem oranını koyar;
+benzetimin kuramsal kontrolü ise bilinen 0,40 oranını kullanır. Sonlu sayıdaki
+tekrarda görülen küçük ampirik yanlılık, tahmin edicinin kuramsal olarak
+yanlı olduğunu kanıtlamaz. On gözlem için normal yaklaşım temkinle kullanılmalıdır.
+
+\textbf{Pekiştirme ve yanıt.} Bernoulli örneklem oranı yansız olduğundan
+kuramsal MSE varyansa eşittir: $p(1-p)/n=0{,}0048$.

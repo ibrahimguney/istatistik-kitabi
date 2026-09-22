@@ -1,0 +1,51 @@
+\section{Bölüm sonu çözümlü problemler}
+
+\begin{enumerate}
+  \item \textbf{Eksiklik oranı.} 240 öğrencinin 18'inde başlangıç puanı,
+  36'sında son-test puanı eksiktir. Değişken bazındaki eksiklik oranlarını
+  bulun.
+
+  \textbf{Çözüm:} Başlangıç için $18/240=0{,}075$, yani yüzde 7,5; son-test
+  için $36/240=0{,}15$, yani yüzde 15'tir. Aynı öğrencilerin iki değişkende de
+  eksik olup olmadığı bilinmeden tam gözlem sayısı yalnız bu oranlardan
+  bulunamaz.
+
+  \item \textbf{Mekanizma yorumu.} Son-test eksikliği yalnız gözlenen
+  başlangıç puanı ve program grubuyla ilişkili görünmektedir. Hangi mekanizma
+  çalışma varsayımı olarak düşünülebilir?
+
+  \textbf{Çözüm:} Başlangıç puanı ve grup atama/analiz modeline alındığında MAR
+  makul bir çalışma varsayımı olabilir. Gözlenmeyen son-test değerinin ayrıca
+  eksikliği etkileyip etkilemediği gözlenen veriden kanıtlanamaz; MNAR
+  duyarlılık analizi gerekir.
+
+  \item \textbf{Ortalama ile atama.} Gözlenen değerler $40,50,60$ ve bir eksik
+  hücre olsun. Eksik hücreye gözlenen ortalama yazıldığında ortalama ve
+  örneklem varyansı nasıl değişir?
+
+  \textbf{Çözüm:} Gözlenen ortalama 50'dir. $40,50,60,50$ dizisinin ortalaması
+  yine 50 olur. İlk üç değerin örneklem varyansı 100, atama sonrasındaki
+  örneklem varyansı $200/3\approx66{,}67$ olur. Yapay merkez değeri değişkenliği
+  küçültür.
+
+  \item \textbf{Rubin toplam varyansı.} $m=5$, atama içi ortalama varyans
+  $\bar U=4$ ve atamalar arası varyans $B=1{,}5$ olsun. Toplam varyansı ve
+  yaklaşık standart hatayı bulun.
+
+  \textbf{Çözüm:}
+  \[
+  T=4+\left(1+\frac15\right)(1{,}5)=5{,}8,
+  \qquad \SE=\sqrt{5{,}8}\approx2{,}41.
+  \]
+  Yalnız $\sqrt{\bar U}=2$ kullanmak atama belirsizliğini dışarıda bırakır.
+
+  \item \textbf{Duyarlılık kararı.} MAR çoklu atama analizinde grup farkı 5,2
+  puan; eksik sonuçların her grupta 4 puan daha düşük varsayıldığı senaryoda
+  4,9 puan; yalnız müdahale grubunda 8 puan daha düşük varsayıldığı senaryoda
+  1,1 puandır. Sonucu değerlendirin.
+
+  \textbf{Çözüm:} Benzer düşüş varsayımında sonuç kararlıdır. Müdahale
+  grubundaki güçlü seçici kayıp varsayımında fark büyük ölçüde azalmaktadır.
+  Ana bulgu eksikliğin gruplar arasında farklı davranmadığı varsayımına
+  duyarlıdır; bu sınır açıkça raporlanmalıdır.
+\end{enumerate}

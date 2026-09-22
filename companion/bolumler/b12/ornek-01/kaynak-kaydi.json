@@ -1,0 +1,18 @@
+{
+  "tarih": "2026-09-09",
+  "paket": "B12",
+  "ders_bolumu": 12,
+  "kapsamli_bolum": 13,
+  "kaynaklar": [
+    "chapters/12-kategorik-kikare.tex",
+    "chapters/r/b12.tex"
+  ],
+  "veri_turu": "Öğretim amaçlı 2x2 frekans tablosu; dört satır 80 gözlemin hücre özetidir, bireysel kayıt değildir.",
+  "veri_sha256": "10a13d969233a008bd891f23d5b7fcb69dfa3ec79050bbd13e9a56c1e90badf9",
+  "referans_yontemi": "Hücre katkıları Fraction ile tam kesir olarak hesaplandı: toplam 16/3. df=1 ki-kare üst kuyruğu P(Z^2 >= chi2)=erfc(sqrt(chi2/2)) özdeşliğiyle math.erfc kullanılarak hesaplandı; chi2_contingency çıktısı referansa kopyalanmadı.",
+  "duzeltme": "Yates süreklilik düzeltmesi yok.",
+  "artik_turu": "Pearson (O-E)/sqrt(E); R residuals, SPSS CROSSTABS SRESID.",
+  "alfa": 0.05,
+  "kontrol_sayisi": 32,
+  "rastgele_islem": false
+}

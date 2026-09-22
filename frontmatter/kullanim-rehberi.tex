@@ -1,0 +1,134 @@
+\phantomsection
+\chapter*{Kitabı Kullanma Rehberi}
+\markboth{Kitabı Kullanma Rehberi}{Kitabı Kullanma Rehberi}
+\addcontentsline{toc}{chapter}{Kitabı Kullanma Rehberi}
+
+Kitabı araştırma sorusundan gerekçeli rapora uzanan bir çalışma rotası
+olarak kullanın. Önce hangi soruyu yanıtlamak istediğinizi ve verinin nasıl
+üretildiğini belirleyin. Ardından uygun özeti veya analizi seçin;
+belirsizliği ve yorumun sınırlarını açıklayın. Bir yazılımın sonuç üretmesi,
+bu adımların tamamlandığı anlamına gelmez.
+
+\textbf{Ortak bölüm düzeni.} Birleşik kitabın 20 bölümündeki
+\emph{Literatür verisiyle yazılım uygulamaları}, aynı verinin IBM SPSS,
+R ve Python ile analizini, sonuç karşılaştırmasını ve örnek raporunu içerir.
+Numaralı kutular SPSS menü adımlarını gösterir. Ayrı
+\emph{R ile çözümlü uygulama} bölümleri ve konu anlatımındaki Python
+örnekleri korunmuştur; bunların öğretim verileri ortak gerçek veriyle
+karıştırılmamalıdır. Öğrenciden üç yazılımı aynı anda öğrenmesi beklenmez.
+Bootstrap ve rastgeleleştirme, eksik veri, ölçek güvenirliği ve çoklu
+regresyon bölümleri gerektiğinde destek ya da ileri okuma rotası sunar.
+
+\begin{prismbox}[PrismLight]{Önerilen haftalık çalışma döngüsü}
+\begin{enumerate}
+  \item Bölümün amaç kutusunu ve ana kavramları okuyun.
+  \item Araştırma sorusunu, gözlem birimini ve hesaplanacak büyüklüğü yazın; sonra formüldeki simgeleri açıklayın.
+  \item Çözümlü örneği kapatarak yeniden çözün ve sonucu bir cümleyle yorumlayın.
+  \item Yazılım çıktısını elle yapılan hesap ve grafiklerle karşılaştırın.
+  \item Yöntem seçiminin gerekçesini, sonucun belirsizliğini ve ileri süremeyeceğiniz bir iddiayı yazın.
+\end{enumerate}
+\end{prismbox}
+
+Kitaptaki \emph{Sezgi} kutuları kavramsal bağlantıları, \emph{Sık Hata}
+kutuları yaygın yanlış yorumları, \emph{Yazılım Notu} ve
+\emph{Yazılım Çıktısı Nasıl Okunur?} kutuları ise teknoloji destekli analizde
+denetlenmesi gereken noktaları gösterir. Bu kutular ana metnin süsü değil,
+istatistiksel karar sürecinin parçasıdır. Bu kullanım düzeni, kavramsal
+anlama ile gerçek veri çözümlemesini birlikte geliştiren önerilerle uyumludur
+\citep{gaise2016}.
+
+\textbf{Ortak pedagojik omurga.} Her ana bölüm; öğrenme hedefleri, başlamadan
+önce sorusu veya ön koşul bilgisi, temel kavram açıklaması, en az bir çözümlü
+uygulama, yöntem/çıktı denetimi, bölüm özeti ve uygulama soruları içerir.
+Bölümün niteliğine göre gerçek veri laboratuvarı ile Python, SPSS veya R
+uygulamalarından uygun olanlar eklenir; üç yazılımın her bölümde zorunlu ve
+eşit uzunlukta kullanılması beklenmez.
+
+Hesap makinesi veya yazılım aritmetik yükünü azaltabilir; fakat hedef
+parametreyi, uygun yöntemi ve yorumun sınırlarını kendi başına belirleyemez.
+Bu nedenle her analizde sayısal sonuçtan önce araştırma tasarımı, sonra
+varsayımlar ve en son bağlamsal yorum ele alınmalıdır.
+
+\section*{Karar ve raporlama kaydı}
+
+Aşağıdaki kaydı uygulamalara eşlik eden kendi çalışma notunuz olarak
+kullanın. Bu, her bölümde doldurulmuş olarak bulunan bir tablo değil,
+farklı örneklere uygulayabileceğiniz ortak bir kontrol listesidir.
+Yalnız betimleme yapılan bir görevde test veya güven aralığı gerekmiyorsa,
+bunları zorunlu olarak eklemek yerine neden gerekmediğini belirtin.
+
+\begin{enumerate}
+  \item \textbf{Soru ve veri:} Araştırma sorusu nedir? Gözlem birimi,
+  veri kaynağı ve araştırma tasarımı nedir; hangi kayıtlar kullanılmıştır?
+  \item \textbf{Hedef:} Ortalama, oran, fark veya ilişki gibi hangi
+  büyüklük incelenmektedir? Örneklem özeti ile evrene ilişkin hedefi ayırın.
+  \item \textbf{Analiz tanımı:} Yöntemi, değişken veya ölçüm sırasını,
+  eksik değer yaklaşımını ve varsa test yönü ile güven düzeyini yazın.
+  Yöntemin koşullarını ve değerlendiremediğiniz varsayımları belirtin.
+  \item \textbf{Sonuç ve belirsizlik:} Tahmini birimiyle verin; soruya
+  uygun olduğunda güven aralığını, ilişki veya fark büyüklüğünü ve test
+  sonucunu ekleyin. Yalnız $p$ değeriyle yetinmeyin.
+  \item \textbf{Yorumun sınırı:} Soruyu yanıtlayan kısa bir rapor yazın.
+  Verinin desteklemediği bir nedensellik, genelleme veya tahmin iddiasını
+  ayrıca belirtin.
+\end{enumerate}
+
+\textbf{Aynı veri, farklı soru.} B11'deki gruplararası ortalama farkı ile
+B12'deki 10 puan eşiğini karşılama oranlarını karşılaştırırken önce hangi
+büyüklüğün değiştiğini açıklayın. B14'te yalnız pozitif notları seçmenin
+hangi kayıtları ve hedefi değiştirdiğini düşünün. Farklı sonuçları yalnız
+``anlamlı/anlamsız'' diye ayırmak yerine, her birinin yanıtladığı soruyu
+yazın. Aynı kayıtları yeniden analiz etmek bağımsız bir tekrar çalışma
+değildir.
+
+\textbf{Çıktıları eşleştirme.} Yazılımlar arasında karşılaştırmaya geçmeden
+önce analiz tanımının aynı olduğunu kontrol edin. Farkın yönü, testin iki
+yönlü olması veya süreklilik düzeltmesi gibi tercihler sonuçları
+etkileyebilir. Kullandığınız kodu ve çıktıyı saklayın; yeniden çalıştırma
+ile yalnız paylaşılan bir çıktıyı incelemeyi birbirinden ayırın.
+Sayısal uyum, veri üretiminin veya model varsayımlarının denetlendiği
+anlamına gelmez.
+
+Hızlı tekrar sırasında formüller için Ek~\ref{app:formulas}, kritik değerler
+için Ek~\ref{app:distribution-tables}, yazılım eşleştirmeleri için
+Ek~\ref{app:software-map} kullanılabilir. Bölüm sonu sorularında önce yalnız
+ipucunu, ardından kısa yanıtı görmek isteyen okuyucu Ek~\ref{app:answer-key}'deki
+kademeli anahtara başvurabilir.
+
+\section*{Gerçek veri ve kod paketi}
+
+Kitabın ortak veri ve kod dosyaları \texttt{companion/} klasöründe bulunur.
+Bu klasörde ham ve temiz veri ayrı tutulmuş; değişken sözlükleri, veri
+kaynakları, bölüm eşleştirmeleri ve yeniden üretilebilir Python betikleri
+birlikte verilmiştir. \texttt{companion/code/} içindeki veri hazırlama,
+doğrulama, örnek analiz ve grafik üretim akışı proje kökünden
+\begin{center}
+\ifimoders
+\texttt{python companion/code/run\_imo301.py}
+\else
+\texttt{python companion/code/run\_all.py}
+\fi
+\end{center}
+komutuyla çalıştırılabilir. Bu komut bütün basılı yazılım bloklarını veya
+SPSS ve R'yi çalıştırmaz. Literatür uygulamalarının kodları için ilgili
+bölümü ve \texttt{companion/spss/} paketini izleyin; hazırlık adımları
+sayfa~\pageref{sec:spss-guide}'de açıklanmıştır.
+\ifimoders
+Ortak paket kapsamlı kitabın dosyalarını da içerir; bu komut yalnız ders
+sürümünün temel analizlerini çalıştırır. Çıktı dosyalarındaki numaralar
+kaynak dosya adlarıyla eşleşir ve bu sürümdeki bölüm sırasını izler.
+\fi
+
+Gerçek veri setleri kullanılırken gözlem birimi ve veri kaynağı her analizde
+yeniden belirtilmelidir. Okul bölgesi düzeyindeki bir ilişki, öğrenci
+düzeyindeki ilişki gibi yorumlanmamalıdır. Veri setlerinin kaynak ve hak
+bilgileri \texttt{companion/data/dictionaries/} altında kayıtlıdır.
+Verinin kaynağını, kullanım koşullarını ve yapılan dönüşümleri belgelemek,
+istatistiksel uygulamanın etik sorumlulukları arasındadır
+\citep{asaethics2022}.
+
+\begin{mistakebox}
+Bir formülü doğru uygulamak, yanlış seçilmiş örneklemi veya uygun olmayan
+araştırma tasarımını düzeltmez. İstatistiksel kalite veri üretim aşamasında
+başlar.
+\end{mistakebox}

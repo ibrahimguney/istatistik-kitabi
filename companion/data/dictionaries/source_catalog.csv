@@ -1,0 +1,6 @@
+source_id,title,level,provider,license_or_rights,status,source_locator,recommended_use
+star98,STAR98 Educational Dataset,school_district,statsmodels and original author,"Original author retains rights; distributed in statsmodels with permission",local_demo,statsmodels.datasets.star98,"descriptive statistics; sampling; confidence intervals; correlation; regression"
+spector,Spector and Mazzeo Program Effectiveness Data,student,statsmodels and original researcher,"Original author retains rights; distributed in statsmodels with permission",local_demo,statsmodels.datasets.spector,"group comparisons; categorical tables; correlation; regression"
+uci_student_performance,Student Performance,student,UCI Machine Learning Repository,CC BY 4.0,publication_candidate,doi:10.24432/C5TG7T,"shared student-level storyline across Chapters 1-13"
+uci_dropout,Predict Students' Dropout and Academic Success,student,UCI Machine Learning Repository,CC BY 4.0,publication_candidate,doi:10.24432/C5MC89,"categorical outcomes; sampling; chi-square; multivariable extension"
+world_bank_education,World Bank and UNESCO education indicators,country_year,World Bank Open Data / UNESCO Institute for Statistics,CC BY 4.0,publication_candidate,indicator:SE.TER.ENRR,"aggregate-data interpretation; correlation; regression; ecological fallacy"

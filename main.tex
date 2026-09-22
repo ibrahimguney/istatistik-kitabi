@@ -1,0 +1,502 @@
+% !TEX program = xelatex
+% Varsayılan derleme PDF e-kitaptır. Matbaaya verilecek iç blok yalnız
+% main-pdfx4.tex üzerinden PDFXBuild tanımlanarak üretilir; dış baskı kapağı
+% cover-print.tex dosyasındadır.
+\ifdefined\PDFXBuild
+  \documentclass[10pt,twoside,openright]{book}
+\else
+  \ifdefined\EbookBuild\else
+    \def\EbookBuild{1}
+  \fi
+  \documentclass[10pt,oneside,openany]{book}
+\fi
+\input{print-config}
+% Birleşik ana kitap kapsamlı sürümdür. Eski \ifimoders anahtarı, Mist
+% kaynaklarındaki koşullu parçalarla geriye dönük uyumluluk için korunur.
+\newif\ifimoders
+\imodersfalse
+
+\usepackage{fontspec}
+\setmainfont{Libertinus Serif}[
+  Ligatures=TeX,
+  Numbers={Lining,Proportional},
+  UprightFont=Libertinus Serif Regular,
+  ItalicFont=Libertinus Serif Italic,
+  BoldFont=Libertinus Serif Semibold,
+  BoldItalicFont=Libertinus Serif Semibold Italic
+]
+\setsansfont{Libertinus Sans}[
+  Ligatures=TeX,
+  Numbers={Lining,Proportional},
+  ItalicFont=Libertinus Sans Italic,
+  BoldFont=Libertinus Sans Bold
+]
+\setmonofont{Libertinus Mono}[Scale=MatchLowercase]
+\usepackage[turkish]{babel}
+\ifdefined\EbookBuild
+  \usepackage[
+    paperwidth=152.4mm,
+    paperheight=228.6mm,
+    left=17mm,
+    right=17mm,
+    top=18mm,
+    bottom=21mm,
+    headheight=18pt,
+    headsep=6mm,
+    footskip=10mm
+  ]{geometry}
+\else
+  \usepackage[
+    paperwidth=152.4mm,
+    paperheight=228.6mm,
+    inner=19mm,
+    outer=15mm,
+    top=18mm,
+    bottom=21mm,
+    headheight=18pt,
+    headsep=6mm,
+    footskip=10mm
+  ]{geometry}
+\fi
+\ifdefined\PDFXBuild
+  \usepackage[x-4]{pdfx}
+  \ExplSyntaxOn
+  \cs_new:Npn \prism_pdfx_bp:n #1
+    { \dim_to_decimal_in_bp:n {#1} \c_space_tl }
+  \cs_gset:cpx {pdfx@everypage@xetex}{
+    /MediaBox[0\c_space_tl 0\c_space_tl
+      \prism_pdfx_bp:n { \paperwidth }
+      \prism_pdfx_bp:n { \paperheight }]
+    /CropBox[0\c_space_tl 0\c_space_tl
+      \prism_pdfx_bp:n { \paperwidth }
+      \prism_pdfx_bp:n { \paperheight }]
+    /TrimBox[0\c_space_tl 0\c_space_tl
+      \prism_pdfx_bp:n { \paperwidth }
+      \prism_pdfx_bp:n { \paperheight }]
+    /BleedBox[0\c_space_tl 0\c_space_tl
+      \prism_pdfx_bp:n { \paperwidth }
+      \prism_pdfx_bp:n { \paperheight }]
+  }
+  \ExplSyntaxOff
+\fi
+\usepackage{xcolor}
+\selectcolormodel{cmyk}
+\usepackage[most]{tcolorbox}
+\usepackage{ragged2e}
+\usepackage[protrusion=true,expansion=false]{microtype}
+% XeLaTeX'te güvenilir olan optik kenar taşması kullanılır; font genişletmesi
+% motor tarafından desteklenmediği için kapalı tutulur.
+\usepackage{enumitem}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{unicode-math}
+\setmathfont{Libertinus Math}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{multicol}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc,positioning,shapes.geometric}
+% Tist'in erişilebilir PDF sürümünde kullanılan TikZ anahtarları XeLaTeX
+% baskı profilinde görsel sonucu değiştirmeden yok sayılır.
+\tikzset{alt/.code={},artifact/.style={}}
+\usepackage{listings}
+\usepackage{needspace}
+\usepackage[bottom]{footmisc}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{caption}
+\usepackage{emptypage}
+\usepackage{makeidx}
+\makeindex
+\usepackage[round,authoryear]{natbib}
+\ifdefined\PDFXBuild
+  \hypersetup{hypertexnames=false}
+\else
+  \usepackage[pdfpagelabels=false,hypertexnames=false]{hyperref}
+  \usepackage{hyperxmp}
+\fi
+\usepackage{qrcode}
+\setcitestyle{aysep={,},yysep={;},notesep={; }}
+\setlength{\bibsep}{0.45em}
+
+\definecolor{PrismBlue}{HTML}{1F4E79}
+\definecolor{PrismSubheadingBlue}{HTML}{2B6A9E}
+\definecolor{PrismGray}{HTML}{555555}
+\definecolor{PrismLight}{HTML}{EEF5FB}
+\definecolor{PrismNoteBlue}{HTML}{EAF3FA}
+\definecolor{PrismWarnOrange}{HTML}{FFF3E0}
+\definecolor{PrismResearchGreen}{HTML}{EAF7EA}
+\definecolor{PrismSoftwarePurple}{HTML}{F2ECFA}
+
+\ifdefined\PDFXBuild
+  \hypersetup{hidelinks}
+\else
+  \hypersetup{
+    pdftitle={\BookTitle: \BookSubtitle},
+    pdfauthor={\BookAuthor},
+    pdfsubject={IMO301 İstatistik ve PDR209 Temel İstatistik izlencelerini birleştiren ders kitabı},
+    pdfkeywords={istatistik, veri okuryazarlığı, eksik veri, veri kalitesi, çoklu atama, örnekleme, tahmin, güven aralığı, bootstrap, hipotez testi, etki büyüklüğü, t testi, ANOVA, ki-kare, korelasyon, regresyon, parametrik olmayan yöntemler, ölçek güvenirliği, Cronbach alfa, omega},
+    pdflang={tr-TR},
+    pdfcopyright={Telif hakkı \BookYear{} İbrahim Güney. Tüm hakları saklıdır.},
+    pdflicenseurl={},
+    pdfdisplaydoctitle=true
+  }
+  \ifdefined\EbookBuild
+    \hypersetup{
+      colorlinks=true,
+      linkcolor=PrismBlue,
+      citecolor=PrismBlue,
+      urlcolor=PrismSubheadingBlue,
+      bookmarksopen=true,
+      bookmarksnumbered=true,
+      pdfpagemode=UseOutlines
+    }
+  \else
+    \hypersetup{hidelinks}
+  \fi
+  \ifimoders
+    \hypersetup{
+      pdftitle={IMO301 İstatistik: İzlenceye Uygun Ders Sürümü},
+      pdfsubject={IMO301 ders izlencesine göre düzenlenmiş 14 bölümlük ders kitabı},
+      pdfkeywords={istatistik, örnekleme, tahmin, güven aralığı, hipotez testi, t testi, ki-kare, korelasyon, basit regresyon}
+    }
+  \fi
+\fi
+
+\graphicspath{{assets/}{assets/logos/}}
+\AtBeginDocument{%
+  \ifdefined\shorthandoff\shorthandoff{=}\fi
+  \ifdefined\PDFXBuild
+    \special{pdf:minorversion 6}%
+  \fi
+}
+\addto\captionsturkish{%
+  \renewcommand{\contentsname}{İçindekiler}%
+  \renewcommand{\listfigurename}{Şekiller Listesi}%
+  \renewcommand{\listtablename}{Tablolar Listesi}%
+  \renewcommand{\bibname}{Kaynakça}%
+  \renewcommand{\indexname}{Konu Dizini}%
+}
+\setcounter{tocdepth}{1}
+\setcounter{secnumdepth}{2}
+
+\titleformat{\part}[display]
+  {\centering\normalfont\sffamily\bfseries\color{PrismBlue}}
+  {\Large KISIM \thepart}
+  {1.2ex}
+  {\Huge}
+\titlespacing*{\part}{0pt}{0pt}{3cm}
+
+\titleformat{\chapter}[display]
+  {\normalfont\sffamily\bfseries\color{PrismBlue}\raggedright\hyphenpenalty=10000}
+  {\filleft\fontsize{38}{40}\selectfont\thechapter}
+  {-0.5ex}
+  {\titlerule[0.8pt]\vspace{1.1ex}\LARGE}
+\titlespacing*{\chapter}{0pt}{-12pt}{32pt}
+
+\titleformat{\section}
+  {\normalfont\Large\sffamily\bfseries\color{PrismBlue}\raggedright\hyphenpenalty=10000}
+  {\thesection}{0.7em}{}
+\titlespacing*{\section}{0pt}
+  {2.8ex plus 0.8ex minus 0.4ex}
+  {1.1ex plus 0.2ex}
+\titleformat{\subsection}
+  {\normalfont\large\sffamily\bfseries\color{PrismSubheadingBlue}\raggedright\hyphenpenalty=10000}
+  {\thesubsection}{0.7em}{}
+\titlespacing*{\subsection}{0pt}
+  {2.2ex plus 0.6ex minus 0.3ex}
+  {0.8ex plus 0.2ex}
+
+\captionsetup{
+  font=small,
+  labelfont={bf,sf,color=PrismBlue},
+  labelsep=period,
+  justification=raggedright,
+  singlelinecheck=true
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\ifdefined\EbookBuild
+  \fancyhead[L]{\footnotesize\nouppercase{\leftmark}}
+  \fancyhead[R]{\footnotesize\thepage}
+\else
+  \fancyhead[LE]{\footnotesize\thepage\quad\textsc{İstatistik}}
+  \fancyhead[RO]{\footnotesize\nouppercase{\leftmark}\quad\thepage}
+\fi
+\renewcommand{\headrulewidth}{0.35pt}
+\renewcommand{\chaptermark}[1]{\markboth{\thechapter\enspace #1}{}}
+\fancypagestyle{plain}{%
+  \fancyhf{}
+  \fancyfoot[C]{\footnotesize\thepage}
+  \renewcommand{\headrulewidth}{0pt}
+}
+
+\lstdefinestyle{prismPython}{%
+  language=Python,
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{PrismBlue}\bfseries,
+  commentstyle=\color{PrismGray},
+  stringstyle=\color{black!70},
+  numbers=left,
+  numberstyle=\tiny\color{PrismGray},
+  numbersep=8pt,
+  breaklines=true,
+  breakatwhitespace=true,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  frame=single,
+  rulecolor=\color{PrismBlue!35},
+  backgroundcolor=\color{PrismLight!55},
+  framerule=0.4pt,
+  xleftmargin=1.5em,
+  framexleftmargin=1em,
+  aboveskip=0.8em,
+  belowskip=0.8em
+}
+\lstset{style=prismPython}
+\lstloadlanguages{R}
+\lstdefinestyle{prismR}{%
+  style=prismPython,
+  language=R
+}
+\lstdefinestyle{prismPythonApp}{style=prismPython,numbers=none,xleftmargin=0pt,framexleftmargin=0pt,breakatwhitespace=false}
+\lstdefinestyle{prismSPSS}{%
+  style=prismPython,language={},
+  basicstyle=\ttfamily\footnotesize,
+  numbers=none,xleftmargin=0pt,framexleftmargin=0pt,
+  breakatwhitespace=false
+}
+\newcommand{\spsslisting}[1]{%
+  \IfFileExists{companion/spss/syntax/#1.sps}{%
+    \lstinputlisting[style=prismSPSS]{companion/spss/syntax/#1.sps}%
+  }{%
+    \PackageWarning{prism}{Missing SPSS syntax file: companion/spss/syntax/#1.sps}%
+    \par\smallskip\noindent
+    {\small\textbf{Eksik eşlikçi dosya:} \texttt{#1.sps} bu proje
+    kopyasında bulunmadığından komut listesi gösterilemiyor.
+    Listeyi görüntülemek için dosyayı \texttt{companion/spss/syntax}
+    klasörüne ekleyip yeniden derleyin.\par}%
+    \smallskip
+  }%
+}
+\input{companion/spss/results/values.tex}
+
+
+\newenvironment{prismbox}[2][PrismNoteBlue]{%
+  \par\Needspace{5\baselineskip}\medskip\noindent
+  \begin{tcolorbox}[
+    enhanced,
+    breakable,
+    colback=#1,
+    colframe=PrismBlue!55!black,
+    coltitle=black,
+    title=\textbf{#2},
+    fonttitle=\bfseries,
+    boxrule=0.55pt,
+    arc=2mm,
+    left=6pt,right=6pt,top=5pt,bottom=5pt,
+    before skip=2pt,after skip=6pt
+  ]%
+}{\end{tcolorbox}\par}
+\newenvironment{sezgibox}{\begin{prismbox}[PrismNoteBlue]{Sezgi}}{\end{prismbox}}
+\newenvironment{researchbox}{\begin{prismbox}[PrismResearchGreen]{Araştırmacı Notu}}{\end{prismbox}}
+\newenvironment{softwarebox}{\par\Needspace{22\baselineskip}\begin{prismbox}[PrismSoftwarePurple]{Yazılım Notu}}{\end{prismbox}}
+\newenvironment{mistakebox}{\begin{prismbox}[PrismWarnOrange]{Sık Hata}}{\end{prismbox}}
+\newenvironment{assumptionbox}{\begin{prismbox}[PrismWarnOrange]{Bu Yöntemi Kullanmadan Önce Kontrol Et}}{\end{prismbox}}
+\newenvironment{outputguidebox}{\begin{prismbox}[PrismSoftwarePurple]{Yazılım Çıktısı Nasıl Okunur?}}{\end{prismbox}}
+\newenvironment{prerequisitebox}{\begin{prismbox}[PrismNoteBlue]{Ön koşul bilgileri}}{\end{prismbox}}
+\newenvironment{definitionbox}{\begin{prismbox}[PrismResearchGreen]{Tanım}}{\end{prismbox}}
+\newenvironment{hedefler}{\begin{prismbox}[PrismResearchGreen]{Öğrenme Hedefleri}}{\end{prismbox}}
+\newenvironment{hazirlik}{\begin{prismbox}[PrismNoteBlue]{Başlamadan Önce}}{\end{prismbox}}
+\newenvironment{etkinlik}{\begin{prismbox}[PrismSoftwarePurple]{Dur--Düşün--Uygula}}{\end{prismbox}}
+\theoremstyle{definition}
+\newtheorem{tanim}{Tanım}[chapter]
+\newtheorem{ornek}{Örnek}[chapter]
+\theoremstyle{plain}
+\newtheorem{teorem}{Teorem}[chapter]
+\newtheorem{sonuc}{Sonuç}[chapter]
+\newenvironment{ispat}{\begin{proof}[Kanıt]}{\end{proof}}
+\newenvironment{ispatfikri}{\begin{proof}[İspat Fikri]}{\end{proof}}
+\newcommand{\bolumkaynaklari}[1]{%
+  \Needspace{5\baselineskip}%
+  \section*{Bölümün Temel Kaynakları}%
+  \noindent Bu bölümün kuramsal çerçevesi ve yöntemsel ayrıntıları için
+  başvurulabilecek temel kaynaklar: #1.\par
+}
+\newcommand{\adimbaslik}[1]{%
+  \par\medskip\noindent\textbf{#1}\par\nobreak
+}
+
+% Kitap genelinde kullanılan istatistiksel gösterimler
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\E}{\mathbb{E}}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\SE}{SE}
+\DeclareMathOperator{\MSE}{MSE}
+\DeclareMathOperator{\VIF}{VIF}
+\DeclareMathOperator{\IQR}{IQR}
+\DeclareMathOperator{\DEFF}{DEFF}
+\DeclareMathOperator{\SSE}{SSE}
+\DeclareMathOperator{\SST}{SST}
+\newcommand{\Ind}[1]{\mathbf{1}\!\left\{#1\right\}}
+\DeclareRobustCommand{\pval}{\texorpdfstring{\ensuremath{p}}{p}}
+\DeclareRobustCommand{\tstat}{\texorpdfstring{\ensuremath{t}}{t}}
+\DeclareRobustCommand{\Fstat}{\texorpdfstring{\ensuremath{F}}{F}}
+
+\setlist[itemize]{topsep=5pt,itemsep=2pt,parsep=0pt}
+\setlist[enumerate]{topsep=5pt,itemsep=2pt,parsep=0pt}
+\setlength{\parskip}{0pt}
+\setlength{\parindent}{1.25em}
+\setlength{\textfloatsep}{16pt plus 4pt minus 4pt}
+\setlength{\floatsep}{13pt plus 3pt minus 3pt}
+\setlength{\intextsep}{13pt plus 3pt minus 3pt}
+\setlength{\emergencystretch}{2em}
+\setlength{\columnsep}{5mm}
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000
+\brokenpenalty=10000
+\frenchspacing
+\raggedbottom
+\hbadness=10000
+\vbadness=10000
+\hfuzz=1pt
+\vfuzz=1pt
+
+\input{frontmatter/spss-adimlar}
+\input{frontmatter/bolum-paketleri}
+
+\begin{document}
+
+\ifdefined\EbookBuild
+  \input{frontmatter/on-kapak}
+\fi
+
+% İç kapak
+\begin{titlepage}
+\thispagestyle{empty}
+\begin{center}
+  \vspace*{2.8cm}
+  {\fontsize{27}{32}\selectfont\sffamily\bfseries\color{PrismBlue}
+    \BookTitle\par}
+  \vspace{0.45cm}
+  {\Large \BookSubtitle\par}
+  \vspace{2.2cm}
+  {\Large \BookAuthor\par}
+  \vfill
+  \IfFileExists{assets/logos/izulogo-temiz.png}{%
+    \includegraphics[height=1.5cm]{assets/logos/izulogo-temiz.png}\par
+    \vspace{0.45cm}
+  }{}
+  {\large \BookPublisher\par}
+  \vspace{0.2cm}
+  {\BookCity, \BookYear\par}
+  \vspace*{1cm}
+\end{center}
+\end{titlepage}
+
+\clearpage
+\thispagestyle{empty}
+\vspace*{1.5cm}
+{\Large\sffamily\bfseries \BookTitle\par}
+\vspace{0.2cm}
+{\large \BookSubtitle\par}
+\vfill
+\small
+\begin{tabular}{@{}>{\bfseries}p{0.32\textwidth}p{0.60\textwidth}@{}}
+Yazar & \BookAuthor \\
+Yayıncı & \BookPublisher \\
+Birinci baskı & \BookYear \\
+Sürüm & IMO301--PDR209 birleşik kapsamlı sürüm \\
+ISBN & \BookISBNDisplay \\
+Yayın no & \BookPublicationNumberDisplay \\
+\end{tabular}
+
+\vspace{1cm}
+\textcopyright{} \BookYear{} İbrahim Güney. Tüm hakları saklıdır. Bu yayının hiçbir
+bölümü, yayıncının yazılı izni olmaksızın elektronik, mekanik, fotokopi,
+kayıt veya başka bir yöntemle çoğaltılamaz ve yayımlanamaz.
+
+\vspace{0.8cm}
+Bu kitapta hem eğitim amacıyla hazırlanmış örnekler hem de kaynağı belirtilen
+gerçek veriler kullanılmıştır. Gerçek veri setlerinin kaynak ve kullanım
+koşulları eşlikçi veri paketinde verilmiştir. Yazılım sürümleri ve çevrim içi
+kaynaklar baskı tarihinden sonra değişebilir.
+\vspace*{1cm}
+\clearpage
+
+\frontmatter
+\input{frontmatter/preface-combined}
+\cleardoublepage
+\tableofcontents
+\cleardoublepage
+\listoffigures
+\cleardoublepage
+\listoftables
+\cleardoublepage
+\input{frontmatter/kullanim-rehberi}
+\input{frontmatter/izlence-rotasi-combined}
+\input{frontmatter/notation}
+\input{frontmatter/spss-rehberi}
+\input{frontmatter/r-rehberi}
+\cleardoublepage
+
+\mainmatter
+\part{Veri, Araştırma ve Betimleme}
+\input{chapters/pdr/01-veri-arastirma}
+\input{chapters/pdr/02-betimsel-istatistik}
+\input{chapters/pdr/03-eksik-veri-kalitesi}
+\input{chapters/pdr/06-ornekleme}
+
+\part{Örnekleme Değişkenliği ve Tahmin}
+\input{chapters/04-ornekleme-dagilimlari}
+\input{chapters/pdr/03-normal-z-mkt}
+\input{chapters/pdr/07-nokta-tahmini}
+\input{chapters/pdr/08-guven-araliklari}
+\input{chapters/09-bootstrap-rastgelelestirme}
+
+\part{İstatistiksel Çıkarım ve Grup Karşılaştırmaları}
+\input{chapters/pdr/09-hipotez-etki}
+\input{chapters/pdr/04-t-testleri}
+\input{chapters/pdr/10-anova}
+
+\part{İlişki, Modelleme ve Sağlam Yöntemler}
+\input{chapters/12-kategorik-kikare}
+\input{chapters/pdr/05-korelasyon}
+\input{chapters/pdr/11-basit-regresyon}
+\input{chapters/pdr/13-nonparametrik}
+\input{chapters/pdr/16-olcek-guvenirligi}
+\input{chapters/15-coklu-regresyon}
+\input{chapters/pdr/14-uygulama-laboratuvari}
+
+\part{Bütünleştirme ve Değerlendirme}
+\input{chapters/14-genel-sinava-hazirlik}
+
+\appendix
+\input{appendix/formulas}
+\input{appendix/distribution-tables}
+\input{appendix/software-map}
+\input{appendix/answer-key}
+
+\backmatter
+\input{backmatter/kavramlar-sozlugu}
+\input{backmatter/references}
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{Konu Dizini}
+\markboth{Konu Dizini}{Konu Dizini}
+\printindex
+
+\cleardoublepage
+\ifdefined\EbookBuild
+  \input{backmatter/arka-kapak}
+\fi
+% Matbaaya verilen iç blok çift sayfa sayısıyla sonlanır; basılı dış kapak
+% ayrı dosyadır. E-kitapta ise yukarıdaki dijital arka kapak son sayfadır.
+\end{document}

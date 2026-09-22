@@ -1,0 +1,4 @@
+degisken,aciklama,veri_turu,olcme_duzeyi,birim,gecerli_degerler,eksik_deger_kurali
+devam_saati,Öğretim örneğindeki devam süresi,nicel,oran,saat,Sıfır veya pozitif sayılar,Boş hücre eksiktir; mevcut örnekte yoktur
+basari,Öğretim örneğindeki başarı puanı,nicel,aralık varsayımı,puan,Sayısal puan; ölçek sınırları belirtilmemiştir,Boş hücre eksiktir; mevcut örnekte yoktur
+program,Öğrencinin program etiketi,kategorik,nominal,birimsiz,A veya B,Boş hücre eksiktir; mevcut örnekte yoktur

@@ -1,0 +1,591 @@
+\chapter{Korelasyon: İlişkinin Yönü ve Büyüklüğü}
+\index{korelasyon}
+
+\begin{hedefler}
+Bu bölümün sonunda okuyucu:
+\begin{itemize}
+  \item iki değişken arasındaki ilişkiyi saçılım grafiğinde yön, biçim, güç ve aykırı değer bakımından inceleyebilecek,
+  \item kovaryans ile Pearson korelasyonunun mantığını açıklayabilecek,
+  \item Pearson ve Spearman korelasyonları arasında veri yapısına uygun seçim yapabilecek,
+  \item korelasyon katsayısı, güven aralığı, $p$-değeri ve örneklem hacmini birlikte yorumlayabilecek,
+  \item doğrusal olmayan ilişki, aykırı değer, ranj daralması ve alt grup karışımının korelasyona etkisini tanıyabilecek,
+  \item korelasyon ile açıklanan varyans oranını birbirinden ayırabilecek,
+  \item gözlenen ilişkiyi nedensellik iddiasına dönüştürmeden alternatif açıklamalar üretebilecek,
+  \item Python ve SPSS çıktılarından bilimsel bir korelasyon raporu oluşturabilecektir.
+\end{itemize}
+\end{hedefler}
+
+\begin{hazirlik}
+Uyku süresi ile akademik başarı ilişkili bulunduğunda bu sonuç uykunun başarıyı
+artırdığını kanıtlar mı? Ters nedensellik, ortak neden veya seçim sürecine
+dayanan en az iki alternatif açıklama üretin.
+\end{hazirlik}
+
+\section{PDR vakası: Uyku süresi ve akademik kaygı}
+
+Bir psikolojik danışma birimi, öğrencilerin gecelik ortalama uyku süresi ile
+akademik kaygı puanları arasındaki ilişkiyi incelemektedir. Yirmi öğrenciden
+elde edilen veride uyku süresi 4,5 ile 8,5 saat, kaygı puanı 40 ile 75 arasında
+değişmektedir.
+
+Araştırmacının yalnız ``korelasyon anlamlı mı?'' sorusunu sorması yeterli
+değildir. Şu sorular birlikte ele alınmalıdır:
+
+\begin{enumerate}
+  \item İlişkinin yönü ve yaklaşık biçimi nedir?
+  \item İlişki doğrusal mı, yoksa başka bir örüntü mü göstermektedir?
+  \item Tek bir gözlem katsayıyı aşırı etkiliyor mu?
+  \item İlişkinin büyüklüğü ve belirsizliği nedir?
+  \item Gözlenen ilişki hangi nedensel ve nedensel olmayan süreçlerle açıklanabilir?
+\end{enumerate}
+
+Bu örnekte Pearson korelasyonu yaklaşık $r=-0{,}585$ bulunacaktır. Negatif
+işaret, daha uzun uyku süresinin örneklemde daha düşük kaygı puanıyla birlikte
+görülme eğiliminde olduğunu gösterir. Bu sayı henüz ilişkinin doğrusal
+biçimini, aykırı gözlemleri veya nedensel yönünü kanıtlamaz.
+
+\begin{researchbox}
+Uyku ve kaygı öz-bildirimle aynı anda ölçülmüşse ölçüm hatası, ortak yöntem
+etkisi ve zaman sırası belirsizliği vardır. Öğrencinin daha az uyuduğu için mi
+kaygılandığı, kaygılandığı için mi uyuyamadığı veya sınav yükünün her ikisini
+de mi etkilediği korelasyondan tek başına anlaşılamaz.
+\end{researchbox}
+
+\section{İlk adım: Saçılım grafiği}
+\index{saçılım grafiği}
+\index{doğrusal ilişki}
+
+İki nicel değişken arasındaki ilişki önce saçılım grafiğiyle incelenir. Her
+nokta bir öğrenciyi, yatay ve dikey konumlar o öğrencinin iki ölçümünü temsil
+eder. Grafik dört temel özelliği görünür kılar; yalnız özet katsayılarına
+dayanmak belirgin örüntüleri saklayabilir \cite{anscombe1973}:
+
+\begin{description}
+  \item[Yön] Değerler birlikte artıyor mu, biri artarken diğeri azalıyor mu?
+  \item[Biçim] İlişki doğrusal, eğrisel, tekdüze veya kümeli mi?
+  \item[Güç] Noktalar temel örüntünün çevresinde ne kadar sıkı toplanıyor?
+  \item[Olağandışı gözlem] Aykırı veya yüksek etkili noktalar var mı?
+\end{description}
+
+\begin{figure}[htbp]
+\centering
+\resizebox{0.98\linewidth}{!}{%
+\begin{tikzpicture}[alt={Pozitif, negatif ve doğrusal olmayan ilişkileri karşılaştıran üç saçılım grafiği},x=0.62cm,y=0.52cm]
+  \foreach \dx/\title in {0/{pozitif},7/{negatif},14/{doğrusal olmayan}} {
+    \draw[->,PrismGray] (\dx,0)--(\dx+5.2,0);
+    \draw[->,PrismGray] (\dx,0)--(\dx,5.2);
+    \node[font=\scriptsize,text=PrismGray] at (\dx+2.5,5.55) {\title};
+  }
+  \foreach \x/\y in {0.5/0.7,1/1.4,1.5/1.2,2/2.4,2.5/2.1,3/3.2,3.5/3.1,4/4.0,4.5/4.4}
+    \fill[PrismBlue] (\x,\y) circle (2pt);
+  \foreach \x/\y in {0.5/4.4,1/4.0,1.5/3.7,2/3.1,2.5/3.3,3/2.4,3.5/2.0,4/1.4,4.5/0.8}
+    \fill[PrismSubheadingBlue] (7+\x,\y) circle (2pt);
+  \foreach \x/\y in {0.4/4.2,0.9/3.1,1.4/2.0,1.9/1.1,2.4/0.7,2.9/0.9,3.4/1.5,3.9/2.6,4.4/4.1}
+    \fill[PrismWarnOrange!85!black] (14+\x,\y) circle (2pt);
+\end{tikzpicture}%
+}
+\caption{İlişkinin yönü ve biçimi saçılım grafiğinde görülür.}
+\end{figure}
+
+Son panelde güçlü bir U biçimli ilişki olmasına rağmen Pearson korelasyonu
+sıfıra yakın olabilir. Bu nedenle ``$r=0$ ise değişkenler ilişkisizdir''
+sonucu yanlıştır. Katsayı belirli bir ilişki türünü özetler; grafik daha geniş
+örüntüyü gösterir.
+
+\begin{mistakebox}
+Saçılım grafiğine doğrusal eğilim çizgisi eklenmiş olması ilişkinin gerçekten
+doğrusal olduğunu kanıtlamaz. Eğrilik, alt grup kümeleri ve uç gözlemler ayrıca
+incelenmelidir.
+\end{mistakebox}
+
+\section{Kovaryanstan korelasyona}
+\index{kovaryans}
+\index{Pearson korelasyonu}
+
+İki değişkenin ortalamalarından sapmaları çoğunlukla aynı işareti taşıyorsa
+kovaryans pozitiftir; biri pozitifken diğeri negatif olma eğilimindeyse
+kovaryans negatiftir:
+\[
+s_{xy}=\frac{1}{n-1}
+\sum_{i=1}^n(x_i-\bar x)(y_i-\bar y).
+\]
+
+Kovaryansın büyüklüğü değişkenlerin ölçü birimlerine bağlıdır. Uyku saatten
+dakikaya çevrildiğinde kovaryans 60 kat değişir. Pearson korelasyonu
+kovaryansı iki standart sapmaya bölerek birimsiz hâle getirir:
+\[
+r=\frac{s_{xy}}{s_xs_y}
+=\frac{\sum_{i=1}^n(x_i-\bar x)(y_i-\bar y)}
+{\sqrt{\sum_{i=1}^n(x_i-\bar x)^2
+             \sum_{i=1}^n(y_i-\bar y)^2}}.
+\]
+
+Standartlaştırılmış puanlarla eşdeğer gösterim
+\[
+r=\frac{1}{n-1}\sum_{i=1}^n z_{xi}z_{yi}
+\]
+biçimindedir. Aynı yönde standart sapma gösteren gözlemler pozitif, ters yönde
+gösterenler negatif katkı yapar.
+
+\section{Pearson korelasyonunun özellikleri}
+\index{Pearson korelasyonu!özellikleri}
+
+Pearson korelasyonu $-1$ ile $1$ arasındadır:
+
+\begin{description}
+  \item[$r=1$] Bütün noktalar pozitif eğimli bir doğru üzerindedir.
+  \item[$r=-1$] Bütün noktalar negatif eğimli bir doğru üzerindedir.
+  \item[$r=0$] Doğrusal ilişki yoktur; doğrusal olmayan ilişki olabilir.
+\end{description}
+
+Katsayının işareti yönü, mutlak değeri doğrusal ilişkinin derecesini gösterir.
+X ile Y'nin yer değiştirmesi sonucu değiştirmez. Her iki değişkene sabit
+eklemek veya pozitif bir sabitle çarpmak korelasyonu değiştirmez; değişkenlerden
+birini negatif sabitle çarpmak yalnız işareti tersine çevirir.
+
+Korelasyonun büyüklüğü eğim değildir. Aynı $r$ değeri farklı ölçü birimleri ve
+farklı regresyon eğimleriyle birlikte görülebilir. Eğim, X'teki bir birimlik
+değişime karşı Y'deki beklenen değişimi; korelasyon ise standartlaştırılmış
+doğrusal birlikteliği özetler \cite{kutner2005,james2021}.
+
+\begin{sezgibox}
+Korelasyon, noktaların ince bir doğrusal şerit çevresinde ne kadar düzenli
+dizildiğini anlatır. Şeridin dikliği ölçü birimine bağlıdır; korelasyonun
+büyüklüğü ise noktaların şeride ne kadar sıkı bağlandığıyla ilgilidir.
+\end{sezgibox}
+
+\section{Adım adım PDR örneği}
+
+Yirmi öğrencinin uyku ve kaygı verisinde Pearson katsayısı
+\[
+r=-0{,}585
+\]
+olarak hesaplanmıştır. Yorum üç aşamada yapılır.
+
+\subsection*{1. Yön ve büyüklük}
+
+İlişki negatiftir: daha uzun uyku süresi daha düşük kaygı puanıyla birlikte
+görülme eğilimindedir. Mutlak değer yaklaşık 0,59'dur. Bu büyüklük PDR
+bağlamında dikkate değer olabilir; ancak sabit ``orta'' veya ``güçlü'' etiketi
+araştırma bağlamının yerine geçmemelidir.
+
+\subsection*{2. Sıfır korelasyon testi}
+
+$H_0:\rho=0$ için test istatistiği
+\[
+t=r\sqrt{\frac{n-2}{1-r^2}}
+\]
+olup $n-2$ serbestlik derecelidir. Örnekte
+\[
+t=-0{,}585\sqrt{\frac{18}{1-0{,}585^2}}
+\approx-3{,}06,
+\qquad p\approx0{,}007.
+\]
+
+Bu sonuç sıfır doğrusal korelasyon hipotezine karşı kanıt sunar. $p$-değeri
+ilişkinin nedensel olduğunu veya gerçek katsayının tam $-0{,}585$ olduğunu
+göstermez.
+
+\subsection*{3. Güven aralığı}
+
+Pearson korelasyonu için güven aralığı çoğunlukla Fisher dönüşümüyle kurulur:
+\[
+z_r=\frac12\ln\left(\frac{1+r}{1-r}\right),
+\qquad
+SE(z_r)=\frac{1}{\sqrt{n-3}}.
+\]
+Z ölçeğinde sınırlar oluşturulup ters dönüşüm uygulandığında yüzde 95 güven
+aralığı yaklaşık
+\[
+[-0{,}816;\ -0{,}192]
+\]
+bulunur. Veri zayıf ile güçlü arasında değişebilen negatif evren
+korelasyonlarıyla uyumludur; örneklemin küçük olması aralığı genişletmiştir.
+
+\section{Korelasyon büyüklüğünü yorumlamak}
+\index{korelasyon!yorumlama}
+
+Korelasyon için evrensel küçük--orta--büyük sınırları yoktur. Yorum şu
+özelliklere bağlıdır:
+
+\begin{itemize}
+  \item ölçümlerin güvenirliği ve ranjı,
+  \item alan yazındaki tipik ilişkiler,
+  \item ilişkinin hizmet veya karar açısından sonucu,
+  \item örneklemin kimlerden oluştuğu,
+  \item güven aralığının genişliği.
+\end{itemize}
+
+Çok küçük bir ilişki büyük bir öğrenci evreninde hizmet planlaması bakımından
+önemli olabilir. Büyük görünen bir örneklem korelasyonu ise küçük ve seçilmiş
+bir grupta kararsız olabilir. Kesin eşik yerine büyüklük ve belirsizlik birlikte
+sunulmalıdır.
+
+\section{Açıklanan varyans ve yanlış yorumlar}
+\index{açıklanan varyans}
+\index{R kare@$R^2$}
+
+Basit doğrusal regresyonda tek bir yordayıcı ve kesme terimi bulunduğunda
+\[
+R^2=r^2
+\]
+ilişkisi vardır. Uyku--kaygı örneğinde
+\[
+r^2=(-0{,}585)^2\approx0{,}342.
+\]
+Bu değer, örneklemde kaygı puanlarındaki doğrusal değişkenliğin yaklaşık yüzde
+34,2'sinin uyku süresiyle doğrusal olarak ortaklaştığını gösterir.
+
+\begin{mistakebox}
+``$r=-0{,}585$ olduğuna göre uyku kaygının yüzde 58,5'ini azaltır'' ifadesi
+yanlıştır. Korelasyon yüzde değişim değildir. $r^2$ de tek başına nedensel
+``açıklama'' oranı değildir; gözlemsel doğrusal ortak değişkenliği özetler.
+\end{mistakebox}
+
+Yüksek $R^2$ nedensellik, düşük $R^2$ de önemsizlik anlamına gelmez. Sonuç
+değişkeninin doğal değişkenliği, ölçüm hatası ve karar bağlamı göz önünde
+bulundurulmalıdır.
+
+\section{Spearman sıra korelasyonu}
+\index{Spearman korelasyonu}
+\index{sıra korelasyonu}
+
+Spearman korelasyonu ham puanların sıralarına Pearson korelasyonu uygulanarak
+elde edilir. Bağlı sıra yoksa
+\[
+r_s=1-\frac{6\sum d_i^2}{n(n^2-1)}
+\]
+formülü kullanılabilir; uygulamada yazılım bağlı sıraları uygun biçimde ele
+alır.
+
+Spearman katsayısı şu durumlarda yararlıdır:
+
+\begin{itemize}
+  \item değişkenlerden biri anlamlı sıralara sahip fakat eşit aralıklı olmayan ölçekteyse,
+  \item ilişki doğrusal değil ancak sürekli artan veya azalan, yani tekdüzeyse,
+  \item uç değerler Pearson korelasyonunu aşırı etkiliyorsa,
+  \item sıralama davranışı araştırma hedefiyle uyumluysa.
+\end{itemize}
+
+Uyku--kaygı verisinde Spearman korelasyonu yaklaşık
+\[
+r_s=-0{,}549,
+\qquad p\approx0{,}012
+\]
+bulunur. Pearson ve Spearman sonuçlarının benzer olması negatif tekdüze
+örüntünün yalnız birkaç uç değerden kaynaklanmadığına dair sınırlı bir
+duyarlılık göstergesidir. İki katsayının farklı hedefleri olduğu unutulmamalıdır.
+
+\begin{mistakebox}
+Spearman korelasyonu ``varsayımsız Pearson'' değildir ve her aykırı değer
+sorununu çözmez. Sıralar bilgi kaybına yol açabilir; çok sayıda bağlı sıra ve
+olağandışı etkili gözlemler sonucu yine etkileyebilir.
+\end{mistakebox}
+
+\section{Doğrusal olmayan ve tekdüze olmayan ilişkiler}
+\index{doğrusal olmayan ilişki}
+\index{tekdüze ilişki}
+
+Pearson doğrusal, Spearman ise tekdüze ilişkiyi özetler. X arttıkça Y önce
+azalıyor sonra artıyorsa ilişki ne doğrusal ne de tekdüzedir. Her iki katsayı
+sıfıra yakın olduğu hâlde güçlü bir U biçimli örüntü bulunabilir.
+
+PDR bağlamında orta düzey stresin performansı artırıp çok düşük ve çok yüksek
+stresin performansı düşürmesi böyle bir eğrisel ilişki oluşturabilir. Bu
+durumda:
+
+\begin{itemize}
+  \item saçılım grafiği ve yumuşatılmış eğri incelenir,
+  \item kuramsal olarak gerekçeli eğrisel terimler modellenir,
+  \item doğrusal korelasyon ``ilişki yok'' diye yorumlanmaz.
+\end{itemize}
+
+İlişkinin biçimi veri görüldükten sonra sınırsız model denenerek seçilmemeli;
+keşfedici bulgu sonraki çalışmada doğrulanmalıdır.
+
+\section{Aykırı ve etkili gözlemler}
+\index{aykırı değer}
+\index{etkili gözlem}
+\index{kaldıraç}
+
+Pearson korelasyonu ortalama, standart sapma ve çapraz çarpımlara dayandığı
+için aykırı gözlemlere duyarlıdır. X ekseninde diğer noktalardan çok uzakta
+bulunan bir gözlem yüksek kaldıraçlıdır ve doğrusal örüntüyü güçlü biçimde
+değiştirebilir.
+
+Uyku--kaygı verisine 9 saat uyuduğunu ve kaygı puanının 90 olduğunu bildiren
+tek bir öğrenci eklendiğinde Pearson korelasyonu yaklaşık $-0{,}585$'ten
+$-0{,}153$'e düşmektedir. Spearman korelasyonu da yaklaşık $-0{,}338$'e
+değişmektedir. Bu karşılaştırma gözlemin otomatik olarak silinmesini değil,
+sonucun ona duyarlı olduğunu gösterir.
+
+\begin{enumerate}
+  \item Veri girişi, birim ve katılımcı kaydı doğrulanır.
+  \item Gözlemin farklı bir alt grubu temsil edip etmediği incelenir.
+  \item Grafik ve standartlaştırılmış değerler değerlendirilir.
+  \item Gözlem dahil ve hariç sonuçlar duyarlılık analizi olarak sunulur.
+  \item Silme kararı sonuçtan bağımsız, bilimsel gerekçeye dayandırılır.
+\end{enumerate}
+
+\begin{researchbox}
+Uç bir kaygı puanı istatistiksel olarak etkili olduğu kadar mesleki açıdan da
+önemli olabilir. Gerçek bir öğrenciyi yalnız korelasyonu ``bozduğu'' için
+görünmez kılmak bilimsel ve etik açıdan savunulamaz.
+\end{researchbox}
+
+\section{Ranj daralması}
+\index{ranj daralması}
+
+Korelasyon örneklemde gözlenen değişkenlikten etkilenir. Yalnız yüksek başarı
+puanlı öğrenciler seçildiğinde başarı ranjı daralır ve evrende var olan ilişki
+örneklemde daha küçük görünebilir. Benzer biçimde yalnız yüksek risk grubunda
+kaygı ile başka bir değişken arasındaki korelasyon zayıflayabilir.
+
+Ranj daralması katsayının değişkenlerin değişmez bir özelliği olmadığını
+gösterir. Örneklemin dahil edilme ölçütleri, minimum--maksimum değerleri ve
+hedef evrenden nasıl ayrıldığı raporlanmalıdır.
+
+\begin{sezgibox}
+Bir ilişkinin görülebilmesi için her iki değişkende de yeterli çeşitlilik
+gerekir. Yalnız aynı boya yakın kişileri seçerek boy ile kol uzunluğu
+ilişkisini incelemek, cetvelin çok küçük bir bölümüne bakmaya benzer.
+\end{sezgibox}
+
+\section{Alt gruplar ve yanıltıcı toplam korelasyon}
+\index{alt grup}
+\index{toplam korelasyon}
+
+İki veya daha fazla alt grup birlikte analiz edildiğinde toplam korelasyon,
+grup içindeki ilişkilerden farklı hatta ters yönde olabilir. Örneğin lisans ve
+lisansüstü öğrenciler hem yaş hem yardım arama puanı bakımından farklıysa,
+grupların birleştirilmesi yaş ile yardım arama arasında yapay bir ilişki
+üretebilir.
+
+Bu durum bazen Simpson paradoksu olarak görünür. Araştırmacı:
+
+\begin{itemize}
+  \item saçılım grafiğinde noktaları anlamlı gruplara göre renklendirmeli,
+  \item grup içi ve toplam ilişkileri karşılaştırmalı,
+  \item alt grup analizini kuramsal gerekçeyle yürütmeli,
+  \item çok sayıda veri sonrası alt grup aramanın yanlış pozitif riskini açıklamalıdır.
+\end{itemize}
+
+Alt grupları ayırmak her zaman doğru değildir; küçük grup örneklemleri çok
+kararsız katsayılar üretebilir. Amaç, veri üretim yapısını görünür kılmaktır.
+
+\section{Ölçüm güvenirliği ve korelasyon}
+\index{ölçüm güvenirliği}
+\index{korelasyon!zayıflama}
+
+Rastgele ölçüm hatası gözlenen korelasyonu çoğunlukla sıfıra doğru zayıflatır.
+İki yapının kuramsal ilişkisi güçlü olsa bile kısa, güvenirliği düşük ölçekler
+daha küçük korelasyon verebilir. Bu nedenle kullanılan ölçme araçlarının
+güvenirlik ve geçerlik kanıtları belirtilmelidir.
+
+Yüksek güvenirlik ise korelasyonun geçerli veya nedensel olduğunu garanti
+etmez. İki öz-bildirim ölçeği benzer soru dili ya da ortak yanıt eğilimi
+nedeniyle yapay biçimde yüksek korelasyon gösterebilir.
+
+\begin{mistakebox}
+Düşük korelasyonu otomatik olarak ``değişkenler ilişkisiz'' diye yorumlamayın.
+Ranj daralması, düşük güvenirlik, doğrusal olmayan biçim ve alt grup karışımı
+katsayıyı küçültebilir. Önce veri ve ölçüm koşullarını inceleyin.
+\end{mistakebox}
+
+\section{Korelasyon ve nedensellik}
+\index{nedensellik}
+\index{ters nedensellik}
+\index{karıştırıcı değişken}
+
+Korelasyon iki değişkenin birlikte değiştiğini gösterir; tek başına birinin
+diğerine neden olduğunu göstermez. Uyku ile kaygı arasındaki negatif ilişki
+en az dört biçimde açıklanabilir:
+
+\begin{enumerate}
+  \item az uyku kaygıyı artırabilir,
+  \item yüksek kaygı uykuyu azaltabilir,
+  \item sınav yükü veya ekonomik stres her ikisini etkileyebilir,
+  \item örnekleme, yanıtlamama veya ölçüm süreci yapay ilişki üretebilir.
+\end{enumerate}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[alt={Sınav yükünün hem uyku süresini hem akademik kaygıyı etkilediği ve uyku ile kaygının ilişkili olduğu nedensel şema},
+  box/.style={draw=PrismBlue,fill=PrismLight,rounded corners,align=center,minimum width=2.5cm,minimum height=0.8cm}
+]
+\node[box] (stress) at (0,0) {Sınav yükü};
+\node[box] (sleep) at (4,0) {Uyku süresi};
+\node[box] (anxiety) at (8,0) {Kaygı};
+\draw[->,thick,PrismBlue] (stress)--(sleep);
+\draw[->,thick,PrismBlue] (stress) to[bend right=28] (anxiety);
+\draw[<->,thick,PrismSubheadingBlue] (sleep)--(anxiety);
+\end{tikzpicture}
+\caption{Ortak neden ve belirsiz yön içeren olası açıklama şeması.}
+\end{figure}
+
+Nedensel yorum için zaman sırası, uygun karşılaştırma, karıştırıcıların
+denetlenmesi, ölçüm kalitesi ve mümkünse rastgele atama gibi ek tasarım
+kanıtları gerekir. İstatistiksel kontrol bütün karıştırıcıları otomatik olarak
+ortadan kaldırmaz.
+
+\section{Kısmi korelasyon ve kontrol yanılgısı}
+\index{kısmi korelasyon}
+\index{kontrol değişkeni}
+
+Kısmi korelasyon, bir veya daha fazla değişkenle doğrusal olarak ortaklaşan
+kısım çıkarıldıktan sonra iki değişken arasındaki ilişkiyi özetler. Örneğin
+uyku ile kaygı ilişkisi sınıf düzeyi sabit tutulduğunda incelenebilir.
+
+Ancak bir değişkeni ``kontrol etmek'' nedensel sorunu otomatik çözmez. Araya
+giren değişkeni, ortak etkinin sonucunu veya ölçüm hatalı bir kovaryatı modele
+eklemek yeni yanlılık oluşturabilir. Kontrol değişkenleri yalnız $p$-değerine
+veya korelasyon tablosuna göre değil, kuramsal nedensel gerekçeyle seçilmelidir.
+
+Bu konu Bölüm 11'de doğrusal regresyon çerçevesinde ayrıntılandırılacaktır.
+
+\section{Çok sayıda korelasyon ve seçici raporlama}
+\index{çoklu test}
+\index{seçici raporlama}
+
+On değişkenin bütün ikilileri için 45 korelasyon hesaplanır. Yalnız düşük
+$p$-değerlerini seçmek yanlış pozitif ve abartılı etki riski doğurur.
+Araştırmacı birincil ilişkileri önceden belirlemeli, korelasyon ailesinin
+büyüklüğünü açıklamalı ve gerektiğinde Holm ya da yanlış keşif oranı gibi
+düzeltmeler kullanmalıdır.
+
+Korelasyon matrisi sunulduğunda her hücrenin örneklem hacmi aynı olmayabilir.
+Çift bazında eksik veri silme, farklı korelasyonların farklı öğrenci
+altkümelerine dayanmasına yol açabilir. Eksik veri yöntemi açıkça
+belirtilmelidir.
+
+\section{Pearson korelasyonu için koşullar}
+
+Korelasyon ve sıfır korelasyon testi değerlendirilirken şu noktalar incelenir:
+
+\begin{itemize}
+  \item her gözlem çifti aynı analiz birimine aittir,
+  \item gözlem çiftleri birbirinden bağımsızdır veya bağımlılık modellenmiştir,
+  \item iki değişken niceldir ve ilişki yaklaşık doğrusaldır,
+  \item güçlü aykırı ve yüksek etkili gözlem yoktur,
+  \item klasik küçük örneklem testi için ortak dağılım yaklaşık iki değişkenli normaldir,
+  \item örnekleme ve ölçüm süreci hedeflenen yoruma uygundur.
+\end{itemize}
+
+Korelasyon katsayısının hesaplanması için normallik gerekmez; fakat klasik
+$p$-değeri ve güven aralığının küçük örneklem geçerliği dağılım koşullarından
+etkilenebilir. Grafik, bootstrap aralığı ve sağlamlık analizi bu nedenle
+yararlıdır.
+
+\begin{assumptionbox}
+İki değişken için ayrı ayrı normal histogram görmek ilişkinin doğrusal veya
+aykırı değersiz olduğunu göstermez. Varsayım incelemesinin temel grafiği iki
+değişkeni birlikte gösteren saçılım grafiğidir.
+\end{assumptionbox}
+
+\section{Python ile yeniden üretilebilir analiz}
+
+\begin{lstlisting}
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import stats
+
+uyku = np.array([4.5,5.0,5.2,5.5,5.8,6.0,6.1,6.3,6.5,6.7,
+                 6.8,7.0,7.1,7.3,7.5,7.6,7.8,8.0,8.2,8.5])
+kaygi = np.array([68,52,75,60,66,48,70,55,64,58,
+                  45,62,53,46,60,43,55,49,57,40])
+
+r, p = stats.pearsonr(uyku, kaygi)
+rs, ps = stats.spearmanr(uyku, kaygi)
+
+# Fisher donusumuyle yuzde 95 guven araligi
+z = np.arctanh(r)
+se = 1 / np.sqrt(len(uyku) - 3)
+alt, ust = np.tanh([z - 1.96 * se, z + 1.96 * se])
+
+print("Pearson r ve p:", r, p)
+print("Yuzde 95 GA:", alt, ust)
+print("Spearman rs ve p:", rs, ps)
+print("r-kare:", r**2)
+
+plt.scatter(uyku, kaygi)
+egim, kesme = np.polyfit(uyku, kaygi, 1)
+plt.plot(uyku, kesme + egim * uyku, color="navy")
+plt.xlabel("Gecelik uyku suresi")
+plt.ylabel("Akademik kaygi puani")
+plt.show()
+\end{lstlisting}
+
+Kod çıktısından önce grafiğin biçimi ve etkili gözlemler incelenmelidir.
+Korelasyon katsayıları birbirinin yerine seçilecek iki farklı ``anlamlılık
+yolu'' değildir; Pearson doğrusal, Spearman sıralara dayalı tekdüze ilişkiyi
+hedefler.
+
+\section{SPSS ile korelasyon analizi}
+
+\begin{enumerate}
+  \item Önce \textbf{Graphs $>$ Chart Builder} ile saçılım grafiği oluşturun.
+  \item \textbf{Analyze $>$ Correlate $>$ Bivariate} yolunu izleyin.
+  \item İki değişkeni analiz alanına taşıyın; araştırma hedefine göre Pearson veya Spearman seçin.
+  \item Tek veya çift yönlü seçimin veri görülmeden önceki hipotezle uyumunu doğrulayın.
+  \item Eksik değerlerin çift bazında mı liste bazında mı dışlandığını kontrol edin.
+  \item Katsayı, kesin $p$-değeri ve her çift için geçerli $n$ değerini okuyun.
+  \item Güven aralığı sürümde doğrudan verilmiyorsa bootstrap seçeneğini veya uygun ek yordamı kullanın.
+\end{enumerate}
+
+\begin{outputguidebox}
+Korelasyon tablosunu şu sırayla okuyun: (1) değişkenlerin yönü ve kodlaması,
+(2) her çift için geçerli $n$, (3) katsayının işareti ve büyüklüğü, (4) kesin
+$p$-değeri, (5) güven aralığı, (6) saçılım grafiği ve etkili gözlemler.
+Yıldız işaretlerinin sayısını ilişkinin büyüklüğü sanmayın; yıldızlar yalnız
+seçilmiş anlamlılık eşiklerini gösterir.
+\end{outputguidebox}
+
+\section{Bilimsel raporlama örneği}
+
+``Gecelik uyku süresi ile akademik kaygı puanı arasında negatif doğrusal
+ilişki bulunmuştur, $r(18)=-0{,}585$, yüzde 95 GA
+$[-0{,}816;-0{,}192]$, $p=0{,}007$, $n=20$. Saçılım grafiği belirgin bir
+eğrilik göstermemiştir. Spearman duyarlılık analizi benzer yönde sonuç
+vermiştir, $r_s=-0{,}549$, $p=0{,}012$. Kesitsel ve öz-bildirime dayalı
+tasarım nedeniyle ilişki nedensel etki olarak yorumlanmamıştır.''
+
+Serbestlik derecesi Pearson korelasyon testinde $n-2$ olduğu için parantezde
+18 verilmiştir. Alan yazındaki raporlama geleneğine göre doğrudan $n=20$ de
+belirtilebilir. Yöntem, katsayı türü ve eksik veri işlemi açık olmalıdır.
+
+\section{Bir korelasyon araştırmasını değerlendirirken}
+
+\begin{enumerate}
+  \item Araştırma sorusu doğrusal mı, tekdüze mi, yoksa daha genel bir ilişkiyi mi hedefliyor?
+  \item Saçılım grafiği yön, biçim, alt gruplar ve etkili gözlemler bakımından incelenmiş mi?
+  \item Pearson veya Spearman seçimi veri yapısıyla gerekçelendirilmiş mi?
+  \item Katsayı güven aralığı, $p$-değeri ve örneklem hacmiyle birlikte verilmiş mi?
+  \item Ranj daralması, ölçüm güvenirliği ve eksik veri dikkate alınmış mı?
+  \item Çok sayıda korelasyon için seçici raporlama veya çoklu test sorunu var mı?
+  \item Korelasyon açıklanan yüzde, tahmin doğruluğu veya nedensel etki gibi yanlış yorumlanmış mı?
+\end{enumerate}
+
+\input{chapter-exercises/10-korelasyon}
+
+\bolumkaynaklari{\cite{anscombe1973,kutner2005,james2021,cohen1988}}
+
+\section*{Hatırla--Uygula--Yansıt}
+
+\begin{enumerate}
+\renewcommand{\labelenumi}{\textbf{\Alph{enumi}.}}
+  \item \textbf{Hatırla:} Saçılım grafiğinde ilişkinin yön, biçim, güç ve aykırı değer özelliklerini açıklayın.
+  \item \textbf{Yorumla:} $r=-0{,}60$ için yönü, büyüklüğü ve basit doğrusal modeldeki $R^2$ değerini belirtin.
+  \item \textbf{Ayır:} Korelasyon katsayısı ile regresyon eğiminin neden aynı şey olmadığını açıklayın.
+  \item \textbf{Test et:} $r=0{,}40$ ve $n=27$ için sıfır korelasyon testinin $t$ istatistiğini hesaplayın.
+  \item \textbf{Aralık:} $r=0{,}35$ ve yüzde 95 GA $[-0{,}05;0{,}65]$ sonucunu kanıt ve hassasiyet bakımından yorumlayın.
+  \item \textbf{Seç:} Pearson yerine Spearman kullanmayı gerektirebilecek üç veri özelliği yazın.
+  \item \textbf{Eğrilik:} Güçlü U biçimli ilişkide Pearson ve Spearman katsayılarının neden sıfıra yakın olabileceğini açıklayın.
+  \item \textbf{Aykırı değer:} Tek yüksek kaldıraçlı gözlemin korelasyonu nasıl büyütebileceğini veya küçültebileceğini tartışın.
+  \item \textbf{Ranj:} Yalnız yüksek başarı gösteren öğrencileri seçmenin kaygı--başarı korelasyonuna olası etkisini açıklayın.
+  \item \textbf{Alt grup:} Toplam korelasyon ile grup içi korelasyonların neden farklı olabileceğine bir PDR örneği verin.
+  \item \textbf{Ölçüm:} Düşük güvenirliğin gözlenen korelasyonu nasıl etkileyebileceğini açıklayın.
+  \item \textbf{Nedensellik:} Uyku ile kaygı arasındaki ilişki için ters yön ve iki ortak neden önerin.
+  \item \textbf{Çoklu test:} Sekiz değişkenin bütün ikilileri için kaç korelasyon hesaplanacağını bulun ve seçici raporlama riskini tartışın.
+  \item \textbf{Uygula:} Python verisine $(9,90)$ gözlemini ekleyip Pearson, Spearman ve grafikteki değişimi karşılaştırın.
+  \item \textbf{Raporla:} Katsayı türü, $r$, serbestlik derecesi veya $n$, güven aralığı, $p$-değeri, grafik ve nedensellik sınırı içeren kısa bir bulgu paragrafı yazın.
+\end{enumerate}

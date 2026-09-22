@@ -1,0 +1,18 @@
+\definecolor{SPSSStepBackground}{HTML}{F7F4EE}
+\newcounter{spssadim}
+\newenvironment{spssadimlar}{%
+  \par\Needspace{7\baselineskip}\medskip
+  \noindent\textbf{SPSS'te adım adım}\par\smallskip
+  \setcounter{spssadim}{0}%
+}{\par\medskip}
+\newcommand{\spssadim}[1]{%
+  \stepcounter{spssadim}%
+  \begin{tcolorbox}[
+    colback=SPSSStepBackground,colframe=PrismGray!65,
+    coltext=black,sharp corners,boxrule=0.35pt,
+    left=7pt,right=7pt,top=5pt,bottom=5pt,
+    before skip=3pt,after skip=3pt,fontupper={\small\RaggedRight}]
+    \hangindent=1.6em\hangafter=1
+    \noindent\makebox[1.6em][l]{\thespssadim.}#1\par
+  \end{tcolorbox}%
+}

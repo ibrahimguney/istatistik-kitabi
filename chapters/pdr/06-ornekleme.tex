@@ -1,0 +1,598 @@
+\chapter{Örnekleme Yöntemleri ve Örnekleme Yanlılığı}
+\label{ch:sampling-design}
+\index{örnekleme}
+\index{örnekleme yanlılığı}
+
+\begin{hedefler}
+Bu bölümün sonunda okuyucu:
+\begin{itemize}
+  \item hedef evren, erişilebilir evren, örnekleme çerçevesi, örnekleme birimi ve örneklemi ayırt edebilecek,
+  \item basit rastgele, sistematik, tabakalı, küme ve çok aşamalı örneklemeyi araştırma bağlamına göre seçebilecek,
+  \item örnekleme hatası ile kapsam, yanıtlamama, gönüllülük ve ölçüm yanlılığını ayırabilecek,
+  \item örneklem hacmini hassasiyet, güç, tasarım ve beklenen yanıt oranıyla ilişkilendirebilecek,
+  \item örnekleme sürecini şeffaf ve etik biçimde raporlayabilecektir.
+\end{itemize}
+\end{hedefler}
+
+\begin{hazirlik}
+Bir anket yalnız sosyal medya hesabını takip eden öğrencilere gönderilirse
+kimler sistematik olarak dışarıda kalabilir? Genellenebilirliği tartışın.
+\end{hazirlik}
+
+\section{PDR vakası: Üniversite öğrencilerinin yardım arama tutumları}
+
+Bir üniversitenin psikolojik danışma merkezi, öğrencilerin profesyonel yardım
+arama tutumlarını ve merkezin hizmetlerine ilişkin farkındalıklarını
+incelemek istemektedir. Üniversitede dört fakültede toplam 6.000 öğrenci
+vardır. Araştırma ekibinin bütün öğrencilere ulaşması mümkün değildir; bu
+nedenle 600 öğrencilik bir örneklem planlanmaktadır.
+
+İlk bakışta yapılacak iş 600 isim seçmek gibi görünür. Oysa şu kararlar
+sonucun niteliğini belirler:
+
+\begin{itemize}
+  \item Araştırmanın hedefi bütün kayıtlı öğrenciler mi, yalnız kampüse devam edenler mi?
+  \item Güncel öğrenci listesi bütün fakülte ve sınıf düzeylerini içeriyor mu?
+  \item Az sayıdaki alt gruplar örneklemde yeterince temsil edilecek mi?
+  \item Ankete yanıt vermeyen öğrenciler yanıt verenlerden farklı olabilir mi?
+  \item Yardım arama gibi hassas bir konuda davet biçimi gönüllülüğü etkiler mi?
+\end{itemize}
+
+Bu vaka bölüm boyunca farklı örnekleme tasarımlarını karşılaştırmak için
+kullanılacaktır.
+
+\section{Hedef evrenden gözlenen örnekleme}
+\index{hedef evren}
+\index{erişilebilir evren}
+\index{örnekleme çerçevesi}
+\index{örnekleme birimi}
+\index{analiz birimi}
+
+Araştırmacının hakkında sonuç üretmek istediği topluluk \textbf{hedef evren},
+seçim yapılırken fiilen erişilebilen birimlerin listesi \textbf{örnekleme
+çerçevesi}, ölçülen birimler ise \textbf{örneklem}dir. Bu üç küme aynı değilse
+genelleme yapılırken kapsam hatası oluşabilir \cite{cochran1977,lohr2021}.
+
+\begin{description}
+  \item[Erişilebilir evren] Araştırmacının uygulamada ulaşabildiği hedef evren bölümüdür.
+  \item[Örnekleme birimi] Seçim işleminin uygulandığı öğrenci, sınıf, okul veya kurumdur.
+  \item[Analiz birimi] Sonuçların hesaplandığı temel birimdir; örnekleme birimiyle aynı olmak zorunda değildir.
+\end{description}
+
+Örneğin önce sınıflar seçilip seçilen sınıflardaki öğrenciler ölçülürse sınıf
+örnekleme birimi, öğrenci analiz birimidir. Bu ayrım bağımsızlık ve standart
+hata hesapları açısından önemlidir.
+
+Örneğin bir üniversitedeki bütün öğrenciler hedeflenirken anket bağlantısının
+yalnız belirli bir dersin çevrim içi sayfasında paylaşılması, örnekleme
+çerçevesini o dersi alan öğrencilerle sınırlar.
+
+\begin{figure}[htbp]
+\centering
+\resizebox{0.92\linewidth}{!}{%
+\begin{tikzpicture}[alt={Hedef evren, erişilebilir evren, örnekleme çerçevesi ve gözlenen örneklem arasındaki daralmayı gösteren akış şeması},
+  box/.style={draw=PrismBlue,rounded corners,fill=PrismLight,minimum width=3.2cm,minimum height=1cm,align=center},
+  note/.style={font=\scriptsize,text=PrismGray,align=center}
+]
+\node[box] (target) at (0,0) {Hedef evren\\6.000 öğrenci};
+\node[box] (frame) at (4.3,0) {Örnekleme çerçevesi\\güncel öğrenci listesi};
+\node[box] (selected) at (8.6,0) {Seçilen örneklem\\600 öğrenci};
+\node[box] (responded) at (12.9,0) {Yanıtlayan örneklem\\örneğin 438 öğrenci};
+\draw[->,thick,PrismBlue] (target)--(frame);
+\draw[->,thick,PrismBlue] (frame)--(selected);
+\draw[->,thick,PrismBlue] (selected)--(responded);
+\node[note] at (2.15,-0.85) {kapsam hatası};
+\node[note] at (6.45,-0.85) {örnekleme hatası};
+\node[note] at (10.75,-0.85) {yanıtlamama};
+\end{tikzpicture}%
+}
+\caption{Hedef evrenden yanıtlayan örnekleme uzanan seçim zinciri.}
+\end{figure}
+
+\subsection{İyi bir örnekleme çerçevesinin özellikleri}
+\index{örnekleme çerçevesi!kapsam}
+\index{kapsam hatası}
+
+Çerçeve güncel olmalı, hedef evrendeki her uygun birimi kapsamalı, aynı birimi
+birden fazla kez içermemeli ve seçim için gerekli tabaka ya da küme bilgisini
+taşımalıdır. Mezun olmuş öğrencilerin listede kalması fazla kapsam; uzaktan
+öğrenim öğrencilerinin listede bulunmaması eksik kapsam örneğidir.
+
+\begin{etkinlik}
+Yardım arama tutumu araştırması için üç olası çerçeve düşünün: öğrenci bilgi
+sistemi listesi, kampüste o gün bulunan öğrenciler ve merkezin sosyal medya
+takipçileri. Her çerçevenin kimleri kapsadığını ve kimleri dışarıda
+bıraktığını karşılaştırın.
+\end{etkinlik}
+
+\section{Olasılıklı örnekleme yöntemleri}
+\index{olasılıklı örnekleme}
+\index{dahil olma olasılığı}
+
+Olasılıklı örneklemede her birimin seçilme olasılığı bilinir ve sıfırdan
+büyüktür. Bu özellik, örnekleme belirsizliğinin hesaplanmasına ve tasarıma
+dayalı genellemeye temel sağlar. ``Rastgele'' sözcüğü gelişigüzel seçim değil,
+önceden tanımlanmış bir olasılık mekanizması anlamına gelir.
+
+\begin{description}
+  \item[Basit rastgele örnekleme] Her birim bilinen ve eşit seçilme şansına sahiptir.
+  \item[Sistematik örnekleme] Rastgele başlangıçtan sonra listedeki her $k$'ıncı birim seçilir.
+  \item[Tabakalı örnekleme] Evren önemli alt gruplara ayrılır ve her tabakadan örnek alınır.
+  \item[Küme örneklemesi] Bireyler yerine sınıf, okul veya kurum gibi doğal kümeler seçilir.
+  \item[Çok aşamalı örnekleme] Önce kümeler, sonra kümeler içindeki alt birimler seçilir.
+\end{description}
+
+\subsection{Basit rastgele örnekleme}
+\index{basit rastgele örnekleme}
+
+$N$ birimlik çerçeveden $n$ birim seçildiğinde her birimin dahil olma
+olasılığı
+\[
+\pi_i=\frac{n}{N}
+\]
+olur. Seçim bilgisayarın rassal sayı üreteciyle yapılabilir; araştırmacının
+``rastgele görünen'' isimler seçmesi yeterli değildir.
+
+\begin{ornek}[Basit rastgele seçim]
+6.000 öğrenciden 600'ü seçilecekse her öğrencinin örnekleme dahil olma
+olasılığı $600/6000=0{,}10$'dur. Listenin her satırı tek ve uygun bir öğrenciyi
+temsil ediyorsa 600 farklı sıra numarası rassal olarak seçilebilir.
+\end{ornek}
+
+\subsection{Sistematik örnekleme}
+\index{sistematik örnekleme}
+\index{seçim aralığı}
+
+Yaklaşık seçim aralığı $k=N/n$ ile bulunur. $N=6000$ ve $n=600$ için
+$k=10$'dur. 1 ile 10 arasında rassal bir başlangıç, örneğin 7 seçilir; sonra
+7, 17, 27, $\ldots$ numaralı birimler alınır.
+
+Liste sırası gizli bir döngü içeriyorsa sistematik seçim yanlı sonuç
+üretebilir. Örneğin kayıtlar her on satırda bir aynı program türünü tekrar
+ediyorsa $k=10$ seçimi bazı grupları aşırı ya da eksik temsil edebilir.
+
+\subsection{Tabakalı örnekleme}
+\index{tabakalı örnekleme}
+\index{orantılı dağıtım}
+
+Evren fakülte, sınıf düzeyi veya öğrenim türü gibi önemli alt gruplara
+ayrılır. Orantılı dağıtımda $h$ tabakasından seçilecek sayı
+\[
+n_h=n\frac{N_h}{N}
+\]
+olarak belirlenir. Fakülte büyüklükleri 2.400, 1.800, 1.200 ve 600 ise
+600 kişilik orantılı örneklem sırasıyla 240, 180, 120 ve 60 öğrenciden oluşur.
+
+Küçük fakat araştırma açısından önemli bir alt grup orantılı seçimde çok az
+gözlemle temsil edilebilir. Bu durumda orantısız tabakalama yapılabilir; ancak
+üniversite geneli sonuçlarda seçim olasılıklarını dengeleyen ağırlıklar
+gerekebilir.
+
+\subsection{Küme ve çok aşamalı örnekleme}
+\index{küme örneklemesi}
+\index{çok aşamalı örnekleme}
+\index{tasarım etkisi}
+
+Öğrencilerin tek listesine ulaşmak güç, sınıf listelerine ulaşmak kolaysa önce
+sınıflar seçilip sonra seçilen sınıflardaki öğrenciler araştırmaya alınabilir.
+Bu yaklaşım maliyeti azaltır. Bununla birlikte aynı sınıftaki öğrenciler
+birbirine benzeyebileceğinden 600 öğrencilik küme örneklemi, 600 bağımsız
+öğrencilik basit rastgele örneklem kadar bilgi taşımayabilir.
+
+Çok aşamalı tasarımda önce fakülteler veya sınıflar, sonra bunların içindeki
+öğrenciler seçilir. Her aşamadaki seçim olasılığı ve küme yapısı analizde
+dikkate alınmalıdır.
+
+Tabakalama, alt grupların temsilini güvenceye almak için; küme örneklemesi ise
+dağınık bir evrende veri toplama maliyetini azaltmak için kullanılabilir.
+Küme içindeki bireyler birbirine benzediğinde etkili bilgi miktarı, aynı
+sayıdaki bağımsız bireyden daha düşük olur \cite{chambers2003}.
+
+\begin{table}[htbp]
+\centering
+\caption{Olasılıklı örnekleme yöntemlerinin karşılaştırılması.}
+\begin{tabular}{@{}p{0.20\textwidth}p{0.27\textwidth}p{0.29\textwidth}@{}}
+\toprule
+Yöntem & Güçlü yön & Temel risk veya maliyet \\
+\midrule
+Basit rastgele & Seçim mantığı ve ağırlıklar yalındır & Tam ve güncel birey listesi gerekir \\
+Sistematik & Uygulaması hızlı ve örneklemi listeye yayar & Liste sırasındaki dönemlilik sonucu bozabilir \\
+Tabakalı & Önemli alt grupların temsilini güvenceye alır & Tabaka bilgisi ve gerektiğinde ağırlık gerekir \\
+Küme & Saha maliyetini azaltır & Küme içi benzerlik hassasiyeti düşürebilir \\
+Çok aşamalı & Büyük ve dağınık evrenlerde uygulanabilirdir & Seçim ve analiz yapısı daha karmaşıktır \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Olasılıksız örnekleme}
+\index{olasılıksız örnekleme}
+\index{kolayda örnekleme}
+\index{amaçlı örnekleme}
+\index{kartopu örnekleme}
+
+Kolayda, gönüllü ve amaçlı örnekleme bazı araştırma bağlamlarında gerekli
+olabilir; ancak birimlerin seçilme olasılıkları bilinmediği için örnekleme
+hatası klasik formüllerle tam olarak hesaplanamaz. Sonuçların hangi gruba
+genellenebileceği açıkça sınırlandırılmalıdır.
+
+\begin{description}
+  \item[Kolayda örnekleme] Ulaşılması kolay katılımcılar seçilir.
+  \item[Gönüllü örnekleme] Katılımcılar açık çağrıya kendi istekleriyle yanıt verir.
+  \item[Amaçlı örnekleme] Belirli deneyim veya özellikleri taşıyan bilgi-zengin durumlar seçilir.
+  \item[Kartopu örnekleme] Ulaşılması güç gruplarda katılımcılar başka katılımcılara erişim sağlar.
+  \item[Kota örneklemesi] Belirli grup sayıları hedeflenir; grup içi seçim olasılıklı olmak zorunda değildir.
+\end{description}
+
+Amaçlı veya kartopu örnekleme nitel ve keşfedici PDR araştırmalarında değerli
+olabilir. Sorun yöntemin kullanılması değil, sonuçların olasılıklı bir örneklem
+elde edilmiş gibi bütün evrene genellenmesidir.
+
+\begin{researchbox}
+Klinik deneyimi bulunan az sayıdaki danışmanın görüşünü derinlemesine
+incelemek için amaçlı örnekleme uygun olabilir. Aynı örneklemden ülkedeki tüm
+danışmanların belirli bir görüşü hangi oranda taşıdığını tahmin etmek ise
+savunulamaz.
+\end{researchbox}
+
+\section{Yanlılık kaynakları}
+\index{yanlılık!kapsam}
+\index{yanlılık!gönüllülük}
+\index{yanlılık!yanıtlamama}
+\index{yanlılık!ölçüm}
+
+\begin{itemize}
+  \item \textbf{Kapsam yanlılığı:} Çerçeve hedef evrenin bazı kesimlerini dışlar.
+  \item \textbf{Yanıtlamama yanlılığı:} Yanıt verenler vermeyenlerden sistematik olarak farklıdır.
+  \item \textbf{Gönüllülük yanlılığı:} Güçlü görüşü olan kişiler katılmaya daha isteklidir.
+  \item \textbf{Ölçüm yanlılığı:} Soru biçimi, araç veya uygulayıcı yanıtları sistematik etkiler.
+  \item \textbf{Seçim sonrası dışlama:} Analiz ölçütleri belirli sonuçları aşırı temsil eder.
+\end{itemize}
+
+\subsection{Örnekleme hatası ve yanlılık aynı değildir}
+\index{örnekleme hatası}
+\index{yanlılık}
+
+Örnekleme hatası, yalnız bir örneklemin gözlenmesinden kaynaklanan rassal
+farktır; farklı örneklemler farklı sonuç verir. Örneklem büyüdükçe çoğunlukla
+azalır ve standart hatayla nicelendirilebilir. Yanlılık ise sonuçları belirli
+bir yönde sistematik olarak çarpıtır; daha büyük örneklem bu çarpıklığı
+gidermeyebilir.
+
+\begin{table}[htbp]
+\centering
+\caption{Örnekleme sürecindeki hata ve yanlılıkların tanılanması.}
+\begin{tabular}{@{}p{0.22\textwidth}p{0.30\textwidth}p{0.29\textwidth}@{}}
+\toprule
+Sorun & Yardım arama araştırmasındaki örnek & Olası önlem \\
+\midrule
+Kapsam & Kayıt donduran öğrenciler listede yok & Hedef evreni sınırla veya çerçeveyi tamamla \\
+Yanıtlamama & Hizmetlere ilgisiz öğrenciler ankete dönmüyor & Hatırlatma, kısa form, yanıtlayan--yanıtlamayan karşılaştırması \\
+Gönüllülük & Olumlu veya olumsuz deneyimi güçlü olanlar katılıyor & Olasılıklı davet ve tarafsız çağrı dili \\
+Ölçüm & ``Merkezimizin yararlı hizmetleri'' biçiminde yönlendirici soru & Tarafsız ifade ve pilot uygulama \\
+İşleme & Eksik yanıtların gerekçesiz silinmesi & Önceden tanımlı veri temizleme ve duyarlılık analizi \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{mistakebox}
+Rastgele örnekleme ile rastgele atama aynı işlem değildir. Rastgele örnekleme
+evrene genellemeyi, rastgele atama ise gruplar arasında nedensel karşılaştırmayı
+destekler.
+\end{mistakebox}
+
+\section{Yanıtlamama ve katılım süreci}
+\index{yanıtlamama}
+\index{yanıt oranı}
+
+Yanıt oranı genel olarak
+\[
+\text{yanıt oranı}=\frac{\text{uygun ve tamamlanmış yanıt sayısı}}
+{\text{ulaşılabilen uygun davetli sayısı}}
+\]
+biçiminde düşünülür. Ancak yüksek yanıt oranı tek başına yanlılığın olmadığını,
+düşük oran da mutlaka ağır yanlılık bulunduğunu kanıtlamaz. Önemli olan
+yanıtlamanın araştırma değişkenleriyle sistematik ilişkili olup olmadığıdır.
+
+Katılımı artırmak için açık ve kısa davet, makul süre, erişilebilir anket,
+birkaç tarafsız hatırlatma ve gizlilik güvencesi kullanılabilir. Ders notu,
+hizmet erişimi veya danışmanlık ilişkisi üzerinden baskı oluşturacak teşvik ve
+çağrılardan kaçınılmalıdır.
+
+\begin{etkinlik}
+Aynı ankete ait iki davet metni yazın. Birincisi öğrencileri katılmaya
+yönlendiren ve araştırmanın beklenen sonucunu ima eden sorunlu bir metin,
+ikincisi tarafsızlık, gönüllülük ve gizlilik ilkelerini koruyan etik bir metin
+olsun. Metinleri karşılaştırın.
+\end{etkinlik}
+
+\section{Örneklem hacmi ve temsil}
+\index{örneklem hacmi}
+\index{temsil gücü}
+\index{sonlu evren düzeltmesi}
+
+Büyük örneklem rastgele örnekleme hatasını azaltır; fakat sistematik yanlılığı
+otomatik olarak gidermez. Örneklem hacmi belirlenirken hedeflenen hassasiyet,
+değişkenlik, güven düzeyi, araştırma tasarımı ve ulaşılabilir kaynaklar birlikte
+değerlendirilir.
+
+Basit rastgele örneklemede ortalamanın standart hatası yaklaşık
+\[
+SE(\bar X)=\frac{s}{\sqrt n}
+\]
+olduğundan belirsizliği yarıya indirmek yaklaşık dört kat gözlem gerektirir.
+
+Örneklem hacmi için tek bir evrensel ``yeterli sayı'' yoktur. Planlama şu
+bileşenlere dayanır:
+
+\begin{itemize}
+  \item tahmin edilmek istenen etki veya oran,
+  \item kabul edilebilir hata payı ve güven düzeyi,
+  \item evrendeki değişkenlik,
+  \item karşılaştırılacak grup ve alt grup sayısı,
+  \item kümeleme veya ağırlıklandırma gibi tasarım özellikleri,
+  \item beklenen yanıtlamama ve veri kaybı,
+  \item zaman, bütçe ve etik yük.
+\end{itemize}
+
+Örneğin tamamlanmış 600 yanıt hedefleniyor ve uygun davetlilerin yaklaşık
+yüzde 75'inin yanıt vereceği bekleniyorsa en az
+\[
+600/0{,}75=800
+\]
+öğrencinin davet edilmesi gerekir. Bu hesap yanıtlamama yanlılığını çözmez;
+yalnız beklenen kayıp için sayısal planlama yapar.
+
+\begin{sezgibox}
+Örneklem hacmi hassasiyeti, örnekleme tasarımı ise temsilin dayanağını
+belirler. Çok büyük ama seçimi yanlı bir örneklem, küçük standart hata ile
+yanlış değeri çok hassas biçimde tahmin edebilir.
+\end{sezgibox}
+
+\section{Adım adım çözümlü örnekleme planı}
+
+Yardım arama araştırmasında fakülte büyüklükleri sırasıyla 2.400, 1.800,
+1.200 ve 600; hedef tamamlanmış örneklem 600 olsun.
+
+\subsection*{1. Tasarım seçimi}
+
+Yardım arama tutumunun fakültelere göre değişebileceği ve her fakültenin
+örneklemde görünmesi istendiği için fakülte tabakalı örnekleme seçilir. Her
+tabaka içinde öğrenciler basit rastgele yöntemle belirlenir.
+
+\subsection*{2. Orantılı dağıtım}
+
+Fakültelere ayrılacak tamamlanmış örneklem sayıları
+\[
+600\left(\frac{2400}{6000}\right)=240,\quad
+600\left(\frac{1800}{6000}\right)=180,\quad
+600\left(\frac{1200}{6000}\right)=120,\quad
+600\left(\frac{600}{6000}\right)=60
+\]
+olarak bulunur.
+
+\subsection*{3. Yanıtlamama payı}
+
+Her fakültede yüzde 75 yanıt beklenirse davet sayıları yaklaşık 320, 240, 160
+ve 80; toplam 800 olur. Gerçekleşen yanıt oranları fakülteler arasında
+karşılaştırılmalı ve dengesizlik raporlanmalıdır.
+
+\subsection*{4. Seçim ve kayıt}
+
+Her öğrencinin çerçevedeki benzersiz kimliği, tabakası, seçilip seçilmediği,
+davet tarihi ve yanıt durumu güvenli bir seçim günlüğünde tutulur. Analiz
+dosyasındaki kimlik bilgileri bu yönetim dosyasından ayrılır.
+
+\section{Python ile tabakalı örnek seçimi}
+
+\begin{lstlisting}
+import pandas as pd
+
+# cerceve: her satir bir ogrenci; id ve fakulte sutunlari var
+cerceve = pd.read_csv("ogrenci_cercevesi.csv")
+davet_sayilari = {"A": 320, "B": 240, "C": 160, "D": 80}
+
+parcalar = []
+for fakulte, n in davet_sayilari.items():
+    tabaka = cerceve.loc[cerceve["fakulte"] == fakulte]
+    parcalar.append(tabaka.sample(n=n, replace=False, random_state=209))
+
+orneklem = pd.concat(parcalar).sort_values(["fakulte", "id"])
+print(orneklem["fakulte"].value_counts().sort_index())
+orneklem.to_csv("davet_orneklemi.csv", index=False)
+\end{lstlisting}
+
+Rassal tohumun kaydedilmesi seçimin yeniden üretilebilmesini sağlar. Gerçek
+bir projede aynı sabit tohum her tabakada aynen kullanılmak yerine tek bir
+rassal sayı üreteci yönetilebilir; burada kod öğretim amacıyla sade
+tutulmuştur.
+
+\section{SPSS ile rastgele seçim}
+
+Tam bir çerçeve SPSS veri dosyasında bulunuyorsa \textbf{Data $>$ Select Cases
+$>$ Random sample of cases} menüsü basit rastgele alt örneklem üretmek için
+kullanılabilir. Tabakalı seçimde önce fakülteye göre dosya bölme veya her
+tabaka için ayrı seçim gerekir. Seçilmeyen kayıtların silinmesi yerine filtre
+değişkeni kullanmak, seçim işlemini denetlenebilir tutar.
+
+\begin{outputguidebox}
+Seçimden sonra yalnız toplam $n$ değerini kontrol etmeyin. Her tabakadaki
+seçilen sayı, yinelenen kimlikler, kapsam dışı kayıtlar ve beklenen seçim
+oranları incelenmelidir. Rastgele seçim komutu kötü bir örnekleme çerçevesini
+düzeltemez.
+\end{outputguidebox}
+
+\section{Örnekleme sürecini raporlama}
+
+Yeterli bir yöntem bölümü hedef evreni, çalışma tarihini, uygunluk ve dışlama
+ölçütlerini, çerçevenin kaynağını, örnekleme yöntemini, planlanan ve gerçekleşen
+tabaka sayılarını, davet ve yanıt sayılarını, yanıt oranını ve varsa ağırlıkları
+belirtir. Örnek rapor:
+
+``Araştırmanın hedef evrenini 2026--2027 akademik yılında üniversiteye kayıtlı
+6.000 öğrenci oluşturmuştur. Güncel öğrenci bilgi sistemi listesi fakülteye
+göre tabakalanmış; her tabakada bilgisayar üretimli rassal sayılarla toplam
+800 öğrenci davet edilmiştir. 612 öğrenci anketi tamamlamıştır (yanıt oranı
+\%76{,}5). Fakülteye göre planlanan ve gerçekleşen yanıt sayıları raporlanmış,
+yanıtlamama nedeniyle oluşabilecek yanlılık araştırmanın sınırlılığı olarak
+değerlendirilmiştir.''
+
+\section{Literatür veri setiyle IBM SPSS laboratuvarı}
+\index{Student Performance veri seti!tabakalı örnekleme}
+\index{SPSS!tabakalı örnekleme}
+\index{rassal tohum}
+\index{dahil olma olasılığı}
+
+Birinci bölümde içe aktarılan \emph{Student Performance} matematik dosyası bu
+uygulamada 395 birimlik sonlu bir örnekleme çerçevesi gibi ele alınacaktır
+\cite{cortez2008data,cortezsilva2008}. Amaç, iki okulun her ikisini de temsil
+eden yaklaşık yüzde 25 büyüklüğünde bir öğretim örneklemi seçmektir. Çerçevede
+Gabriel Pereira (GP) okulundan 349, Mousinho da Silveira (MS) okulundan 46
+öğrenci vardır. Orantılı dağıtım sonucunda 100 kişilik örnekleme GP'den 88,
+MS'den 12 öğrenci alınacaktır.
+
+\begin{researchbox}
+Buradaki işlem yayımlanmış veri dosyasından yeniden örnek seçme alıştırmasıdır.
+Özgün araştırmadaki öğrencileri sonradan olasılıklı bir evren örneklemine
+dönüştürmez. Bu nedenle elde edilen sonuçlar Portekiz'deki bütün öğrencilere
+tasarıma dayalı olarak genellenemez.
+\end{researchbox}
+
+\subsection{Araştırma görevi ve seçim planı}
+
+\begin{enumerate}
+  \item Çerçevedeki okul frekanslarını doğrulayın.
+  \item Her okul içinde rassal sayı üretip öğrencileri sıralayın.
+  \item GP tabakasından ilk 88, MS tabakasından ilk 12 öğrenciyi seçin.
+  \item Seçilen sayıları ve tabaka bazındaki dahil olma oranlarını denetleyin.
+  \item Seçim göstergesini koruyun; seçilmeyen kayıtları veri dosyasından silmeyin.
+\end{enumerate}
+
+Sabit rassal tohum aynı yazılım ve aynı veri sırası altında seçimin yeniden
+üretilmesini kolaylaştırır. Tohum, seçimin araştırmacı tarafından istenen
+sonucu verecek biçimde tekrar tekrar denenmesi için kullanılmamalıdır.
+
+\subsection{SPSS syntax ile orantılı tabakalı seçim}
+
+Aşağıdaki syntax, birinci bölümde oluşturulan \texttt{StudentMath} veri seti
+açıkken çalıştırılır. Önce özgün satır sırasını saklayan bir kimlik ve okul
+tabakalarının büyüklükleri oluşturulur; ardından her tabaka içinde rassal
+sıralama yapılır.
+
+\begin{lstlisting}[language={}]
+DATASET ACTIVATE StudentMath.
+
+COMPUTE case_id=$CASENUM.
+AGGREGATE
+ /OUTFILE=* MODE=ADDVARIABLES
+ /BREAK=school
+ /N_tabaka=N.
+
+SET SEED=2092026.
+COMPUTE rassal=RV.UNIFORM(0,1).
+SORT CASES BY school rassal.
+RANK VARIABLES=rassal (A) BY school
+ /RANK INTO tabaka_sira.
+
+DO IF school='GP'.
+ COMPUTE hedef_n=88.
+ELSE IF school='MS'.
+ COMPUTE hedef_n=12.
+END IF.
+
+COMPUTE secildi=(tabaka_sira<=hedef_n).
+COMPUTE dahil_olma=hedef_n/N_tabaka.
+VALUE LABELS secildi 0 'Seçilmedi' 1 'Seçildi'.
+FORMATS dahil_olma (F5.3).
+
+CROSSTABS
+ /TABLES=school BY secildi
+ /CELLS=COUNT ROW.
+
+TEMPORARY.
+SELECT IF secildi=1.
+FREQUENCIES VARIABLES=school.
+
+TEMPORARY.
+SELECT IF secildi=1.
+DESCRIPTIVES VARIABLES=G3 absences
+ /STATISTICS=MEAN STDDEV MIN MAX.
+
+TEMPORARY.
+SELECT IF secildi=1.
+SAVE OUTFILE='student-mat-tabakali-100.sav'.
+
+SORT CASES BY case_id.
+EXECUTE.
+\end{lstlisting}
+
+\subsection{SPSS çıktısının erişilebilir özeti}
+
+Seçimin temel denetimi, \textbf{Crosstabs} tablosundaki gözlem sayıları ve satır
+yüzdeleriyle yapılır:
+
+\begin{table}[htbp]
+\centering
+\caption{Okula göre orantılı tabakalı seçim denetimi.}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Okul & Çerçeve $N_h$ & Seçilen $n_h$ & Seçilmeyen & Dahil olma oranı \\
+\midrule
+GP & 349 & 88 & 261 & 0,252 \\
+MS & 46  & 12 & 34  & 0,261 \\
+\midrule
+Toplam & 395 & 100 & 295 & 0,253 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Çıktının analizi}
+
+Toplam seçilen gözlem sayısı planlanan 100'dür ve iki okul da örneklemde
+temsil edilmektedir. Tam sayıya yuvarlama nedeniyle dahil olma oranları tam
+olarak eşit değildir: GP için $88/349=0{,}252$, MS için
+$12/46=0{,}261$'dir. Fark küçük olsa da kesin tasarım ağırlıkları kullanılacaksa
+her öğrenciye kendi dahil olma olasılığının tersi verilmelidir:
+\[
+w_{GP}=\frac{349}{88}\approx3{,}97,
+\qquad
+w_{MS}=\frac{46}{12}\approx3{,}83.
+\]
+
+\textbf{Descriptives} tablosundaki G3 ve devamsızlık özetleri seçilmiş 100
+öğrenciyi betimler; çerçevedeki 395 öğrencinin kesin özellikleri değildir.
+Başka bir rassal tohum farklı öğrencileri ve dolayısıyla biraz farklı bir
+ortalama ile standart sapmayı seçebilir. Bu değişim bir yazılım hatası değil,
+örnekleme değişkenliğidir.
+
+Çapraz tabloda bir okuldan 88 ve diğerinden 12 yerine farklı sayılar
+görülüyorsa önce filtre, okul kodları, veri sırası ve \texttt{BY school}
+ifadesi denetlenmelidir. Yalnız toplamın 100 olması yeterli değildir; örnekleme
+planının tabaka bazında da gerçekleşmesi gerekir.
+
+\begin{outputguidebox}
+Bu uygulamada ana çıktı bir anlamlılık testi değildir. Doğru okuma sırası:
+(1) çerçeve büyüklükleri, (2) hedef tabaka sayıları, (3) seçilen gerçek
+sayılar, (4) dahil olma oranları, (5) filtre durumudur. Düşük bir $p$-değeri
+kötü kurulmuş bir örnekleme çerçevesini düzeltemez.
+\end{outputguidebox}
+
+\input{chapters/r/b06}
+\input{chapter-exercises/02-ornekleme}
+
+\bolumkaynaklari{\cite{cochran1977,lohr2021,chambers2003,murthy1967,cortez2008data,cortezsilva2008}}
+
+\section*{Hatırla--Uygula--Yansıt}
+
+\begin{enumerate}
+\renewcommand{\labelenumi}{\textbf{\Alph{enumi}.}}
+  \item \textbf{Hatırla:} Hedef evren, erişilebilir evren, örnekleme çerçevesi, örnekleme birimi ve analiz birimini tek örnekte ayırın.
+  \item \textbf{Hesapla:} $N=2.400$ ve $n=240$ için dahil olma olasılığını ve sistematik seçim aralığını bulun.
+  \item \textbf{Dağıt:} 500, 300 ve 200 kişilik üç tabakadan 100 kişilik orantılı örneklem oluşturun.
+  \item \textbf{Seç:} Dağınık 80 okuldan öğrenci seçilecek bir araştırma için basit rastgele, tabakalı ve küme örneklemeyi maliyet ve hassasiyet bakımından karşılaştırın.
+  \item \textbf{Tanıla:} Çevrim içi yardım arama anketinde kapsam, gönüllülük, yanıtlamama ve ölçüm yanlılığına birer örnek verin.
+  \item \textbf{Eleştir:} ``10.000 kişi ankete katıldığı için sonuçlar bütün gençleri temsil eder'' savını değerlendirin.
+  \item \textbf{Planla:} 400 tamamlanmış yanıt ve yüzde 80 beklenen yanıt oranı için kaç kişinin davet edilmesi gerektiğini hesaplayın.
+  \item \textbf{Uygula:} Küçük bir öğrenci listesinde basit rastgele ve tabakalı örneklem oluşturup grup dağılımlarını karşılaştırın.
+  \item \textbf{Etik karar:} Danışmanın kendi danışanlarını araştırmaya davet etmesindeki güç ilişkisini ve gönüllülük riskini tartışın.
+  \item \textbf{Raporla:} Seçim, davet, yanıt ve dışlama sayılarını içeren kısa bir örnekleme yöntemi paragrafı yazın.
+\end{enumerate}

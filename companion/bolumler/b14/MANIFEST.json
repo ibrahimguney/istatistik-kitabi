@@ -1,0 +1,22 @@
+{
+  "algorithm": "SHA-256",
+  "files": {
+    "DOGRULAMA.md": "5ead94020d0cf2c7205e5c6b8202bd1728208de7169ffe08a0ae4f0eaa8f0df2",
+    "README.md": "ab6599e9a7896883d172cfe0e3bd5792a658b7fe40a72adcd6fab895ad32a1f0",
+    "alistirmalar.md": "0bc216ae405444daa6207e9934154b52a08f3ff10733b7506063fbb339a8fff0",
+    "cozumler.md": "b09cda61364979067c804e3348d3433e569f3e5d8208da5218250e897f961687",
+    "ornek-01/README.md": "5160c6e1fd06d7e8c6261e60c8396c9912f39f4924154d4f3c7b8ebb6a7fb776",
+    "ornek-01/analiz.sps": "998326e3f7f2616252fdd8c41e3b652cd43773f541b62629aa1c9cd9842b6319",
+    "ornek-01/analiz.sps.txt": "998326e3f7f2616252fdd8c41e3b652cd43773f541b62629aa1c9cd9842b6319",
+    "ornek-01/beklenen-sonuclar.csv": "0c9fdca5c2fd4b9829fd4592554d968336f971cd8390ee457efd83839b984507",
+    "ornek-01/ciktilar/python/son-on-araligi.png": "7e5cf04ebecedfa5757d61bcf75846bdeacda8a578af097e14481728a5a1ba8e",
+    "ornek-01/cozum.R": "a95718909c51521a450d763878ea95967c215e21591e490e7825f4f42972ea09",
+    "ornek-01/cozum.md": "d218f133e5aa73bf29e2e9ce30576adbea3bd18b65f7f030146642933d3bcfa1",
+    "ornek-01/cozum.py": "7a27f992c4480e567a95e27404757569efc598e1ad9c90522dddd9708381b783",
+    "ornek-01/grafik-aciklamasi.md": "64e54920604b257a9b41589667cbc3b9b2cde77feb910a4cda73cfdb23d1d83b",
+    "ornek-01/kaynak-kaydi.json": "b611e131f6894c4de517a0ebeeb712f6db2f58878f2cb237e1a30dff0662639f",
+    "ornek-01/veri-sozlugu.csv": "85bbb33facc4f6f21c2d11ca460879aa008adea7041975ce452055e75b9ae43f",
+    "ornek-01/veri.csv": "6e2bf925b1ce47ad0c9cd4d3234ce85662ad26448554e54665b8029808c33a47",
+    "sinav-rehberi.md": "a321f749ed1003bae7d3c6dd80ee332ded4e61c14513e1feb675d6ac056d3fb1"
+  }
+}

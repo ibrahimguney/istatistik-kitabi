@@ -1,0 +1,119 @@
+GET DATA /TYPE=TXT /FILE='veri.csv' /ENCODING='UTF8'
+ /ARRANGEMENT=DELIMITED /DELCASE=LINE /DELIMITERS="," /FIRSTCASE=2
+ /VARIABLES=etiket A1 n F16.0 ortalama F20.10 s F20.10.
+COMPUTE grup=$CASENUM.
+DATASET NAME Klasik.
+FILTER OFF.
+USE ALL.
+WEIGHT OFF.
+SPLIT FILE OFF.
+VARIABLE LEVEL grup (NOMINAL) n ortalama s (SCALE).
+VALUE LABELS grup 1 'A' 2 'B' 3 'C'.
+LIST VARIABLES=grup n ortalama s.
+COMPUTE agirlikli=n*ortalama.
+COMPUTE grup_hata=(n-1)*s**2.
+AGGREGATE /OUTFILE=* MODE=ADDVARIABLES /BREAK=
+ /toplam_n=SUM(n) /grup_sayisi=N /toplam_agirlikli=SUM(agirlikli) /ss_hata=SUM(grup_hata).
+COMPUTE genel_ortalama=toplam_agirlikli/toplam_n.
+COMPUTE grup_kare=n*(ortalama-genel_ortalama)**2.
+AGGREGATE /OUTFILE=* MODE=ADDVARIABLES /BREAK= /ss_grup=SUM(grup_kare).
+COMPUTE ss_toplam=ss_grup+ss_hata.
+COMPUTE sd_grup=grup_sayisi-1.
+COMPUTE sd_hata=toplam_n-grup_sayisi.
+COMPUTE ms_grup=ss_grup/sd_grup.
+COMPUTE mse=ss_hata/sd_hata.
+COMPUTE f_degeri=ms_grup/mse.
+DO IF (f_degeri=0).
+ COMPUTE p_degeri=1.
+ELSE.
+ COMPUTE p_degeri=CDF.F(1/f_degeri,sd_hata,sd_grup).
+END IF.
+COMPUTE eta2=ss_grup/ss_toplam.
+COMPUTE omega2=(ss_grup-sd_grup*mse)/(ss_toplam+mse).
+COMPUTE alfa=.05.
+COMPUTE kritik_q=IDF.SRANGE(1-alfa,grup_sayisi,sd_hata).
+COMPUTE reddet=(p_degeri<alfa).
+EXECUTE.
+DATASET COPY KlasikOzet.
+DATASET ACTIVATE KlasikOzet.
+SELECT IF ($CASENUM=1).
+COMPUTE anahtar=1.
+SORT CASES BY anahtar.
+FORMATS toplam_n grup_sayisi genel_ortalama ss_grup ss_hata ss_toplam
+ sd_grup sd_hata ms_grup mse f_degeri eta2 omega2 kritik_q alfa (F18.10).
+FORMATS p_degeri (E18.10).
+LIST VARIABLES=toplam_n grup_sayisi genel_ortalama ss_grup ss_hata ss_toplam
+ sd_grup sd_hata ms_grup mse f_degeri p_degeri eta2 omega2 kritik_q alfa reddet.
+DATASET ACTIVATE Klasik.
+DATASET COPY IlkGrup.
+DATASET ACTIVATE IlkGrup.
+MATCH FILES /FILE=* /KEEP=grup n ortalama s.
+RENAME VARIABLES (grup n ortalama s=ilk n_ilk ort_ilk s_ilk).
+SORT CASES BY ilk.
+DATASET ACTIVATE Klasik.
+DATASET COPY IkinciGrup.
+DATASET ACTIVATE IkinciGrup.
+MATCH FILES /FILE=* /KEEP=grup n ortalama s.
+RENAME VARIABLES (grup n ortalama s=ikinci n_ikinci ort_ikinci s_ikinci).
+SORT CASES BY ikinci.
+GET DATA /TYPE=TXT /FILE='ciftler.csv' /ENCODING='UTF8'
+ /ARRANGEMENT=DELIMITED /DELCASE=LINE /DELIMITERS="," /FIRSTCASE=2
+ /VARIABLES=cift F8.0 ilk F8.0 ikinci F8.0.
+DATASET NAME Tukey.
+SORT CASES BY ilk.
+MATCH FILES /FILE=* /TABLE=IlkGrup /BY ilk.
+SORT CASES BY ikinci.
+MATCH FILES /FILE=* /TABLE=IkinciGrup /BY ikinci.
+COMPUTE anahtar=1.
+SORT CASES BY anahtar.
+MATCH FILES /FILE=* /TABLE=KlasikOzet /BY anahtar.
+COMPUTE fark=ort_ilk-ort_ikinci.
+COMPUTE se_q=SQRT(mse/2*(1/n_ilk+1/n_ikinci)).
+COMPUTE q_degeri=ABS(fark)/se_q.
+COMPUTE yari_genislik=kritik_q*se_q.
+COMPUTE alt=fark-yari_genislik.
+COMPUTE ust=fark+kritik_q*se_q.
+DO IF (q_degeri=0).
+ COMPUTE p_duzeltilmis=1.
+ELSE.
+ COMPUTE p_duzeltilmis=1-CDF.SRANGE(q_degeri,grup_sayisi,sd_hata).
+END IF.
+COMPUTE reddet_cift=(p_duzeltilmis<alfa).
+SORT CASES BY cift.
+FORMATS fark se_q q_degeri alt ust (F18.10) p_duzeltilmis (E18.10).
+LIST VARIABLES=cift ilk ikinci fark se_q q_degeri yari_genislik alt ust p_duzeltilmis reddet_cift.
+GET DATA /TYPE=TXT /FILE='welch.csv' /ENCODING='UTF8'
+ /ARRANGEMENT=DELIMITED /DELCASE=LINE /DELIMITERS="," /FIRSTCASE=2
+ /VARIABLES=etiket A1 n F16.0 ortalama F20.10 s F20.10.
+COMPUTE grup=$CASENUM.
+DATASET NAME Welch.
+VALUE LABELS grup 1 'A' 2 'B' 3 'C'.
+LIST VARIABLES=grup n ortalama s.
+COMPUTE agirlik=n/s**2.
+AGGREGATE /OUTFILE=* MODE=ADDVARIABLES /BREAK=
+ /toplam_n=SUM(n) /grup_sayisi=N /agirlik_toplami=SUM(agirlik).
+COMPUTE pay=agirlik/agirlik_toplami.
+COMPUTE merkez_katki=pay*ortalama.
+COMPUTE duzeltme_katki=(1-pay)**2/(n-1).
+AGGREGATE /OUTFILE=* MODE=ADDVARIABLES /BREAK=
+ /agirlikli_merkez=SUM(merkez_katki) /duzeltme_toplami=SUM(duzeltme_katki).
+COMPUTE kare_katki=agirlik*(ortalama-agirlikli_merkez)**2.
+AGGREGATE /OUTFILE=* MODE=ADDVARIABLES /BREAK= /kare_toplami=SUM(kare_katki).
+COMPUTE duzeltme_carpani=1+2*(grup_sayisi-2)*duzeltme_toplami/(grup_sayisi**2-1).
+COMPUTE sd_pay=grup_sayisi-1.
+COMPUTE sd_payda=(grup_sayisi**2-1)/(3*duzeltme_toplami).
+COMPUTE pay_welch=kare_toplami/sd_pay.
+COMPUTE f_welch=pay_welch/duzeltme_carpani.
+COMPUTE alfa=.05.
+DO IF (f_welch=0).
+ COMPUTE p_welch=1.
+ELSE.
+ COMPUTE p_welch=CDF.F(1/f_welch,sd_payda,sd_pay).
+END IF.
+COMPUTE reddet=(p_welch<.05).
+EXECUTE.
+SELECT IF ($CASENUM=1).
+FORMATS toplam_n grup_sayisi agirlikli_merkez duzeltme_toplami duzeltme_carpani
+ sd_pay sd_payda f_welch (F18.10) p_welch (E18.10).
+LIST VARIABLES=toplam_n grup_sayisi agirlikli_merkez duzeltme_toplami duzeltme_carpani
+ sd_pay sd_payda f_welch p_welch reddet agirlik_toplami pay_welch alfa.

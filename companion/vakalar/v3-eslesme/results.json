@@ -1,0 +1,27 @@
+{
+  "pairs": 395,
+  "mean": -0.4936708860759494,
+  "sd": 2.762481677461891,
+  "median": 0.0,
+  "minimum": -12,
+  "maximum": 4,
+  "negative": 159,
+  "zero": 93,
+  "positive": 143,
+  "g3_zero_count": 38,
+  "source_sha256": "041d88ddca1da9fb8a1a9261bbf090d2f7c75625c228392e1077c2cf656051e8",
+  "new_independent_study": false,
+  "wrong_positional_demo": {
+    "pairs": 395,
+    "mean": -0.4936708860759494,
+    "sd": 5.337049456065144,
+    "median": 0.0,
+    "minimum": -17,
+    "maximum": 13,
+    "negative": 177,
+    "zero": 29,
+    "positive": 189,
+    "wrong_partner_ids": 394,
+    "status": "artificial_invalid_positional_pairing_not_a_study_result"
+  }
+}

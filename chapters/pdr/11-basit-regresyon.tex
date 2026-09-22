@@ -1,0 +1,715 @@
+\chapter{Basit Doğrusal Regresyon}
+\index{doğrusal regresyon}
+\index{basit doğrusal regresyon}
+
+\begin{hedefler}
+Bu bölümün sonunda okuyucu:
+\begin{itemize}
+  \item basit doğrusal regresyonda yanıt, açıklayıcı değişken, katsayı ve hata terimini ayırt edebilecek,
+  \item kesme ve eğim katsayılarını değişkenlerin özgün birimleriyle yorumlayabilecek,
+  \item en küçük kareler doğrusunun nasıl seçildiğini ve artıkların rolünü açıklayabilecek,
+  \item eğim için standart hata, hipotez testi ve güven aralığını birlikte değerlendirebilecek,
+  \item belirlilik katsayısı ile artık standart hatasını model uyumunun farklı yönleri olarak yorumlayabilecek,
+  \item ortalama yanıt güven aralığı ile bireysel tahmin aralığını ayırabilecek,
+  \item doğrusallık, sabit varyans, bağımsızlık, normallik ve etkili gözlem koşullarını tanılayabilecek,
+  \item öngörü, ilişki ve nedensel etki kavramlarını birbirine karıştırmadan Python ve SPSS sonuçlarını raporlayabilecektir.
+\end{itemize}
+\end{hedefler}
+
+\begin{hazirlik}
+Bir regresyon doğrusunun bütün gözlem noktalarından geçmesi gerekir mi?
+``En iyi uyum'' ifadesinin hangi ölçüte göre tanımlanabileceğini ve bazı
+noktaların neden doğrunun üstünde ya da altında kalacağını düşünün.
+\end{hazirlik}
+
+\section{PDR vakası: Uyku süresinden kaygı puanını yordamlamak}
+
+Önceki bölümde 20 öğrencinin gecelik uyku süresi ile akademik kaygı puanı
+arasında $r=-0{,}585$ korelasyon bulunmuştu. Korelasyon ilişkinin yönünü ve
+standartlaştırılmış derecesini özetledi. Psikolojik danışma birimi şimdi daha
+somut sorular sormaktadır:
+
+\begin{enumerate}
+  \item Uyku süresi bir saat arttığında beklenen kaygı puanı ortalama kaç puan değişir?
+  \item Yedi saat uyuyan öğrencilerin ortalama kaygı puanı nedir?
+  \item Yedi saat uyuyan tek bir öğrencinin puanı hangi geniş aralıkta olabilir?
+  \item Doğrusal model veriyi yeterince iyi temsil ediyor mu?
+\end{enumerate}
+
+Basit doğrusal regresyon bu soruları yanıt ve açıklayıcı değişken rollerini
+belirleyerek ele alır. Bu örnekte akademik kaygı yanıt değişkeni $Y$, uyku
+süresi açıklayıcı değişken $X$ olacaktır.
+
+\begin{researchbox}
+``Uyku süresinden kaygıyı yordamlamak'' ifadesi nedensel etki iddiası değildir.
+Kesitsel gözlemsel veride regresyon eğimi, uyku süresi farklı öğrencilerin
+ortalama kaygı farkını özetler. Aynı öğrencinin uykusu bir saat artırıldığında
+kaygısının bu miktarda değişeceği sonucuna doğrudan varılamaz.
+\end{researchbox}
+
+\section{İlişkiden doğrusal modele}
+\index{yanıt değişkeni}
+\index{açıklayıcı değişken}
+\index{hata terimi}
+
+Basit doğrusal regresyon, $X=x$ olan birimlerin ortalama yanıtını
+\[
+E(Y\mid X=x)=\beta_0+\beta_1x
+\]
+biçiminde modeller. Tek tek gözlemler için
+\[
+Y_i=\beta_0+\beta_1X_i+\varepsilon_i
+\]
+yazılır. Bu modelin tahmin ve çıkarım çerçevesi doğrusal model kaynaklarında
+ayrıntılı olarak ele alınır \cite{kutner2005}. Modelin bileşenleri şunlardır:
+
+\begin{description}
+  \item[$Y_i$] $i$'inci öğrencinin gözlenen yanıtı, burada kaygı puanı,
+  \item[$X_i$] açıklayıcı değişken değeri, burada uyku süresi,
+  \item[$\beta_0$] evrendeki regresyon doğrusunun kesme katsayısı,
+  \item[$\beta_1$] evrendeki regresyon eğimi,
+  \item[$\varepsilon_i$] öğrencinin koşullu ortalamadan ayrılan kısmı.
+\end{description}
+
+Hata terimi yalnız ölçüm hatası değildir. Modelde bulunmayan bireysel
+özellikler, gün içi değişkenlik ve doğrusal ortalama çevresindeki doğal
+farklılıklar da hata teriminde yer alır.
+
+Örneklemden tahmin edilen doğru
+\[
+\widehat{Y}=b_0+b_1X
+\]
+biçimindedir. Yirmi öğrencilik uyku--kaygı verisi için
+\[
+\widehat{\text{Kaygı}}=89{,}54-4{,}98\times\text{Uyku}
+\]
+elde edilir.
+
+\section{Kesme ve eğim katsayısını yorumlamak}
+\index{regresyon!kesme katsayısı}
+\index{regresyon!eğim katsayısı}
+\index{merkezleme}
+
+\subsection{Eğim}
+
+$b_1=-4{,}98$, uyku süresi bir saat daha yüksek olan öğrencilerin beklenen
+kaygı puanının örneklemde ortalama 4,98 puan daha düşük olduğunu gösterir.
+Yorum hem X'in hem Y'nin birimini içermelidir.
+
+Eğim ``her öğrenci bir saat fazla uyursa kaygısı kesin 4,98 puan azalır''
+anlamına gelmez. Regresyon doğrusu koşullu ortalamayı tanımlar; bireysel
+puanlar doğrunun çevresinde dağılır. Gözlemsel tasarımda eğim aynı zamanda
+nedensel değişim olarak yorumlanamaz.
+
+\subsection{Kesme}
+
+$b_0=89{,}54$, modelde uyku süresi 0 saat olduğunda beklenen kaygı puanıdır.
+Ancak veride uyku süresi 4,5 ile 8,5 saat arasındadır. Sıfır saat veri
+aralığının çok dışında ve uygulamada olağandışı olduğundan kesmenin doğrudan
+PDR yorumu anlamlı değildir. Kesme yine de doğrunun matematiksel konumunu
+belirler.
+
+X değişkenini ortalaması çevresinde merkezlemek yorumu kolaylaştırabilir.
+$X_c=X-6{,}67$ tanımlanırsa yeni kesme, ortalama uyku süresindeki beklenen
+kaygı puanı olan 56,3'e eşit olur; eğim değişmez.
+
+\begin{mistakebox}
+Kesme katsayısını yalnız yazılım verdiği için yorumlamayın. $X=0$ değeri
+ölçekte olanaksız, veri aralığının dışında veya araştırma açısından anlamsızsa
+kesme yalnız modelin cebirsel bileşeni olarak belirtilmelidir.
+\end{mistakebox}
+
+\section{En küçük kareler doğrusu}
+\index{en küçük kareler yöntemi}
+\index{artık}
+\index{uydurulan değer}
+
+Her öğrenci için uydurulan değer
+\[
+\hat Y_i=b_0+b_1X_i
+\]
+ve artık
+\[
+e_i=Y_i-\hat Y_i
+\]
+olarak tanımlanır. Pozitif artık gözlenen puanın model tahmininden yüksek,
+negatif artık düşük olduğunu gösterir.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[alt={Bir gözlemin regresyon doğrusu üzerindeki tahmini ile gözlenen değeri arasındaki artığı gösteren çizim},x=1.0cm,y=0.12cm]
+  \draw[->,PrismGray] (4,35)--(9,35) node[right,font=\scriptsize]{uyku};
+  \draw[->,PrismGray] (4,35)--(4,78) node[above,font=\scriptsize]{kaygı};
+  \draw[PrismBlue,very thick] (4.5,67.1)--(8.5,47.2);
+  \fill[PrismWarnOrange!85!black] (7,62) circle (2.4pt);
+  \fill[PrismBlue] (7,54.7) circle (2.2pt);
+  \draw[<->,PrismWarnOrange!90!black,thick] (7,54.7)--(7,62);
+  \node[right,font=\scriptsize,text=PrismWarnOrange!80!black] at (7.08,58.4) {artık $e_i$};
+  \node[below,font=\scriptsize,text=PrismBlue] at (7,54.2) {$\hat Y_i$};
+\end{tikzpicture}
+\caption{Bir gözlem için gözlenen değer, uydurulan değer ve artık.}
+\end{figure}
+
+En küçük kareler yöntemi
+\[
+SSE=\sum_{i=1}^ne_i^2
+=\sum_{i=1}^n(Y_i-b_0-b_1X_i)^2
+\]
+toplamını en aza indiren katsayıları seçer. Artıkların karelenmesi pozitif ve
+negatif sapmaların birbirini götürmesini engeller ve büyük sapmalara daha çok
+ağırlık verir.
+
+Çözüm
+\[
+b_1=\frac{\sum(X_i-\bar X)(Y_i-\bar Y)}
+{\sum(X_i-\bar X)^2}
+=r\frac{s_Y}{s_X},
+\qquad
+b_0=\bar Y-b_1\bar X
+\]
+biçimindedir. Uydurulan doğru $(\bar X,\bar Y)$ noktasından geçer.
+
+Kesme terimli en küçük kareler modelinde artıkların toplamı sıfırdır ve
+uydurulan değerlerin ortalaması gözlenen Y ortalamasına eşittir. Bu cebirsel
+özellikler modelin doğru veya nedensel olduğunu garanti etmez.
+
+\begin{sezgibox}
+En küçük kareler doğrusu bütün noktalardan geçen bir çizgi aramaz. Noktaların
+doğruya dikey uzaklıklarının kareleri toplamını en küçük yapan denge çizgisini
+seçer. Hangi değişkenin Y olduğu bu nedenle önemlidir.
+\end{sezgibox}
+
+\section{Korelasyon ile regresyon arasındaki bağlantı}
+\index{korelasyon!regresyon ilişkisi}
+
+Tek açıklayıcılı, kesme terimli regresyonda:
+
+\begin{itemize}
+  \item eğim ile Pearson korelasyonu aynı işarete sahiptir,
+  \item $b_1=r(s_Y/s_X)$ bağıntısı geçerlidir,
+  \item $R^2=r^2$ olur,
+  \item eğim için $H_0:\beta_1=0$ testi ile $H_0:\rho=0$ testi aynı $t$ ve $p$ sonucunu verir.
+\end{itemize}
+
+Yine de iki yöntem aynı değildir. Korelasyon X ve Y'ye simetrik davranır;
+değişkenler yer değiştirince $r$ değişmez. Regresyon Y'yi X'ten yordamayı
+amaçlar; değişkenler yer değiştirince eğim, artıklar ve tahminler değişir.
+
+\section{Eğim için çıkarım}
+\index{regresyon!eğim testi}
+\index{regresyon!eğim güven aralığı}
+
+Örneklem eğimi $b_1$, evren eğimi $\beta_1$ için nokta tahminidir. Sıfır
+doğrusal eğim hipotezi
+\[
+H_0:\beta_1=0,
+\qquad
+H_1:\beta_1\neq0
+\]
+ve test istatistiği
+\[
+t=\frac{b_1}{SE(b_1)},
+\qquad sd=n-2
+\]
+biçimindedir.
+
+Uyku--kaygı modelinde
+\[
+b_1=-4{,}984,
+\qquad SE(b_1)=1{,}629,
+\]
+dolayısıyla
+\[
+t=\frac{-4{,}984}{1{,}629}=-3{,}059,
+\qquad p=0{,}007.
+\]
+
+Eğim için yüzde 95 güven aralığı
+\[
+b_1\pm t^*SE(b_1)
+=[-8{,}406;\ -1{,}561]
+\]
+olarak bulunur. Veri, uyku süresindeki bir saatlik artış başına beklenen kaygı
+puanında yaklaşık 1,6 ile 8,4 puanlık azalmalarla uyumludur. Aralığın genişliği
+etkinin büyüklüğü hakkındaki belirsizliği gösterir.
+
+\begin{mistakebox}
+$p=0{,}007$ eğimin doğru olma olasılığının yüzde 99,3 olduğu anlamına gelmez.
+Sıfır eğim ve model varsayımları altında gözlenen kadar uç bir test
+istatistiğinin olasılığını özetler.
+\end{mistakebox}
+
+\section{Değişkenliğin ayrıştırılması ve model uyumu}
+\index{R kare@$R^2$}
+\index{model uyumu}
+\index{SSE}
+\index{SSR}
+\index{SST}
+
+Yanıt değişkenindeki toplam değişkenlik
+\[
+SST=\sum(Y_i-\bar Y)^2
+\]
+olup model tarafından temsil edilen ve artıkta kalan parçalara ayrılır:
+\[
+SST=SSR+SSE.
+\]
+
+Uyku--kaygı verisinde
+\[
+SST=1722{,}20,
+\qquad SSR=589{,}16,
+\qquad SSE=1133{,}04.
+\]
+
+Belirlilik katsayısı
+\[
+R^2=\frac{SSR}{SST}
+=1-\frac{SSE}{SST}
+\]
+olduğundan
+\[
+R^2=0{,}342
+\]
+bulunur. Örneklemde kaygı puanı değişkenliğinin yüzde 34,2'si uyku süresiyle
+kurulan doğrusal model tarafından temsil edilmektedir.
+
+$R^2$ modelin nedensel doğruluğunu, bireysel tahminlerin kesinliğini veya yeni
+örneklem performansını garanti etmez. Gereksiz değişken eklemek çoklu
+regresyonda $R^2$ değerini düşürmez; bu nedenle düzeltilmiş $R^2$ ve dış
+örneklem doğrulaması da önemlidir.
+
+\subsection{Artık standart hatası}
+\index{artık standart hatası}
+
+Hata varyansının tahmini
+\[
+MSE=\frac{SSE}{n-2}
+\]
+ve artık standart hatası
+\[
+s_e=\sqrt{MSE}
+\]
+ile verilir. Örnekte
+\[
+s_e=\sqrt{1133{,}04/18}\approx7{,}93
+\]
+puandır. Bu değer gözlenen kaygı puanlarının regresyon doğrusu çevresindeki
+tipik dikey saçılmasını Y'nin özgün biriminde özetler.
+
+\begin{researchbox}
+Yüzde 34 açıklanan değişkenlik önemli görünebilir; fakat yaklaşık 7,9 puanlık
+artık standart hatası bireysel öğrenciler arasında geniş farklılık kaldığını
+gösterir. Grup düzeyindeki ilişki tek bir öğrenci için kesin puan üretmez.
+\end{researchbox}
+
+\section{Genel F testi}
+\index{F testi@$F$ testi!regresyon}
+
+Regresyon ANOVA tablosunda model ortalama karesi hata ortalama karesine
+bölünür:
+\[
+F=\frac{MSR}{MSE}.
+\]
+Tek açıklayıcılı modelde eğim testinin karesi genel $F$ testine eşittir:
+\[
+F=t^2.
+\]
+Örnekte $(-3{,}059)^2=9{,}36$ ve $F(1,18)=9{,}36$, $p=0{,}007$ elde edilir.
+Birden fazla açıklayıcılı modelde genel $F$ testi bütün eğimlerin birlikte
+sıfır olup olmadığını değerlendirir.
+
+\section{Uydurulan değer, güven aralığı ve tahmin aralığı}
+\index{güven aralığı!ortalama yanıt}
+\index{tahmin aralığı!bireysel}
+
+Yedi saat uyku için uydurulan ortalama kaygı puanı
+\[
+\hat Y=89{,}54-4{,}98(7)=54{,}66
+\]
+olur. Bu nokta tahmini iki farklı belirsizlik sorusuna yol açar.
+
+\subsection{Ortalama yanıt için güven aralığı}
+
+Yedi saat uyuyan bütün benzer öğrencilerin ortalama kaygı puanı için yüzde 95
+güven aralığı yaklaşık
+\[
+[50{,}76;\ 58{,}55]
+\]
+olarak bulunur. Bu aralık regresyon doğrusunun $X=7$ noktasındaki ortalama
+konum belirsizliğini gösterir.
+
+\subsection{Yeni birey için tahmin aralığı}
+
+Yedi saat uyuyan yeni bir öğrencinin puanı için yüzde 95 tahmin aralığı
+yaklaşık
+\[
+[37{,}54;\ 71{,}77]
+\]
+olur. Bireysel öğrencilerin ortalama çizgi çevresindeki doğal değişkenliğini de
+içerdiği için tahmin aralığı her zaman ortalama güven aralığından geniştir.
+
+\begin{table}[htbp]
+\centering
+\caption{Yedi saat uyku için iki farklı aralığın yorumu.}
+\begin{tabular}{@{}p{0.27\textwidth}p{0.24\textwidth}p{0.30\textwidth}@{}}
+\toprule
+Aralık & Yaklaşık sınırlar & Hedef \\
+\midrule
+Ortalama güven aralığı & 50,76--58,55 & Yedi saat uyuyanların evren ortalaması \\
+Bireysel tahmin aralığı & 37,54--71,77 & Yedi saat uyuyan yeni bir öğrenci \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Her iki aralık da $X$ değeri örneklem ortalamasına yakınken daha dardır; veri
+aralığının uçlarına gidildikçe genişler. Tahmin aralığı model hatasını,
+ortalama aralığı ise yalnız koşullu ortalamanın tahmin belirsizliğini içerir.
+
+\begin{mistakebox}
+Regresyon doğrusu üzerindeki 54,66 değeri yedi saat uyuyan her öğrencinin
+puanı değildir. Aynı uyku süresine sahip öğrenciler çok farklı kaygı puanları
+alabilir; bireysel tahmin aralığı bu değişkenliği görünür kılar.
+\end{mistakebox}
+
+\section{Ekstrapolasyon}
+\index{ekstrapolasyon}
+
+Model 4,5 ile 8,5 saat arasındaki veriden kurulmuştur. Dokuz veya on saat için
+doğruyu uzatmak ekstrapolasyondur. İlişkinin veri aralığı dışında aynı eğimle
+süreceği bilinmez. Daha uç değerlerde biyolojik sınırlar, doygunluk veya
+farklı öğrenci grupları devreye girebilir.
+
+Ekstrapolasyon yalnız X'in gözlenen minimum ve maksimumuna değil, veri
+yoğunluğuna göre de değerlendirilmelidir. Sekiz saat çevresinde çok az gözlem
+varsa bu bölgedeki tahmin, aralık içinde olsa bile daha belirsiz olabilir.
+
+\begin{mistakebox}
+Yüksek $R^2$ ekstrapolasyonu güvenli hâle getirmez. Model gözlenen aralıkta iyi
+uyabilir, ancak aralığın dışında ilişki biçimi tamamen değişebilir.
+\end{mistakebox}
+
+\section{Artıklarla model kontrolü}
+\index{artık analizi}
+\index{artık grafiği}
+
+Regresyon sonuçları yorumlanmadan önce artıklar uydurulan değerler ve X ile
+birlikte incelenir. İyi davranan bir artık grafiğinde noktalar sıfır çizgisi
+çevresinde örüntüsüz ve yaklaşık sabit genişlikte dağılır.
+
+\begin{table}[htbp]
+\centering
+\caption{Artık grafiklerinde görülebilecek örüntüler.}
+\begin{tabular}{@{}p{0.24\textwidth}p{0.28\textwidth}p{0.29\textwidth}@{}}
+\toprule
+Örüntü & Olası sorun & İncelenecek yaklaşım \\
+\midrule
+Eğri desen & Doğrusal olmayan ortalama ilişkisi & Eğrisel terim veya farklı model \\
+Huni biçimi & Değişen hata varyansı & Dönüşüm veya sağlam standart hata \\
+Tek büyük artık & Y yönünde olağandışı gözlem & Kayıt ve bağlam kontrolü \\
+Uç X değeri & Yüksek kaldıraç & Etki ve duyarlılık incelemesi \\
+Sıralı dalga & Bağımlı veya zamansal hata & Bağımlılığı modelleme \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Artık grafiği yalnız ``varsayımlar sağlandı/sağlanmadı'' kutusu değildir.
+Modelin veriyi hangi yönden eksik temsil ettiğini gösteren tanı aracıdır.
+
+\section{Regresyon varsayımları}
+\index{regresyon!varsayımlar}
+\index{doğrusallık}
+\index{sabit varyans}
+\index{hata normalliği}
+\index{bağımsızlık}
+
+Basit doğrusal regresyonda farklı amaçlar için farklı koşullar önemlidir:
+
+\begin{description}
+  \item[Doğrusallık] $E(Y\mid X)$ veri aralığında yaklaşık doğrusaldır.
+  \item[Bağımsızlık] Birimlerin hata terimleri birbirinden bağımsızdır veya bağımlılık modellenmiştir.
+  \item[Sabit varyans] Hata saçılması X boyunca yaklaşık sabittir.
+  \item[Yaklaşık normallik] Küçük örneklemde klasik test ve aralıklar için hatalar yaklaşık normaldir.
+  \item[Uygun ölçüm] X ve Y ölçümleri anlamlı, karşılaştırılabilir ve yeterince güvenilirdir.
+\end{description}
+
+Normallik X değişkeninin veya Y'nin tek başına normal olması anlamına gelmez;
+koşullu hata dağılımına ilişkindir. Büyük örneklemde eğim çıkarımı orta düzey
+normallik sapmalarına daha dayanıklı olabilir, ancak doğrusallık ve bağımsızlık
+ihlalleri hâlâ önemlidir.
+
+\begin{assumptionbox}
+Artık grafiğini, Q--Q grafiğini ve etkili gözlem ölçülerini birlikte inceleyin.
+Tek bir normallik veya değişen varyans testinin $p$-değeri modelin bütün
+geçerliğini belirlemez. Grafik, tasarım ve araştırma hedefi birlikte
+değerlendirilmelidir.
+\end{assumptionbox}
+
+\section{Aykırı, yüksek kaldıraçlı ve etkili gözlemler}
+\index{aykırı değer}
+\index{kaldıraç}
+\index{etkili gözlem}
+\index{Cook uzaklığı}
+
+Üç kavram ayrılmalıdır:
+
+\begin{description}
+  \item[Aykırı gözlem] Y değeri modelin tahmininden uzaktır; büyük artığa sahiptir.
+  \item[Yüksek kaldıraç] X değeri örneklemin X merkezinden uzaktır.
+  \item[Etkili gözlem] Çıkarıldığında katsayıları veya tahminleri belirgin değiştirir.
+\end{description}
+
+Yüksek kaldıraçlı bir nokta doğru üzerinde bulunursa büyük artığa sahip
+olmayabilir; yine de eğimi güçlü biçimde sabitleyebilir. Cook uzaklığı, kaldıraç
+ve öğrencilendirilmiş artıklar birlikte incelenebilir. Bunlar otomatik silme
+kuralları değil, araştırma sinyalleridir.
+
+\begin{enumerate}
+  \item Veri girişi, birim ve kodlama doğrulanır.
+  \item Gözlemin hedef evrene ait olup olmadığı incelenir.
+  \item Gözlem dahil ve hariç katsayılar ile aralıklar karşılaştırılır.
+  \item Karar sonuçtan bağımsız bilimsel gerekçeyle verilir.
+  \item Duyarlılık analizi şeffaf biçimde raporlanır.
+\end{enumerate}
+
+\begin{researchbox}
+Olağandışı bir öğrenci, istatistiksel modeli etkilediği kadar hizmet açısından
+da önemli olabilir. Gerçek bir gözlemi modeli daha ``temiz'' göstermek için
+silmek, hem bilimsel bilgiyi hem danışmanlık gereksinimini görünmez kılabilir.
+\end{researchbox}
+
+\section{Değişen varyans ve sağlam standart hatalar}
+\index{değişen varyans}
+\index{sağlam standart hata}
+
+Kaygı puanlarının saçılması düşük uyku düzeylerinde daha büyük, yüksek uyku
+düzeylerinde daha küçük olabilir. Böyle bir huni biçiminde en küçük kareler
+eğimi belirli koşullarda doğrusal ortalama için kullanılabilir; fakat klasik
+standart hata ve güven aralığı yanlış olabilir.
+
+Olası yaklaşımlar:
+
+\begin{itemize}
+  \item veri ve değişken tanımlarını yeniden kontrol etmek,
+  \item kuramsal olarak uygun dönüşüm kullanmak,
+  \item değişen varyansa dayanıklı standart hatalar hesaplamak,
+  \item varyans yapısını doğrudan modellemek,
+  \item sonucu duyarlılık analizleriyle karşılaştırmak.
+\end{itemize}
+
+Sağlam standart hata doğrusal olmayan ortalama ilişkisini düzeltmez. Önce
+model biçimi, sonra çıkarım yöntemi değerlendirilmelidir.
+
+\section{Doğrusal olmayan ilişki}
+\index{doğrusal olmayan ilişki}
+\index{polinom terimi}
+
+Artık grafiğinde eğri desen varsa düz doğru ortalama ilişkiyi eksik temsil
+ediyor olabilir. Örneğin uyku ile kaygı ilişkisi bir noktadan sonra
+doygunlaşabilir. Kuramsal gerekçe varsa
+\[
+E(Y\mid X)=\beta_0+\beta_1X+\beta_2X^2
+\]
+gibi eğrisel model düşünülebilir.
+
+Karesel terim eklendiğinde $\beta_1$ artık tek başına sabit eğim değildir;
+X'in etkisi düzeye göre değişir. Model sonuç görüldükten sonra sınırsız terim
+denenerek seçilmemeli, yeni biçim mümkünse bağımsız veride doğrulanmalıdır.
+
+\section{Eksik veri ve ölçüm hatası}
+\index{eksik veri}
+\index{ölçüm hatası}
+
+Basit regresyon çoğunlukla X veya Y'si eksik satırları analiz dışı bırakır.
+Eksiklik kaygı düzeyi, uyku sorunu veya yardım arama davranışıyla ilişkiliyse
+tam durum analizi yanlı olabilir. Analize giren ve girmeyen öğrencilerin
+sayısı ile bilinen özellikleri karşılaştırılmalıdır.
+
+X değişkenindeki rastgele ölçüm hatası eğimi çoğunlukla sıfıra doğru
+zayıflatır. Öz-bildirim uyku süresinin hatalı olması gerçek ilişkinin daha
+küçük görünmesine yol açabilir. Y'deki ölçüm hatası ise artık varyansını ve
+tahmin aralıklarını genişletebilir.
+
+\begin{mistakebox}
+Daha fazla gözlem sistematik ölçüm hatasını düzeltmez. Büyük örneklem hatalı
+ölçüme dayalı eğimi çok hassas biçimde tahmin edebilir.
+\end{mistakebox}
+
+\section{Öngörü ile açıklama ve nedenselliği ayırmak}
+\index{öngörü}
+\index{açıklama}
+\index{nedensel çıkarım}
+
+Regresyon en az üç farklı amaçla kullanılabilir:
+
+\begin{description}
+  \item[Betimleme] Örneklemdeki ortalama doğrusal ilişkiyi özetlemek,
+  \item[Öngörü] Yeni birimlerin Y değerini olabildiğince doğru tahmin etmek,
+  \item[Nedensel çıkarım] X'e müdahalenin Y üzerindeki etkisini tahmin etmek.
+\end{description}
+
+İyi öngören bir değişken nedensel olmayabilir; nedensel bir etki de bireysel
+öngörüye az katkı sağlayabilir. Nedensel yorum için zaman sırası, karıştırıcı
+değişkenler, seçim süreci ve araştırma tasarımı hakkında ek varsayımlar gerekir.
+
+Uyku ile kaygı ilişkisinde sınav yükü her ikisini etkileyebilir. Sınav yükünü
+modele eklemek yararlı olabilir; ancak ölçülmemiş karıştırıcılar, ters
+nedensellik ve hatalı kovaryat ölçümü devam eder. ``Diğer değişkenler kontrol
+edildi'' ifadesi nedenselliği otomatik olarak kurmaz.
+
+\section{Modelin yeni veride değerlendirilmesi}
+\index{çapraz doğrulama}
+\index{eğitim verisi}
+\index{test verisi}
+
+Modelin kurulduğu örneklemdeki $R^2$ ve hata, aynı veriye uyumu gösterir. Yeni
+öğrencilerde öngörü başarısı daha düşük olabilir. Öngörü amacı varsa veri
+eğitim ve test bölümlerine ayrılabilir veya çapraz doğrulama kullanılabilir.
+
+Yeni veride ortalama mutlak hata ve hata kareleri ortalamasının karekökü gibi
+ölçüler incelenebilir. Çok küçük örneklemde tek bir eğitim--test bölmesi
+kararsızdır; çapraz doğrulama daha verimli olabilir. Model seçimi ve başarı
+ölçütü veri analizinden önce belirlenmelidir \cite{hastie2009,james2021}.
+
+\begin{sezgibox}
+Bir doğrunun geçmiş veriye çok iyi uyması, yeni öğrencileri iyi tahmin edeceği
+anlamına gelmez. Modelin gerçek sınavı, kurulurken görmediği verideki
+performansıdır.
+\end{sezgibox}
+
+\section{Python ile basit doğrusal regresyon}
+
+\begin{lstlisting}
+import numpy as np
+import matplotlib.pyplot as plt
+import statsmodels.api as sm
+
+uyku = np.array([4.5,5.0,5.2,5.5,5.8,6.0,6.1,6.3,6.5,6.7,
+                 6.8,7.0,7.1,7.3,7.5,7.6,7.8,8.0,8.2,8.5])
+kaygi = np.array([68,52,75,60,66,48,70,55,64,58,
+                  45,62,53,46,60,43,55,49,57,40])
+
+X = sm.add_constant(uyku)
+model = sm.OLS(kaygi, X).fit()
+print(model.summary())
+print(model.conf_int())
+
+# Yedi saat uyku icin ortalama ve bireysel araliklar
+yeni = np.array([[1, 7.0]])
+print(model.get_prediction(yeni).summary_frame(alpha=0.05))
+
+# Temel tani grafikleri
+fig, ax = plt.subplots(1, 2, figsize=(8, 3))
+ax[0].scatter(uyku, kaygi)
+ax[0].plot(uyku, model.fittedvalues, color="navy")
+ax[0].set_xlabel("Uyku suresi")
+ax[0].set_ylabel("Kaygi puani")
+ax[1].scatter(model.fittedvalues, model.resid)
+ax[1].axhline(0, color="black", linestyle="--")
+ax[1].set_xlabel("Uydurulan deger")
+ax[1].set_ylabel("Artik")
+plt.tight_layout()
+plt.show()
+
+# Etkili gozlem olculeri
+etki = model.get_influence().summary_frame()
+print(etki[["standard_resid", "hat_diag", "cooks_d"]])
+\end{lstlisting}
+
+\texttt{summary\_frame} çıktısında \texttt{mean\_ci\_lower} ve
+\texttt{mean\_ci\_upper} ortalama yanıt aralığını;
+\texttt{obs\_ci\_lower} ve \texttt{obs\_ci\_upper} yeni birey tahmin
+aralığını verir. İki aralık birbirinin yerine raporlanmamalıdır.
+
+\section{SPSS ile doğrusal regresyon}
+
+\begin{enumerate}
+  \item Önce \textbf{Graphs $>$ Chart Builder} ile saçılım grafiği oluşturun.
+  \item \textbf{Analyze $>$ Regression $>$ Linear} yolunu izleyin.
+  \item Kaygı puanını \textbf{Dependent}, uyku süresini \textbf{Independent(s)} alanına taşıyın.
+  \item \textbf{Statistics} bölümünde tahminler, model uyumu ve güven aralıklarını seçin.
+  \item \textbf{Plots} bölümünde standartlaştırılmış artıklarla uydurulan değer grafiği ve normal P--P grafiği oluşturun.
+  \item \textbf{Save} bölümünde uydurulan değerler, artıklar, Cook uzaklığı ve kaldıraç ölçülerini gerektiğinde kaydedin.
+  \item Model Summary, ANOVA ve Coefficients tablolarını tanı grafikleriyle birlikte okuyun.
+\end{enumerate}
+
+\begin{outputguidebox}
+Çıktıyı şu sırayla okuyun: (1) örneklem büyüklüğü ve değişken kodları, (2)
+saçılım grafiği, (3) Model Summary tablosundaki $R^2$ ve tahmin hatası, (4)
+ANOVA tablosundaki genel $F$, (5) Coefficients tablosundaki $B$, standart hata,
+$t$, $p$ ve güven aralığı, (6) artık ve etki tanıları. Standartlaştırılmamış
+$B$ eğimini, standartlaştırılmış Beta katsayısıyla karıştırmayın.
+\end{outputguidebox}
+
+\section{Bütünleştirici sonuç yorumu}
+
+Uyku--kaygı modelinin temel sonuçları şöyledir:
+
+\begin{itemize}
+  \item Denklem: $\widehat{\text{Kaygı}}=89{,}54-4{,}98\text{Uyku}$.
+  \item Eğim: saat başına yaklaşık 4,98 puan daha düşük beklenen kaygı.
+  \item Eğim güven aralığı: $[-8{,}41;-1{,}56]$.
+  \item Eğim testi: $t(18)=-3{,}06$, $p=0{,}007$.
+  \item Model uyumu: $R^2=0{,}342$, artık standart hatası 7,93 puan.
+  \item Yedi saat için ortalama tahmin: 54,66, yüzde 95 GA $[50{,}76;58{,}55]$.
+  \item Yedi saat için bireysel tahmin aralığı: $[37{,}54;71{,}77]$.
+\end{itemize}
+
+Bu sonuçlar örneklemde negatif doğrusal ilişki bulunduğunu ve ortalama
+doğrunun sıfır eğimden farklı olduğuna ilişkin kanıtı gösterir. Geniş bireysel
+tahmin aralığı yalnız uyku süresinin tek öğrencinin kaygısını kesin biçimde
+yordamadığını ortaya koyar.
+
+\section{Bilimsel raporlama örneği}
+
+``Gecelik uyku süresi akademik kaygı puanını negatif yönde yordamıştır,
+$b=-4{,}98$, $SH=1{,}63$, $t(18)=-3{,}06$, $p=0{,}007$, yüzde 95 GA
+$[-8{,}41;-1{,}56]$. Model kaygı puanındaki örneklem değişkenliğinin yüzde
+34,2'sini temsil etmiştir, $R^2=0{,}342$, $F(1,18)=9{,}36$.
+Artık standart hatası 7,93 puandır. Artık grafikleri belirgin eğrilik
+göstermemiştir. Kesitsel öz-bildirim tasarımı nedeniyle eğim nedensel uyku
+etkisi olarak yorumlanmamıştır.''
+
+Bir öngörü raporunda bunlara ek olarak yeni veride doğrulama yöntemi ve hata
+ölçüsü; nedensel araştırmada ise atama, karıştırıcı seçimi ve duyarlılık
+varsayımları belirtilmelidir.
+
+\section{Bir regresyon araştırmasını değerlendirirken}
+
+\begin{enumerate}
+  \item Y ve X değişkenlerinin rolleri araştırma sorusuyla uyumlu mu?
+  \item Saçılım grafiği doğrusal ilişkiyi ve veri aralığını destekliyor mu?
+  \item Eğim özgün birimleri ve güven aralığıyla yorumlanmış mı?
+  \item Kesme yalnız $X=0$ anlamlıysa mı yorumlanmış?
+  \item $R^2$ nedensellik veya bireysel tahmin kesinliği gibi sunulmuş mu?
+  \item Artık, değişen varyans ve etkili gözlem tanıları incelenmiş mi?
+  \item Ortalama güven aralığı ile bireysel tahmin aralığı ayrılmış mı?
+  \item Ekstrapolasyon veya yeni veriye doğrulanmamış öngörü yapılmış mı?
+  \item İlişki, öngörü ve nedensellik amaçları birbirinden ayrılmış mı?
+\end{enumerate}
+
+\input{chapters/r/regression}
+\input{chapter-exercises/11-basit-regresyon}
+
+\bolumkaynaklari{\cite{kutner2005,james2021,hastie2009,anscombe1973}}
+
+\section*{Hatırla--Uygula--Yansıt}
+
+\begin{enumerate}
+\renewcommand{\labelenumi}{\textbf{\Alph{enumi}.}}
+  \item \textbf{Hatırla:} $Y_i$, $X_i$, $\beta_0$, $\beta_1$ ve $\varepsilon_i$ terimlerini bir PDR örneği üzerinde açıklayın.
+  \item \textbf{Yorumla:} $\widehat Y=72-3{,}5X$ denkleminde eğimi X ve Y'nin birimleriyle yorumlayın.
+  \item \textbf{Kesme:} Aynı denklemde $X=0$ veri aralığının dışındaysa kesme yorumunun neden sınırlı olduğunu açıklayın.
+  \item \textbf{Hesapla:} $b_1=-2{,}4$ ve $SE(b_1)=0{,}8$ için $t$ istatistiğini bulun.
+  \item \textbf{Aralık:} Eğim için yüzde 95 güven aralığı $[-4{,}1;-0{,}7]$ olduğunda yönü ve makul büyüklükleri açıklayın.
+  \item \textbf{Artık:} Gözlenen Y 60 ve uydurulan Y 54 ise artığı hesaplayıp yorumlayın.
+  \item \textbf{Uyum:} $SST=1000$ ve $SSE=650$ için $R^2$ değerini bulun; ne söylediğini ve söylemediğini yazın.
+  \item \textbf{Bağlantı:} Basit regresyonda $r=-0{,}50$ ise $R^2$ ve eğimin işareti nedir?
+  \item \textbf{Aralıkları ayır:} Aynı X değeri için bireysel tahmin aralığının neden ortalama güven aralığından geniş olduğunu açıklayın.
+  \item \textbf{Tanıla:} Artık--uydurulan değer grafiğinde eğri ve huni desenlerinin gösterebileceği sorunları ayırın.
+  \item \textbf{Etki:} Büyük artık, yüksek kaldıraç ve yüksek etki kavramlarına ayrı örnekler verin.
+  \item \textbf{Ekstrapolasyon:} 10--18 yaş verisinden 35 yaş için tahmin yapmanın riskini açıklayın.
+  \item \textbf{Nedensellik:} Uyku--kaygı eğimi için ters nedensellik ve iki ortak neden önerin.
+  \item \textbf{Uygula:} Python verisine $(9,90)$ gözlemini ekleyerek eğim, $R^2$, Cook uzaklığı ve grafikleri karşılaştırın.
+  \item \textbf{Raporla:} Denklem, eğim, standart hata, test, güven aralığı, $R^2$, artık hatası ve nedensellik sınırı içeren kısa bir bulgu paragrafı yazın.
+\end{enumerate}

@@ -1,0 +1,21 @@
+{
+  "algorithm": "SHA-256",
+  "files": {
+    "DOGRULAMA.md": "59542037514167ee42e87f3ab4295cd318866b348a2c5b7f6d46d62852593499",
+    "README.md": "e23c901489bcdb6b33c018d751e1c3479c7a66a1232cd60075f5dcf6bb39d03b",
+    "alistirmalar.md": "b1f57aa19d8d412e58a0b50ef4ed62166b2d0ef380ce5b19ac00707182cd5565",
+    "cozumler.md": "56e652ee9b5a16af0076a4a6ad2974e9ace89d642ed1e1e19c8610988657258d",
+    "ornek-01/README.md": "b4fa6919cc6ccca1b51a6ee4dc246dddc67eba442390df6ce83aa1b08b205556",
+    "ornek-01/analiz.sps": "f30467dbc81dc129c0e19fe3f18dbb78185449aa41b1bb8292e03d95cad47de1",
+    "ornek-01/analiz.sps.txt": "f30467dbc81dc129c0e19fe3f18dbb78185449aa41b1bb8292e03d95cad47de1",
+    "ornek-01/beklenen-sonuclar.csv": "baaec7db93e2ae9fc1a519551ba888244379ad94079beb08ab621a1a8724d1af",
+    "ornek-01/ciktilar/python/test-ve-aralik.png": "1e36dba9298f4f807f131549ddb9ff396910198caad0e48ad002d682b28cd5af",
+    "ornek-01/cozum.R": "ede5eadbe0267dd91cbc1c5fc95e4da0e9d2f054c3ca037e82c82606651996c4",
+    "ornek-01/cozum.md": "0d5040dec698ae469408a9fc2a26a2d4f22156b7365b08198ed53338101f81ec",
+    "ornek-01/cozum.py": "e4ee47528d891a8f0180f04b88608ca7755ec2eedaf7bf4144adb397f128e1f5",
+    "ornek-01/grafik-aciklamasi.md": "10a14b6e68fbb63d9f71f486703ae5b4a4a2360f6f0a745b73b6b1f01f28b2cb",
+    "ornek-01/kaynak-kaydi.json": "89e0a45bac6bcc563dda42662b241490b3012ea1aad169dfd3b6742cc0a31960",
+    "ornek-01/veri-sozlugu.csv": "df13f7514c465efef4cb39dbc832f5f5903971739815b078705191fce387fed3",
+    "ornek-01/veri.csv": "66afa14471c33079b26566b757e91458bdb71e1e1b45c12120889d2cf6f4ce27"
+  }
+}

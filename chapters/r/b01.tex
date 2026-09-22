@@ -1,0 +1,38 @@
+\section{R ile çözümlü uygulama}
+\label{sec:r-b01}
+
+\textbf{Soru.} Bölümdeki beş öğrencilik öğretim örneğini R'de oluşturun.
+Gözlem birimini, değişken türlerini, program frekanslarını ve ortalama başarıyı
+belirleyin. Bu küçük veri gerçek bir araştırmadan alınmış değildir.
+
+\begin{lstlisting}[style=prismR]
+veri <- data.frame(
+  devam_saati = c(8, 10, 7, 12, 9),
+  basari = c(68, 75, 64, 83, 72),
+  program = factor(c("A", "A", "B", "B", "A"))
+)
+str(veri)
+summary(veri)
+table(veri$program)
+prop.table(table(veri$program))
+colSums(is.na(veri))
+c(ogrenci = nrow(veri),
+  ortalama_devam = mean(veri$devam_saati),
+  ortalama_basari = mean(veri$basari))
+\end{lstlisting}
+
+\begin{outputguidebox}
+\textbf{Çözüm ve kontrol değerleri.} Her satır bir öğrencidir; veri
+5 satır ve 3 değişken içerir. \texttt{devam\_saati} ve \texttt{basari}
+nicel, \texttt{program} nominal kategoriktir. A programında 3, B programında
+2 öğrenci vardır. Ortalama devam 9,2 saat, ortalama başarı 72,4 puandır;
+hiçbir sütunda eksik değer yoktur.
+\end{outputguidebox}
+
+\textbf{Yorum.} \texttt{factor} program kodlarının kategori olarak
+saklanmasını sağlar. Bir program etiketinin ortalamasını almak anlamlı
+değildir. Beş satırın özetlenmesi, devamın başarıya neden olduğunu veya
+öğrencilerin bir evreni temsil ettiğini göstermez.
+
+\textbf{Pekiştirme ve yanıt.} Programların örneklemdeki paylarını
+\texttt{prop.table} çıktısından okuyun: A için 0,60, B için 0,40 elde edilir. Bunlar evren oranı değil örneklem oranlarıdır.

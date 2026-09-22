@@ -1,0 +1,491 @@
+\section{Literatür verisiyle yazılım uygulamaları}
+\label{sec:spss-b11}
+
+\textbf{Amaç ve veri.} \texttt{b11.csv} ile iki ayrı soru sorulur:
+F ve M kodlu grupların yıl sonu ortalamaları farklı mı; aynı öğrencinin
+\texttt{g3} ve \texttt{g1} notları arasında ortalama fark var mı
+\citep{cortez2008data}?
+İlk soru için Welch, ikinci soru için eşleştirilmiş $t$ testi kullanılır.
+İki test de iki yönlüdür; her biri için anlamlılık düzeyi 0,05 ve
+güven düzeyi yüzde 95'tir. Fark yönleri sırasıyla F eksi M ve
+\texttt{g3-g1} olarak sabitlenmiştir.
+
+\textbf{Ortak veri.} Doğrulanan B11 uygulamasında üç yazılım da
+\nolinkurl{companion/spss/csv/b11.csv} dosyasını kullanmıştır.
+Dosya 395 satır ve 10 sütun içerir; kayıtların tamamı analiz edilir.
+\texttt{sex} için 1=F ve 2=M kaynak kategorileridir. B06'nın seçim
+göstergeleri ve ağırlığı kullanılmaz. Bu karşılaştırma Excel içe
+aktarmanın doğrulandığı anlamına gelmez. Kodları \texttt{companion}
+klasörünü içeren paket kökünden çalıştırın; veri sözlüğü ve hazırlık
+için bkz. sayfa~\pageref{sec:spss-guide}.
+
+\subsection{IBM SPSS uygulaması}
+\textbf{Başlamadan önce.} B10'dan kalan tek satırlık özeti değil,
+aşağıdaki veri açma bloğuyla ham B11 verisini kullanın. Menü yoluna
+geçmeden önce bu bloğu \texttt{EXECUTE} satırı dahil çalıştırın.
+Filtre, ağırlık ve dosya bölme kapalı olmalıdır. Dosya açma hatasında
+önce \texttt{/FILE} yolunu düzeltip veri açma bloğunu yeniden çalıştırın.
+B11 kodu kayıtları özet satırına indirmez; yalnız \texttt{fark}
+değişkenini ekler.
+
+\begin{spssadimlar}
+\spssadim{\emph{Analyze $\to$ Descriptive Statistics $\to$ Explore} yolunda \texttt{g3} değişkenini \emph{Dependent List}, \texttt{sex} değişkenini \emph{Factor List} alanına yerleştirin; grup kutu grafiklerini inceleyin.}
+\spssadim{\emph{Analyze $\to$ Compare Means $\to$ Independent-Samples T Test} yolunu açın. \texttt{g3} test değişkeni, \texttt{sex} gruplama değişkeni olsun.}
+\spssadim{\emph{Define Groups} içinde grup 1 için 1, grup 2 için 2 yazın. \emph{Continue}; yüzde 95 güven düzeyini kontrol edip \emph{OK} seçin.}
+\spssadim{Önceden seçilen Welch yaklaşımı için \emph{Equal variances not assumed} satırını ve iki yönlü anlamlılık sütununu okuyun. Farkın yönü F eksi M'dir. Levene sonucuna göre sonradan satır değiştirmeyin.}
+\spssadim{Eşleştirilmiş analiz öncesi \emph{Transform $\to$ Compute Variable} ile \texttt{fark=g3-g1} hesaplayın; Explore ile bu farkın histogram ve kutu grafiğini inceleyin.}
+\spssadim{\emph{Analyze $\to$ Compare Means $\to$ Paired-Samples T Test} yolunda ilk değişken \texttt{g3}, ikinci değişken \texttt{g1} olacak biçimde tek çift oluşturun.}
+\spssadim{\emph{Options} içinde yüzde 95 güven düzeyini seçip \emph{Continue $\to$ OK} ile çalıştırın. Fark \texttt{g3-g1} yönündedir. Yeni sürümlerde \emph{Compare Means} yerine \emph{Compare Means and Proportions} menüsü kullanılabilir.}
+\end{spssadimlar}
+
+{\raggedright
+\noindent\textbf{Komutların görevi.} \texttt{GROUPS=sex(1 2)} bağımsız grupları ve fark yönünü tanımlar. \texttt{PAIRS=g3 WITH g1} aynı öğrencinin iki notunu eşleştirir. Aradaki \texttt{COMPUTE} ve \texttt{EXAMINE}, fark dağılımını kontrol eder.\par}
+
+\par\noindent\begin{minipage}{\linewidth}
+\textbf{Uygulama kodu:} \texttt{b11}. Doğrulanan veri dosyası
+\texttt{companion/spss} altındaki \texttt{csv/b11.csv} dosyasıdır.
+
+\begin{lstlisting}[style=prismSPSS]
+SET DECIMAL=DOT.
+GET DATA /TYPE=TXT
+ /FILE='companion/spss/csv/b11.csv'
+ /ENCODING='UTF8'
+ /ARRANGEMENT=DELIMITED /DELCASE=LINE
+ /DELIMITERS="," /QUALIFIER='"'
+ /FIRSTCASE=2
+ /VARIABLES=id F8.0 school F8.0 sex F8.0 age F8.0
+ studytime F8.0 absences F8.0 g1 F8.0 g2 F8.0
+ g3 F8.0 pass10 F8.0.
+FILTER OFF.
+WEIGHT OFF.
+SPLIT FILE OFF.
+VARIABLE LABELS
+ sex 'Kaynak verideki cinsiyet kategorisi'
+ g1 'Ilk donem matematik notu'
+ g3 'Yil sonu matematik notu'.
+VALUE LABELS sex 1 'F' 2 'M'.
+VARIABLE LEVEL
+ id school sex pass10 (NOMINAL)
+ studytime (ORDINAL)
+ age absences g1 g2 g3 (SCALE).
+FORMATS g1 g3 (F14.9).
+EXECUTE.
+\end{lstlisting}
+\end{minipage}\par
+
+\par\noindent\begin{minipage}{\linewidth}
+\textbf{İki analiz.} Veri açma bloğundan sonra çalıştırın.
+
+\begin{lstlisting}[style=prismSPSS]
+EXAMINE VARIABLES=g3 BY sex
+ /PLOT=BOXPLOT /STATISTICS=DESCRIPTIVES
+ /CINTERVAL=95.
+T-TEST GROUPS=sex(1 2) /VARIABLES=g3
+ /CRITERIA=CI(.95).
+COMPUTE fark=g3-g1.
+VARIABLE LABELS fark 'Yil sonu eksi ilk donem notu'.
+VARIABLE LEVEL fark (SCALE).
+FORMATS fark (F14.9).
+EXECUTE.
+EXAMINE VARIABLES=fark
+ /PLOT=BOXPLOT HISTOGRAM
+ /STATISTICS=DESCRIPTIVES /CINTERVAL=95.
+T-TEST PAIRS=g3 WITH g1 (PAIRED)
+ /CRITERIA=CI(.95).
+\end{lstlisting}
+
+\end{minipage}\par
+
+\begin{outputguidebox}
+\textbf{Paylaşılan SPSS tablolarıyla doğrulanan değerler.}
+\emph{Group Statistics} tablosunda F için $n=208$, ortalama
+9,9663461538; M için $n=187$, ortalama 10,914438503 görülür.
+\emph{Equal variances not assumed} satırında $t=-2{,}065$,
+serbestlik derecesi 390,569 ve iki yönlü $p=0{,}040$ vardır.
+F eksi M farkı $-0{,}9480923488$ puandır. Eşit varyans varsayılan
+satırın aynı yuvarlanmış $p$ değerini vermesi, iki yöntemi aynı yapmaz.
+
+\emph{Paired Samples Test} tablosunda \texttt{g3-g1} farkı
+$-0{,}4936708861$, $t(394)=-3{,}552$ ve iki yönlü $p<0{,}001$
+görülür. Bu ifade $p=0$ demek değildir. \emph{Paired Samples
+Correlations} tablosundaki 0,801 korelasyon ve onun anlamlılığı,
+ortalama farkının testi yerine okunmaz. Her öğrencinin iki notu
+bir çifttir; 790 bağımsız öğrenci yoktur.
+\end{outputguidebox}
+
+\textbf{Grafik kontrolünün kapsamı.} Paylaşılan SPSS fark histogramında
+395 kayıt, ortalama $-0{,}493670886$ ve standart sapma 2,762481677
+görülür. Farklar sıfır çevresinde yoğunlaşırken negatif tarafta uzun
+bir kuyruk vardır. Farkın kutu grafiğinde medyan sıfır civarındadır;
+negatif tarafta çok sayıda aykırı değer işaretlenmiştir. Bu görseller
+simetrik normal dağılım görünümünü desteklemez; normallik doğrulanmış
+sayılmaz. İşaretlenen kayıtlar yalnız aykırı etiketi nedeniyle silinmez.
+
+Sonradan paylaşılan SPSS F--M \texttt{g3} kutu grafiği de incelenmiştir.
+F grubunda medyan 10, kutu sınırları 8 ve 13; M grubunda medyan 11,
+kutu sınırları 9 ve 14'tür. Bıyıklar sırasıyla 4--19 ve 5--20 puana
+uzanır. M grubunun merkezi daha yüksek görünse de dağılımlar belirgin
+biçimde örtüşür; kutudaki çizgi ortalamayı değil medyanı gösterir.
+Her iki grupta sıfır notlar aykırı olarak işaretlenmiştir. Üst üste
+binen simgelerden kayıt sayısı okunmaz; proje CSV'sinde F grubunda
+23, M grubunda 15 sıfır not vardır ve bu 38 kayıt analizde tutulur.
+Bu görünüm tek başına normalliği, varyans eşitliğini veya gözlemlerin
+bağımsızlığını doğrulamaz; önceden seçilen Welch testi değiştirilmez.
+
+
+\par\noindent\begin{minipage}{\linewidth}
+\subsection{R uygulaması}
+\label{sec:r-gercek-b11}
+
+\texttt{var.equal=FALSE} Welch testini seçer. Eşleştirilmiş testte
+ilk değişken G3, ikinci değişken G1 olduğundan fark G3--G1 olur.
+Aşağıdaki R bloklarını sırayla çalıştırın.
+
+\begin{lstlisting}[style=prismR]
+veri <- read.csv("companion/spss/csv/b11.csv")
+stopifnot(nrow(veri) == 395, ncol(veri) == 10,
+  !anyNA(veri), !anyDuplicated(veri$id),
+  all(veri$sex %in% c(1, 2)),
+  all(veri$pass10 == as.integer(veri$g3 >= 10)))
+grup_F <- veri$g3[veri$sex == 1]
+grup_M <- veri$g3[veri$sex == 2]
+fark <- veri$g3-veri$g1
+welch <- t.test(grup_F, grup_M, var.equal=FALSE,
+  alternative="two.sided", conf.level=.95)
+eslesmis <- t.test(veri$g3, veri$g1, paired=TRUE,
+  alternative="two.sided", conf.level=.95)
+print(welch); print(eslesmis)
+\end{lstlisting}
+
+\textbf{Çıktıyı okuma.} Paylaşılan R çıktısında Welch için iki yönlü
+$p=0{,}039577$, eşleştirilmiş test için $p=0{,}000429$ bulunmuştur.
+İki testin güven aralıkları da ilgili ortalama farkına aittir.
+\end{minipage}\par
+
+\par\noindent\begin{minipage}{\linewidth}
+\textbf{Ayrıntılı özetler.} Aşağıdaki kod grup ve ölçüm özetlerini,
+iki testin sonuçlarını ve eşleştirilmiş etkiyi yazdırır.
+
+\begin{lstlisting}[style=prismR]
+betimsel <- function(degerler) {
+  c(n=length(degerler), ort=mean(degerler),
+    ss=sd(degerler), sh=sd(degerler)/sqrt(length(degerler)))
+}
+test_ozeti <- function(sonuc, ortalama_fark) {
+  c(t=unname(sonuc$statistic), df=unname(sonuc$parameter),
+    p_iki_yonlu=sonuc$p.value, fark=ortalama_fark,
+    alt=sonuc$conf.int[1], ust=sonuc$conf.int[2])
+}
+print(rbind(F=betimsel(grup_F), M=betimsel(grup_M)),
+      digits=15)
+print(test_ozeti(welch, mean(grup_F)-mean(grup_M)),
+      digits=15)
+print(rbind(G3=betimsel(veri$g3), G1=betimsel(veri$g1)),
+      digits=15)
+print(test_ozeti(eslesmis, mean(fark)), digits=15)
+print(c(betimsel(fark), dz=mean(fark)/sd(fark)), digits=15)
+print(sum(veri$g3 == 0))
+\end{lstlisting}
+
+\textbf{Çıktıyı okuma.} R çıktısında 395 satır, 10 sütun ve sıfır
+eksik değer vardır; 38 sıfır not analizde tutulmuştur.
+$d_z=-0{,}178706$, ortalama farkın \emph{farkların standart sapmasına}
+bölünmesiyle hesaplanır; iki grubun ortak standart sapması kullanılmaz.
+\end{minipage}\par
+
+\par\noindent\begin{minipage}{\linewidth}
+\textbf{Grafikleri üretme.} Bu R grafiklerinin çıktısı paylaşılmamıştır;
+görsel inceleme için kod aşağıda ayrıca verilmiştir.
+
+\begin{lstlisting}[style=prismR]
+par(mfrow=c(1, 3))
+boxplot(g3 ~ sex, data=veri, names=c("F", "M"))
+boxplot(fark, main="G3-G1")
+hist(fark, main="G3-G1", xlab="Difference")
+par(mfrow=c(1, 1))
+\end{lstlisting}
+
+\end{minipage}\par
+
+\par\noindent\begin{minipage}{\linewidth}
+\subsection{Python uygulaması}
+\label{sec:python-b11}
+
+\texttt{equal\_var=False} Welch testidir; \texttt{ttest\_rel} aynı
+öğrencinin iki notunu eşleştirir. Python bloklarını sırayla çalıştırın;
+iki testin aralıkları ayrı okunur.
+
+\begin{lstlisting}[style=prismPythonApp]
+import pandas as pd
+import numpy as np
+from scipy import stats
+
+veri = pd.read_csv("companion/spss/csv/b11.csv")
+assert veri.shape == (395, 10)
+assert not veri.isna().any().any()
+assert veri.id.is_unique
+assert veri.sex.isin([1, 2]).all()
+assert veri.pass10.eq((veri.g3 >= 10).astype(int)).all()
+grup_F = veri.loc[veri.sex == 1, "g3"]
+grup_M = veri.loc[veri.sex == 2, "g3"]
+fark = veri.g3-veri.g1
+welch = stats.ttest_ind(grup_F, grup_M,
+    equal_var=False, alternative="two-sided")
+eslesmis = stats.ttest_rel(veri.g3, veri.g1,
+                          alternative="two-sided")
+print(welch); print(welch.confidence_interval(.95))
+print(eslesmis); print(eslesmis.confidence_interval(.95))
+\end{lstlisting}
+
+\textbf{Çıktıyı okuma.} Paylaşılan Python çıktısında fark yönleri
+F--M ve G3--G1 olarak R ve SPSS ile aynıdır. Serbestlik derecesi
+Welch testinde kesirli, eşleştirilmiş testte 394'tür.
+\end{minipage}\par
+
+\par\noindent\begin{minipage}{\linewidth}
+\textbf{Ayrıntılı özetler.} \texttt{ddof=1}, örneklem standart sapmasını
+seçer. Aşağıdaki özetlerin sayısal içeriği yüklenen Python çıktısıyla
+aynıdır; burada yazdırma düzeni kısaltılmıştır.
+
+\begin{lstlisting}[style=prismPythonApp]
+def betimsel(degerler):
+    return dict(n=len(degerler), ort=degerler.mean(),
+        ss=degerler.std(ddof=1),
+        sh=degerler.std(ddof=1)/np.sqrt(len(degerler)))
+
+def test_ozeti(sonuc, ortalama_fark):
+    aralik = sonuc.confidence_interval(.95)
+    return dict(t=sonuc.statistic, df=sonuc.df,
+        p_iki_yonlu=sonuc.pvalue, fark=ortalama_fark,
+        alt=aralik.low, ust=aralik.high)
+
+ozetler = {
+    "F": betimsel(grup_F), "M": betimsel(grup_M),
+    "Welch": test_ozeti(welch, grup_F.mean()-grup_M.mean()),
+    "G3": betimsel(veri.g3), "G1": betimsel(veri.g1),
+    "Eslesmis": test_ozeti(eslesmis, fark.mean()),
+    "Fark": dict(betimsel(fark),
+                 dz=fark.mean()/fark.std(ddof=1))}
+for baslik, ozet in ozetler.items():
+    print(baslik)
+    for ad, deger in ozet.items():
+        print(f"{ad}: {deger:.13f}")
+print(int((veri.g3 == 0).sum()))
+\end{lstlisting}
+
+\textbf{Çıktıyı okuma.} Python çıktısı da 395 satır, 10 sütun, sıfır
+eksik değer ve 38 sıfır not gösterir. R ve Python ham kayıtları korur.
+\end{minipage}\par
+
+\par\noindent\begin{minipage}{\linewidth}
+\textbf{Grafikleri üretme.} Bu Python grafiklerinin çıktısı
+paylaşılmamıştır; sayısal uyum grafiklerin doğrulandığı anlamına gelmez.
+
+\begin{lstlisting}[style=prismPythonApp]
+import matplotlib.pyplot as plt
+
+sekil, eksenler = plt.subplots(1, 3, figsize=(12, 4))
+eksenler[0].boxplot([grup_F, grup_M])
+eksenler[0].set_xticks([1, 2], ["F", "M"])
+eksenler[0].set_title("G3")
+eksenler[1].boxplot(fark); eksenler[1].set_title("G3-G1")
+eksenler[2].hist(fark, bins=15)
+eksenler[2].set_title("G3-G1")
+plt.tight_layout(); plt.show()
+\end{lstlisting}
+
+\end{minipage}\par
+
+\Needspace{15\baselineskip}
+\subsection{Sonuçların karşılaştırılması ve ortak rapor}
+13 Eylül 2026'da paylaşılan SPSS tabloları, R ve Python metin
+çıktılarıyla karşılaştırılmıştır. Beş betimsel özetin dörder değeri,
+iki testin altışar değeri ve $d_z$ olmak üzere 33 sayısal özetin
+tamamı R ve Python arasında $10^{-12}$ mutlak tolerans içinde
+uyumludur. Python'un 13 ondalık basamaklı özetleri proje CSV'sinden
+yapılan hesaplarla da eşleşir. SPSS'in gösterdiği basamaklar aynı
+sonuçlarla uyumludur; eşleştirilmiş testin $p<0{,}001$ gösterimi,
+R/Python'daki yaklaşık 0,000429 değerini içerir.
+Görsel kontrol paylaşılan SPSS F--M grup kutu grafiğini, fark
+histogramını ve fark kutu grafiğini kapsar. R/Python grafiklerinin
+çıktıları paylaşılmadığından bunlar görsel doğrulama kapsamında
+değildir. Aşağıdaki tablolar çıktıların kitap
+düzenine uyarlanmış özetidir; ekran görüntüsü değildir.
+
+\begin{table}[H]
+\centering
+\caption{B11'in doğrulanmış grup, ölçüm ve fark özetleri}
+\label{tab:b11-dogrulanmis-betimsel}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Değişken/grup & $n$ & Ortalama & Standart sapma & Standart hata \\
+\midrule
+G3 (F) & 208 & 9,966346 & 4,622338 & 0,320501 \\
+G3 (M) & 187 & 10,914439 & 4,495297 & 0,328729 \\
+\midrule
+G3 (tümü) & 395 & 10,415190 & 4,581443 & 0,230517 \\
+G1 (tümü) & 395 & 10,908861 & 3,319195 & 0,167007 \\
+G3--G1 & 395 & $-0{,}493671$ & 2,762482 & 0,138996 \\
+\bottomrule
+\end{tabular}
+\par\smallskip
+{\footnotesize Ondalıklı değerler altı basamağa yuvarlanmıştır.
+İlk iki satır aynı 395 öğrencinin F ve M gruplarını, son üç satır
+bu öğrencilerin iki notunu ve kişi içi farkını özetler; satırlar
+ayrı örneklemler olarak toplanmaz. Standart hata $s/\sqrt{n}$'dir.\par}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{B11'de Welch ve eşleştirilmiş test sonuçları}
+\label{tab:b11-dogrulanmis-test}
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Ölçü & Welch (F--M) & Eşleştirilmiş (G3--G1) \\
+\midrule
+Ortalama fark & $-0{,}948092$ & $-0{,}493671$ \\
+$t$ istatistiği & $-2{,}065057$ & $-3{,}551703$ \\
+Serbestlik derecesi & 390,569356 & 394 \\
+İki yönlü $p$ değeri & 0,039577 & 0,000429 \\
+\%95 aralık: alt sınır & $-1{,}850732$ & $-0{,}766937$ \\
+\%95 aralık: üst sınır & $-0{,}045452$ & $-0{,}220405$ \\
+\bottomrule
+\end{tabular}
+\par\smallskip
+{\footnotesize Aralıklar ilgili ortalama farkları içindir; tek bir
+grubun ortalama aralığı değildir. Her test ayrı iki yönlü 0,05
+düzeyinde değerlendirilmiştir; çoklu test düzeltmesi yapılmamıştır.
+Ara hesaplarda yuvarlanmamış değerler kullanılmıştır.\par}
+\end{table}
+
+\Needspace{13\baselineskip}
+\begin{outputguidebox}
+Tablo~\ref{tab:b11-dogrulanmis-test} içindeki Welch sonucu,
+F grubunun yıl sonu ortalamasının M grubundan yaklaşık 0,948 puan
+düşük olduğunu gösterir. Önceden seçilen iki yönlü 0,05 düzeyinde
+eşit ortalamalar hipotezi reddedilir. Bu ilişki okul, önceki başarı
+ve diğer karıştırıcılar için düzeltilmemiştir; biyolojik veya
+nedensel bir açıklama değildir.
+
+Eşleştirilmiş sonuçta yıl sonu eksi ilk dönem ortalama farkı yaklaşık
+$-0{,}494$ puandır. Sıfır ortalama fark hipotezi aynı anlamlılık
+düzeyinde reddedilir. Tablo~\ref{tab:b11-dogrulanmis-betimsel}
+içindeki fark standart sapması kullanıldığında
+$d_z=\overline{D}/s_D=-0{,}178706$ bulunur. Bu etki, bağımsız
+grupların standartlaştırılmış farkı değildir. Dönem notları ve yıl
+sonu notu eşdeğer sınav tekrarları olarak varsayılmaz; sonuç bir
+öğretim müdahalesinin etkisi diye yorumlanmaz.
+
+Fark dağılımındaki negatif kuyruk ve aykırı değerler nedeniyle
+varsayım değerlendirmesi yalnız $p$ değerine dayandırılamaz.
+Büyük örneklem, farklı öğrencilerin bağımsızlığı veya iki okulla
+sınırlı kaynağın temsil gücü sorununu çözmez. Yazılımların sayısal
+uyumu bu varsayımların doğrulandığı anlamına gelmez.
+\end{outputguidebox}
+
+\Needspace{10\baselineskip}
+\textbf{Raporlama örneği (doğrulanmış çıktılarla).}
+``F grubunda 208, M grubunda 187 öğrenci bulunmaktadır. Welch testinde
+F eksi M yıl sonu not ortalaması farkı $-0{,}948092$ puandır
+($t=-2{,}065057$, serbestlik derecesi 390,569356,
+$p=0{,}039577$; \%95 güven aralığı
+$[-1{,}850732;\ -0{,}045452]$). Ayrı eşleştirilmiş analizde
+395 öğrencinin yıl sonu eksi ilk dönem ortalama farkı $-0{,}493671$
+puan bulunmuştur ($t(394)=-3{,}551703$, $p=0{,}000429$;
+\%95 güven aralığı $[-0{,}766937;\ -0{,}220405]$,
+$d_z=-0{,}178706$). Sıfır notlu 38 kayıt korunmuştur.
+Fark grafikleri negatif kuyruk ve aykırı değerler göstermiştir;
+normallik doğrulanmış kabul edilmemiştir. Sonuçlar bağımsızlık
+varsayımı altında yorumlanmış; okul ve diğer karıştırıcılar için
+düzeltme yapılmamıştır. Bulgular nedensel etki veya daha geniş
+bir öğrenci evrenine genellenebilirlik kanıtı olarak sunulmamıştır.''
+
+
+\Needspace{8\baselineskip}
+\subsection{Karşılaştırmalı görev: aynı kayıtlar, iki analiz birimi}
+\label{sec:b11-karsilastirmali-gorev}
+
+\textbf{Hedef ve teslim.} Gruplararası fark ile öğrenci içi farkı
+ayırt edin. Yeni test çalıştırmadan, mevcut çıktılarla beş maddelik bir
+karar ve raporlama kaydı hazırlayın. Önce kendi yanıtınızı yazın;
+ardından gerekçeli kontrol yanıtını ve puanlama ölçütlerini okuyun.
+
+\begin{enumerate}
+  \item \textbf{Soru ve birim.} Welch ve eşleştirilmiş analiz için
+  hedeflenen büyüklüğü, sıfır hipotezini ve analizde kullanılan gözlem
+  yapısını ayrı yazın. Aynı 395 kaydı kullanmak neden aynı testi
+  gerektirmez? Eşleştirilmiş analizde neden 790 bağımsız gözlem yoktur?
+  \item \textbf{Analiz tanımı.} Her iki analiz için fark yönünü, test
+  yönünü ve güven düzeyini belirtin. Grup ya da ölçüm sırası ters
+  çevrildiğinde fark, $t$, iki yönlü $p$ ve $[L;U]$ güven aralığı
+  nasıl değişir? Welch sonucu üzerinde sayısal olarak gösterin.
+  \item \textbf{Grafik ve veri kararı.} F--M kutu grafiklerinin
+  medyanlarını ve örtüşmesini yorumlayın. Grafikten tek başına test
+  kararı verilip verilemeyeceğini ve aykırı görünen kayıtları neden
+  otomatik olarak silmeyeceğinizi açıklayın.
+  \item \textbf{İki kısa rapor.} Her soru için ayrı bir cümlede
+  ortalama farkını puan birimiyle, yüzde 95 güven aralığını ve iki
+  yönlü $p$ değerini verin. Gruplararası fark ile öğrenci içi farkı
+  aynı büyüklük olarak sunmayın.
+  \item \textbf{İddia sınırı.} ``Sonuç anlamlı olduğuna göre kaynak
+  cinsiyet kategorisi başarıyı belirler; dönem farkı da öğretimin
+  etkisidir'' yorumundaki iki çıkarımı ayrı düzeltin. Okul, önceki
+  başarı ve diğer karıştırıcılar için ne yapıldığını belirtin.
+\end{enumerate}
+
+\Needspace{8\baselineskip}
+\textbf{Gerekçeli kontrol yanıtı.}
+\begin{enumerate}
+  \item Welch'in hedefi $\mu_{G3,F}-\mu_{G3,M}$ ve sıfır hipotezi
+  bu farkın sıfır olmasıdır. Gruplar 208 ve 187 farklı öğrencidir;
+  öğrenciler arası bağımsızlık varsayılır. Eşleştirilmiş analizde
+  $D=G3-G1$, hedef $\mu_D$, sıfır hipotezi $\mu_D=0$'dır.
+  Analiz 395 öğrenci farkını kullanır; bir öğrencinin iki notu
+  bağımsız iki kayıt sayılmaz. Testi satır sayısı değil, soru ve
+  ölçümlerin yapısı belirler.
+  \item Yönler F eksi M ve G3 eksi G1; testler iki yönlü, güven
+  düzeyi yüzde 95'tir. Sıra tersine dönünce fark ve $t$ işaret
+  değiştirir, iki yönlü $p$ değişmez; aralık $[-U;-L]$ olur.
+  Welch için yeni fark $0{,}948092$, $t=2{,}065057$ ve aralık
+  $[0{,}045452;\ 1{,}850732]$'dir; $p=0{,}039577$ kalır.
+  Eşleştirilmiş fark için de aynı dönüşüm geçerlidir.
+  \item Medyanlar F için 10, M için 11'dir; dağılımlar belirgin
+  biçimde örtüşür. Medyan çizgileri ortalamaları göstermez ve kutu
+  grafiği ortalama farkının testinin yerine geçmez. Aykırı işareti
+  veri hatasını kanıtlamaz; kayıtlar incelenir, yalnız işaretlendiği
+  için silinmez. Ana analizde sıfır notlar korunmuştur.
+  \item ``F eksi M yıl sonu ortalama farkı $-0{,}948092$ puandır;
+  yüzde 95 güven aralığı $[-1{,}850732;\ -0{,}045452]$ ve
+  iki yönlü $p=0{,}039577$'dir.''
+  ``Öğrenci içi G3 eksi G1 ortalama farkı $-0{,}493671$ puandır;
+  yüzde 95 güven aralığı $[-0{,}766937;\ -0{,}220405]$ ve
+  iki yönlü $p=0{,}000429$'dur.''
+  Bu cümleler beşinci maddedeki sınırlılıklarla birlikte okunur.
+  \item İlk bulgu düzeltilmemiş bir gruplararası ilişkidir;
+  biyolojik veya nedensel belirleme göstermez. İkinci bulgu da
+  karşılaştırılabilir bir müdahale tasarımı olmadan öğretim etkisi
+  olarak yorumlanamaz. Okul, önceki başarı ve diğer karıştırıcılar
+  denetlenmemiştir; notlar eşdeğer sınav tekrarları sayılmamıştır.
+\end{enumerate}
+
+\Needspace{8\baselineskip}
+\textbf{Değerlendirme ölçütleri (10 puan).} Her görev maddesinde
+aşağıdaki iki bileşenin her biri 1 puandır. Doğru ve gerekçeli bileşen
+1, eksik veya yanlış bileşen 0 puan alır; eşdeğer doğru ifadeler kabul
+edilir. Sayısal sonuçlar altı ondalık basamağa uygun yuvarlanabilir.
+\begin{enumerate}
+  \item İki hedef ve sıfır hipotezini doğru ayırma (1);
+  bağımsız gruplar ile 395 eşleşmiş farkın yapısını açıklama (1).
+  \item Fark/test yönleri ve güven düzeyini belirtme (1);
+  işaret, $p$ ve aralık dönüşümünü doğru gösterme (1).
+  \item Medyanları ve örtüşmeyi doğru okuma (1);
+  grafiğin test yerine geçmediğini ve otomatik silmenin uygun
+  olmadığını açıklama (1).
+  \item Welch için doğru fark, birim, aralık ve $p$ (1);
+  eşleştirilmiş analiz için aynı dört öğe (1).
+  \item Gruplararası nedensel yorumu karıştırıcılarla birlikte
+  düzeltme (1); dönem farkını öğretim etkisinden ayırma (1).
+\end{enumerate}
+Doğru hesaplar nedensel yorum hatasını telafi etmez; böyle bir yanıt
+tam puan alamaz. B12'de bu karşılaştırmayı ortalama ile oran ayrımına
+taşıyın (sayfa~\pageref{sec:b12-karsilastirmali-gorev}).

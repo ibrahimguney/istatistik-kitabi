@@ -1,0 +1,87 @@
+local({
+  toplu_kontrol <- function() {
+    cat('B01/ornek-01 klasorundeki cozum.R dosyasini secin.\n')
+    secilen <- normalizePath(file.choose(), winslash='/', mustWork=TRUE)
+    ornek_b01 <- dirname(secilen)
+    if (basename(secilen) != 'cozum.R' || basename(ornek_b01) != 'ornek-01' ||
+        basename(dirname(ornek_b01)) != 'b01') {
+      stop('Lutfen b01/ornek-01/cozum.R dosyasini secin.')
+    }
+    kok <- dirname(dirname(ornek_b01))
+    onceki_dizin <- getwd()
+    on.exit(setwd(onceki_dizin), add=TRUE)
+    rscript <- file.path(R.home('bin'), if (.Platform$OS.type == 'windows') 'Rscript.exe' else 'Rscript')
+    if (!file.exists(rscript)) stop('Bu R kurulumunda Rscript bulunamadi.')
+    rapor <- tempfile(pattern='r-toplu-sonuc-', tmpdir=dirname(kok))
+    if (!dir.create(rapor)) stop('Sonuc klasoru olusturulamadi.')
+    rapor <- normalizePath(rapor, winslash='/', mustWork=TRUE)
+    capture.output(sessionInfo(), file=file.path(rapor, 'R-oturumu.txt'))
+    writeLines(c(paste('Tarih:', format(Sys.time(), tz='UTC', usetz=TRUE)),
+                 paste('Paket kok dizini:', kok),
+                 'Kapsam: --check ve gecici kopyada degistirilmis referansi reddetme.',
+                 'Grafik, benzetim ve SPSS calistirmasi bu denetimde yoktur.'),
+               file.path(rapor, 'kapsam.txt'))
+    paketler <- c(sprintf('b%02d', 1:14), 'bootstrap', 'coklu-regresyon', 'anova')
+    calistir <- function(log) {
+      system2(rscript, c('--vanilla', 'cozum.R', '--check'),
+              stdout=log, stderr=log, timeout=180)
+    }
+    paket_kontrol <- function(kod) {
+      ornek <- file.path(kok, kod, 'ornek-01')
+      gerekli <- file.path(ornek, c('cozum.R', 'beklenen-sonuclar.csv'))
+      if (!all(file.exists(gerekli))) stop('Paket veya gerekli dosya eksik.')
+      kopya <- tempfile(pattern='r-paket-')
+      if (!dir.create(kopya)) stop('Gecici klasor olusturulamadi.')
+      once <- getwd()
+      on.exit({setwd(once); unlink(kopya, recursive=TRUE)}, add=TRUE)
+      dosyalar <- list.files(ornek, pattern='\\.(R|csv)$', full.names=TRUE)
+      if (!all(file.copy(dosyalar, kopya, overwrite=FALSE))) stop('Girdiler kopyalanamadi.')
+      write.csv(data.frame(dosya=basename(dosyalar), md5=unname(tools::md5sum(dosyalar))),
+                file.path(rapor, paste0(kod, '-girdi-md5.csv')), row.names=FALSE)
+      setwd(kopya)
+      beklenen <- read.csv('beklenen-sonuclar.csv', check.names=FALSE, stringsAsFactors=FALSE)
+      if (!identical(names(beklenen), c('degisken','olcu','deger')) ||
+          nrow(beklenen) == 0 || !is.numeric(beklenen$deger) ||
+          any(!is.finite(beklenen$deger))) stop('Referans CSV gecersiz.')
+      log <- file.path(rapor, paste0(kod, '-R.txt'))
+      cikis <- calistir(log)
+      satirlar <- readLines(log, warn=FALSE)
+      mesaj <- grep('^DOGRULANDI:\\s*[0-9]+\\s+kontrol', satirlar, value=TRUE, perl=TRUE)
+      sayi <- if (length(mesaj) == 1) {
+        as.integer(sub('^DOGRULANDI:\\s*([0-9]+).*', '\\1', mesaj, perl=TRUE))
+      } else NA_integer_
+      pozitif <- isTRUE(cikis == 0 && !is.na(sayi) && sayi == nrow(beklenen))
+      negatif_cikis <- NA_integer_
+      if (pozitif) {
+        beklenen$deger[1] <- beklenen$deger[1] + 1
+        write.csv(beklenen, 'beklenen-sonuclar.csv', row.names=FALSE)
+        negatif_cikis <- calistir(file.path(rapor, paste0(kod, '-negatif-R.txt')))
+      }
+      gecti <- pozitif && isTRUE(negatif_cikis == 1)
+      data.frame(paket=kod, beklenen=nrow(beklenen), eslesen=if (pozitif) sayi else 0L,
+                 cikis=cikis, negatif_cikis=negatif_cikis,
+                 durum=if (gecti) 'GECTI' else 'BASARISIZ',
+                 not=if (gecti) '' else 'Paket loglarini inceleyin.', check.names=FALSE)
+    }
+    sonuc <- NULL
+    for (kod in paketler) {
+      kayit <- tryCatch(paket_kontrol(kod), error=function(hata) {
+        writeLines(conditionMessage(hata), file.path(rapor, paste0(kod, '-surucu-hatasi.txt')))
+        data.frame(paket=kod, beklenen=NA_integer_, eslesen=0L, cikis=NA_integer_,
+                   negatif_cikis=NA_integer_, durum='CALISTIRILAMADI',
+                   not=conditionMessage(hata), check.names=FALSE)
+      })
+      sonuc <- rbind(sonuc, kayit)
+      write.csv(sonuc, file.path(rapor, 'ozet.csv'), row.names=FALSE, fileEncoding='UTF-8')
+      cat(kod, ':', kayit$durum, '\n')
+      flush.console()
+    }
+    print(sonuc, row.names=FALSE)
+    cat('\nGecen paket:', sum(sonuc$durum == 'GECTI'), '/', length(paketler), '\n')
+    cat('Pozitif kontrolde eslesen deger:', sum(sonuc$eslesen), '\n')
+    cat('Sonuc klasoru:', rapor, '\n')
+    cat('ozet.csv ve hata varsa ilgili paket logunu paylasin.\n')
+    invisible(rapor)
+  }
+  toplu_kontrol()
+})

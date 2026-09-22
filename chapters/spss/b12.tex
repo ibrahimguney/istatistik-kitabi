@@ -1,0 +1,443 @@
+\section{Literatür verisiyle yazılım uygulamaları}
+\label{sec:spss-b12}
+
+\textbf{Amaç ve veri.} \texttt{b12.csv} ile kaynak cinsiyet kategorisi
+ve yıl sonu notunun en az 10 olması arasındaki ilişki incelenir
+\citep{cortez2008data}. Satırlar F ve M, sütunlar 10 puanın altı ve
+10 ve üzeridir. Sıfır hipotezi bu iki kategorik değişkenin bağımsız
+olmasıdır; alternatif hipotez ilişki bulunmasıdır. Anlamlılık düzeyi
+0,05'tir. Önceden seçilen yöntem, süreklilik düzeltmesi uygulanmayan
+Pearson ki-kare testidir; B11'deki ortalamalar farkı testi değildir.
+
+\textbf{Ortak veri.} Karşılaştırmada kullanılan dosya
+\nolinkurl{companion/spss/csv/b12.csv} olup 395 satır ve 10 sütun
+içerir. \texttt{sex} için 1=F ve 2=M; \texttt{pass10} için
+0: $\texttt{g3}<10$, 1: $\texttt{g3}\geq10$ tanımlıdır.
+Sıfır notlu 38 kayıt eksik sayılmaz; eşik altı kategorisinde tutulur.
+B06'nın seçim göstergeleri ve ağırlığı kullanılmaz. Paylaşılan CSV
+kopyası proje verisiyle aynıdır; bu kontrol Excel içe aktarmanın
+doğrulandığı anlamına gelmez. Kodları \texttt{companion} klasörünü
+içeren paket kökünden çalıştırın; veri sözlüğü için bkz.
+sayfa~\pageref{sec:spss-guide}.
+
+\subsection{IBM SPSS uygulaması}
+\textbf{Başlamadan önce.} Önce aşağıdaki veri açma bloğunu
+\texttt{EXECUTE} satırı dahil çalıştırın. B11'den kalan etkin veri
+yerine B12 dosyası yeniden açılır. Filtre, ağırlık ve dosya bölme
+kapalı olmalıdır. Dosya açılamazsa \texttt{/FILE} yolunu düzeltip
+bu bloğu yeniden çalıştırın; eski etkin veriyle devam etmeyin.
+
+\begin{spssadimlar}
+\spssadim{\emph{Analyze $\to$ Descriptive Statistics $\to$ Crosstabs} yolunu açın.}
+\spssadim{\texttt{sex} değişkenini \emph{Row(s)}, \texttt{pass10} değişkenini \emph{Column(s)} alanına taşıyın.}
+\spssadim{\emph{Statistics} içinde \emph{Chi-square} ve \emph{Phi and Cramér's V} seçeneklerini işaretleyip \emph{Continue} seçin.}
+\spssadim{\emph{Cells} içinde \emph{Observed}, \emph{Expected}, \emph{Row} yüzdeleri ve \emph{Standardized} artıkları seçin. Düzeltilmiş standartlaştırılmış artıklar bu karşılaştırmanın ölçüsü değildir.}
+\spssadim{\emph{Continue $\to$ OK} ile çıktıyı alın. \emph{Case Processing Summary} tablosunda 395 geçerli ve sıfır eksik kayıt bulunduğunu kontrol edin.}
+\spssadim{\emph{Pearson Chi-Square} satırındaki \emph{Asymptotic Significance (2-sided)} sütununu ve beklenen frekans dipnotunu okuyun. \emph{Symmetric Measures} tablosundan Cramér $V$ değerini alın.}
+\end{spssadimlar}
+
+{\raggedright
+\noindent\textbf{Komutların görevi.} \texttt{TABLES=sex BY pass10}
+satır ve sütunu, \texttt{CHISQ PHI} test ve ilişki büyüklüklerini
+belirler. \texttt{CELLS=COUNT EXPECTED ROW SRESID}, gözlenen ve
+beklenen sayımları, satır yüzdelerini ve Pearson hücre artıklarını
+ister.\par}
+
+\par\noindent\begin{minipage}{\linewidth}
+\textbf{Uygulama kodu:} \texttt{b12}. Veri açma ve tanımlama:
+
+\begin{lstlisting}[style=prismSPSS]
+SET DECIMAL=DOT.
+GET DATA /TYPE=TXT
+ /FILE='companion/spss/csv/b12.csv'
+ /ENCODING='UTF8'
+ /ARRANGEMENT=DELIMITED /DELCASE=LINE
+ /DELIMITERS="," /QUALIFIER='"'
+ /FIRSTCASE=2
+ /VARIABLES=id F8.0 school F8.0 sex F8.0 age F8.0
+ studytime F8.0 absences F8.0 g1 F8.0 g2 F8.0
+ g3 F8.0 pass10 F8.0.
+FILTER OFF.
+WEIGHT OFF.
+SPLIT FILE OFF.
+VARIABLE LABELS
+ sex 'Kaynak verideki cinsiyet kategorisi'
+ pass10 'Yil sonu notu en az 10'.
+VALUE LABELS
+ sex 1 'F' 2 'M'
+ /pass10 0 '10 puanin alti' 1 '10 ve uzeri'.
+VARIABLE LEVEL sex pass10 (NOMINAL).
+EXECUTE.
+\end{lstlisting}
+\end{minipage}\par
+
+\par\noindent\begin{minipage}{\linewidth}
+\textbf{Frekanslar ve ilişki testi.} Veri açma bloğundan sonra çalıştırın.
+
+\begin{lstlisting}[style=prismSPSS]
+FREQUENCIES VARIABLES=sex pass10.
+CROSSTABS /TABLES=sex BY pass10
+ /FORMAT=AVALUE TABLES
+ /STATISTICS=CHISQ PHI
+ /CELLS=COUNT EXPECTED ROW SRESID.
+\end{lstlisting}
+\end{minipage}\par
+
+\begin{outputguidebox}
+\textbf{Paylaşılan SPSS tablolarıyla doğrulanan değerler.}
+\emph{Case Processing Summary} tablosunda 395 geçerli ve sıfır
+eksik kayıt vardır. Çapraz tabloda F satırı $(75,133)$, M satırı
+$(55,132)$; satır toplamları 208 ve 187'dir. Eşiği karşılayanların
+satır yüzdeleri sırasıyla yüzde 63,9 ve 70,6 görünür.
+
+\emph{Pearson Chi-Square} satırında $\chi^2(1)=1{,}970$ ve
+$p=0{,}160$; dipnotta en küçük beklenen frekans 61,54 ve beklenen
+frekansı 5'in altında olan hücre sayısı sıfırdır. \emph{Symmetric
+Measures} tablosunda Phi ve Cramér $V$ üç basamakla 0,071'dir.
+
+\emph{Continuity Correction} satırındaki $p=0{,}195$ ve Fisher
+testinin iki yönlü $p=0{,}165$ değeri farklı yöntemlere aittir;
+Pearson sonucunun yazılımlar arasında uyuşmadığı anlamına gelmez.
+Bu karşılaştırmada yöntem, sonuçlara göre değiştirilmez.
+\end{outputguidebox}
+
+\par\noindent\begin{minipage}{\linewidth}
+\subsection{R uygulaması}
+\label{sec:r-gercek-b12}
+
+\texttt{correct=FALSE} süreklilik düzeltmesini kapatır. Aşağıdaki
+blokları sırayla ve çok satırlı komutları bütünüyle çalıştırın.
+
+\begin{lstlisting}[style=prismR]
+veri <- read.csv("companion/spss/csv/b12.csv")
+stopifnot(nrow(veri) == 395, ncol(veri) == 10,
+  !anyNA(veri), !anyDuplicated(veri$id),
+  all(veri$sex %in% c(1, 2)),
+  all(veri$pass10 %in% c(0, 1)),
+  all(veri$pass10 == as.integer(veri$g3 >= 10)))
+tablo <- table(
+  sex=factor(veri$sex, levels=c(1, 2),
+             labels=c("F", "M")),
+  pass10=factor(veri$pass10, levels=c(0, 1),
+                labels=c("10_alti", "10_ve_uzeri")))
+sonuc <- chisq.test(tablo, correct=FALSE)
+print(c(satir=nrow(veri), sutun=ncol(veri),
+  eksik=sum(is.na(veri)), sifir_not=sum(veri$g3 == 0)))
+print(addmargins(tablo))
+\end{lstlisting}
+\end{minipage}\par
+
+\textbf{Dosya yolu sorunu yaşarsanız.} İlk satırın yerine aşağıdaki
+komutu çalıştırıp \texttt{b12.csv} dosyasını seçin; sonra kontrol
+bloğundan devam edin.
+\begin{lstlisting}[style=prismR]
+veri <- read.csv(file.choose())
+\end{lstlisting}
+Ham CSV dosyası analiz çıktısı değildir. Özellikle
+\texttt{), digits=15)} gibi kapanış satırlarını tek başına çalıştırmayın;
+ilgili \texttt{print} komutunun tamamını seçin.
+
+\par\noindent\begin{minipage}{\linewidth}
+\textbf{Karşılaştırılacak sayısal çıktılar.} Satır yüzdelerinin
+paydaları F için 208, M için 187'dir. \texttt{residuals}, Pearson
+hücre artıklarıdır; R'deki \texttt{stdres} ile aynı değildir.
+
+\begin{lstlisting}[style=prismR]
+print(100 * prop.table(tablo, margin=1), digits=15)
+print(sonuc$expected, digits=15)
+print(sonuc$residuals, digits=15)
+print(c(
+  n=sum(tablo),
+  ki_kare=unname(sonuc$statistic),
+  df=unname(sonuc$parameter),
+  p=sonuc$p.value,
+  min_beklenen=min(sonuc$expected),
+  bes_alti_hucre=sum(sonuc$expected < 5),
+  cramer_v=sqrt(unname(sonuc$statistic)/sum(tablo))
+), digits=15)
+\end{lstlisting}
+
+\textbf{Çıktıyı okuma.} Paylaşılan R metninde dört satır yüzdesi,
+dört beklenen sayım, dört Pearson artığı ve son özetin yedi değeri
+yer alır. $\chi^2=1{,}969808570687404$, $p=0{,}160468182571215$
+ve $V=0{,}070617682919937$ bulunmuştur. R burada yeniden
+çalıştırılmamış; kullanıcının paylaştığı çıktı karşılaştırılmıştır.
+\end{minipage}\par
+
+\par\noindent\begin{minipage}{\linewidth}
+\subsection{Python uygulaması}
+\label{sec:python-b12}
+
+\texttt{correction=False} aynı Pearson testini seçer. Satır ve
+sütun sıraları açıkça sabitlenir. Blokları sırayla çalıştırın.
+
+\begin{lstlisting}[style=prismPythonApp]
+import pandas as pd
+import numpy as np
+from scipy import stats
+
+veri = pd.read_csv("companion/spss/csv/b12.csv")
+assert veri.shape == (395, 10)
+assert not veri.isna().any().any()
+assert veri.id.is_unique
+assert veri.sex.isin([1, 2]).all()
+assert veri.pass10.isin([0, 1]).all()
+assert veri.pass10.eq((veri.g3 >= 10).astype(int)).all()
+tablo = pd.crosstab(veri.sex, veri.pass10).reindex(
+    index=[1, 2], columns=[0, 1], fill_value=0)
+tablo.index = ["F", "M"]
+tablo.columns = ["10_alti", "10_ve_uzeri"]
+ki_kare, p_degeri, serbestlik, beklenen = (
+    stats.chi2_contingency(tablo, correction=False))
+yuzdeler = 100 * tablo.div(tablo.sum(axis=1), axis=0)
+artiklar = (tablo.to_numpy()-beklenen)/np.sqrt(beklenen)
+print("satir:", len(veri), "sutun:", veri.shape[1])
+print("eksik:", int(veri.isna().sum().sum()))
+print("sifir_not:", int((veri.g3 == 0).sum()))
+print(tablo)
+print("Satir toplamlari:", tablo.sum(axis=1).to_dict())
+print("Sutun toplamlari:", tablo.sum(axis=0).to_dict())
+\end{lstlisting}
+\end{minipage}\par
+
+\par\noindent\begin{minipage}{\linewidth}
+\textbf{Ayrıntılı çıktı.} Aşağıdaki yazdırma düzeni, paylaşılan
+Python terminal çıktısındaki 13 ondalık basamaklı değerleri verir.
+
+\begin{lstlisting}[style=prismPythonApp]
+for baslik, degerler in [
+    ("Satir yuzdeleri", yuzdeler.to_numpy()),
+    ("Beklenen sayimlar", beklenen),
+    ("Pearson hucre artiklari", artiklar)
+]:
+    print(baslik)
+    cerceve = pd.DataFrame(degerler,
+        index=tablo.index, columns=tablo.columns)
+    print(cerceve.to_string(
+        float_format=lambda sayi: f"{sayi:.13f}"))
+
+ozet = dict(n=int(tablo.to_numpy().sum()),
+    ki_kare=ki_kare, df=serbestlik, p=p_degeri,
+    min_beklenen=beklenen.min(),
+    bes_alti_hucre=int((beklenen < 5).sum()),
+    cramer_v=np.sqrt(ki_kare/len(veri)))
+for ad, deger in ozet.items():
+    print(f"{ad}: {deger:.13f}")
+\end{lstlisting}
+
+\textbf{Çıktıyı okuma.} Paylaşılan Python ekranında 395 satır,
+10 sütun, sıfır eksik değer ve 38 sıfır not vardır. Sayımlar ve
+toplamlar SPSS ile aynıdır. $p=0{,}1604681825712$ ve
+$V=0{,}0706176829199$ değerlerini ilgili etiketlerle okuyun.
+Kod ham kayıtları değiştirmez; tablo ayrı bir nesnedir.
+\end{minipage}\par
+
+\Needspace{12\baselineskip}
+\subsection{Sonuçların karşılaştırılması ve ortak rapor}
+13 Eylül 2026'da paylaşılan SPSS tabloları, R metni ve Python
+terminal ekranı karşılaştırılmıştır. R metnindeki 19 sayısal
+özet, Python sonuçlarıyla $10^{-12}$ mutlak tolerans içinde
+uyumludur. Python kodu proje CSV'siyle ayrıca çalıştırılmıştır;
+ekrandaki 13 ondalık basamaklı sonuçlarla eşleşir. SPSS tabloları
+gösterilen yuvarlama hassasiyetlerinde aynı sonuçları verir.
+Aşağıdaki tablolar çıktıların kitap düzenine uyarlanmış özetidir;
+ekran görüntüsü değildir. Ara hesaplar yuvarlanmamış değerlerle yapılır.
+
+\begin{table}[H]
+\centering
+\caption{B12'de kaynak kategorisine göre 10 puan eşiği}
+\label{tab:b12-dogrulanmis-sayim}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Grup & $<10$ & $\geq10$ & Toplam & $\geq10$ yüzdesi \\
+\midrule
+F & 75 & 133 & 208 & 63,942308 \\
+M & 55 & 132 & 187 & 70,588235 \\
+\midrule
+Toplam & 130 & 265 & 395 & 67,088608 \\
+\bottomrule
+\end{tabular}
+\par\smallskip
+{\footnotesize Son sütun ilgili satırın yüzdesidir: F için
+$100(133/208)$, M için $100(132/187)$, toplam için $100(265/395)$.
+Tam 10 puan, eşiği karşılayan kategoriye dahildir.\par}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{B12'de beklenen sayımlar ve Pearson hücre artıkları}
+\label{tab:b12-dogrulanmis-artik}
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Hücre & Beklenen sayım ($E$) & Pearson artığı \\
+\midrule
+F, $<10$ & 68,455696 & $0{,}790968$ \\
+F, $\geq10$ & 139,544304 & $-0{,}553997$ \\
+M, $<10$ & 61,544304 & $-0{,}834199$ \\
+M, $\geq10$ & 125,455696 & $0{,}584276$ \\
+\bottomrule
+\end{tabular}
+\par\smallskip
+{\footnotesize $E=(\text{satır toplamı})(\text{sütun toplamı})/395$;
+Pearson artığı $(O-E)/\sqrt{E}$'dir. SPSS \texttt{SRESID}, R
+\texttt{residuals} ve Python \texttt{artiklar} burada aynı ölçüdür.
+Yuvarlanmamış dört artığın kareleri toplamı Pearson ki-kare değerini verir.\par}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{B12'de Pearson testi ve ilişki büyüklüğü}
+\label{tab:b12-dogrulanmis-test}
+\begin{tabular}{@{}lr@{}}
+\toprule
+Ölçü & Değer \\
+\midrule
+Geçerli kayıt sayısı & 395 \\
+Pearson $\chi^2$ & 1,969809 \\
+Serbestlik derecesi & 1 \\
+$p$ değeri & 0,160468 \\
+En küçük beklenen frekans & 61,544304 \\
+Beklenen frekansı 5'in altındaki hücre & 0 \\
+Cramér $V$ & 0,070618 \\
+\bottomrule
+\end{tabular}
+\par\smallskip
+{\footnotesize Süreklilik düzeltmesi uygulanmamıştır. Bu $2\times2$
+tabloda Cramér $V=\sqrt{\chi^2/395}$'tir; yön belirtmez.\par}
+\end{table}
+
+\Needspace{12\baselineskip}
+\begin{outputguidebox}
+Tablo~\ref{tab:b12-dogrulanmis-sayim}, eşiği karşılayanların
+örneklemdeki oranlarını betimler. Yüzdeler farklı olsa da
+Tablo~\ref{tab:b12-dogrulanmis-test} içindeki
+$p=0{,}160468>0{,}05$ nedeniyle bağımsızlık sıfır hipotezi
+reddedilmez. Bu, bağımsızlığın kanıtı veya oranların kesin eşitliği
+değildir. Cramér $V=0{,}070618$, ilişki büyüklüğünün örneklem
+özetidir; nedensel etki ya da açıklanan varyans yüzdesi değildir.
+
+Tablo~\ref{tab:b12-dogrulanmis-artik} içindeki pozitif artık,
+bağımsızlık altında beklenenden fazla; negatif artık daha az
+gözlem olduğunu gösterir. Bunlar düzeltilmiş artıklar değildir;
+her hücreyi ayrı anlamlılık testi olarak raporlamayın.
+
+Beklenen sayımların yeterli olması, öğrencilerin bağımsızlığını
+veya iki okulla sınırlı verinin temsil gücünü doğrulamaz. Test okul,
+önceki başarı ve diğer karıştırıcılar için düzeltme içermez.
+B11'de yıl sonu \emph{ortalamaları}, burada ise 10 puan eşiğini
+karşılama \emph{oranları} karşılaştırılır. Farklı sorulara farklı
+kararlar çıkması çelişki değildir; notları iki kategoriye ayırmak
+puan farklılıklarına ilişkin bilgiyi kaybettirir.
+\end{outputguidebox}
+
+\Needspace{10\baselineskip}
+\textbf{Raporlama örneği (doğrulanmış çıktılarla).}
+``395 kayıtta yıl sonu notu en az 10 olanların oranı F grubunda
+$133/208$ (yüzde 63,942308), M grubunda $132/187$ (yüzde 70,588235)
+bulunmuştur. Süreklilik düzeltmesiz Pearson testinde kaynak cinsiyet
+kategorisi ile eşiği karşılama durumu arasında yüzde 5 düzeyinde
+yeterli ilişki kanıtı elde edilmemiştir
+($\chi^2(1)=1{,}969809$, $p=0{,}160468$, Cramér $V=0{,}070618$).
+En küçük beklenen frekans 61,544304'tür; 5'in altında beklenen
+frekans yoktur. Sıfır notlu 38 kayıt analizde tutulmuştur.
+Sonuç bağımsızlığı kanıtlamaz. Gözlemlerin bağımsızlığı varsayılmış;
+okul ve diğer karıştırıcılar için düzeltme yapılmamıştır. İki okulla
+sınırlı veriden nedensel veya geniş bir evrene yönelik sonuç çıkarılmamıştır.''
+
+\Needspace{8\baselineskip}
+\subsection{Karşılaştırmalı görev: aynı öğrenciler, farklı hedefler}
+\label{sec:b12-karsilastirmali-gorev}
+
+\textbf{Hedef ve teslim.} B11'in yalnız F--M Welch analiziyle B12'nin
+Pearson analizini karşılaştırın; B11'deki eşleştirilmiş dönem farkını bu
+iki soruya karıştırmayın. Mevcut çıktıları kullanarak aşağıdaki beş
+maddeyi yanıtlayın. Yeni eşik veya yeni anlamlılık testi seçmeyin.
+Kontrol yanıtını okumadan önce kendi gerekçeli raporunuzu tamamlayın.
+
+\begin{enumerate}
+  \item \textbf{Ne değişti?} İki analizde kayıtlar, gruplar, yanıt
+  değişkeni, hedeflenen büyüklük ve sıfır hipotezini karşılaştırın.
+  G3'ü iki kategoriye ayırmak hangi bilgiyi kaybettirir?
+  \item \textbf{Payda ve yön.} F ve M için eşiği karşılama yüzdelerini
+  payları ve paydalarıyla gösterin. F eksi M oran farkını yüzde puan
+  olarak hesaplayın. Bu fark B11'in not puanı farkıyla aynı şey midir?
+  Cramér $V$ bu farkın işaretini verir mi?
+  \item \textbf{Hesap kontrolü.} Yuvarlanmamış Pearson hücre
+  artıklarının karelerini toplayıp $\chi^2$ ile karşılaştırın.
+  En küçük beklenen sayımı ve 5'in altındaki hücre sayısını belirtin.
+  Bu kontrol öğrencilerin bağımsızlığını da doğrular mı?
+  \item \textbf{Karşılaştırmalı rapor.} İki soruyu, test kararlarını
+  ve ilişki/fark özetlerini içeren kısa bir paragraf yazın.
+  ``Welch anlamlı, ki-kare anlamsız; yazılımlar çelişiyor ve ikinci
+  test grupların eşitliğini kanıtlıyor'' yorumunu düzeltin.
+  \item \textbf{Analiz disiplini.} ``Eşiği değiştirip anlamlı sonuç
+  bulalım; sıfır notları da çıkaralım'' önerisini değerlendirin.
+  Aynı öğrencilerle yapılan iki analizin neden bağımsız iki tekrar
+  çalışma olmadığını ve nedensel sonuç vermediğini açıklayın.
+\end{enumerate}
+
+\Needspace{8\baselineskip}
+\textbf{Gerekçeli kontrol yanıtı.}
+\begin{enumerate}
+  \item Her iki analiz de aynı 395 öğrenciyi, 208 F ve 187 M kaydını
+  ve sıfır notları kullanır. Welch sayısal G3 için
+  $H_0:\mu_{G3,F}=\mu_{G3,M}$ hipotezini sınar. Pearson analizinde
+  yanıt $\mathbb{1}(G3\geq10)$'dur; sıfır hipotezi kaynak kategorisi
+  ile eşik durumunun bağımsızlığıdır. Bu iki gruplu tabloda bu,
+  grupların eşiği karşılama olasılıklarının eşitliğine karşılık gelir.
+  Aynı eşik kategorisindeki farklı notlar artık ayırt edilmez.
+  Değişen kayıtlar değil, soru, yanıtın gösterimi ve yöntemdir.
+  \item Yüzdeler $100(133/208)=63{,}942308$ ve
+  $100(132/187)=70{,}588235$'tir. F eksi M farkı yaklaşık
+  $-6{,}645928$ yüzde puandır; iki payda da 395 değildir.
+  Bu betimsel oran farkı, B11'in $-0{,}948092$ not puanı farkından
+  farklı bir büyüklüktür. Cramér $V=0{,}070618$ yön belirtmez.
+  Burada oran farkı için ayrıca güven aralığı hesaplanmamıştır.
+  \item Dört artığın kareleri toplamı
+  $\sum (O-E)^2/E=1{,}969808570687404$ olup Pearson istatistiğidir.
+  En küçük beklenen sayım yaklaşık 61,544304, 5'in altındaki hücre
+  sayısı sıfırdır. Hücre hesaplarının uygunluğu öğrencilerin
+  bağımsızlığını veya örneklemin temsil gücünü kanıtlamaz.
+  Yuvarlanmış artıklarla oluşan küçük fark, yöntem çelişkisi değildir.
+  \item ``Yıl sonu ortalamaları için F eksi M farkı
+  $-0{,}948092$ puandır (\%95 GA
+  $[-1{,}850732;\ -0{,}045452]$); Welch testinde
+  $p=0{,}039577$ ile eşit ortalamalar hipotezi reddedilmiştir.
+  Ayrı eşik sorusunda oranlar yüzde 63,942308 ve 70,588235'tir;
+  Pearson testinde $\chi^2(1)=1{,}969809$, $p=0{,}160468$ ve
+  $V=0{,}070618$ bulunmuş, bağımsızlık hipotezi reddedilmemiştir.
+  Kararlar her test için ayrı 0,05 düzeyindedir; sorular farklı
+  olduğundan çelişki yoktur. İkinci sonuç eşitliğin veya bağımsızlığın
+  kanıtı değildir.'' Bu karar ayrılığı tek başına yöntemlerden
+  birinin üstünlüğünü de göstermez.
+  \item Sonuca bakarak eşik seçmek önceden tanımlanan soruyu
+  değiştirir; yalnız anlamlı sonucu sunmak uygun değildir.
+  Sıfırları dışlamak kayıt kapsamını ve hedefi değiştirir; sıfır
+  notlar kendiliğinden eksik değer sayılmaz. Aynı öğrencilerin
+  yeniden analizi yeni bağımsız kanıt üretmez. Okul, önceki başarı
+  ve diğer karıştırıcılar denetlenmediğinden nedensel açıklama
+  yapılamaz; iki okulla sınırlı kaynağın temsil gücü ayrıca tartışılır.
+\end{enumerate}
+
+\Needspace{8\baselineskip}
+\textbf{Değerlendirme ölçütleri (10 puan).} Her görev maddesindeki
+iki bileşenin her biri 1 puandır; doğru ve gerekçeli bileşen 1, eksik
+veya yanlış bileşen 0 puan alır. Eşdeğer doğru ifadeler ve belirtilen
+basamaklara uygun yuvarlama kabul edilir.
+\begin{enumerate}
+  \item Ortak kayıt/grupları ve değişen yanıtı ayırma (1);
+  iki sıfır hipotezini ve kategorileştirmenin bilgi kaybını açıklama (1).
+  \item Pay, payda, yüzdeler ve yüzde puan farkını doğru verme (1);
+  not puanı farkından ayrımı ve $V$'nin yönsüzlüğünü açıklama (1).
+  \item Artık kareleri toplamını ve beklenen sayım kontrolünü
+  doğru verme (1); bunları bağımsızlık kanıtından ayırma (1).
+  \item İki sorunun sayısal özetleri ve kararlarını doğru
+  raporlama (1); çelişki ve eşitlik kanıtı yorumlarını düzeltme (1).
+  \item Eşik değiştirme ve sıfırları silme önerilerinin soru/kapsam
+  üzerindeki etkisini açıklama (1); bağımsız tekrar ve nedensellik
+  iddialarını sınırlılıklarla birlikte reddetme (1).
+\end{enumerate}
+Yalnız $p$ değerlerini doğru kopyalamak yeterli değildir. Bağımsızlığı
+kanıtlanmış sayan veya nedensel iddiayı koruyan yanıt tam puan alamaz.
+Bu ölçütler öğretim amaçlıdır; öğrenme etkileri henüz öğrenci
+uygulamasıyla değerlendirilmemiştir.

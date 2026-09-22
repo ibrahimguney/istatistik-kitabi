@@ -1,0 +1,17 @@
+chapter,dataset,variables,primary_activity,method
+1,spector,"gpa,pre_program_test,program_participation,grade_improved",Araştırma sorusunu gözlem birimi ve değişkenlere dönüştürme,veri yapısı
+2,spector,"program_participation,grade_improved",Kategorik ve nicel değişkenleri sınıflandırma,veri sözlüğü
+3,star98,"above_median_rate,low_income_pct,pupil_teacher_ratio",Merkez yayılım çarpıklık ve aykırı değerleri inceleme,betimsel istatistik
+4,star98,above_median_rate,Okul bölgelerinden tekrarlı örneklem seçme,örnekleme dağılımı
+5,star98,above_median_rate,Farklı örneklem hacimlerinde ortalamaları karşılaştırma,merkezi limit teoremi
+6,star98,"low_income_group,charter_group",Basit ve tabakalı örneklem seçme,örnekleme tasarımı
+7,star98,above_median_rate,Nokta tahmini ve benzetimle standart hata,nokta tahmini
+8,star98,above_median_rate,Ortalama için t güven aralığı,güven aralığı
+9,"star98;spector","above_median_rate;program_participation,grade_improved",Tahmin belirsizliği ve sıfır hipotezi dağılımı,bootstrap ve rastgeleleştirme
+10,spector,grade_improved,Oran için sıfır hipotezi kurma,hipotez testi
+11,star98,above_median_rate,Tek örneklem t testi ve etki büyüklüğü,tek örneklem t testi
+12,spector,"pre_program_test,program_participation",Program gruplarını karşılaştırma,Welch t testi
+13,spector,"program_participation,grade_improved",Gözlenen ve beklenen frekansları karşılaştırma,Fisher kesin ve ki-kare
+14,star98,"low_income_pct,above_median_rate",Saçılım regresyon ve artık grafikleri,korelasyon ve regresyon
+15,star98,"above_median_rate,low_income_pct,pupil_teacher_ratio,teacher_experience_years,spending_per_pupil_thousands,college_prep_pct",Ayarlanmış katsayılar ve model tanıları,çoklu doğrusal regresyon
+16,"star98;spector",selected,Çok aşamalı genel tekrar,karma uygulama

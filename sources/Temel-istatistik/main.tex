@@ -1,0 +1,630 @@
+% !TEX program = lualatex
+\DocumentMetadata{
+  lang=tr-TR,
+  pdfstandard=UA-2,
+  tagging=on
+}
+\documentclass[11pt,twoside,openright]{book}
+
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[utf8]{inputenc}
+  \usepackage[T1]{fontenc}
+  \usepackage[turkish]{babel}
+\else
+  \usepackage{fontspec}
+  \usepackage[turkish]{babel}
+  \setmainfont{Libertinus Serif}[Ligatures=TeX]
+  \setsansfont{Libertinus Sans}[Ligatures=TeX]
+  \setmonofont{Libertinus Mono}[Scale=MatchLowercase]
+\fi
+
+\usepackage[
+  paperwidth=176mm,
+  paperheight=250mm,
+  twoside,
+  inner=21mm,
+  outer=17mm,
+  bindingoffset=4mm,
+  top=20mm,
+  bottom=23mm,
+  headheight=15pt,
+  headsep=6mm,
+  footskip=11mm
+]{geometry}
+\usepackage{xcolor}
+\usepackage{ragged2e}
+\usepackage{microtype}
+\usepackage[pdfpagelabels=false,hypertexnames=false]{hyperref}
+\usepackage{fancyhdr}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\ifLuaTeX
+  \usepackage{unicode-math}
+  \setmathfont{Libertinus Math}
+\fi
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multicol}
+\usepackage{graphicx}
+\usepackage{qrcode}
+% Turkish babel makes ':' active, which breaks qrcode's URL cache in the .aux file.
+% Keep the in-memory cache, but do not persist QR matrices between runs.
+\makeatletter
+\renewcommand{\qr@writebinarymatrixtoauxfile}[1]{}
+\makeatother
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usepackage{listings}
+% Tagging compatibility for code listings and pedagogical boxes. These
+% definitions follow the current tagpdf reference implementation.
+\makeatletter
+\ExplSyntaxOn
+\DeclareInstance{blockenv}{lstlisting}{display}{
+  name=lstlisting,
+  tag-name=verbatim,
+  tag-attr-class=,
+  tagging-recipe=standard,
+  inner-level-counter=,
+  increment-level=false,
+  setup-code=,
+  block-instance=displayblock,
+  inner-instance=,
+  final-code=\tagpdfsetup{paratag=codeline}\ignorespaces,
+  tagging-suppress-paras=true
+}
+\lst@UserCommand\lstrenewenvironment#1#2#{
+  \cs_undefine:c{#1@}
+  \let\lst@arg\@empty
+  \lst@XConvert{#1}\@nil
+  \expandafter\lstnewenvironment@\lst@arg{#1}{#2}
+}
+\lstrenewenvironment{lstlisting}[2][]{
+  \MathCollectFalse
+  \UseInstance{blockenv}{lstlisting}{}
+  \lst@TestEOLChar{#2}
+  \lstset{#1}
+  \csname\@lst @SetFirstNumber\endcsname
+}{
+  \@nobreakfalse
+  \csname\@lst @SaveFirstNumber\endcsname
+  \endblockenv
+}
+\ExplSyntaxOff
+\makeatother
+\usepackage{needspace}
+\usepackage{type1cm}
+\usepackage[bottom]{footmisc}
+\usepackage{makeidx}
+\makeindex
+\lstdefinestyle{prismPython}{%
+  language=Python,
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{PrismBlue},
+  commentstyle=\color{PrismGray},
+  stringstyle=\color{black!70},
+  numbers=left,
+  numberstyle=\tiny\color{PrismGray},
+  stepnumber=1,
+  numbersep=8pt,
+  breaklines=true,
+  breakatwhitespace=true,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  frame=single,
+  rulecolor=\color{PrismBlue!35},
+  backgroundcolor=\color{PrismLight!55},
+  framerule=0.4pt,
+  xleftmargin=1.5em,
+  framexleftmargin=1.0em,
+  aboveskip=0.8em,
+  belowskip=0.8em
+}
+\lstset{style=prismPython}
+\usepackage{docmute}
+\providecommand{\subtitle}[1]{}
+\providecommand{\institute}[1]{}
+\providecommand{\prob}{}
+\AtBeginDocument{\ifdefined\shorthandoff\shorthandoff{=}\fi}
+\graphicspath{{assets/}{assets/figures/}{assets/logos/}{chapters/}{./}}
+
+\definecolor{PrismBlue}{HTML}{1F4E79}
+\definecolor{PrismHeadingBlue}{HTML}{1F4E79}
+\definecolor{PrismSubheadingBlue}{HTML}{2B6A9E}
+\definecolor{PrismGray}{HTML}{555555}
+\definecolor{PrismLight}{HTML}{EEF5FB}
+\definecolor{PrismNoteBlue}{HTML}{EAF3FA}
+\definecolor{PrismWarnOrange}{HTML}{FFF3E0}
+\definecolor{PrismResearchGreen}{HTML}{EAF7EA}
+\definecolor{PrismSoftwarePurple}{HTML}{F2ECFA}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE]{\small\sffamily\color{PrismGray}\thepage\qquad\leftmark}
+\fancyhead[RO]{\small\sffamily\color{PrismGray}\rightmark\qquad\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+\renewcommand{\chaptermark}[1]{\markboth{\thechapter\enspace #1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection\enspace #1}}
+\fancypagestyle{plain}{%
+  \fancyhf{}%
+  \fancyfoot[C]{\small\sffamily\color{PrismGray}\thepage}%
+  \renewcommand{\headrulewidth}{0pt}%
+  \renewcommand{\footrulewidth}{0pt}%
+}
+
+\newcommand{\prismQRBlock}{%
+  \begingroup
+  \setlength{\fboxsep}{6pt}%
+  \begin{tikzpicture}[artifact]
+    \node[inner sep=6pt,fill=white]
+      {\qrcode[nolink,height=2.15cm]{https://ibrahimguney.github.io/istatistik-lab/}};
+  \end{tikzpicture}\par
+  {\scriptsize Dijital laboratuvara erişim}\par
+  {\scriptsize \url{https://ibrahimguney.github.io/istatistik-lab/}}%
+  \endgroup
+}
+
+% The URL identifier follows the published book order, not the .tex filename.
+% Keep each QR code together with its accessible, clickable text alternative.
+\newcommand{\bolumlaboratuvari}[1]{%
+  \par\Needspace{4.5cm}\medskip
+  \noindent\begin{minipage}{\linewidth}
+    \noindent\colorbox{PrismSoftwarePurple}{%
+      \strut\sffamily\bfseries Bölümün Dijital Laboratuvarı}\par
+    \medskip\noindent
+    \begin{minipage}[c]{0.25\linewidth}
+      \centering
+      \begin{tikzpicture}[artifact]
+        \node[inner sep=8pt,fill=white]
+          {\qrcode[nolink,height=2.3cm]{https://ibrahimguney.github.io/temelistatistik/bolumler/b#1/}};
+      \end{tikzpicture}
+    \end{minipage}\hfill
+    \begin{minipage}[c]{0.71\linewidth}
+      \small\raggedright
+      \textbf{Bölüm \thechapter{} için çevrim içi çalışma alanı}\par
+      \smallskip
+      Bu bölümle ilgili dijital çalışmalara ulaşmak için karekodu
+      telefonunuzla tarayın. PDF üzerinden okuyorsanız aşağıdaki
+      bağlantıya tıklayabilirsiniz.
+    \end{minipage}\par
+    \smallskip\noindent
+    {\footnotesize\url{https://ibrahimguney.github.io/temelistatistik/bolumler/b#1/}\par}
+  \end{minipage}\par\medskip
+}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=PrismBlue,
+  urlcolor=PrismBlue,
+  citecolor=PrismBlue,
+  pdftitle={Temel İstatistik: PDR Araştırmaları İçin Veri Okuryazarlığı},
+  pdfauthor={Prof. Dr. İbrahim Güney},
+  pdfsubject={PDR 209 Temel İstatistik ders izlencesiyle uyumlu ders kitabı},
+  pdfkeywords={temel istatistik, PDR, veri okuryazarlığı, betimsel istatistik, t testi, ANOVA, korelasyon, regresyon}
+}
+
+
+\renewcommand{\contentsname}{İçindekiler}
+\renewcommand{\listfigurename}{Şekiller Listesi}
+\renewcommand{\listtablename}{Tablolar Listesi}
+\renewcommand{\indexname}{Teknik Dizin}
+\addto\captionsturkish{%
+  \renewcommand{\contentsname}{İçindekiler}%
+  \renewcommand{\listfigurename}{Şekiller Listesi}%
+  \renewcommand{\listtablename}{Tablolar Listesi}%
+  \renewcommand{\indexname}{Teknik Dizin}%
+}
+\setcounter{tocdepth}{1}
+\setcounter{secnumdepth}{2}
+
+\renewcommand{\proofname}{Kanıt}
+\makeatletter
+\@ifundefined{definitionname}{}{\renewcommand{\definitionname}{Tanım}}
+\@ifundefined{theoremname}{}{\renewcommand{\theoremname}{Teorem}}
+\@ifundefined{examplename}{}{\renewcommand{\examplename}{Örnek}}
+\@ifundefined{resultname}{}{\renewcommand{\resultname}{Sonuç}}
+\@ifundefined{proofname}{}{\renewcommand{\proofname}{Kanıt}}
+\@ifundefined{problemname}{}{\renewcommand{\problemname}{Problem}}
+\makeatother
+
+
+% Commands and theorem environments used by chapter sources.
+\theoremstyle{definition}
+\newtheorem{tanim}{Tanım}[chapter]
+\newtheorem{ornek}{Örnek}[chapter]
+\theoremstyle{plain}
+\newtheorem{teorem}{Teorem}[chapter]
+\newtheorem{sonuc}{Sonuç}[chapter]
+\newenvironment{ispat}{\begin{proof}[Kanıt]}{\end{proof}}
+\newenvironment{ispatfikri}{\begin{proof}[İspat Fikri]}{\end{proof}}
+\newcommand{\dusen}[2]{(#1)_{#2}}
+\renewcommand{\P}{\mathbf{P}}
+\newcommand{\dd}{\,d}
+\providecommand{\E}{}
+\renewcommand{\E}{\mathbb{E}}
+\newcommand{\Var}{\operatorname{V}}
+\newcommand{\rnd}{\mathrm{rnd}}
+\DeclareMathOperator{\Olas}{P}
+\newcommand{\nint}[1]{\left\langle #1 \right\rangle}
+
+% Commands used by chapter sources.
+\newcommand{\R}{\mathbb{R}}
+\renewcommand{\prob}{P}
+\newcommand{\dist}{m}
+\newcommand{\comp}[1]{\tilde{#1}}
+\setlength{\parskip}{0pt}
+\setlength{\parindent}{1.25em}
+\setlength{\headheight}{15pt}
+\linespread{1.03}
+\setlength{\abovedisplayskip}{8pt plus 2pt minus 3pt}
+\setlength{\belowdisplayskip}{8pt plus 2pt minus 3pt}
+\setlength{\abovedisplayshortskip}{5pt plus 2pt}
+\setlength{\belowdisplayshortskip}{5pt plus 2pt minus 2pt}
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000
+\setlength{\emergencystretch}{3em}
+\hfuzz=1000pt
+\hbadness=10000
+\makeatletter
+\renewcommand{\@pnumwidth}{4.2em}
+\renewcommand{\@tocrmarg}{5.4em}
+\renewcommand*{\l@section}{\@dottedtocline{1}{1.8em}{4.3em}}
+\renewcommand*{\l@figure}{\@dottedtocline{1}{1.8em}{4.3em}}
+\renewcommand*{\l@table}{\@dottedtocline{1}{1.8em}{4.3em}}
+\makeatother
+
+\newcommand{\blankpage}{%
+  \clearpage
+  \thispagestyle{empty}%
+  \null
+  \clearpage
+}
+\newenvironment{prismbox}[2][PrismNoteBlue]{%
+  \par\Needspace{5\baselineskip}\medskip
+  \begingroup
+  \setlength{\leftskip}{0.75em}%
+  \setlength{\rightskip}{0.75em}%
+  \noindent\colorbox{#1}{\strut\sffamily\bfseries #2}\par\nobreak
+  \smallskip\noindent\ignorespaces
+}{%
+  \par\endgroup\medskip
+}
+\newenvironment{sezgibox}{\begin{prismbox}[PrismNoteBlue]{Sezgi}}{\end{prismbox}}
+\newenvironment{researchbox}{\begin{prismbox}[PrismResearchGreen]{Araştırmacı Notu}}{\end{prismbox}}
+\newenvironment{softwarebox}{\begin{prismbox}[PrismSoftwarePurple]{Yazılım Notu}}{\end{prismbox}}
+\newenvironment{mistakebox}{\begin{prismbox}[PrismWarnOrange]{Sık Hata}}{\end{prismbox}}
+\newenvironment{assumptionbox}{\begin{prismbox}[PrismWarnOrange]{Bu Yöntemi Kullanmadan Önce Kontrol Et}}{\end{prismbox}}
+\newenvironment{outputguidebox}{\begin{prismbox}[PrismSoftwarePurple]{Yazılım Çıktısı Nasıl Okunur?}}{\end{prismbox}}
+\newenvironment{sezgi}{\begin{sezgibox}}{\end{sezgibox}}
+\newenvironment{arastirmacinotu}{\begin{researchbox}}{\end{researchbox}}
+\newenvironment{yazilimnotu}{\begin{softwarebox}}{\end{softwarebox}}
+\newenvironment{sikhata}{\begin{mistakebox}}{\end{mistakebox}}
+\newenvironment{hedefler}{\begin{prismbox}[PrismResearchGreen]{Öğrenme Hedefleri}}{\end{prismbox}}
+\newenvironment{hazirlik}{\begin{prismbox}[PrismNoteBlue]{Başlamadan Önce}}{\end{prismbox}}
+\newenvironment{etkinlik}{\begin{prismbox}[PrismSoftwarePurple]{Dur--Düşün--Uygula}}{\end{prismbox}}
+
+\newcommand{\bolumkaynaklari}[1]{%
+  \Needspace{5\baselineskip}%
+  \section*{Bölümün Temel Kaynakları}%
+  \noindent Bu bölümün kuramsal çerçevesi ve yöntemsel ayrıntıları için
+  başvurulabilecek temel kaynaklar: #1.\par
+}
+\newcommand{\adimbaslik}[1]{%
+  \par\medskip\noindent\textbf{#1}\par\nobreak
+}
+
+
+\newcommand{\inferenceflowmap}{%
+\begin{center}
+\resizebox{0.96\linewidth}{!}{%
+\begin{tikzpicture}[alt={Parametreden tahmin ediciye, standart hataya, güven aralığına, hipotez testine ve raporlamaya uzanan çıkarım akışı},
+    >=stealth,
+    flow/.style={draw=PrismBlue!70, fill=PrismLight!70, rounded corners=2pt, minimum width=2.9cm, minimum height=1.0cm, align=center, font=\small\bfseries},
+    note/.style={font=\scriptsize, align=center, text=PrismGray}
+]
+\node[flow] (parameter) at (0,0) {Parametre\\$\theta$};
+\node[flow] (estimator) at (3.5,0) {Tahmin edici\\$\hat\theta$};
+\node[flow] (se) at (7.0,0) {Standart hata\\$SE(\hat\theta)$};
+\node[flow] (ci) at (10.5,0) {Güven aralığı\\$\hat\theta\pm c\,SE$};
+\node[flow] (test) at (14.0,0) {Hipotez testi\\$H_0$--$H_1$};
+\node[flow] (report) at (17.5,0) {Raporlama\\karar ve yorum};
+\draw[->, thick, PrismBlue] (parameter) -- (estimator);
+\draw[->, thick, PrismBlue] (estimator) -- (se);
+\draw[->, thick, PrismBlue] (se) -- (ci);
+\draw[->, thick, PrismBlue] (ci) -- (test);
+\draw[->, thick, PrismBlue] (test) -- (report);
+\node[note] at (1.75,-0.85) {örneklem\\bilgisi};
+\node[note] at (5.25,-0.85) {örnekleme\\değişkenliği};
+\node[note] at (8.75,-0.85) {belirsizlik\\ölçümü};
+\node[note] at (12.25,-0.85) {kanıt\\değerlendirme};
+\node[note] at (15.75,-0.85) {bağlam ve\\etki büyüklüğü};
+\end{tikzpicture}%
+}
+\end{center}
+}
+\newenvironment{conceptmapbox}{\begin{prismbox}[PrismNoteBlue]{Kavram Haritası}}{\end{prismbox}}
+
+\author{Prof. Dr. İbrahim Güney}
+\title{Temel İstatistik}
+\subtitle{PDR Araştırmaları İçin Veri Okuryazarlığı}
+\date{}
+\institute{Istanbul Sabahattin Zaim University}
+
+\newcommand{\disKapak}{%
+\begin{titlepage}
+\thispagestyle{empty}
+\begin{tikzpicture}[artifact,remember picture,overlay]
+  \fill[PrismLight!70!white] (current page.south west) rectangle (current page.north east);
+  \fill[PrismBlue!94!black]
+    (current page.north west) rectangle ($(current page.north east)+(0,-12.35cm)$);
+  \fill[PrismSubheadingBlue]
+    ($(current page.north west)+(0,-12.35cm)$) rectangle ($(current page.north east)+(0,-12.53cm)$);
+  \fill[white]
+    ($(current page.south west)+(1.35cm,1.8cm)$)
+    rectangle ($(current page.south east)+(-1.35cm,11.1cm)$);
+  \draw[PrismBlue!22,line width=0.8pt]
+    ($(current page.south west)+(1.35cm,1.8cm)$)
+    rectangle ($(current page.south east)+(-1.35cm,11.1cm)$);
+  \fill[PrismSubheadingBlue!10]
+    ($(current page.south west)+(1.3cm,7.9cm)$) circle (2.0cm);
+  \fill[PrismResearchGreen!72!white]
+    ($(current page.south east)+(-2.1cm,3.4cm)$) circle (1.45cm);
+  \fill[PrismWarnOrange!78!white]
+    ($(current page.south east)+(-1.4cm,9.1cm)$) circle (0.9cm);
+\end{tikzpicture}
+
+\vspace*{1.0cm}
+\begin{center}
+  {\color{white!82}\small\bfseries ÇIKARIM \textbullet\ MODELLEME
+  \textbullet\ TEKRARLANABİLİR UYGULAMA\par}
+  \vspace{0.55cm}
+  {\color{white}\fontsize{26}{31}\selectfont\bfseries
+    TEMEL İSTATİSTİK\par}
+  \vspace{0.34cm}
+  {\color{white!86}\Large PDR Araştırmaları İçin Veri Okuryazarlığı\par}
+
+  \vspace{1.45cm}
+  \resizebox{\textwidth}{!}{%
+  \begin{tikzpicture}[artifact,x=1cm,y=1cm]
+    \fill[white] (0,0) rectangle (13.6,6.5);
+    \draw[black!12,line width=0.35pt] (0,0) grid[xstep=0.68,ystep=0.65] (13.6,6.5);
+    \draw[black!48,line width=0.8pt] (0.55,0.65) -- (13.0,0.65);
+    \draw[black!48,line width=0.8pt] (0.75,0.35) -- (0.75,6.05);
+
+    \draw[PrismBlue,line width=2pt,smooth,samples=180,domain=0:9]
+      plot ({3.3+0.95*\x},{0.65+130.2*(\x/(1+\x/2))^2*(1/(1+\x/2))^7});
+    \node[anchor=west,text=PrismBlue,font=\small] at (4.65,5.12)
+      {$F_{6,12}$};
+
+    \foreach \x/\y in {
+      6.4/2.45,6.85/1.65,7.15/3.35,7.6/2.05,7.95/4.15,
+      8.35/2.8,8.8/4.65,9.15/2.2,9.65/3.5,10.05/4.9,
+      10.45/2.75,10.9/4.05,11.25/3.2,11.7/5.0,12.05/4.3} {
+        \fill[PrismSubheadingBlue!82!black] (\x,\y) circle (0.085);
+    }
+
+    \foreach \x/\lo/\hi/\m in {
+      1.0/0.85/2.05/1.42,1.5/1.15/2.65/1.92,2.0/1.62/3.12/2.38,
+      2.5/2.05/3.7/2.86,3.0/2.52/4.18/3.35} {
+        \draw[PrismGray,line width=0.9pt] (\x,\lo) -- (\x,\hi);
+        \draw[PrismGray,line width=0.9pt] (\x-0.12,\lo) -- (\x+0.12,\lo);
+        \draw[PrismGray,line width=0.9pt] (\x-0.12,\hi) -- (\x+0.12,\hi);
+        \fill[PrismWarnOrange!80!black] (\x,\m) circle (0.09);
+    }
+    \node[anchor=west,text=PrismGray,font=\small] at (0.9,5.82)
+      {$\hat\theta$ \quad $SE(\hat\theta)$ \quad $GA_{1-\alpha}$ \quad $p$-değeri};
+    \node[anchor=east,text=PrismGray,font=\footnotesize] at (12.9,0.23)
+      {tahmin \textbullet\ belirsizlik \textbullet\ kanıt \textbullet\ öngörü};
+  \end{tikzpicture}%
+  }
+
+  \vfill
+  {\color{black!82}\Large\bfseries İbrahim Güney\par}
+  \vspace{0.22cm}
+  {\color{black!58}\normalsize Istanbul Sabahattin Zaim University\par}
+  \vspace{0.42cm}
+  {\color{PrismBlue}\large\bfseries 2026\par}
+  \vspace*{1.05cm}
+\end{center}
+\end{titlepage}}
+
+\newcommand{\icKapak}{%
+\begin{titlepage}
+\thispagestyle{empty}
+\begin{center}
+  \vspace*{3.0cm}
+  {\fontsize{25}{31}\selectfont\bfseries
+    Temel İstatistik\par}
+  \vspace{0.55cm}
+  {\Large PDR Araştırmaları İçin Veri Okuryazarlığı\par}
+
+  \vspace{2.3cm}
+  {\Large Prof. Dr. İbrahim GÜNEY\par}
+
+  \vfill
+  {\large İstanbul Sabahattin Zaim Üniversitesi Yayınları\par}
+  \vspace{0.25cm}
+  {\normalsize İstanbul, 2026\par}
+  \vspace*{1.0cm}
+\end{center}
+\end{titlepage}}
+
+\newcommand{\kunyeSayfasi}{%
+\begin{titlepage}
+\thispagestyle{empty}
+\small
+\vspace*{1.2cm}
+\noindent{\large\bfseries Temel İstatistik}\par
+\vspace{0.15cm}
+\noindent PDR Araştırmaları İçin Veri Okuryazarlığı\par
+
+\vfill
+\renewcommand{\arraystretch}{1.3}
+\noindent
+\begin{tabular}{@{}>{\bfseries\raggedright\arraybackslash}p{0.31\textwidth}>{\raggedright\arraybackslash}p{0.61\textwidth}@{}}
+Yayın no & İstanbul Sabahattin Zaim Üniversitesi Yayınları: .......................... \\
+ISBN & ................................................... \\
+Birinci Baskı & Ağustos 2026 \\
+Yazar & Prof. Dr. İbrahim GÜNEY \\
+Yayın Koordinatörü & Mustafa GENÇ \\
+Kapak Tasarım & Erhan YALUR \\
+Yayıncı & İstanbul Sabahattin Zaim Üniversitesi - Halkalı Cad. No 281 Küçükçekmece/İstanbul 34303 \\
+Baskı & 1. Baskı \\
+\end{tabular}
+
+\vspace{1.0cm}
+\noindent \textcopyright{} 2026 İbrahim Güney. Tüm hakları saklıdır. Bu eserin tamamı veya bir bölümü, yayıncının yazılı izni olmadan herhangi bir biçimde çoğaltılamaz ve yayımlanamaz.\par
+\vspace*{1.0cm}
+\end{titlepage}}
+
+\newcommand{\arkaKapak}{%
+\clearpage
+\thispagestyle{empty}
+\begin{tikzpicture}[artifact,remember picture,overlay]
+  \fill[PrismBlue!94!black] (current page.south west) rectangle (current page.north east);
+  \fill[PrismSubheadingBlue]
+    ($(current page.north west)+(0,-3.15cm)$) rectangle ($(current page.north east)+(0,-3.33cm)$);
+  \fill[white,opacity=0.97]
+    ($(current page.south west)+(1.35cm,2.55cm)$)
+    rectangle ($(current page.north east)+(-1.35cm,-6.2cm)$);
+  \draw[white!58,line width=0.8pt]
+    ($(current page.south west)+(1.35cm,2.55cm)$)
+    rectangle ($(current page.north east)+(-1.35cm,-6.2cm)$);
+  \fill[PrismResearchGreen!72!white]
+    ($(current page.south west)+(1.9cm,3.6cm)$) circle (1.35cm);
+  \fill[PrismWarnOrange!78!white]
+    ($(current page.north east)+(-1.45cm,-4.9cm)$) circle (0.9cm);
+  \fill[PrismSubheadingBlue!12]
+    ($(current page.south east)+(-1.6cm,7.0cm)$) circle (1.7cm);
+
+  \node[anchor=north,align=center,text=white] at ($(current page.north)+(0,-3.72cm)$) {%
+    \begin{minipage}{13cm}
+    \centering
+    {\fontsize{20}{25}\selectfont\bfseries Temel İstatistik\par}
+    \vspace{0.18cm}
+    {\color{white!82}\large PDR Araştırmaları İçin Veri Okuryazarlığı\par}
+    \end{minipage}%
+  };
+
+  \node[anchor=north] at ($(current page.north)+(0,-6.65cm)$) {%
+    \begin{minipage}{11.2cm}
+    \small\color{black!86}\justifying
+    Bu kitap, PDR öğrencilerinin istatistiksel düşünme ve veri okuryazarlığı becerilerini geliştirmek için hazırlanmıştır. Araştırma sorusundan veri toplamaya, betimsel incelemeden istatistiksel çıkarıma ve etik raporlamaya uzanan süreç aşamalı bir öğrenme rotasıyla ele alınır.
+
+    Örnekleme, grafikler, tahmin, güven aralıkları, hipotez testleri, t testleri, ANOVA, korelasyon, regresyon, kategorik ve parametrik olmayan yöntemler PDR senaryoları üzerinden açıklanır. Her bölüm öğrenme hedefleri, kavram yanılgıları, kısa uygulamalar ve bölüm sonu öz değerlendirme sorularıyla desteklenir.
+
+    Kitap, yöntem adlarını ezberletmek yerine araştırma sorusuna uygun yöntemi seçme, yazılım çıktısını eleştirel okuma, etki büyüklüğü ile belirsizliği birlikte yorumlama ve bulguları bilimsel ve mesleki sorumlulukla raporlama becerilerine odaklanır.
+
+    \vspace{0.25cm}
+    {\color{PrismBlue}\bfseries Kitabın kapsamı}\par
+    \vspace{0.08cm}
+    \begin{itemize}
+      \item Nokta ve aralık tahmini
+      \item Hipotez testleri ve etki büyüklüğü
+      \item Regresyon, ANOVA ve model tanılama
+      \item Kategorik ve parametrik olmayan yöntemler
+      \item Varsayım kontrolü ve sağlam alternatifler
+      \item Python--SPSS uygulamaları ve etik raporlama
+    \end{itemize}
+
+    \vspace{0.15cm}
+    \noindent
+    \begin{minipage}[c]{0.64\linewidth}
+      \centering
+      {\large\bfseries Prof. Dr. İbrahim Güney\par}
+      \vspace{0.08cm}
+      {\footnotesize Istanbul Sabahattin Zaim University\par}
+    \end{minipage}%
+    \hfill
+    \begin{minipage}[c]{0.28\linewidth}
+      \centering
+      \begin{tikzpicture}[artifact]
+        \node[inner sep=3pt,fill=white]
+          {\qrcode[nolink,height=1.45cm]{https://ibrahimguney.github.io/istatistik-lab/}};
+      \end{tikzpicture}\par
+      {\tiny\color{PrismGray}Dijital laboratuvar\par}
+      {\tiny\color{PrismGray}ibrahimguney.github.io/\par istatistik-lab/}
+    \end{minipage}
+    \end{minipage}%
+  };
+
+  \node[anchor=south,text=white!82] at ($(current page.south)+(0,0.58cm)$) {%
+    {\small ÇIKARIM \textbullet\ MODELLEME
+    \textbullet\ HESAPLAMA \textbullet\ RAPORLAMA}%
+  };
+\end{tikzpicture}
+\null
+\clearpage}
+
+\begin{document}
+\pagestyle{fancy}
+\raggedbottom
+
+\disKapak
+\icKapak
+\kunyeSayfasi
+
+\frontmatter%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{frontmatter/preface}
+\input{frontmatter/notation}
+
+\cleardoublepage
+\tableofcontents
+\cleardoublepage
+\listoffigures
+\addcontentsline{toc}{chapter}{Şekiller Listesi}
+\cleardoublepage
+\listoftables
+\addcontentsline{toc}{chapter}{Tablolar Listesi}
+\cleardoublepage
+
+\mainmatter%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{chapters/01-veri-arastirma}
+\bolumlaboratuvari{01}
+\input{chapters/06-ornekleme}
+\bolumlaboratuvari{02}
+\input{chapters/02-betimsel-istatistik}
+\bolumlaboratuvari{03}
+\input{chapters/03-normal-z-mkt}
+\bolumlaboratuvari{04}
+\input{chapters/07-nokta-tahmini}
+\bolumlaboratuvari{05}
+\input{chapters/08-guven-araliklari}
+\bolumlaboratuvari{06}
+\input{chapters/09-hipotez-etki}
+\bolumlaboratuvari{07}
+\input{chapters/04-t-testleri}
+\bolumlaboratuvari{08}
+\input{chapters/10-anova}
+\bolumlaboratuvari{09}
+\input{chapters/05-korelasyon}
+\bolumlaboratuvari{10}
+\input{chapters/11-basit-regresyon}
+\bolumlaboratuvari{11}
+\input{chapters/12-kategorik-kikare}
+\bolumlaboratuvari{12}
+\input{chapters/13-nonparametrik}
+\bolumlaboratuvari{13}
+\input{chapters/14-uygulama-laboratuvari}
+\bolumlaboratuvari{14}
+
+\appendix
+\input{appendix/formulas}
+\input{appendix/distribution-tables}
+\input{appendix/software-map}
+\input{appendix/alistirmalar_ek}
+\input{appendix/cevap_anahtari}
+
+\backmatter%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{backmatter/concept-index}
+\input{backmatter/references}
+\printindex
+\arkaKapak
+
+\end{document}

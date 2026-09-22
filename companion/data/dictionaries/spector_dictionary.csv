@@ -1,0 +1,8 @@
+variable,description_tr,measurement_type,unit_or_levels
+student_id,Öğrenci sıra kimliği,identifier,none
+gpa,Not ortalaması,continuous,original scale
+pre_program_test,Programa ilişkin ekonomi testi puanı,continuous,score
+program_participation,Programa katılım göstergesi,binary,0/1
+grade_improved,Notun iyileşme göstergesi,binary,0/1
+program_group,Programa katılım etiketi,nominal,comparison/program
+improvement_label,Not iyileşmesi etiketi,nominal,not_improved/improved

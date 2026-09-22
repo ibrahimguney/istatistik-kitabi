@@ -1,0 +1,117 @@
+{
+  "date": "2026-09-10",
+  "scope": "Uploaded B05; manifest keys interpreted portably without changing source files",
+  "R_executed": false,
+  "SPSS_executed": false,
+  "result": {
+    "paket": "b05",
+    "mevcut": true,
+    "eksik_temel_dosyalar": [],
+    "manifest": {
+      "mevcut": true,
+      "dosyalar": {
+        "alistirmalar.md": {
+          "durum": "eslesiyor",
+          "sha256": "451292fe5c6f2920bc075a2a152d230655273240b4e13f2315dc59863238b8e7",
+          "manifest_yolu": "alistirmalar.md",
+          "beklenen_sha256": "451292fe5c6f2920bc075a2a152d230655273240b4e13f2315dc59863238b8e7"
+        },
+        "cozumler.md": {
+          "durum": "eslesiyor",
+          "sha256": "1f8abffa239080c6321f6211f24d3d4d6e81c8fa68b8ba9b01f8c3cbd59f8978",
+          "manifest_yolu": "cozumler.md",
+          "beklenen_sha256": "1f8abffa239080c6321f6211f24d3d4d6e81c8fa68b8ba9b01f8c3cbd59f8978"
+        },
+        "DOGRULAMA.md": {
+          "durum": "eslesiyor",
+          "sha256": "6ce67cb440f92c4373fa6a6ea0f565634ff70b05431819616230f9e8092956e5",
+          "manifest_yolu": "DOGRULAMA.md",
+          "beklenen_sha256": "6ce67cb440f92c4373fa6a6ea0f565634ff70b05431819616230f9e8092956e5"
+        },
+        "ornek-01/analiz.sps": {
+          "durum": "eslesiyor",
+          "sha256": "f1affad38b9373f8c05373948d578e5177a8c97555388375c5a268148b670d01",
+          "manifest_yolu": "ornek-01\\analiz.sps",
+          "beklenen_sha256": "f1affad38b9373f8c05373948d578e5177a8c97555388375c5a268148b670d01"
+        },
+        "ornek-01/analiz.sps.txt": {
+          "durum": "eslesiyor",
+          "sha256": "f1affad38b9373f8c05373948d578e5177a8c97555388375c5a268148b670d01",
+          "manifest_yolu": "ornek-01\\analiz.sps.txt",
+          "beklenen_sha256": "f1affad38b9373f8c05373948d578e5177a8c97555388375c5a268148b670d01"
+        },
+        "ornek-01/beklenen-sonuclar.csv": {
+          "durum": "eslesiyor",
+          "sha256": "95d46bc61a94fc9a8fe71e19b57b2b114d110611bfe782bf8003c44aa1b06001",
+          "manifest_yolu": "ornek-01\\beklenen-sonuclar.csv",
+          "beklenen_sha256": "95d46bc61a94fc9a8fe71e19b57b2b114d110611bfe782bf8003c44aa1b06001"
+        },
+        "ornek-01/cozum.md": {
+          "durum": "eslesiyor",
+          "sha256": "fd69fdeec62050216d87b1f9ebdc40a4d988442f4825393419ff1bcda73bfba0",
+          "manifest_yolu": "ornek-01\\cozum.md",
+          "beklenen_sha256": "fd69fdeec62050216d87b1f9ebdc40a4d988442f4825393419ff1bcda73bfba0"
+        },
+        "ornek-01/cozum.py": {
+          "durum": "eslesiyor",
+          "sha256": "71f33b7b8eb16988005c4e812968afe818dea3541240a8c21687b8ad12649d88",
+          "manifest_yolu": "ornek-01\\cozum.py",
+          "beklenen_sha256": "71f33b7b8eb16988005c4e812968afe818dea3541240a8c21687b8ad12649d88"
+        },
+        "ornek-01/cozum.R": {
+          "durum": "eslesiyor",
+          "sha256": "9783bb30503605181c45fc45ff80ce93fa1ec554e4b66cae7c7048122e40e39b",
+          "manifest_yolu": "ornek-01\\cozum.R",
+          "beklenen_sha256": "9783bb30503605181c45fc45ff80ce93fa1ec554e4b66cae7c7048122e40e39b"
+        },
+        "ornek-01/README.md": {
+          "durum": "eslesiyor",
+          "sha256": "e786f8c259fe8cff2426c6cbf74589acf013b786b76824f1dd6be60784feb114",
+          "manifest_yolu": "ornek-01\\README.md",
+          "beklenen_sha256": "e786f8c259fe8cff2426c6cbf74589acf013b786b76824f1dd6be60784feb114"
+        },
+        "ornek-01/uretim-kaydi.json": {
+          "durum": "eslesiyor",
+          "sha256": "260e44e5710ba268bff0738cd8aa5d2b4168cac3ca58709ec246ddb1984e4d09",
+          "manifest_yolu": "ornek-01\\uretim-kaydi.json",
+          "beklenen_sha256": "260e44e5710ba268bff0738cd8aa5d2b4168cac3ca58709ec246ddb1984e4d09"
+        },
+        "ornek-01/veri-sozlugu.csv": {
+          "durum": "eslesiyor",
+          "sha256": "bf1ce159764af1e068a990d1ddeb673df69c4b355c3890a8221ec3c085cd0a03",
+          "manifest_yolu": "ornek-01\\veri-sozlugu.csv",
+          "beklenen_sha256": "bf1ce159764af1e068a990d1ddeb673df69c4b355c3890a8221ec3c085cd0a03"
+        },
+        "ornek-01/veri.csv": {
+          "durum": "eslesiyor",
+          "sha256": "6fe722191a4283fe95f8c810ca941407401e6c3903518791d96d9e450a6ed7ba",
+          "manifest_yolu": "ornek-01\\veri.csv",
+          "beklenen_sha256": "6fe722191a4283fe95f8c810ca941407401e6c3903518791d96d9e450a6ed7ba"
+        },
+        "README.md": {
+          "durum": "eslesiyor",
+          "sha256": "e786f8c259fe8cff2426c6cbf74589acf013b786b76824f1dd6be60784feb114",
+          "manifest_yolu": "README.md",
+          "beklenen_sha256": "e786f8c259fe8cff2426c6cbf74589acf013b786b76824f1dd6be60784feb114"
+        }
+      },
+      "listelenmeyen": []
+    },
+    "python_sozdizimi": [
+      {
+        "dosya": "ornek-01/cozum.py",
+        "durum": "gecti"
+      }
+    ],
+    "python": {
+      "komut": "python -B cozum.py --check",
+      "calisma_dizini": "companion/bolumler/b05/ornek-01",
+      "cikis_kodu": 0,
+      "gecti": true,
+      "kontrol_degeri_sayisi": 24,
+      "stdout": "DOGRULANDI: 24 kontrol degeri eslesiyor.\n",
+      "stderr": ""
+    },
+    "spss_kopyalari_esit": true
+  }
+}

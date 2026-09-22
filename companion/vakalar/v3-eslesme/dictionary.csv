@@ -1,0 +1,6 @@
+variable,role,definition
+id,local_key,B11 dosya içi sıra numarası; bölmeden önce sabitlendi; özgün öğrenci kimliği veya mat–por anahtarı değil
+source_line,trace,raw/student-mat.csv fiziksel veri satırı; başlık nedeniyle id+1
+g1,source,İlk dönem matematik notu; 0–20
+g3,source,Yıl sonu matematik notu; 0–20; sıfır geçerli gözlem
+difference,derived,g3−g1; pozitif değer yıl sonu notunun ilk dönem notundan yüksek olması

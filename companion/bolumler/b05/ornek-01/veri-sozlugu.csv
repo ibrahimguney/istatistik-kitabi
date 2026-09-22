@@ -1,0 +1,5 @@
+degisken,anlam,olcek,eksik_kurali
+tekrar,Benzersiz tekrar kimligi,nominal,kabul edilmez
+ort1,n=1 orneklem ortalamasi,scale,kabul edilmez
+ort5,n=5 orneklem ortalamasi,scale,kabul edilmez
+ort30,n=30 orneklem ortalamasi,scale,kabul edilmez

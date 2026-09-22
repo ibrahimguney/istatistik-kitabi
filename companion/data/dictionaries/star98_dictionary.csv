@@ -1,0 +1,20 @@
+variable,description_tr,measurement_type,unit_or_levels
+district_id,Okul bölgesi sıra kimliği,identifier,none
+above_median_count,Matematikte ulusal medyanın üzerindeki öğrenci sayısı,count,student
+below_median_count,Matematikte ulusal medyanın altındaki öğrenci sayısı,count,student
+tested_count,İki sonuç sayısının toplamı,count,student
+above_median_rate,Ulusal medyanın üzerindeki öğrencilerin oranı,proportion,0-1
+low_income_pct,Düşük gelirli öğrencilerin yüzdesi,continuous,percent
+asian_students_pct,Asyalı öğrencilerin yüzdesi,continuous,percent
+black_students_pct,Siyah öğrencilerin yüzdesi,continuous,percent
+hispanic_students_pct,Hispanik öğrencilerin yüzdesi,continuous,percent
+minority_teachers_pct,Azınlık grubundaki öğretmenlerin yüzdesi,continuous,percent
+teacher_experience_years,Öğretmenlerin ortalama hizmet yılı,continuous,year
+teacher_salary_thousands,Öğretmen başına maaş ve yan hak bütçesi,continuous,thousand_currency_units
+spending_per_pupil_thousands,Öğrenci başına harcama,continuous,thousand_currency_units
+pupil_teacher_ratio,Öğrenci-öğretmen oranı,continuous,students_per_teacher
+college_prep_pct,Üniversite hazırlık dersi alanların yüzdesi,continuous,percent
+charter_schools_pct,Charter okullarının yüzdesi,continuous,percent
+year_round_schools_pct,Yıl boyu eğitim veren okulların yüzdesi,continuous,percent
+low_income_group,Düşük gelir yüzdesinin üçte birlik grubu,ordinal,low/middle/high
+charter_group,Bölgede charter okul bulunma durumu,nominal,has_charter/no_charter

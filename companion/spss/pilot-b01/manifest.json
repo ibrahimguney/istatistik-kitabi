@@ -1,0 +1,11 @@
+{
+  "README.md": "654e380c3fd348d89635262dc1183d80ee7dca6533d00549b34712241709a710",
+  "companion/spss/csv/b01.csv": "b71d797eb8f1d0584d8afaa27ff9b8a942bd44d615688224b4252659a5c30bd1",
+  "companion/spss/syntax/open-b01.sps": "4c666c15d11c330220e681ece1e5bb5fac2a58e82c413a202f64d541e17af32b",
+  "companion/spss/syntax/open-b01-excel.sps": "69b587e6f6c8eff1e3d0810c16ad7e5a14804d56ad868d82353e80e7f9a4fa18",
+  "companion/spss/syntax/b01.sps": "ee1789e5491c8c626887ee7da1b820301c6a91fe4be33572ffd3320d351abee4",
+  "companion/spss/sav/README.txt": "c391c9977559275112f9e3f3b83932e6c8904ad20f6792513fa2de943af0f0ff",
+  "b01.R": "6c27a79ee3f9fd42003bc75b464b9dd32070f31d6e05e295cdd3484f1d260c31",
+  "b01.py": "ecc92f6340e7877660321e6e92250ff36eb2c5fc74d9286e8987222fe73808b8",
+  "companion/spss/excel/b01.xlsx": "4bb57a121be739719dffefe978b2c277dbf7a334a7e462f7577c8f277778113c"
+}

@@ -1,0 +1,339 @@
+\section{Literatür verisiyle yazılım uygulamaları}
+\label{sec:spss-b10}
+
+\textbf{Amaç ve veri.} \texttt{b10.csv} ile anlamlılık, etki büyüklüğü
+ve ileriye dönük örneklem planını ayırın \citep{cortez2008data}.
+Gözlenen analizde $H_0:\mu=10$ ve $H_1:\mu\ne10$ sınanır.
+Planlamada ise yeni bir çalışma için hedef fark 1 puandır;
+bu fark, gözlenen ortalama farkından ayrı bir girdidir.
+
+\textbf{Ortak veri.} Doğrulanan B10 uygulamasında üç yazılım da
+\nolinkurl{companion/spss/csv/b10.csv} dosyasını kullanmıştır.
+Dosya 395 satır ve 10 sütun içerir; kayıtların tamamı analiz edilir.
+B06'nın seçim göstergeleri ve ağırlığı burada kullanılmaz.
+Bu karşılaştırma Excel içe aktarmanın doğrulandığı anlamına gelmez.
+Kodları \texttt{companion} klasörünü içeren paket kökünden çalıştırın;
+veri sözlüğü ve hazırlık için bkz. sayfa~\pageref{sec:spss-guide}.
+
+\subsection{IBM SPSS uygulaması}
+\textbf{Başlamadan önce.} Aşağıdaki kod CSV verisini yeniden açar.
+Menü yolunu kullanacaksanız veri açma ve tanımlama komutlarını
+\texttt{EXECUTE} satırı dahil çalıştırın. Filtre, ağırlık ve dosya
+bölme kapalı olmalıdır. \texttt{AGGREGATE}, etkin veriyi tek özet
+satırıyla değiştirir; bu özeti ham veri dosyasının üzerine kaydetmeyin.
+Tekrar analiz için veri açma adımından başlayın. Güç komutu SPSS
+Statistics 27 ve sonrasında bulunur; eski sürümlerde yalnız bu adımı
+atlayıp R veya Python planını kullanabilirsiniz.
+
+\begin{spssadimlar}
+\spssadim{Gözlenen test ve $d$ için aşağıdaki kodu kullanın. \emph{One-Sample Test} tablosunda \emph{Two-Sided p} sütununu, \texttt{LIST} çıktısında \texttt{etki\_d} değerini okuyun. Örneklem planını bu gözlenen farka göre kurmayın.}
+\spssadim{\emph{Analyze $\to$ Power Analysis $\to$ Means $\to$ One-Sample T Test} yolunu açın. \emph{Estimate} için \emph{Sample size} seçin.}
+\spssadim{Hedef gücü \texttt{0.80} girin. \emph{Hypothesized Values} ile \emph{Population mean}=11 ve \emph{Null value}=10 belirleyin.}
+\spssadim{\emph{Population standard deviation} alanına \texttt{4.581442611} girin; \emph{Nondirectional (two-sided)} ve anlamlılık düzeyi \texttt{0.05} seçin.}
+\spssadim{\emph{OK} ile gereken örneklem hacmini alın. Paylaşılan çıktıda \emph{N}=167 ve \emph{Actual Power}=0,801 görülür. Bu güç, planlanan 1 puan fark içindir; eldeki 395 kaydın gözlenen gücü değildir.}
+\end{spssadimlar}
+
+{\raggedright
+\noindent\textbf{Komutların görevi.} \texttt{T-TEST} ve \texttt{COMPUTE etki\_d} gözlenen veriyi inceler. \texttt{POWER MEANS ONESAMPLE} ayrı bir ileriye dönük planlamadır; hedef güç ve alternatif ortalama önceden belirlenir.\par}
+
+\textbf{Uygulama kodu:} \texttt{b10}. Doğrulanan veri dosyası
+\texttt{companion/spss} altındaki \texttt{csv/b10.csv} dosyasıdır.
+
+\begin{lstlisting}[style=prismSPSS]
+SET DECIMAL=DOT.
+GET DATA /TYPE=TXT
+ /FILE='companion/spss/csv/b10.csv'
+ /ENCODING='UTF8'
+ /ARRANGEMENT=DELIMITED /DELCASE=LINE
+ /DELIMITERS="," /QUALIFIER='"'
+ /FIRSTCASE=2
+ /VARIABLES=id F8.0 school F8.0 sex F8.0 age F8.0
+ studytime F8.0 absences F8.0 g1 F8.0 g2 F8.0
+ g3 F8.0 pass10 F8.0.
+FILTER OFF.
+WEIGHT OFF.
+SPLIT FILE OFF.
+VARIABLE LABELS g3 'Yil sonu matematik notu'.
+VARIABLE LEVEL
+ id school sex pass10 (NOMINAL)
+ studytime (ORDINAL)
+ age absences g1 g2 g3 (SCALE).
+FORMATS g3 (F14.9).
+EXECUTE.
+\end{lstlisting}
+
+\par\noindent\begin{minipage}{\linewidth}
+\textbf{Gözlenen test ve özet.} Veri açma bloğundan sonra çalıştırın.
+
+\begin{lstlisting}[style=prismSPSS]
+T-TEST /TESTVAL=10 /VARIABLES=g3
+ /CRITERIA=CI(.95).
+AGGREGATE /OUTFILE=*
+ /BREAK= /n=N /ort=MEAN(g3) /ss=SD(g3).
+COMPUTE etki_d=(ort-10)/ss.
+FORMATS n (F8.0).
+FORMATS ort ss etki_d (F14.9).
+LIST VARIABLES=n ort ss etki_d.
+\end{lstlisting}
+\end{minipage}\par
+
+\par\noindent\begin{minipage}{\linewidth}
+\textbf{Ayrı planlama adımı.} Aşağıdaki komut ham veriden yeni bir
+etki tahmin etmez; belirtilen varsayımlarla gereken hacmi hesaplar.
+
+\begin{lstlisting}[style=prismSPSS]
+POWER MEANS ONESAMPLE
+ /PARAMETERS TEST=NONDIRECTIONAL
+ SIGNIFICANCE=.05 POWER=.80
+ SD=4.581442611 MEAN=11 NULL=10.
+\end{lstlisting}
+
+\end{minipage}\par
+
+\begin{outputguidebox}
+\textbf{Paylaşılan SPSS çıktısıyla doğrulanan değerler.}
+\emph{One-Sample Statistics} tablosunda $n=395$, ortalama
+10,415189873, standart sapma 4,5814426110 ve standart hata
+0,23051739492 görülür. Test tablosunda $t(394)=1{,}801$ ve
+iki yönlü $p=0{,}072$; \texttt{LIST} çıktısında
+$d=(\bar x-10)/s=0{,}090624266$ bulunmuştur.
+Tek yönlü 0,036 değeri bu uygulamanın kararında kullanılmaz.
+
+Güç tablosundaki \emph{Effect Size}=0,218 ise
+$1/4{,}581442611$ planlama etkisinin yuvarlanmış değeridir;
+gözlenen $d$ ile aynı değildir. \emph{Power}=0,8 hedef gücü,
+\emph{Actual Power}=0,801 ise 167 kişide hesaplanan gücü gösterir.
+\texttt{LIST} altındaki bir kayıt, 395 kişinin toplu özetidir;
+örneklem büyüklüğünün bire düştüğü anlamına gelmez.
+\end{outputguidebox}
+
+
+\par\noindent\begin{minipage}{\linewidth}
+\subsection{R uygulaması}
+\label{sec:r-gercek-b10}
+
+\textbf{Gözlenen analiz.} Standartlaştırılmış fark ile iki yönlü
+$p$ değeri ayrı niceliklerdir. Ortalama aralığından 10 çıkarılarak
+SPSS'in fark aralığı elde edilir.
+
+\begin{lstlisting}[style=prismR]
+veri <- read.csv("companion/spss/csv/b10.csv")
+stopifnot(nrow(veri) == 395, ncol(veri) == 10,
+  !anyNA(veri),
+  all(veri$pass10 == as.integer(veri$g3 >= 10)))
+sonuc <- t.test(veri$g3, mu=10,
+  alternative="two.sided", conf.level=.95)
+ortalama <- mean(veri$g3)
+standart_sapma <- sd(veri$g3)
+print(c(n=nrow(veri), ort=ortalama, ss=standart_sapma,
+  sh_ort=standart_sapma/sqrt(nrow(veri)),
+  t=unname(sonuc$statistic), df=unname(sonuc$parameter),
+  p_iki_yonlu=sonuc$p.value, fark=ortalama-10,
+  etki_d=(ortalama-10)/standart_sapma,
+  ort_alt=sonuc$conf.int[1],
+  ort_ust=sonuc$conf.int[2]), digits=15)
+print(sum(veri$g3 == 0))
+\end{lstlisting}
+
+\textbf{Çıktıyı okuma.} Paylaşılan R çıktısında 395 satır, 10 sütun,
+sıfır eksik değer ve analizde tutulan 38 sıfır not vardır.
+Gözlenen etki 0,090624, iki yönlü $p$ değeri 0,072448'dir.
+\end{minipage}\par
+
+\par\noindent\begin{minipage}{\linewidth}
+\textbf{İleriye dönük plan.} \texttt{strict=TRUE} iki kuyruğu da
+hesaba katar; \texttt{ceiling} gereken hacmi yukarı yuvarlar.
+
+\begin{lstlisting}[style=prismR]
+plan <- power.t.test(delta=1, sd=4.581442611,
+  sig.level=.05, power=.80, type="one.sample",
+  alternative="two.sided", strict=TRUE)
+n_plan <- ceiling(plan$n)
+guc <- function(hacim) {
+  power.t.test(n=hacim, delta=1, sd=4.581442611,
+    sig.level=.05, type="one.sample",
+    alternative="two.sided", strict=TRUE)$power
+}
+print(c(n_kesirli=plan$n, n_plan=n_plan,
+  guc_plan=guc(n_plan), n_bir_eksik=n_plan-1,
+  guc_bir_eksik=guc(n_plan-1)), digits=15)
+\end{lstlisting}
+
+\textbf{Çıktıyı okuma.} R çıktısında kesirli hacim yaklaşık
+166,6755, yukarı yuvarlanan hacim 167'dir. Güç 166 kişide
+0,798386, 167 kişide 0,800771 olur; hedefe aşağı yuvarlanmaz.
+\end{minipage}\par
+
+\par\noindent\begin{minipage}{\linewidth}
+\subsection{Python uygulaması}
+\label{sec:python-b10}
+
+\textbf{Gözlenen analiz.} \texttt{ddof=1} örneklem standart
+sapmasını seçer. \texttt{aralik} ortalamanın yüzde 95 aralığıdır.
+
+\begin{lstlisting}[style=prismPythonApp]
+import pandas as pd
+import numpy as np
+from scipy import stats, optimize
+
+veri = pd.read_csv("companion/spss/csv/b10.csv")
+assert veri.shape == (395, 10)
+assert not veri.isna().any().any()
+assert veri.pass10.eq((veri.g3 >= 10).astype(int)).all()
+sonuc = stats.ttest_1samp(veri.g3, 10,
+                         alternative="two-sided")
+aralik = sonuc.confidence_interval(.95)
+ortalama = veri.g3.mean()
+standart_sapma = veri.g3.std(ddof=1)
+ozet = dict(n=len(veri), ort=ortalama, ss=standart_sapma,
+    sh_ort=standart_sapma/np.sqrt(len(veri)),
+    t=sonuc.statistic, df=len(veri)-1,
+    p_iki_yonlu=sonuc.pvalue, fark=ortalama-10,
+    etki_d=(ortalama-10)/standart_sapma,
+    ort_alt=aralik.low, ort_ust=aralik.high)
+for ad, deger in ozet.items():
+    print(f"{ad}: {deger:.13f}")
+print(int((veri.g3 == 0).sum()))
+\end{lstlisting}
+
+\textbf{Çıktıyı okuma.} Paylaşılan Python çıktısı da 395 satır,
+10 sütun, sıfır eksik değer ve 38 sıfır not gösterir. Gözlenen
+analizin 11 özet değeri R ile 13 ondalık basamakta eşleşir.
+R ve Python kodları ham veriyi tek satırlık özetle değiştirmez.
+\end{minipage}\par
+
+\par\noindent\begin{minipage}{\linewidth}
+\textbf{İleriye dönük plan.} Önceki Python bloğundan sonra çalıştırın.
+\texttt{nct}, merkezî olmayan $t$ dağılımıyla iki kuyruklu gücü
+hesaplar. Kök çözümü yukarı yuvarlanır; bir eksik kişi de kontrol edilir.
+
+\begin{lstlisting}[style=prismPythonApp]
+def guc(hacim):
+    serbestlik = hacim - 1
+    kritik = stats.t.ppf(.975, serbestlik)
+    kayma = np.sqrt(hacim) / 4.581442611
+    return (stats.nct.cdf(-kritik, serbestlik, kayma)
+            + stats.nct.sf(kritik, serbestlik, kayma))
+
+n_kesirli = optimize.brentq(
+    lambda hacim: guc(hacim)-.80, 2, 1000)
+n_plan = int(np.ceil(n_kesirli))
+assert guc(n_plan-1) < .80 <= guc(n_plan)
+print("n_kesirli:", n_kesirli, "n_plan:", n_plan)
+print("guc_plan:", guc(n_plan))
+print("n_bir_eksik:", n_plan-1,
+      "guc_bir_eksik:", guc(n_plan-1))
+\end{lstlisting}
+
+\textbf{Çıktıyı okuma.} Python da 167 kişi sonucunu verir.
+Planlama standart sapması üç yazılımda da tam olarak
+\texttt{4.581442611} girilmiştir; hesap öncesinde 4,58'e yuvarlanmaz.
+\end{minipage}\par
+
+\subsection{Sonuçların karşılaştırılması ve ortak rapor}
+13 Eylül 2026'da paylaşılan SPSS tabloları ile R ve Python metin
+çıktıları karşılaştırılmıştır. Gözlenen analizin 11 özet değeri
+R ve Python'da 13 ondalık basamakta eşleşir; SPSS değerleri gösterilen
+yuvarlama hassasiyetlerinde uyumludur. R ve Python'un kesirli hacimleri
+arasında yaklaşık $1{,}1\times10^{-7}$, güçlerinde yaklaşık
+$2\times10^{-12}$ düzeyinde sayısal farklar vardır. Bu farklar
+167 kişilik planı değiştirmez; bütün planlama sonuçları için
+13 basamakta eşitlik iddia edilmez. Proje CSV'sinden yapılan hesaplar
+da sonuçları destekler. Aşağıdaki tablolar çıktıların kitap düzenine
+uyarlanmış özetidir; ekran görüntüsü değildir.
+
+\begin{table}[H]
+\centering
+\caption{B10'da gözlenen test ve standartlaştırılmış fark}
+\label{tab:b10-dogrulanmis-gozlenen}
+\begin{tabular}{@{}lr@{}}
+\toprule
+Ölçü & Değer \\
+\midrule
+Gözlem sayısı & 395 \\
+Ortalama not & 10,415190 \\
+Notların standart sapması & 4,581443 \\
+Ortalamanın standart hatası & 0,230517 \\
+Referanstan fark ($\bar x-10$) & 0,415190 \\
+Gözlenen etki ($d$) & 0,090624 \\
+$t$ istatistiği & 1,801122 \\
+Serbestlik derecesi & 394 \\
+İki yönlü $p$ değeri & 0,072448 \\
+Ortalama için \%95 güven aralığı & $[9{,}961992;\ 10{,}868388]$ \\
+Fark için \%95 güven aralığı & $[-0{,}038008;\ 0{,}868388]$ \\
+\bottomrule
+\end{tabular}
+\par\smallskip
+{\footnotesize Ondalıklı değerler altı basamağa yuvarlanmıştır.
+Standart sapmada 394 böleni kullanılmıştır. Fark aralığı, ortalama
+aralığının her iki sınırından 10 çıkarılarak elde edilir.\par}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{B10'da bir puanlık hedef fark için örneklem planı}
+\label{tab:b10-dogrulanmis-plan}
+\begin{tabular}{@{}lr@{}}
+\toprule
+Planlama girdisi veya sonucu & Değer \\
+\midrule
+Sıfır hipotezindeki ortalama & 10 \\
+Planlanan alternatif ortalama & 11 \\
+Hedef fark (puan) & 1 \\
+Planlama standart sapması & 4,581442611 \\
+Planlama etkisi ($1/4{,}581442611$) & 0,218272 \\
+İki yönlü anlamlılık düzeyi & 0,05 \\
+Hedef güç & 0,80 \\
+Kesirli örneklem hacmi (yaklaşık) & 166,6755 \\
+Gereken en küçük tam sayı hacim & 167 \\
+166 kişide hesaplanan güç & 0,798386 \\
+167 kişide hesaplanan güç & 0,800771 \\
+\bottomrule
+\end{tabular}
+\par\smallskip
+{\footnotesize Kesirli hacim R ve Python hesaplarından gelir.
+SPSS doğrudan 167 kişi ve üç basamakla 0,801 güç göstermiştir.
+Güç hesabı bağımsız normal gözlemler modelinde merkezî olmayan
+$t$ dağılımının iki kuyruğunu kullanır.\par}
+\end{table}
+
+\Needspace{13\baselineskip}
+\begin{outputguidebox}
+Tablo~\ref{tab:b10-dogrulanmis-gozlenen}, eldeki 395 kaydı inceler.
+İki yönlü $p=0{,}072448>0{,}05$ olduğundan $H_0$ reddedilmez;
+bu, ortalamanın kesinlikle 10 olduğunun veya farkın eğitim bakımından
+önemsiz olduğunun kanıtı değildir. Sıfır notlu 38 kayıt korunmuştur.
+
+Tablo~\ref{tab:b10-dogrulanmis-plan} ise farklı bir soruya yanıt
+verir: 1 puanlık gerçek farkı, belirtilen standart sapma ve model
+altında yüzde 80 güçle saptamak için kaç kişi gerekir?
+Gözlenen $d=0{,}090624$ yerine planlama etkisi 0,218272 kullanılır.
+167 kişideki 0,800771 güç, gözlenen $p$ değerinden türetilmiş
+geriye dönük güç değildir; 395 kaydın 167'sini seçme önerisi de değildir.
+
+Bir puanın anlamlı hedef sayılması ve planlama standart sapmasının
+yeni çalışmaya uygunluğu ayrıca gerekçelendirilmelidir. Kayıplar ve
+kümelenme bu hesaba dahil değildir. İki okuldan gelen veride yazılımların
+uyumu, bağımsızlığı veya daha geniş bir evrene genellenebilirliği kanıtlamaz.
+\end{outputguidebox}
+
+\Needspace{10\baselineskip}
+\textbf{Raporlama örneği (doğrulanmış çıktılarla).}
+``395 kayıtta ortalama not 10,415190 ve standart sapma 4,581443
+bulunmuştur. 10 puan referansına karşı iki yönlü testte
+$t(394)=1{,}801122$, $p=0{,}072448$ ve standartlaştırılmış fark
+$d=0{,}090624$ elde edilmiştir. Sıfır hipotezi yüzde 5 düzeyinde
+reddedilmemiştir. Ayrı bir ileriye dönük planlamada, 1 puanlık hedef
+fark, 4,581442611 standart sapma, iki yönlü 0,05 anlamlılık düzeyi
+ve 0,80 hedef güç için en az 167 kişi gerektiği hesaplanmıştır;
+bu hacimde güç 0,800771'dir. Plan bağımsız normal gözlemler modeline
+dayanır; kayıp ve kümelenme etkilerini içermez. İki okulla sınırlı
+kaynak verinin temsil gücü bu hesaplarla doğrulanmış değildir.''
+
+
+\textbf{Görev.} Bir puanlık farkın eğitim bakımından neden önemli kabul
+edilebileceğini gerekçelendirin. Bu gerekçe yoksa yalnız güç hesabı yapmak
+çalışmanın bilimsel önemini sağlamaz. Gözlenen $p$ değerinden geriye dönük
+güç üretip sonucu yeniden değerlendirmeyin. 166 kişiye aşağı yuvarlamanın
+neden hedefi karşılamadığını açıklayın. SPSS'te sonraki uygulamaya
+geçerken tek satırlık özet yerine gerekli ham veriyi yeniden açın.

@@ -1,0 +1,18 @@
+{
+  "tarih": "2026-09-09",
+  "paket": "B13",
+  "ders_bolumu": 13,
+  "kapsamli_bolum": 14,
+  "kaynaklar": [
+    "chapters/13-korelasyon-regresyon-uygulama.tex",
+    "chapters/r/b13.tex"
+  ],
+  "veri_turu": "Kitaptaki 16 satırlık öğretim verisi; her satırın saat/puan eşleşmesi korunur.",
+  "veri_sha256": "0ccad982ba1ce76a65b39bdf3d07b3efb6d1c7115eaf454e45e12b083ebce8b4",
+  "referans_yontemi": "Merkezli toplamlar, katsayılar, her satırın tahmini/artığı ve SSE Fraction tam kesir aritmetiğiyle hesaplandı. Kritik t ve çok küçük p açık t yoğunluğu, quad integrali ve brentq ile üretildi; çözümün linregress/lm sonuçları kopyalanmadı.",
+  "kontrol_sayisi": 62,
+  "p_kontrolu": "p_egim için mutlak tolerans 0, bağıl tolerans 1e-8; sıfıra yuvarlanmış p kontrolü geçmez. Diğer değerler 1e-9 mutlak/bağıl tolerans.",
+  "alfa": 0.05,
+  "yeni_saat": 6,
+  "rastgele_islem": false
+}

@@ -1,0 +1,2 @@
+sample_n,repetitions,observed_mean,bootstrap_se,percentile_ci_low,percentile_ci_high
+303,10000,0.43697839965905794,0.01059065293570939,0.41624834881679473,0.4577927339497355

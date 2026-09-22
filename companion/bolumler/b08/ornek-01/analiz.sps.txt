@@ -1,0 +1,34 @@
+GET DATA /TYPE=TXT /FILE='veri.csv' /ENCODING='UTF8'
+ /ARRANGEMENT=DELIMITED /DELCASE=LINE /DELIMITERS="," /QUALIFIER='"'
+ /FIRSTCASE=2 /VARIABLES=n F12.0 ortalama F24.0 s F24.0.
+DATASET NAME B08Ozet.
+FILTER OFF.
+USE ALL.
+WEIGHT OFF.
+SPLIT FILE OFF.
+VARIABLE LEVEL n ortalama s (SCALE).
+VARIABLE LABELS n 'Ozetlenen orneklemin hacmi'
+ ortalama 'Orneklem ortalamasi' s 'n-1 bolenli orneklem standart sapmasi'.
+COMPUTE standart_hata=s/SQRT(n).
+COMPUTE serbestlik=n-1.
+COMPUTE duzey95=.95.
+COMPUTE duzey99=.99.
+COMPUTE alpha95=1-duzey95.
+COMPUTE alpha99=1-duzey99.
+COMPUTE kritik95=IDF.T((1+duzey95)/2,serbestlik).
+COMPUTE kritik99=IDF.T((1+duzey99)/2,serbestlik).
+COMPUTE hata95=kritik95*standart_hata.
+COMPUTE hata99=kritik99*standart_hata.
+COMPUTE alt95=ortalama-hata95.
+COMPUTE ust95=ortalama+hata95.
+COMPUTE alt99=ortalama-hata99.
+COMPUTE ust99=ortalama+hata99.
+COMPUTE genislik95=2*hata95.
+COMPUTE genislik99=2*hata99.
+FORMATS ortalama s standart_hata duzey95 duzey99 alpha95 alpha99 kritik95 kritik99
+ hata95 hata99 alt95 ust95 alt99 ust99 genislik95 genislik99 (F16.10).
+EXECUTE.
+DISPLAY DICTIONARY.
+LIST VARIABLES=n ortalama s standart_hata serbestlik.
+LIST VARIABLES=duzey95 alpha95 kritik95 hata95 alt95 ust95 genislik95.
+LIST VARIABLES=duzey99 alpha99 kritik99 hata99 alt99 ust99 genislik99.

@@ -1,0 +1,524 @@
+\chapter{Tek Yönlü Varyans Analizi: Üç veya Daha Fazla Ortalamanın Karşılaştırılması}
+\label{ch:anova}
+
+\begin{prismbox}[PrismLight]{Öğrenme çıktıları}
+Bu bölümün sonunda:
+\begin{itemize}
+  \item tek yönlü bağımsız gruplar ANOVA'sının araştırma sorusunu ve hipotezlerini kurabilecek,
+  \item toplam değişkenliği gruplar arası ve grup içi bileşenlere ayırabilecek,
+  \item ANOVA tablosundaki kareler toplamı, serbestlik derecesi, ortalama kare ve $F$ değerini yorumlayabilecek,
+  \item genel testten sonra uygun çoklu karşılaştırmaları ve etki büyüklüklerini değerlendirebilecek,
+  \item klasik ANOVA ile Welch ANOVA arasında veri yapısına göre seçim yapabileceksiniz.
+\end{itemize}
+\end{prismbox}
+
+\begin{prerequisitebox}
+Bağımsız örneklem \tstat testi, hipotez testi, güven aralığı, etki büyüklüğü
+ve grup içi değişkenlik kavramları bilinmelidir. İki bağımsız grubun
+karşılaştırılması için Bölüm~\ref{ch:two-sample}, genel test mantığı için
+Bölüm~\ref{ch:hypothesis} temel alınır.
+\end{prerequisitebox}
+
+\section{Neden ANOVA?}
+
+Üç veya daha fazla bağımsız grubun ortalamaları karşılaştırılırken bütün
+ikili \tstat testlerini ayrı ayrı yapmak aile düzeyindeki Tip I hata riskini
+artırır. Tek yönlü varyans analizi (ANOVA), grupların ortalamalarının aynı
+olduğu ortak bir sıfır hipotezini tek bir genel testle sınar. Yöntemin
+hesaplama ve raporlama ilkeleri için bkz. \citet{agresti2018}; etki
+büyüklüklerinin yorumu için ayrıca \citet{lakens2013}.
+
+Tek yönlü ANOVA'da bir kategorik açıklayıcı değişken ve bir nicel yanıt
+değişkeni vardır. Örneğin üç öğretim yöntemindeki başarı puanları, dört okul
+türündeki aidiyet puanları veya üç geri bildirim biçimindeki tamamlama süreleri
+karşılaştırılabilir. Aynı bireylerin üç zamanda ölçülmesi ise bağımsız gruplar
+ANOVA'sı değildir; tekrarlı ölçümler için bağımlılığı dikkate alan yöntem gerekir.
+
+\begin{definitionbox}
+\textbf{Tek yönlü bağımsız gruplar ANOVA'sı}, bir nicel yanıtın $k$ bağımsız
+gruptaki evren ortalamalarını karşılaştırır. ``Tek yönlü'' ifadesi tek bir
+gruplama değişkeni bulunduğunu; testin tek kuyruklu olduğunu değil, $F$
+dağılımının sağ kuyruğunun kullanıldığını belirtir.
+\end{definitionbox}
+
+\section{Hipotezler ve genel testin anlamı}
+\label{sec:anova-hypotheses}
+
+$k$ grubun evren ortalamaları $\mu_1,\ldots,\mu_k$ olmak üzere hipotezler
+\[
+H_0:\mu_1=\mu_2=\cdots=\mu_k,
+\qquad
+H_1:\text{en az bir evren ortalaması farklıdır}
+\]
+biçimindedir. Alternatif hipotez bütün ortalamaların birbirinden farklı
+olduğunu söylemez. Anlamlı genel test yalnız eşitlik modelinin veriyle uyumlu
+olmadığına işaret eder; farkın hangi gruplar arasında olduğunu belirlemek için
+planlı karşılaştırma veya çoklu karşılaştırma gerekir.
+
+\begin{mistakebox}
+Anlamlı $F$ testi ``bütün gruplar farklıdır'' anlamına gelmez. Benzer biçimde
+anlamlı olmayan genel test, bütün ortalamaların kesin olarak eşit olduğunu
+kanıtlamaz; güven aralıkları ve çalışmanın hassasiyeti ayrıca incelenmelidir.
+\end{mistakebox}
+
+\section{Değişkenliğin iki kaynağa ayrılması}
+\label{sec:anova-decomposition}
+
+ANOVA, puanların genel ortalama çevresindeki toplam değişkenliğini iki parçaya
+ayırır:
+\[
+SS_{\text{toplam}}=SS_{\text{gruplar}}+SS_{\text{hata}}.
+\]
+Burada $SS$ kareler toplamını gösterir. Grup $j$'nin hacmi $n_j$, ortalaması
+$\bar x_j$ ve genel ortalama $\bar x_{..}$ ise
+\[
+SS_{\text{gruplar}}
+=\sum_{j=1}^{k}n_j(\bar x_j-\bar x_{..})^2
+\]
+grup ortalamalarının genel ortalamadan uzaklığını ölçer. Grup içindeki
+gözlemler $x_{ij}$ ile gösterildiğinde
+\[
+SS_{\text{hata}}
+=\sum_{j=1}^{k}\sum_{i=1}^{n_j}(x_{ij}-\bar x_j)^2
+\]
+aynı gruptaki bireysel farklılıkları özetler.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[x=1.05cm,y=0.16cm]
+  \draw[->,PrismGray] (0.4,0)--(9.3,0) node[right,font=\scriptsize]{puan};
+  \foreach \x/\lab in {1/60,3/65,5/70,7/75,9/80}
+    \node[below,font=\tiny] at (\x,0) {\lab};
+  \foreach \x/\y in {1.8/3,2.4/5,3.0/3.5,3.5/5.4,4.0/3.8}
+    \fill[PrismBlue] (\x,\y) circle (2pt);
+  \foreach \x/\y in {3.7/9,4.5/10.8,5.1/8.7,5.8/10.1,6.3/9.2}
+    \fill[PrismSubheadingBlue] (\x,\y) circle (2pt);
+  \foreach \x/\y in {5.8/14.3,6.5/15.8,7.2/13.8,7.9/15.3,8.5/14.5}
+    \fill[PrismWarnOrange!85!black] (\x,\y) circle (2pt);
+  \draw[PrismBlue,very thick] (3.0,2)--(3.0,6.2);
+  \draw[PrismSubheadingBlue,very thick] (5.1,7.7)--(5.1,11.8);
+  \draw[PrismWarnOrange!85!black,very thick] (7.2,12.8)--(7.2,16.7);
+  \node[left,font=\scriptsize] at (0.7,4.5) {A};
+  \node[left,font=\scriptsize] at (0.7,9.8) {B};
+  \node[left,font=\scriptsize] at (0.7,14.8) {C};
+  \draw[PrismGray,dashed] (5.1,0)--(5.1,17.2)
+    node[above,font=\scriptsize]{genel ortalama};
+\end{tikzpicture}
+\caption{ANOVA'da grup ortalamaları arasındaki uzaklık ile grup içi yayılımın birlikte değerlendirilmesi.}
+\label{fig:anova-variation}
+\end{figure}
+
+Şekil~\ref{fig:anova-variation}'de dikey kısa çizgiler grup ortalamalarını,
+noktaların bu çizgiler çevresindeki saçılması grup içi değişkenliği gösterir.
+Grup ortalamaları birbirinden uzak ve grup içi yayılım küçük olduğunda genel
+$F$ oranı büyür.
+
+\section[ANOVA tablosu ve F istatistiği]{ANOVA tablosu ve $F$ istatistiği}
+\label{sec:anova-table}
+
+Kareler toplamları serbestlik derecelerine bölünerek ortalama kareler elde edilir:
+\[
+MS_{\text{gruplar}}=\frac{SS_{\text{gruplar}}}{k-1},
+\qquad
+MS_{\text{hata}}=\frac{SS_{\text{hata}}}{N-k}.
+\]
+Genel test istatistiği
+\[
+F=\frac{MS_{\text{gruplar}}}{MS_{\text{hata}}}
+\]
+olup $H_0$ altında yaklaşık $F_{k-1,N-k}$ dağılımını izler. Eşit ortalamalar
+altında pay ve payda aynı hata değişkenliğini tahmin ettiğinden oran yaklaşık
+1 çevresindedir. Grup ortalamaları arasındaki fark büyüdükçe pay ve dolayısıyla
+$F$ değeri artar. Kritik değerler Ek~\ref{app:distribution-tables},
+Bölüm~\ref{sec:f-table}'de verilmiştir.
+
+\begin{table}[H]
+\centering
+\caption{Tek yönlü ANOVA tablosunun genel yapısı.}
+\label{tab:anova-template}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}Xrrrr@{}}
+\toprule
+Kaynak & Kareler toplamı & sd & Ortalama kare & $F$ \\
+\midrule
+Gruplar arası & $SS_{\text{gruplar}}$ & $k-1$ & $MS_{\text{gruplar}}$ & $MS_{\text{gruplar}}/MS_{\text{hata}}$ \\
+Grup içi (hata) & $SS_{\text{hata}}$ & $N-k$ & $MS_{\text{hata}}$ & \\
+Toplam & $SS_{\text{toplam}}$ & $N-1$ & & \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Çözümlü uygulama: üç öğretim yöntemi}
+\label{sec:anova-worked-example}
+
+Üç bağımsız öğretim yönteminde onar öğrencinin başarı puanı özetleri şöyle
+olsun:
+
+\begin{table}[H]
+\centering
+\caption{Üç öğretim yönteminin başarı puanı özetleri.}
+\label{tab:anova-group-summary}
+\begin{tabular}{lrrr}
+\toprule
+Yöntem & $n$ & Ortalama & Standart sapma \\
+\midrule
+A & 10 & 70 & 6 \\
+B & 10 & 75 & 7 \\
+C & 10 & 82 & 5 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Genel ortalama
+\[
+\bar x_{..}=\frac{10(70)+10(75)+10(82)}{30}=75{,}667
+\]
+olur. Gruplar arası kareler toplamı
+\[
+SS_{\text{gruplar}}
+=10(70-75{,}667)^2+10(75-75{,}667)^2+10(82-75{,}667)^2
+=726{,}667
+\]
+ve özet standart sapmalardan grup içi kareler toplamı
+\[
+SS_{\text{hata}}
+=(10-1)6^2+(10-1)7^2+(10-1)5^2=990
+\]
+bulunur. Sonuç Tablo~\ref{tab:anova-worked}'de gösterilmiştir.
+
+\begin{table}[H]
+\centering
+\caption{Üç öğretim yöntemi için ANOVA tablosu.}
+\label{tab:anova-worked}
+\begin{tabular}{lrrrrr}
+\toprule
+Kaynak & $SS$ & sd & $MS$ & $F$ & $p$ \\
+\midrule
+Gruplar arası & 726,667 & 2 & 363,333 & 9,909 & $<0{,}001$ \\
+Grup içi & 990,000 & 27 & 36,667 & & \\
+Toplam & 1716,667 & 29 & & & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+$F(2,27)=9{,}91$ ve $p=0{,}00059$ olduğundan eşit ortalamalar hipotezi
+reddedilir. Sonuç en az iki yöntemin evren ortalamalarının farklı olduğuna
+ilişkin kanıt sağlar; hangi çiftlerin ayrıldığını henüz göstermez.
+
+\section{Etki büyüklüğü}
+\label{sec:anova-effect-size}
+
+Genel ilişkinin örneklemdeki büyüklüğü eta-kare ile
+\[
+\eta^2=\frac{SS_{\text{gruplar}}}{SS_{\text{toplam}}}
+\]
+özetlenebilir. Eta-kare örneklemde yanıt değişkenliğinin gruplama değişkeniyle
+ilişkili bölümüdür. Özellikle küçük örneklemde yukarı yönlü yanlılığı azaltmaya
+çalışan omega-kare
+\[
+\omega^2=
+\frac{SS_{\text{gruplar}}-(k-1)MS_{\text{hata}}}
+{SS_{\text{toplam}}+MS_{\text{hata}}}
+\]
+ile hesaplanabilir.
+
+Çözümlü örnekte
+\[
+\eta^2=\frac{726{,}667}{1716{,}667}=0{,}423,
+\qquad
+\omega^2\approx0{,}373.
+\]
+Örneklemde başarı puanı değişkenliğinin yaklaşık yüzde 42,3'ü öğretim yöntemi
+gruplarıyla ilişkilidir. Bu oran nedensel etki değildir; nedensel yorum için
+öğrencilerin yöntemlere atanma süreci belirleyicidir. Küçük, orta ve büyük
+gibi sabit etiketler yerine alan bilgisi, ölçme birimi ve güven aralığıyla
+birlikte yorum yapılmalıdır.
+
+\section{Genel testten sonra çoklu karşılaştırmalar}
+\label{sec:anova-posthoc}
+
+Genel test anlamlı olduğunda araştırma sorusu hangi grup farklarının önemli
+olduğunu gerektiriyorsa aile düzeyindeki hata oranını denetleyen bir yöntem
+kullanılır. Eşit varyanslı bağımsız gruplarda Tukey HSD bütün ikili farklar
+için yaygın bir seçenektir. Yalnız önceden belirlenmiş birkaç bilimsel
+karşılaştırma varsa planlı karşıtlıklar daha doğrudan olabilir.
+
+Çözümlü örneğin Tukey sonuçları şöyledir:
+
+\begin{table}[H]
+\centering
+\caption{Öğretim yöntemleri için Tukey HSD karşılaştırmaları.}
+\label{tab:anova-tukey}
+\begin{tabular}{lrrr}
+\toprule
+Karşılaştırma & Ortalama farkı & Yüzde 95 eşzamanlı GA & Düzeltilmiş $p$ \\
+\midrule
+A $-$ B & $-5$ & $[-11{,}71;1{,}71]$ & 0,174 \\
+A $-$ C & $-12$ & $[-18{,}71;-5{,}29]$ & $<0{,}001$ \\
+B $-$ C & $-7$ & $[-13{,}71;-0{,}29]$ & 0,040 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Tablo~\ref{tab:anova-tukey}'ye göre C yöntemi A ve B yöntemlerinden daha
+yüksek ortalamaya sahiptir; A ile B arasındaki beş puanlık fark için yeterli
+kanıt yoktur. Düzeltilmiş $p$ değerleri ve eşzamanlı aralıklar aynı karşılaştırma
+ailesini dikkate alır.
+
+\begin{mistakebox}
+Önce genel ANOVA yapıp ardından düzeltmesiz çok sayıda \tstat testi uygulamak
+çoklu karşılaştırma sorununu çözmez. Karşılaştırmaların veri görüldükten sonra
+seçilmesi de doğrulayıcı ve keşfedici analiz ayrımını bulanıklaştırır.
+\end{mistakebox}
+
+\section{Varsayımlar ve sağlam seçenekler}
+\label{sec:anova-assumptions}
+
+Klasik tek yönlü ANOVA için temel noktalar şunlardır:
+
+\begin{itemize}
+  \item Gözlemler araştırma tasarımına göre bağımsız olmalıdır.
+  \item Her gruptaki hata dağılımı ağır aykırı değerlerden ve ciddi biçim bozukluklarından uzak olmalıdır.
+  \item Grup hata varyanslarının yaklaşık eşit olduğu varsayılır.
+  \item Yanıt nicel, gruplar birbirini dışlayan kategoriler olmalıdır.
+\end{itemize}
+
+Dengeli örneklem hacimleri ve benzer dağılımlar klasik ANOVA'yı orta düzey
+normallik sapmalarına karşı dayanıklı kılar. Varyanslar ve grup hacimleri
+belirgin biçimde farklıysa, özellikle küçük grubun varyansı büyükse, Welch
+ANOVA daha güvenli bir genel test sunar. Welch testi eşit varyans varsayımını
+gerektirmez ve payda serbestlik derecesini yaklaşık hesaplar. Böyle bir
+analizden sonra Games--Howell gibi eşit varyans gerektirmeyen karşılaştırmalar
+düşünülmelidir.
+
+Sıralara dayalı Kruskal--Wallis testi dağılımlar arasındaki genel farklılığı
+inceler; ek koşullar olmadan otomatik olarak ``medyanların eşitliği testi''
+diye yorumlanmamalıdır. Bağımsızlığın bozulması ise dönüşüm veya sıralama
+yöntemiyle düzeltilemez; tasarıma uygun model gerekir.
+
+\begin{assumptionbox}
+Levene testinin anlamsız çıkması varyansların eşit olduğunu kanıtlamaz;
+anlamlı çıkması da tek başına veri dönüşümü zorunluluğu oluşturmaz. Grup
+hacimleri, standart sapmalar, kutu grafikleri, aykırı değerler ve klasik--Welch
+duyarlılık karşılaştırması birlikte değerlendirilmelidir.
+\end{assumptionbox}
+
+\section{Welch ANOVA örneği}
+
+Üç grubun özetleri sırasıyla $(n,\bar x,s)=(12,70,3)$,
+$(20,76,10)$ ve $(8,84,5)$ olsun. Varyanslar 9, 100 ve 25 olduğundan eşit
+varyans varsayımı zayıftır; grup hacimleri de dengesizdir. Welch hesabı
+yaklaşık
+\[
+F_W(2,18{,}16)=25{,}33,\qquad p<0{,}001
+\]
+sonucunu verir. Ortalamaların eşit olmadığına ilişkin güçlü kanıt vardır.
+Hangi grupların ayrıldığını belirlemek için eşit varyans gerektirmeyen ikili
+karşılaştırmalar ve fark güven aralıkları kullanılmalıdır.
+
+\section{Yazılım uygulaması}
+
+\begin{softwarebox}
+\begin{lstlisting}
+import numpy as np
+from scipy import stats
+from statsmodels.stats.oneway import anova_generic
+
+# Ozet istatistiklerden klasik ANOVA
+n = np.array([10, 10, 10])
+mean = np.array([70., 75., 82.])
+sd = np.array([6., 7., 5.])
+grand = np.sum(n * mean) / np.sum(n)
+ss_between = np.sum(n * (mean - grand)**2)
+ss_within = np.sum((n - 1) * sd**2)
+df_between, df_within = len(n) - 1, np.sum(n) - len(n)
+mse = ss_within / df_within
+f_value = (ss_between / df_between) / mse
+p_value = stats.f.sf(f_value, df_between, df_within)
+eta2 = ss_between / (ss_between + ss_within)
+omega2 = ((ss_between - df_between * mse) /
+          (ss_between + ss_within + mse))
+
+print(f_value, p_value, eta2, omega2)
+
+# Ozetlerden Tukey HSD eszamanli araliklari
+q_critical = stats.studentized_range.ppf(
+    .95, len(n), df_within)
+se_tukey = np.sqrt(mse / n[0])
+for i, j in [(0, 1), (0, 2), (1, 2)]:
+    diff = mean[i] - mean[j]
+    margin = q_critical * se_tukey
+    p_adjusted = stats.studentized_range.sf(
+        abs(diff) / se_tukey, len(n), df_within)
+    print(i, j, diff, (diff-margin, diff+margin),
+          p_adjusted)
+
+# Esit olmayan varyanslarda Welch ANOVA: ozetlerden
+welch = anova_generic(
+    means=np.array([70., 76., 84.]),
+    variances=np.array([3., 10., 5.])**2,
+    nobs=np.array([12, 20, 8]),
+    use_var="unequal", welch_correction=True)
+print(welch.statistic, welch.pvalue, welch.df)
+\end{lstlisting}
+İlk hesap yaklaşık $F(2,27)=9{,}91$, $p=0{,}00059$,
+$\eta^2=0{,}423$ ve $\omega^2=0{,}373$ verir. Döngü,
+Tablo~\ref{tab:anova-tukey}'deki Tukey farklarını, eşzamanlı aralıkları ve
+düzeltilmiş \pval-değerlerini yeniden üretir. Son hesap Welch sonucunu verir.
+Ham veri bulunduğunda grup grafikleri, artıklar ve aykırı gözlemler ayrıca
+incelenmelidir.
+\end{softwarebox}
+
+SPSS'te \emph{Analyze $>$ Compare Means $>$ One-Way ANOVA}; R'de klasik
+analiz için \texttt{aov(y \textasciitilde{} group)}, Welch testi için
+\texttt{oneway.test(y \textasciitilde{} group, var.equal=FALSE)} kullanılabilir.
+Yazılım varsayılanlarının çoklu karşılaştırma ve eksik veri işlemleri
+bakımından aynı olduğu varsayılmamalıdır.
+
+\begin{outputguidebox}
+Önce grup hacimleri, ortalamaları, standart sapmaları ve grafiklerini okuyun.
+Ardından kullanılan genel testin klasik mi Welch mi olduğunu, pay ve payda
+serbestlik derecelerini, $F$ ile \pval-değerini kontrol edin. Genel sonuçtan
+sonra etki büyüklüğünü; gerekiyorsa düzeltilmiş ikili farkları ve eşzamanlı
+güven aralıklarını raporlayın.
+\end{outputguidebox}
+
+\section{Raporlama ve araştırma tasarımı}
+
+Klasik analiz için örnek rapor şöyledir:
+
+``Başarı puanları öğretim yöntemlerine göre farklılaştı,
+$F(2,27)=9{,}91$, $p<0{,}001$, $\eta^2=0{,}42$,
+$\omega^2=0{,}37$. Tukey karşılaştırmaları C yönteminin A ve B'den daha
+yüksek ortalamaya sahip olduğunu, A ile B farkının ise belirlenemediğini
+gösterdi.''
+
+Gruplara rastgele atama yapılmış ve uygulama dışında sistematik farklar
+denetlenmişse yöntem etkisine ilişkin nedensel yorum güçlenir. Gözlemsel
+gruplarda anlamlı ANOVA yalnız grup üyeliği ile yanıt arasında ilişki gösterir;
+önceki başarı, seçim süreci veya başka karıştırıcılar farkı açıklayabilir.
+
+\section{Çözümlü problemler}
+
+\subsection*{Problem 1: Hipotez ve tasarım}
+
+Dört farklı okul türündeki öğrencilerin aidiyet puanları karşılaştırılacaktır.
+Yanıt değişkeni nicel ve öğrenciler yalnız bir okul türünde yer almaktadır.
+Hipotezleri, uygun genel testi ve serbestlik derecelerini yazın. Toplam
+örneklem hacmi 84'tür.
+
+\textbf{Çözüm.} Dört bağımsız grup bulunduğundan tek yönlü bağımsız gruplar
+ANOVA'sı uygundur. Hipotezler
+\[
+H_0:\mu_1=\mu_2=\mu_3=\mu_4,
+\qquad H_1:\text{en az bir ortalama farklıdır}
+\]
+biçimindedir. Gruplar arası serbestlik derecesi $4-1=3$, hata serbestlik
+derecesi $84-4=80$ ve toplam serbestlik derecesi $83$'tür.
+
+\subsection*{Problem 2: Eksik ANOVA tablosunu tamamlama}
+
+Üç grup ve toplam 36 gözlem için $SS_{\text{gruplar}}=240$,
+$SS_{\text{hata}}=720$ verilmiştir. ANOVA tablosunu tamamlayın ve
+$F_{0{,}95;2,33}=3{,}285$ kritik değeriyle karar verin.
+
+\textbf{Çözüm.} Serbestlik dereceleri 2, 33 ve 35'tir.
+\[
+MS_{\text{gruplar}}=240/2=120,
+\qquad MS_{\text{hata}}=720/33=21{,}818,
+\]
+\[
+F=120/21{,}818=5{,}50.
+\]
+$5{,}50>3{,}285$ olduğundan yüzde 5 düzeyinde eşit ortalamalar hipotezi
+reddedilir. Toplam kareler toplamı $240+720=960$'tır.
+
+\subsection*{Problem 3: Etki büyüklükleri}
+
+Problem 2'deki değerlerden $\eta^2$ ve $\omega^2$ hesaplayın.
+
+\textbf{Çözüm.}
+\[
+\eta^2=240/960=0{,}25.
+\]
+$MS_{\text{hata}}=21{,}818$ olduğundan
+\[
+\omega^2
+=\frac{240-2(21{,}818)}{960+21{,}818}
+\approx0{,}200.
+\]
+Gruplama değişkeni örneklemde toplam değişkenliğin yüzde 25'iyle ilişkilidir;
+omega-kare düzeltmesi bu oranı yaklaşık yüzde 20 olarak tahmin eder.
+
+\subsection*{Problem 4: Genel test ve ikili karşılaştırma}
+
+Bir ANOVA sonucunda $F(3,76)=4{,}20$, $p=0{,}008$ bulunmuştur. Altı ikili
+karşılaştırmadan yalnız 1--4 çifti için Tukey düzeltilmiş $p=0{,}004$ ve
+yüzde 95 eşzamanlı GA $[2{,}1;9{,}7]$ verilmiştir; diğer aralıklar sıfırı
+içermektedir. Sonucu yorumlayın.
+
+\textbf{Çözüm.} Genel test en az bir grup ortalamasının farklı olduğuna
+ilişkin kanıt verir. Tukey sonuçları belirlenebilen farkın 1 ve 4. gruplar
+arasında olduğunu; 1. grup ortalamasının 4. gruptan yaklaşık 2,1 ile 9,7 birim
+daha yüksek olabileceğini gösterir. Diğer çiftlerde farkın belirlenememesi
+ortalamaların kesin eşitliği anlamına gelmez.
+
+\subsection*{Problem 5: Klasik ANOVA mı Welch ANOVA mı?}
+
+Üç grubun hacimleri 8, 20 ve 40; standart sapmaları sırasıyla 15, 7 ve 4'tür.
+Küçük grubun varyansı en büyüktür. Uygun genel analizi ve kontrol edilmesi
+gereken noktaları açıklayın.
+
+\textbf{Çözüm.} Grup hacimleri ve varyanslar belirgin biçimde dengesizdir;
+klasik eşit varyanslı ANOVA'nın hata oranı etkilenebilir. Welch ANOVA uygun
+birincil veya duyarlılık analizi olur. Grup kutu/nokta grafikleri, aykırı
+değerler, bağımsızlık ve ölçüm koşulları incelenmelidir. İkili analizlerde de
+Games--Howell gibi eşit varyans gerektirmeyen yöntem kullanılmalıdır.
+
+\subsection*{Problem 6: Yazılım çıktısını bütüncül yorumlama}
+
+Bir çıktıda grup ortalamaları 64, 66 ve 72; klasik ANOVA sonucu
+$F(2,87)=6{,}40$, $p=0{,}003$, $\omega^2=0{,}11$ verilmiştir. Welch testi
+$F_W(2,54{,}7)=5{,}92$, $p=0{,}005$ sonucunu vermekte; C grubunun kutu
+grafiğinde iki aykırı değer adayı görülmektedir. Sonucu raporlayın.
+
+\textbf{Çözüm.} Hem klasik hem Welch analizi ortalamaların eşit olmadığına
+ilişkin benzer kanıt sunmaktadır. Örneklem ortalamaları en yüksek değerin C
+grubunda olduğunu gösterir; fakat hangi çiftlerin farklı olduğu uygun çoklu
+karşılaştırmayla belirlenmelidir. $\omega^2=0{,}11$ grup üyeliğiyle ilişkili
+değişkenlik büyüklüğünü özetler. C grubundaki adaylar veri doğruluğu ve etki
+bakımından incelenmeli; otomatik silinmemelidir. Sonuç, tasarım desteklemiyorsa
+nedensel etki olarak sunulmamalıdır.
+
+\input{chapters/r/anova}
+
+\section{Bölüm özeti}
+
+\begin{itemize}
+  \item Tek yönlü ANOVA, bir nicel yanıtın üç veya daha fazla bağımsız grup ortalamasını tek genel testle karşılaştırır.
+  \item $F$ istatistiği gruplar arası ortalama kareyi grup içi ortalama kareye oranlar.
+  \item Anlamlı genel test en az bir ortalamanın farklı olduğunu gösterir; farkın yerini tek başına göstermez.
+  \item Eta-kare ve omega-kare genel farkın büyüklüğünü, çoklu karşılaştırmalar ise hangi grup çiftlerinin ayrıldığını açıklar.
+  \item Varyanslar ve grup hacimleri belirgin biçimde farklıysa Welch ANOVA düşünülmelidir.
+  \item Bağımsızlık, örnekleme ve atama süreci istatistiksel testten önce gelir; ANOVA tek başına nedensellik sağlamaz.
+\end{itemize}
+
+\section*{Alıştırmalar}
+
+\begin{enumerate}
+  \item Tek yönlü ANOVA'nın yanıtladığı araştırma sorusuna eğitim alanından bir örnek verin.
+  \item Üç grup için $H_0$ ve $H_1$ hipotezlerini yazın.
+  \item Neden bütün grup çiftlerine düzeltmesiz \tstat testleri uygulanmaması gerektiğini açıklayın.
+  \item $k=5$ ve $N=120$ için gruplar arası, hata ve toplam serbestlik derecelerini bulun.
+  \item $SS_{\text{gruplar}}=180$, $SS_{\text{hata}}=540$, $k=4$ ve $N=40$ için ortalama kareleri ve $F$ değerini hesaplayın.
+  \item Önceki soruda $F_{0{,}95;3,36}=2{,}866$ ise test kararını yazın.
+  \item $SS_{\text{gruplar}}=180$ ve $SS_{\text{toplam}}=720$ için $\eta^2$ değerini hesaplayın.
+  \item Eta-kare ile omega-karenin neden aynı olmayabileceğini açıklayın.
+  \item Anlamlı genel $F$ testinden sonra Tukey HSD'nin rolünü belirtin.
+  \item Tukey fark aralığı $[-1{,}2;4{,}8]$ olan bir grup çiftini yorumlayın.
+  \item Grup hacimleri 10, 10 ve 10; standart sapmaları 5, 6 ve 5 olduğunda klasik ANOVA'nın varyans koşulunu nitel olarak değerlendirin.
+  \item Grup hacimleri 8, 20 ve 50; standart sapmaları 14, 7 ve 3 olduğunda Welch ANOVA'nın neden düşünülmesi gerektiğini açıklayın.
+  \item Aynı öğrencilerin üç zamanda ölçüldüğü bir çalışmada bu bölümdeki bağımsız gruplar ANOVA'sının neden uygun olmadığını yazın.
+  \item Kruskal--Wallis sonucunun hangi koşullarda doğrudan medyan farkı diye yorumlanamayacağını açıklayın.
+  \item $F(2,57)=1{,}20$, $p=0{,}309$ sonucunu güvenli bir dille yorumlayın.
+  \item İstatistiksel olarak anlamlı ANOVA sonucunun neden tek başına nedensel yöntem etkisi göstermediğini açıklayın.
+\end{enumerate}

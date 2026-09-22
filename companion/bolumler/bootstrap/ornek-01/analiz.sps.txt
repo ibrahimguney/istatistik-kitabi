@@ -1,0 +1,179 @@
+SET DECIMAL=DOT.
+GET DATA /TYPE=TXT /FILE='veri.csv' /ENCODING='UTF8'
+ /ARRANGEMENT=DELIMITED /DELCASE=LINE /DELIMITERS="," /FIRSTCASE=2
+ /VARIABLES=id F8.0 deger F24.16.
+DATASET NAME BootRaw.
+WEIGHT OFF.
+FILTER OFF.
+SPLIT FILE OFF.
+DATASET COPY BootSummary.
+DATASET ACTIVATE BootSummary.
+AGGREGATE OUTFILE=* /BREAK= /n=N(deger) /ortalama=MEAN(deger) /orneklem_sd=SD(deger).
+COMPUTE ampirik_varyans=orneklem_sd**2*(n-1)/n.
+COMPUTE kuramsal_boot_se=SQRT(ampirik_varyans/n).
+COMPUTE anahtar=1.
+SORT CASES BY anahtar.
+DATASET ACTIVATE BootRaw.
+DATASET COPY BT1.
+DATASET ACTIVATE BT1.
+RENAME VARIABLES (id=ind1) (deger=deger1).
+SORT CASES BY ind1.
+DATASET ACTIVATE BootRaw.
+DATASET COPY BT2.
+DATASET ACTIVATE BT2.
+RENAME VARIABLES (id=ind2) (deger=deger2).
+SORT CASES BY ind2.
+DATASET ACTIVATE BootRaw.
+DATASET COPY BT3.
+DATASET ACTIVATE BT3.
+RENAME VARIABLES (id=ind3) (deger=deger3).
+SORT CASES BY ind3.
+DATASET ACTIVATE BootRaw.
+DATASET COPY BT4.
+DATASET ACTIVATE BT4.
+RENAME VARIABLES (id=ind4) (deger=deger4).
+SORT CASES BY ind4.
+DATASET ACTIVATE BootRaw.
+DATASET COPY BT5.
+DATASET ACTIVATE BT5.
+RENAME VARIABLES (id=ind5) (deger=deger5).
+SORT CASES BY ind5.
+GET DATA /TYPE=TXT /FILE='bootstrap-plan.csv' /ENCODING='UTF8'
+ /ARRANGEMENT=DELIMITED /DELCASE=LINE /DELIMITERS="," /FIRSTCASE=2
+ /VARIABLES=sira F8.0 ind1 F8.0 ind2 F8.0 ind3 F8.0 ind4 F8.0 ind5 F8.0.
+DATASET NAME BootPlan.
+SORT CASES BY ind1.
+MATCH FILES /FILE=* /TABLE=BT1 /BY ind1.
+EXECUTE.
+SORT CASES BY ind2.
+MATCH FILES /FILE=* /TABLE=BT2 /BY ind2.
+EXECUTE.
+SORT CASES BY ind3.
+MATCH FILES /FILE=* /TABLE=BT3 /BY ind3.
+EXECUTE.
+SORT CASES BY ind4.
+MATCH FILES /FILE=* /TABLE=BT4 /BY ind4.
+EXECUTE.
+SORT CASES BY ind5.
+MATCH FILES /FILE=* /TABLE=BT5 /BY ind5.
+EXECUTE.
+COMPUTE boot_ort=(deger1+deger2+deger3+deger4+deger5)/5.
+AGGREGATE OUTFILE=* MODE=ADDVARIABLES /BREAK= /toplam=N(boot_ort).
+SORT CASES BY boot_ort.
+COMPUTE konum=$CASENUM.
+COMPUTE h_alt=1+(toplam-1)*0.025.
+COMPUTE h_ust=1+(toplam-1)*0.975.
+COMPUTE alt_katki=0.
+COMPUTE ust_katki=0.
+IF (konum=TRUNC(h_alt)) alt_katki=(1-h_alt+TRUNC(h_alt))*boot_ort.
+IF (konum=TRUNC(h_alt)+1) alt_katki=(h_alt-TRUNC(h_alt))*boot_ort.
+IF (konum=TRUNC(h_ust)) ust_katki=(1-h_ust+TRUNC(h_ust))*boot_ort.
+IF (konum=TRUNC(h_ust)+1) ust_katki=(h_ust-TRUNC(h_ust))*boot_ort.
+COMPUTE olasilik=1/toplam.
+GRAPH /HISTOGRAM=boot_ort.
+AGGREGATE OUTFILE=* /BREAK=
+ /yeniden_orneklem=N(boot_ort) /boot_merkez=MEAN(boot_ort)
+ /boot_sd_b1=SD(boot_ort) /boot_min=MIN(boot_ort) /boot_max=MAX(boot_ort)
+ /alt025=SUM(alt_katki) /ust975=SUM(ust_katki) /olasilik_toplami=SUM(olasilik).
+COMPUTE boot_varyans=boot_sd_b1**2*(yeniden_orneklem-1)/yeniden_orneklem.
+COMPUTE boot_se=SQRT(boot_varyans).
+COMPUTE anahtar=1.
+SORT CASES BY anahtar.
+MATCH FILES /FILE=* /TABLE=BootSummary /BY anahtar.
+COMPUTE boot_yanlilik=boot_merkez-ortalama.
+FORMATS n yeniden_orneklem (F8.0)
+ ortalama ampirik_varyans orneklem_sd kuramsal_boot_se boot_merkez boot_varyans
+ boot_se boot_min boot_max alt025 ust975 boot_yanlilik olasilik_toplami (F18.10).
+LIST n ortalama ampirik_varyans orneklem_sd kuramsal_boot_se yeniden_orneklem
+ boot_merkez boot_varyans boot_se boot_min boot_max alt025 ust975 boot_yanlilik olasilik_toplami.
+GET DATA /TYPE=TXT /FILE='permutasyon.csv' /ENCODING='UTF8'
+ /ARRANGEMENT=DELIMITED /DELCASE=LINE /DELIMITERS="," /FIRSTCASE=2
+ /VARIABLES=id F8.0 grup A1 deger F24.16.
+DATASET NAME PermRaw.
+DATASET COPY PermSummary.
+DATASET ACTIVATE PermSummary.
+COMPUTE a_adet=(grup='A').
+COMPUTE b_adet=(grup='B').
+COMPUTE a_puan=a_adet*deger.
+COMPUTE b_puan=b_adet*deger.
+AGGREGATE OUTFILE=* /BREAK= /n_a=SUM(a_adet) /n_b=SUM(b_adet)
+ /a_toplam=SUM(a_puan) /b_toplam=SUM(b_puan).
+COMPUTE ortalama_a=a_toplam/n_a.
+COMPUTE ortalama_b=b_toplam/n_b.
+COMPUTE gozlenen_fark=ortalama_a-ortalama_b.
+COMPUTE anahtar=1.
+SORT CASES BY anahtar.
+DATASET ACTIVATE PermRaw.
+DATASET COPY PT1.
+DATASET ACTIVATE PT1.
+DELETE VARIABLES grup.
+RENAME VARIABLES (id=ind1) (deger=deger1).
+SORT CASES BY ind1.
+DATASET ACTIVATE PermRaw.
+DATASET COPY PT2.
+DATASET ACTIVATE PT2.
+DELETE VARIABLES grup.
+RENAME VARIABLES (id=ind2) (deger=deger2).
+SORT CASES BY ind2.
+DATASET ACTIVATE PermRaw.
+DATASET COPY PT3.
+DATASET ACTIVATE PT3.
+DELETE VARIABLES grup.
+RENAME VARIABLES (id=ind3) (deger=deger3).
+SORT CASES BY ind3.
+DATASET ACTIVATE PermRaw.
+DATASET COPY PT4.
+DATASET ACTIVATE PT4.
+DELETE VARIABLES grup.
+RENAME VARIABLES (id=ind4) (deger=deger4).
+SORT CASES BY ind4.
+DATASET ACTIVATE PermRaw.
+DATASET COPY PT5.
+DATASET ACTIVATE PT5.
+DELETE VARIABLES grup.
+RENAME VARIABLES (id=ind5) (deger=deger5).
+SORT CASES BY ind5.
+DATASET ACTIVATE PermRaw.
+DATASET COPY PT6.
+DATASET ACTIVATE PT6.
+DELETE VARIABLES grup.
+RENAME VARIABLES (id=ind6) (deger=deger6).
+SORT CASES BY ind6.
+GET DATA /TYPE=TXT /FILE='permutasyon-plan.csv' /ENCODING='UTF8'
+ /ARRANGEMENT=DELIMITED /DELCASE=LINE /DELIMITERS="," /FIRSTCASE=2
+ /VARIABLES=sira F8.0 ind1 F8.0 ind2 F8.0 ind3 F8.0 ind4 F8.0 ind5 F8.0 ind6 F8.0.
+DATASET NAME PermPlan.
+SORT CASES BY ind1.
+MATCH FILES /FILE=* /TABLE=PT1 /BY ind1.
+EXECUTE.
+SORT CASES BY ind2.
+MATCH FILES /FILE=* /TABLE=PT2 /BY ind2.
+EXECUTE.
+SORT CASES BY ind3.
+MATCH FILES /FILE=* /TABLE=PT3 /BY ind3.
+EXECUTE.
+SORT CASES BY ind4.
+MATCH FILES /FILE=* /TABLE=PT4 /BY ind4.
+EXECUTE.
+SORT CASES BY ind5.
+MATCH FILES /FILE=* /TABLE=PT5 /BY ind5.
+EXECUTE.
+SORT CASES BY ind6.
+MATCH FILES /FILE=* /TABLE=PT6 /BY ind6.
+EXECUTE.
+COMPUTE fark=(deger1+deger2+deger3)/3-(deger4+deger5+deger6)/3.
+COMPUTE anahtar=1.
+SORT CASES BY anahtar.
+MATCH FILES /FILE=* /TABLE=PermSummary /BY anahtar.
+COMPUTE uc=(ABS(fark)>=ABS(gozlenen_fark)-1E-12).
+GRAPH /HISTOGRAM=fark.
+AGGREGATE OUTFILE=* /BREAK= /atama_sayisi=N(fark) /uc_atama=SUM(uc)
+ /en_kucuk_fark=MIN(fark) /en_buyuk_fark=MAX(fark) /sifir_merkezi=MEAN(fark).
+COMPUTE p_tam=uc_atama/atama_sayisi.
+COMPUTE anahtar=1.
+SORT CASES BY anahtar.
+MATCH FILES /FILE=* /TABLE=PermSummary /BY anahtar.
+FORMATS n_a n_b atama_sayisi uc_atama (F8.0)
+ ortalama_a ortalama_b gozlenen_fark p_tam en_kucuk_fark en_buyuk_fark sifir_merkezi (F18.10).
+LIST n_a n_b ortalama_a ortalama_b gozlenen_fark atama_sayisi uc_atama
+ p_tam en_kucuk_fark en_buyuk_fark sifir_merkezi.

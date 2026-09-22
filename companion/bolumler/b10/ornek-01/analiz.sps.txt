@@ -1,0 +1,60 @@
+GET DATA /TYPE=TXT /FILE='veri.csv' /ENCODING='UTF8'
+ /ARRANGEMENT=DELIMITED /DELCASE=LINE /DELIMITERS="," /QUALIFIER='"'
+ /FIRSTCASE=2 /VARIABLES=hacim F24.0 ortalama F24.0 standart_sapma F24.0 referans F24.0 alfa F24.0.
+DATASET NAME B10Test.
+GET DATA /TYPE=TXT /FILE='plan.csv' /ENCODING='UTF8'
+ /ARRANGEMENT=DELIMITED /DELCASE=LINE /DELIMITERS="," /QUALIFIER='"'
+ /FIRSTCASE=2 /VARIABLES=plan_hacim F24.0 plan_fark F24.0 plan_sapma F24.0 plan_alfa F24.0 hedef_guc F24.0.
+DATASET NAME B10Plan.
+DATASET ACTIVATE B10Test.
+MATCH FILES /FILE=* /FILE=B10Plan.
+FILTER OFF.
+USE ALL.
+WEIGHT OFF.
+SPLIT FILE OFF.
+COMPUTE serbestlik=hacim-1.
+COMPUTE standart_hata=standart_sapma/SQRT(hacim).
+COMPUTE t_degeri=(ortalama-referans)/standart_hata.
+COMPUTE p_cift=2*CDF.T(-ABS(t_degeri),serbestlik).
+COMPUTE cohen_d=(ortalama-referans)/standart_sapma.
+COMPUTE kritik_t=IDF.T(1-alfa/2,serbestlik).
+COMPUTE hata_payi=kritik_t*standart_hata.
+COMPUTE alt_sinir=ortalama-hata_payi.
+COMPUTE ust_sinir=ortalama+hata_payi.
+COMPUTE genislik=2*hata_payi.
+COMPUTE reddet_cift=(p_cift<alfa).
+COMPUTE plan_d=plan_fark/plan_sapma.
+COMPUTE plan_serbestlik=plan_hacim-1.
+COMPUTE plan_kritik_t=IDF.T(1-plan_alfa/2,plan_serbestlik).
+COMPUTE merkezdisilik=ABS(plan_d)*SQRT(plan_hacim).
+COMPUTE guc=NCDF.T(-plan_kritik_t,plan_serbestlik,merkezdisilik)
+ +1-NCDF.T(plan_kritik_t,plan_serbestlik,merkezdisilik).
+COMPUTE beta=1-guc.
+COMPUTE gereken_hacim=$SYSMIS.
+COMPUTE onceki_guc=$SYSMIS.
+COMPUTE gereken_guc=$SYSMIS.
+COMPUTE #onceki=$SYSMIS.
+LOOP #aday=2 TO 10000.
+  COMPUTE #kritik=IDF.T(1-plan_alfa/2,#aday-1).
+  COMPUTE #nc=ABS(plan_d)*SQRT(#aday).
+  COMPUTE #guc=NCDF.T(-#kritik,#aday-1,#nc)+1-NCDF.T(#kritik,#aday-1,#nc).
+  DO IF (#guc>=hedef_guc).
+    COMPUTE gereken_hacim=#aday.
+    COMPUTE onceki_guc=#onceki.
+    COMPUTE gereken_guc=#guc.
+  END IF.
+  COMPUTE #onceki=#guc.
+END LOOP IF (#guc>=hedef_guc).
+VALUE LABELS reddet_cift 0 'H0 reddedilemez' 1 'H0 reddedilir'.
+FORMATS hacim ortalama standart_sapma referans alfa plan_hacim plan_fark plan_sapma
+ plan_alfa hedef_guc serbestlik standart_hata t_degeri p_cift cohen_d kritik_t
+ alt_sinir ust_sinir hata_payi genislik plan_d plan_serbestlik plan_kritik_t
+ merkezdisilik guc beta gereken_hacim onceki_guc gereken_guc (F16.10).
+EXECUTE.
+DISPLAY DICTIONARY.
+LIST VARIABLES=hacim ortalama standart_sapma referans alfa.
+LIST VARIABLES=plan_hacim plan_fark plan_sapma plan_alfa hedef_guc.
+LIST VARIABLES=serbestlik standart_hata t_degeri p_cift cohen_d kritik_t alt_sinir
+ ust_sinir hata_payi genislik reddet_cift.
+LIST VARIABLES=plan_d plan_serbestlik plan_kritik_t merkezdisilik guc beta
+ gereken_hacim onceki_guc gereken_guc.

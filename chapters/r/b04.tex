@@ -1,0 +1,39 @@
+\section{R ile çözümlü uygulama}
+\label{sec:r-b04}
+
+\textbf{Soru.} $\{2,4,6,8\}$ evreninden geri koymalı iki çekimin bütün
+sıralı sonuçlarını oluşturun. Örneklem ortalamasının dağılımını ve standart
+hatasını benzetim hatası olmadan hesaplayın.
+
+\begin{lstlisting}[style=prismR]
+evren <- c(2, 4, 6, 8)
+ciftler <- expand.grid(ilk = evren, ikinci = evren)
+ortalamalar <- rowMeans(ciftler)
+frekans <- table(ortalamalar)
+data.frame(ortalama = as.numeric(names(frekans)),
+           frekans = as.integer(frekans),
+           olasilik = as.numeric(frekans) / nrow(ciftler))
+merkez <- mean(ortalamalar)
+varyans <- mean((ortalamalar - merkez)^2)
+c(beklenen_deger = merkez, varyans = varyans,
+  standart_hata = sqrt(varyans))
+sigma <- sqrt(mean((evren - mean(evren))^2))
+sigma / sqrt(2)
+barplot(prop.table(frekans), xlab = "Orneklem ortalamasi",
+        ylab = "Olasilik")
+\end{lstlisting}
+
+\begin{outputguidebox}
+\textbf{Çözüm ve kontrol değerleri.} Toplam 16 sıralı örneklem vardır.
+2--8 arasındaki ortalamaların frekansları $1,2,3,4,3,2,1$'dir.
+Dağılımın beklenen değeri 5, varyansı 2,5 ve standart hatası
+$\sqrt{2{,}5}=1{,}5811$'dir. Evren standart sapması $\sqrt{5}$ olduğundan
+$\sigma/\sqrt{2}$ aynı sonucu verir.
+\end{outputguidebox}
+
+\textbf{Yorum.} Bütün olasılık dağılımı listelendiği için varyans 16 böleni
+ile hesaplanır. \texttt{var(ortalamalar)} ise 15'e böler ve burada aranan
+tam dağılım varyansını vermez. Geri koymasız seçim bu kodla aynı tasarım değildir.
+
+\textbf{Pekiştirme ve yanıt.} $\P(\bar X\geq7)$ değerini
+\texttt{mean(ortalamalar >= 7)} ile bulun: $3/16=0{,}1875$.

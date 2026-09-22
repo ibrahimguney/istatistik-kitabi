@@ -1,0 +1,30 @@
+GET DATA /TYPE=TXT /FILE='veri.csv' /ENCODING='UTF8'
+ /ARRANGEMENT=DELIMITED /DELCASE=LINE /DELIMITERS="," /QUALIFIER='"'
+ /FIRSTCASE=2 /VARIABLES=cift_sayisi F24.0 ortalama_fark F24.0 fark_sapmasi F24.0 alfa F24.0.
+DATASET NAME B14Ozet.
+FILTER OFF.
+USE ALL.
+WEIGHT OFF.
+SPLIT FILE OFF.
+COMPUTE standart_hata=fark_sapmasi/SQRT(cift_sayisi).
+COMPUTE serbestlik=cift_sayisi-1.
+COMPUTE t_degeri=ortalama_fark/standart_hata.
+COMPUTE p_cift=2*CDF.T(-ABS(t_degeri),serbestlik).
+COMPUTE dz=ortalama_fark/fark_sapmasi.
+COMPUTE kritik_t=IDF.T(1-alfa/2,serbestlik).
+COMPUTE hata_payi=kritik_t*standart_hata.
+COMPUTE alt_sinir=ortalama_fark-hata_payi.
+COMPUTE ust_sinir=ortalama_fark+hata_payi.
+COMPUTE genislik=2*hata_payi.
+COMPUTE reddet=(p_cift<alfa).
+COMPUTE sifir_aralikta=(alt_sinir<=0 AND 0<=ust_sinir).
+COMPUTE guven_duzeyi=1-alfa.
+VALUE LABELS reddet 0 'H0 reddedilemez' 1 'H0 reddedilir'.
+VALUE LABELS sifir_aralikta 0 'Sifir aralik disinda' 1 'Sifir aralikta'.
+FORMATS cift_sayisi ortalama_fark fark_sapmasi alfa standart_hata serbestlik t_degeri
+ p_cift dz kritik_t hata_payi alt_sinir ust_sinir genislik guven_duzeyi (F16.10).
+EXECUTE.
+DISPLAY DICTIONARY.
+LIST VARIABLES=cift_sayisi ortalama_fark fark_sapmasi alfa.
+LIST VARIABLES=standart_hata serbestlik t_degeri p_cift dz kritik_t hata_payi
+ alt_sinir ust_sinir genislik reddet sifir_aralikta guven_duzeyi.

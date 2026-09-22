@@ -1,0 +1,201 @@
+\section{Literatür verisiyle yazılım uygulamaları}
+\label{sec:spss-b02}
+
+\textbf{Amaç ve veri.} \texttt{b02.csv} ile aynı 395 öğrencinin okul ve
+çalışma süresi kategorilerini inceleyin. Bu, \citet{cortez2008data} verisinin
+bir başka uygulamasıdır; yeni bir bağımsız örneklem değildir.
+
+
+\textbf{Ortak veri.} Üç yazılımda aynı kayıtlar ve değişkenler kullanılır.
+\nolinkurl{companion/spss/csv/b02.csv} ile B01 pilot paketindeki
+\texttt{b01.csv} dosyaları bayt düzeyinde aynıdır. Paylaşılan B02
+uygulamasında R ve Python mevcut \texttt{b01.csv} dosyasını, SPSS ise
+B01 CSV içe aktarımında kaydedilen \texttt{b01.sav} dosyasını kullanmıştır.
+Bu karşılaştırma Excel içe aktarmanın doğrulandığı anlamına gelmez.
+Kodları \texttt{companion} klasörünü içeren paket kökünden çalıştırın;
+veri sözlüğü ve hazırlık için bkz. sayfa~\pageref{sec:spss-guide}.
+
+\subsection{IBM SPSS uygulaması}
+\textbf{Başlamadan önce.} Doğrulanan CSV yolunu izlemek için B01
+verisini açan \texttt{open-b01.sps} dosyasını çalıştırın; bu işlem
+\texttt{b01.sav} dosyasını yeniden oluşturur. Aşağıdaki tam blok da
+aynı hazırlığı yapıp etiketli dosyayı açar; menü yolu alternatif uygulamadır.
+
+\begin{spssadimlar}
+\spssadim{\emph{Variable View} içinde \texttt{studytime} değer etiketlerini inceleyin: 1--4 kodları doğrudan saat sayısı değildir.}
+\spssadim{\emph{Analyze $\to$ Descriptive Statistics $\to$ Frequencies} yolunu açın. \texttt{school}, \texttt{sex}, \texttt{studytime} değişkenlerini seçin.}
+\spssadim{\emph{Display frequency tables} işaretli kalsın; \emph{OK} seçin. \emph{Frequency}, \emph{Percent} ve \emph{Valid Percent} sütunlarını okuyun.}
+\spssadim{\emph{Analyze $\to$ Descriptive Statistics $\to$ Descriptives} yolunda \texttt{age} ve \texttt{g3} değişkenlerini seçin.}
+\spssadim{\emph{Options} altında ortalama, standart sapma, en küçük ve en büyük değerleri seçip \emph{Continue $\to$ OK} ile çıktıyı alın. Nominal kodların ortalamasını istemeyin.}
+\end{spssadimlar}
+
+{\raggedright
+\noindent\textbf{Komutların görevi.} \texttt{FREQUENCIES} kategorik değişkenleri sayar; \texttt{DESCRIPTIVES} yalnız yaş ve notu özetler. \texttt{DISPLAY DICTIONARY} veri tanımlarını kontrol etmeyi sağlar.\par}
+
+\par\noindent\begin{minipage}{\linewidth}
+\textbf{Uygulama kodu:} \texttt{b02}. Doğrulanan pilotun veri dosyası:
+\texttt{sav/b01.sav} (\texttt{companion/spss} altında).
+
+\begin{lstlisting}[style=prismSPSS]
+INSERT FILE='companion/spss/syntax/open-b01.sps'
+ ERROR=STOP.
+GET FILE='companion/spss/sav/b01.sav'.
+FILTER OFF.
+WEIGHT OFF.
+SPLIT FILE OFF.
+DISPLAY DICTIONARY.
+FREQUENCIES VARIABLES=school sex studytime.
+DESCRIPTIVES VARIABLES=age g3
+ /STATISTICS=MEAN STDDEV MIN MAX.
+\end{lstlisting}
+
+\end{minipage}\par
+
+\begin{outputguidebox}
+\textbf{Paylaşılan SPSS çıktısıyla doğrulanan değerler.}
+\texttt{studytime} için 1, 2, 3, 4 kategorilerinin frekansları sırasıyla
+105, 198, 65 ve 27'dir. Kategori 2, haftalık 2--5 saat aralığını gösterir;
+``198 öğrenci tam iki saat çalışmıştır'' denemez. Sayısal 1--4 kodlarına
+Scale atanması ölçümün anlamını değiştirmez. Okul tablosunda GP'nin 349,
+MS'nin 46 kayıtla temsil edildiğini görmek, örneklemin hedef evreni temsil
+ettiğini göstermez. \texttt{g3} ortalaması \SPContextMean\ bir örneklem
+istatistiğidir; daha geniş bir evrenin ortalaması ayrıca tanımlanmalıdır.
+\end{outputguidebox}
+
+
+\par\noindent\begin{minipage}{\linewidth}
+\subsection{R uygulaması}
+\label{sec:r-gercek-b02}
+
+\texttt{prop.table} frekansları orana çevirir. \texttt{ordered} çalışma süresi kodlarının sıralı olduğunu belirtir.
+
+\begin{lstlisting}[style=prismR]
+d <- read.csv("companion/spss/csv/b02.csv")
+stopifnot(!anyNA(d))
+d$school <- factor(d$school, 1:2, c("GP", "MS"))
+d$sex <- factor(d$sex, 1:2, c("F", "M"))
+d$studytime <- ordered(d$studytime, levels=1:4)
+for (v in c("school", "sex", "studytime")) {
+  f <- table(d[[v]])
+  print(f); print(100 * prop.table(f))
+}
+print(sapply(d[c("age", "g3")], function(v)
+  c(n=length(v), mean=mean(v), sd=sd(v),
+    min=min(v), max=max(v))))
+\end{lstlisting}
+
+\textbf{Çıktıyı okuma.} Paylaşılan R çıktısı 395 satır ve 10 sütun
+gösterir; her sütunda eksik değer sayısı sıfırdır. \texttt{n},
+\texttt{mean}, \texttt{sd}, \texttt{min} ve \texttt{max} satırlarını
+ortak tablonun sütunlarıyla eşleştirin. Frekanslar ve yüzdeler de
+paylaşılan çıktıda doğrulanmıştır.
+\end{minipage}\par
+
+\par\noindent\begin{minipage}{\linewidth}
+\subsection{Python uygulaması}
+\label{sec:python-b02}
+
+\texttt{normalize=True} kategori oranlarını verir. Okul ve cinsiyet kodlarının anlamı ortak veri sözlüğünden okunmalıdır.
+
+\begin{lstlisting}[style=prismPythonApp]
+import pandas as pd
+import numpy as np
+from scipy import stats
+
+d = pd.read_csv("companion/spss/csv/b02.csv")
+assert not d.isna().any().any()
+for v in ["school", "sex", "studytime"]:
+    print(d[v].value_counts().sort_index())
+    print(100*d[v].value_counts(normalize=True).sort_index())
+print(d[["age", "g3"]].agg(
+    ["count", "mean", "std", "min", "max"]))
+\end{lstlisting}
+
+\textbf{Çıktıyı okuma.} Paylaşılan Python çıktısı da 395 satır,
+10 sütun ve her sütunda sıfır eksik değer gösterir. \texttt{count},
+\texttt{mean}, \texttt{std}, \texttt{min} ve \texttt{max} satırları
+R özetleriyle eşleşir. Paylaşılan çıktıda okul ve cinsiyet kategorileri
+etiketleriyle, yukarıdaki kısa kodda ise sayısal kodlarıyla gösterilir.
+Bu betimsel uygulama bir hipotez testi veya $p$ değeri üretmez.
+\end{minipage}\par
+
+\subsection{Sonuçların karşılaştırılması ve ortak rapor}
+12 Eylül 2026'da paylaşılan SPSS ekran görüntüsü ile R ve Python
+metin çıktıları karşılaştırılmıştır. Üç kategorik değişkenin frekansları
+eşleşmiş; yüzdeler gösterilen yuvarlama hassasiyetinde uyum sağlamıştır.
+Yaş ve yıl sonu notuna ait 10 betimsel hücre R ve Python'da altı ondalık
+basamakta eşleşmiş, SPSS'in yuvarlanmış değerleriyle de uyum göstermiştir.
+Aşağıdaki tablolar bu çıktıların kitap düzenine uyarlanmış özetidir;
+ekran görüntüsü değildir.
+
+\begin{table}[htbp]
+\centering
+\caption{B02 verisinde okul, cinsiyet kodu ve çalışma süresi dağılımları}
+\label{tab:b02-dogrulanmis-frekans}
+\small
+\begin{tabular}{@{}llrr@{}}
+\toprule
+Değişken & Kategori & Frekans & Yüzde \\
+\midrule
+Okul & GP & 349 & 88,4 \\
+     & MS & 46 & 11,6 \\
+\midrule
+Cinsiyet kodu & F & 208 & 52,7 \\
+              & M & 187 & 47,3 \\
+\midrule
+Çalışma süresi & 1: $<2$ saat & 105 & 26,6 \\
+              & 2: 2--5 saat & 198 & 50,1 \\
+              & 3: 5--10 saat & 65 & 16,5 \\
+              & 4: $>10$ saat & 27 & 6,8 \\
+\bottomrule
+\end{tabular}
+\par\smallskip
+{\footnotesize Her değişken için toplam 395 kayıt ve yüzde 100'dür.
+Yüzdelerin paydası 395'tir; eksik değer olmadığından SPSS'in
+\emph{Percent} ve \emph{Valid Percent} sütunları eşittir.
+Çalışma süresi etiketleri kaynak verideki sıralı kategorilerdir.\par}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{B02 verisinde yaş ve yıl sonu notunun doğrulanmış özetleri}
+\label{tab:b02-dogrulanmis-betimsel}
+\small
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+Değişken & $n$ & Ortalama & Std. sapma & Min. & Maks. \\
+\midrule
+Yaş & 395 & 16,70 & 1,276 & 15 & 22 \\
+\texttt{g3} & 395 & 10,42 & 4,581 & 0 & 20 \\
+\bottomrule
+\end{tabular}
+\par\smallskip
+{\footnotesize Ortalamalar iki, örneklem standart sapmaları üç ondalık
+basamağa yuvarlanmıştır. SPSS'te ortak geçerli gözlem sayısı
+(Valid N, listwise) 395'tir.\par}
+\end{table}
+
+\begin{outputguidebox}
+Tablo~\ref{tab:b02-dogrulanmis-frekans} içinde en sık görülen çalışma
+süresi kategorisi 198 kayıtla (\%50,1) haftalık 2--5 saattir.
+\texttt{studytime} kodları saat miktarı olarak yorumlanmaz.
+Tablo~\ref{tab:b02-dogrulanmis-betimsel} aynı öğrencilerin yaş ve not
+dağılımlarını özetler. Üç yazılımın uyumu hesapların tutarlılığını
+destekler; öğrencilerin rastgele seçildiğini veya Türkiye'deki lise
+öğrencilerini temsil ettiğini kanıtlamaz. B01 ve B02 aynı kayıtları
+kullandığından iki bağımsız örneklem gibi birleştirilmemelidir.
+\end{outputguidebox}
+
+\textbf{Raporlama örneği (doğrulanmış çıktılarla).}
+``İki okuldan 395 öğrenci kaydının 198'inde (\%50,1) haftalık çalışma
+süresi 2--5 saat kategorisindedir. Kategori kodları saat miktarı olarak
+değil, sıralı sınıflar olarak değerlendirilmiştir. Yaş ortalaması
+16,70 yıl ($s=1{,}276$), yıl sonu matematik notu ortalaması 10,42 puandır
+($s=4{,}581$). Bu sonuçlar gözlenen kayıtları betimler; Türkiye'deki lise
+öğrencilerinin tümüne doğrudan genellenmemiştir.''
+
+
+\textbf{Görev.} Hedef evreni ``Türkiye'deki lise öğrencileri'' olarak seçen
+bir araştırmacı için bu dosyanın neden yetersiz olduğunu açıklayın. Dosyayı
+yalnız eğitim amaçlı sonlu bir evren kabul ettiğinizde parametrenin nasıl
+farklı tanımlandığını belirtin.

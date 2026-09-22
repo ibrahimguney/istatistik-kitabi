@@ -1,0 +1,5 @@
+scenario,group,above,below
+A,low_income,40,10
+A,other,10,40
+B,low_income,10,40
+B,other,40,10

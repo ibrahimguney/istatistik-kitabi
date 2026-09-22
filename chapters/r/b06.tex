@@ -1,0 +1,44 @@
+\section{R ile çözümlü uygulama}
+\label{sec:r-b06}
+
+\textbf{Soru.} Her sınıfta dört öğrenci bulunan 12 kişilik çerçeveden altı
+kişilik basit rastgele örneklem ve her sınıftan ikişer kişilik tabakalı
+örneklem seçin. Seçilme olasılıklarını ve ağırlıkları bulun.
+
+\begin{lstlisting}[style=prismR]
+set.seed(2026)
+ogrenciler <- data.frame(
+  id = 1:12, sinif = factor(rep(1:3, each = 4))
+)
+basit <- ogrenciler[sample.int(nrow(ogrenciler), 6), ]
+indisler <- split(seq_len(nrow(ogrenciler)),
+                  ogrenciler$sinif)
+secilen <- unlist(lapply(indisler,
+                        function(indis) sample(indis, 2)),
+                  use.names = FALSE)
+tabakali <- ogrenciler[secilen, ]
+tabakali$secim_olasiligi <- 2 / 4
+tabakali$agirlik <- 1 / tabakali$secim_olasiligi
+print(basit)
+print(tabakali)
+table(tabakali$sinif)
+sum(tabakali$agirlik)
+stopifnot(nrow(basit) == 6,
+          anyDuplicated(basit$id) == 0,
+          all(table(tabakali$sinif) == 2))
+\end{lstlisting}
+
+\begin{outputguidebox}
+\textbf{Çözüm ve kontrol değerleri.} İki tasarımda da altı farklı öğrenci
+seçilir. Tabakalı seçimde sınıf frekansları kesin olarak $(2,2,2)$'dir;
+basit rastgele seçim bunu garanti etmez. Her öğrencinin seçilme olasılığı
+$6/12=2/4=0{,}5$, tasarım ağırlığı 2'dir. Altı ağırlığın toplamı 12'dir.
+\end{outputguidebox}
+
+\textbf{Yorum.} Bu örnekte tabakalar eşit büyüklüktedir ve eşit sayıda
+birim seçilir. Eşit olmayan tabaka hacimlerinde her tabaka için $N_h/n_h$
+ayrı hesaplanmalıdır. Ağırlıklı ortalama hesaplamak, tasarıma uygun standart
+hata hesabını kendiliğinden sağlamaz.
+
+\textbf{Pekiştirme ve yanıt.} Bir sınıfın çerçeveden tamamen çıkarılması
+kapsam hatası yaratır; kalan öğrencileri rastgele seçmek bu hatayı düzeltmez.

@@ -1,0 +1,117 @@
+\chapter{Formül Özeti ve Hızlı Başvuru}
+\label{app:formulas}
+Bu ek, kitabın bölümlerinde doğrudan kullanılan temel formülleri hızlı
+başvuru amacıyla bir araya getirir. Kritik değer tabloları
+Ek~\ref{app:distribution-tables}'te verilmiştir.
+
+
+\section{Betimsel İstatistik ve Sağlam Ölçüler}
+\begin{align*}
+\bar{x} &= \frac{1}{n}\sum_{i=1}^{n}x_i, \\
+s^2 &= \frac{1}{n-1}\sum_{i=1}^{n}(x_i-\bar{x})^2, \\
+\IQR &= Q_3-Q_1, \\
+\text{Aykırı değer adayları} &: \quad x<Q_1-1{,}5\IQR\; \text{veya}\; x>Q_3+1{,}5\IQR.
+\end{align*}
+
+\section{Beklenen Değer ve Örnekleme Değişkenliği}
+\begin{align*}
+\E[aX+b] &= a\E[X]+b, \\
+\Var(X) &= \E[X^2]-\{\E[X]\}^2, \\
+\Var(aX+b) &= a^2\Var(X), \\
+\E[\bar X] &= \mu, \qquad \Var(\bar X)=\frac{\sigma^2}{n}, \\
+\E[\hat p] &= p, \qquad \Var(\hat p)=\frac{p(1-p)}{n}.
+\end{align*}
+
+\section{İkili Gözlemler ve Örneklem Oranı}
+\begin{align*}
+X\sim\mathrm{Bernoulli}(p) &: \quad \P(X=1)=p, \quad \E[X]=p, \quad \Var(X)=p(1-p), \\
+X\sim\mathrm{Binom}(n,p) &: \quad \P(X=k)=\binom{n}{k}p^k(1-p)^{n-k}, \\
+&\quad \E[X]=np, \quad \Var(X)=np(1-p), \qquad \hat p=\frac{X}{n}.
+\end{align*}
+
+\section{Sık Kullanılan Güven Aralıkları}
+\begin{align*}
+\mu\; (\sigma \text{ biliniyor}) &: \quad \bar{x} \pm z_{1-\alpha/2}\frac{\sigma}{\sqrt{n}}, \\
+\mu\; (\sigma \text{ bilinmiyor}) &: \quad \bar{x} \pm t_{1-\alpha/2,n-1}\frac{s}{\sqrt{n}}, \\
+p &: \quad \hat{p} \pm z_{1-\alpha/2}\sqrt{\frac{\hat{p}(1-\hat{p})}{n}}.
+\end{align*}
+
+\section{Temel Test İstatistikleri}
+\begin{align*}
+T &= \frac{\bar{X}-\mu_0}{S/\sqrt{n}}, \qquad \nu=n-1, \\
+T_{\text{Welch}} &= \frac{\bar X_1-\bar X_2}
+{\sqrt{S_1^2/n_1+S_2^2/n_2}}, \\
+T_{\text{eş}} &= \frac{\bar D}{S_D/\sqrt n}, \\
+\chi^2 &= \sum_i \frac{(O_i-E_i)^2}{E_i},
+\qquad E_{ij}=\frac{R_iC_j}{N}.
+\end{align*}
+
+\ifimoders\else
+\section{Bootstrap ve Rastgeleleştirme}
+\begin{align*}
+\SE_{\mathrm{boot}}(\hat\theta)
+&=\sqrt{\frac{1}{B-1}\sum_{b=1}^{B}
+(\hat\theta_b^*-\bar\theta^*)^2}, \\
+\text{Yüzdelik yüzde 95 GA}
+&=[\hat\theta^*_{0{,}025};\hat\theta^*_{0{,}975}], \\
+p_{\mathrm{rand}}
+&=\frac{1+\sum_{b=1}^{B}\Ind{|T_b^*|\geq|T_{\text{göz}}|}}{B+1}.
+\end{align*}
+\fi
+
+\section{Standart Hata ve Etki Büyüklükleri}
+\begin{align*}
+\SE(\bar X) &= \frac{\sigma}{\sqrt n}, \qquad
+\widehat{\SE}(\bar X)=\frac{s}{\sqrt n}, \\
+\widehat{\SE}(\hat p) &= \sqrt{\frac{\hat p(1-\hat p)}{n}}, \\
+d_{\mathrm{tek}} &= \frac{\bar x-\mu_0}{s}, \\
+d_z &= \frac{\bar d}{s_D}, \\
+V &= \sqrt{\frac{\chi^2}{N\min(r-1,c-1)}}.
+\end{align*}
+
+\section{Korelasyon ve Basit Doğrusal Regresyon}
+\begin{align*}
+r &= \frac{\sum_i(x_i-\bar{x})(y_i-\bar{y})}
+{\sqrt{\sum_i(x_i-\bar{x})^2\sum_i(y_i-\bar{y})^2}}, \\
+b_1 &= \frac{\sum_i (x_i-\bar{x})(y_i-\bar{y})}{\sum_i (x_i-\bar{x})^2}, \\
+b_0 &= \bar{y}-b_1\bar{x}, \\
+\hat y_i &= b_0+b_1x_i, \qquad e_i=y_i-\hat y_i, \\
+R^2 &= r^2 \qquad \text{(tek açıklayıcılı doğrusal modelde)}.
+\end{align*}
+
+\ifimoders\else
+\section{Çoklu Doğrusal Regresyon}
+\begin{align*}
+Y_i &= \beta_0+\beta_1X_{1i}+\cdots+\beta_KX_{Ki}+\varepsilon_i, \\
+\hat Y_i &= b_0+b_1X_{1i}+\cdots+b_KX_{Ki}, \\
+e_i &= y_i-\hat y_i, \\
+R^2 &= 1-\frac{\SSE}{\SST}, \\
+R^2_{\mathrm{düz}}
+&=1-(1-R^2)\frac{n-1}{n-K-1}, \\
+\VIF_j &= \frac{1}{1-R_j^2}.
+\end{align*}
+
+İki değişkenli etkileşim modelinde
+\[
+Y=\beta_0+\beta_1X+\beta_2Z+\beta_3XZ+\varepsilon;
+\]
+$X$ eğimi $Z=0$ için $\beta_1$, $Z=1$ için $\beta_1+\beta_3$'tür.
+
+\section{Tek Yönlü Varyans Analizi}
+\begin{align*}
+SS_{\mathrm{toplam}}
+&=SS_{\mathrm{gruplar}}+SS_{\mathrm{hata}}, \\
+SS_{\mathrm{gruplar}}
+&=\sum_{j=1}^{k}n_j(\bar x_j-\bar x_{..})^2, \\
+SS_{\mathrm{hata}}
+&=\sum_{j=1}^{k}\sum_{i=1}^{n_j}(x_{ij}-\bar x_j)^2, \\
+MS_{\mathrm{gruplar}}
+&=\frac{SS_{\mathrm{gruplar}}}{k-1}, \qquad
+MS_{\mathrm{hata}}=\frac{SS_{\mathrm{hata}}}{N-k}, \\
+F&=\frac{MS_{\mathrm{gruplar}}}{MS_{\mathrm{hata}}}, \\
+\eta^2&=\frac{SS_{\mathrm{gruplar}}}{SS_{\mathrm{toplam}}}, \\
+\omega^2
+&=\frac{SS_{\mathrm{gruplar}}-(k-1)MS_{\mathrm{hata}}}
+{SS_{\mathrm{toplam}}+MS_{\mathrm{hata}}}.
+\end{align*}
+\fi

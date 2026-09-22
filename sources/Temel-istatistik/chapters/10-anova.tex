@@ -1,0 +1,861 @@
+\chapter{Varyans Analizi ve Grup Karşılaştırmaları}
+\index{varyans analizi}
+\index{ANOVA}
+
+\begin{hedefler}
+Bu bölümün sonunda okuyucu:
+\begin{itemize}
+  \item üç veya daha fazla grup için neden tek yönlü varyans analizine gereksinim duyulduğunu açıklayabilecek,
+  \item ANOVA modelindeki grup içi ve gruplar arası değişkenliği ayırt edebilecek,
+  \item kareler toplamı, serbestlik derecesi, ortalama kare ve $F$ istatistiğini hesaplayıp yorumlayabilecek,
+  \item genel $F$ testi ile planlı ve post-hoc karşılaştırmaların farklı rollerini açıklayabilecek,
+  \item klasik ANOVA ile Welch ANOVA arasında veri yapısına uygun seçim yapabilecek,
+  \item eta-kare ve omega-kare etki büyüklüklerini hesaplayıp bağlam içinde yorumlayabilecek,
+  \item bağımsızlık, normallik, varyans benzerliği ve aykırı değer koşullarını değerlendirebilecek,
+  \item Python ve SPSS çıktılarından eksiksiz bir ANOVA bulgusu raporlayabilecektir.
+\end{itemize}
+\end{hedefler}
+
+\begin{hazirlik}
+Dört grubun bütün ikililerini karşılaştırmak için kaç ayrı $t$ testi gerekir?
+Her test yüzde 5 anlamlılık düzeyinde yürütüldüğünde aile düzeyindeki yanlış
+pozitif riskinin neden yüzde 5 olarak kalmadığını tartışın.
+\end{hazirlik}
+
+\section{PDR vakası: Üç destek programını karşılaştırmak}
+
+Bir üniversite, sınav kaygısını azaltmak amacıyla üç destek yaklaşımını
+karşılaştırmaktadır:
+
+\begin{description}
+  \item[A programı] Yapılandırılmış grup danışmanlığı,
+  \item[B programı] Psikoeğitim semineri,
+  \item[C programı] Çevrim içi öz-yardım materyali.
+\end{description}
+
+Her programa 12 öğrenci katılmıştır. Program sonunda düşük puanın daha az
+kaygıyı gösterdiği bir ölçek uygulanmıştır. Grup ortalamaları ve standart
+sapmaları şöyledir:
+
+\begin{table}[htbp]
+\centering
+\caption{Üç programın son-test kaygı puanları.}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Program & $n$ & Ortalama & Standart sapma \\
+\midrule
+A: Grup danışmanlığı & 12 & 44,83 & 4,61 \\
+B: Psikoeğitim & 12 & 41,00 & 4,07 \\
+C: Öz-yardım & 12 & 37,50 & 4,54 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Örneklemde ortalamalar farklı görünmektedir. Ancak araştırma sorusu yalnız bu
+36 öğrenciyi betimlemek değil, üç yaklaşımın karşılık geldiği evren
+ortalamalarının farklı olup olmadığını değerlendirmektir. Tek yönlü ANOVA,
+örneklem farklarını grup içindeki doğal değişkenlikle karşılaştırır.
+
+\begin{researchbox}
+Programlara öğrenciler kendi tercihiyle katılmışsa ortalama farklar programın
+nedensel etkisini tek başına göstermez. Başlangıç kaygısı, zaman uygunluğu,
+motivasyon veya yardım arama tutumu hem program seçimiyle hem sonuçla ilişkili
+olabilir. Nedensel yorum için atama süreci kritik önemdedir.
+\end{researchbox}
+
+\section{Neden çok sayıda t testi yerine ANOVA?}
+\index{çoklu karşılaştırma}
+\index{aile düzeyinde hata oranı}
+
+$k$ grubun bütün ikilileri için
+\[
+\frac{k(k-1)}{2}
+\]
+karşılaştırma gerekir. Üç grup için 3, dört grup için 6, beş grup için 10 ayrı
+ikili test oluşur. Her birini $\alpha=0{,}05$ düzeyinde yürütmek, en az bir
+yanlış pozitif sonuç bulma olasılığını artırır.
+
+Testlerin bağımsız olduğu basit durumda üç test için aile düzeyindeki yanlış
+pozitif olasılığı yaklaşık
+\[
+1-(1-0{,}05)^3\approx0{,}143
+\]
+yani yüzde 14,3'tür. Gerçek karşılaştırmalar ortak grupları kullandığı için
+bağımsız değildir; yine de ayrı ayrı testlerin hata oranını artırdığı temel
+sonuç değişmez.
+
+Tek yönlü varyans analizi bütün grup ortalamalarının eşit olduğu ortak sıfır
+hipotezini tek bir genel testle değerlendirir:
+\[
+H_0:\mu_1=\mu_2=\cdots=\mu_k.
+\]
+Alternatif hipotez ``bütün ortalamalar birbirinden farklıdır'' değildir; en az
+bir evren ortalamasının diğerlerinden farklı olmasıdır.
+
+\begin{mistakebox}
+Anlamlı genel $F$ testi üç grubun da birbirinden farklı olduğunu göstermez.
+Yalnız bütün ortalamaların eşit olduğu ortak hipotezle verinin uyumsuz
+olduğunu söyler. Farkın hangi gruplar arasında bulunduğu ayrı karşılaştırmalarla
+incelenir.
+\end{mistakebox}
+
+\section{Tek yönlü ANOVA modeli}
+\index{varyans analizi!tek yönlü}
+\index{gruplar arası değişkenlik}
+\index{grup içi değişkenlik}
+
+$j$ grubundaki $i$'inci kişinin puanı
+\[
+Y_{ij}=\mu+\tau_j+\varepsilon_{ij}
+\]
+biçiminde düşünülebilir. Burada $\mu$ genel ortalama, $\tau_j$ grubun genel
+ortalamadan sapması ve $\varepsilon_{ij}$ kişinin kendi grup ortalaması
+çevresindeki sapmasıdır.
+
+Eşdeğer olarak her gözlemin genel ortalamadan sapması
+\[
+Y_{ij}-\bar Y_{..}
+=\left(\bar Y_{.j}-\bar Y_{..}\right)
++\left(Y_{ij}-\bar Y_{.j}\right)
+\]
+şeklinde iki parçaya ayrılır:
+
+\begin{itemize}
+  \item grubun genel ortalamadan sapması: gruplar arası değişkenlik,
+  \item kişinin kendi grup ortalamasından sapması: grup içi değişkenlik.
+\end{itemize}
+
+ANOVA'nın adı varyans analizidir; fakat temel araştırma sorusu ortalama
+farklarıdır. Ortalamaların birbirinden ayrılması gruplar arası değişkenliği
+büyüttüğü için soru varyans oranı üzerinden sınanır
+\cite{maxwell2018,kutner2005}.
+
+\begin{sezgibox}
+Gruplar gerçekten aynı evrenden geliyorsa grup ortalamaları birbirine, her
+gruptaki öğrenciler de kendi ortalamalarına benzer ölçüde dağılır. Grup
+ortalamaları grup içindeki doğal saçılmaya göre çok uzaksa ortak ortalama
+hipotezi inandırıcılığını kaybeder.
+\end{sezgibox}
+
+\section{Değişkenliğin ayrıştırılması}
+\index{kareler toplamı}
+\index{ortalama kare}
+\index{F istatistiği@$F$ istatistiği}
+\index{serbestlik derecesi}
+
+Toplam kareler toplamı üç bileşenin temel ilişkisiyle ayrılır:
+\[
+SS_T=SS_A+SS_E.
+\]
+
+Burada
+\[
+SS_T=\sum_{j=1}^k\sum_{i=1}^{n_j}
+(Y_{ij}-\bar Y_{..})^2
+\]
+toplam değişkenliği,
+\[
+SS_A=\sum_{j=1}^k n_j
+(\bar Y_{.j}-\bar Y_{..})^2
+\]
+gruplar arası değişkenliği ve
+\[
+SS_E=\sum_{j=1}^k\sum_{i=1}^{n_j}
+(Y_{ij}-\bar Y_{.j})^2
+\]
+grup içi ya da hata değişkenliğini gösterir.
+
+Serbestlik dereceleri
+\[
+sd_A=k-1,
+\qquad
+sd_E=N-k,
+\qquad
+sd_T=N-1
+\]
+olup ortalama kareler
+\[
+MS_A=\frac{SS_A}{k-1},
+\qquad
+MS_E=\frac{SS_E}{N-k}
+\]
+şeklinde hesaplanır. Genel test istatistiği
+\[
+F=\frac{MS_A}{MS_E}
+\]
+oranıdır.
+
+$H_0$ doğruysa gruplar arası ve grup içi ortalama kareler aynı hata
+varyansını tahmin eder; $F$ çoğunlukla 1 çevresindedir. Grup ortalamaları
+birbirinden uzaklaştıkça pay büyür ve $F$ değeri 1'in üzerine çıkar. $F$
+negatif olamaz.
+
+\section{Adım adım çözümlü ANOVA}
+
+Üç program örneğinde toplam $N=36$, grup sayısı $k=3$ ve genel ortalama
+$\bar Y_{..}=41{,}11$'dir. Ham puanlardan hesaplanan kareler toplamı:
+\[
+SS_A=322{,}89,
+\qquad
+SS_E=642{,}67,
+\qquad
+SS_T=965{,}56.
+\]
+Toplama denetimi $322{,}89+642{,}67=965{,}56$ sonucunu verir.
+
+\subsection*{1. Serbestlik dereceleri}
+\[
+sd_A=3-1=2,
+\qquad
+sd_E=36-3=33,
+\qquad
+sd_T=36-1=35.
+\]
+
+\subsection*{2. Ortalama kareler}
+\[
+MS_A=\frac{322{,}89}{2}=161{,}44,
+\qquad
+MS_E=\frac{642{,}67}{33}=19{,}47.
+\]
+
+\subsection*{3. F istatistiği}
+\[
+F=\frac{161{,}44}{19{,}47}=8{,}29.
+\]
+
+\begin{table}[htbp]
+\centering
+\caption{Üç program için tek yönlü ANOVA tablosu.}
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+Kaynak & $SS$ & $sd$ & $MS$ & $F$ & $p$ \\
+\midrule
+Programlar arası & 322,89 & 2 & 161,44 & 8,29 & 0,001 \\
+Grup içi & 642,67 & 33 & 19,47 & & \\
+Toplam & 965,56 & 35 & & & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Sonuç $F(2,33)=8{,}29$, $p=0{,}001$ olarak raporlanır. Bütün evren
+ortalamalarının eşit olduğu hipoteze karşı kanıt vardır. Ancak henüz hangi
+programların farklı olduğu bilinmemektedir.
+
+\section{ANOVA varsayımları}
+\index{varyans analizi!varsayımlar}
+\index{bağımsızlık}
+\index{normallik}
+\index{varyans homojenliği}
+
+Klasik tek yönlü ANOVA şu koşullara dayanır:
+
+\begin{description}
+  \item[Bağımsızlık] Bir gözlemin hata terimi diğer gözlemlerinkinden bağımsızdır.
+  \item[Yaklaşık normallik] Her gruptaki hata veya artık dağılımı yaklaşık normaldir.
+  \item[Varyans benzerliği] Grupların hata varyansları yeterince benzerdir.
+  \item[Uygun ölçüm] Sonuç değişkeninde ortalama ve farklar anlamlıdır.
+  \item[Uygun örnekleme] Seçim ve atama süreci hedeflenen yorumu destekler.
+\end{description}
+
+Bağımsızlık en kritik koşuldur ve bir normallik testiyle doğrulanamaz. Aynı
+öğrencinin birden fazla ölçümü, öğrencilerin sınıflar içinde kümelenmesi veya
+eşleştirilmiş katılımcılar farklı modeller gerektirir.
+
+Normallik ham puanların bütün olarak değil, model artıklarının grup bazında
+davranışına ilişkindir. Dengeli ve orta büyüklükte gruplarda ANOVA ılımlı
+normallik sapmalarına dayanıklıdır. Küçük gruplarda ağır çarpıklık ve aykırı
+değerler daha ciddi sorun oluşturur.
+
+\begin{assumptionbox}
+Önce her grubun $n$, ortalama, standart sapma, histogram, kutu grafiği ve
+aykırı değerlerini inceleyin. Yalnız Shapiro--Wilk ve Levene testlerinin
+$p$-değerleriyle yöntem seçmeyin; örneklem büyüklüğü ve sapmanın niteliğini de
+değerlendirin.
+\end{assumptionbox}
+
+\section{Varyans eşitsizliği ve Welch ANOVA}
+\index{Welch ANOVA}
+\index{varyans eşitsizliği}
+\index{Brown--Forsythe testi}
+\index{Levene testi}
+
+Klasik ANOVA özellikle grup büyüklükleri eşit değilken ve büyük varyans küçük
+grupta bulunduğunda varyans eşitsizliğinden etkilenebilir. Welch ANOVA grup
+ortalamalarını kendi tahmin hassasiyetlerine göre ağırlıklandırır ve
+serbestlik derecesini ayarlar. Eşit varyans varsayımına gereksinim duymaz.
+
+Welch yaklaşımı şu durumlarda güçlü bir seçenektir:
+
+\begin{itemize}
+  \item grup standart sapmaları belirgin farklıysa,
+  \item grup büyüklükleri dengesizse,
+  \item varyans farklılığı araştırma bağlamında gerçekçi görünüyorsa.
+\end{itemize}
+
+Levene veya Brown--Forsythe testi varyans farklılığına ilişkin bilgi verir;
+fakat yöntem kararı tek bir eşik üzerinden mekanikleştirilmemelidir. Welch
+ANOVA, varyanslar eşit olduğunda da çoğunlukla küçük bir güç kaybıyla çalışır.
+
+\begin{mistakebox}
+Varyansların farklı olması ``ANOVA yapılamaz'' anlamına gelmez. Klasik ANOVA
+yerine Welch ANOVA, ikili takiplerde ise eşit varyans gerektirmeyen
+Games--Howell karşılaştırması kullanılabilir.
+\end{mistakebox}
+
+\section{Aykırı değerler ve duyarlılık}
+\index{aykırı değer}
+\index{duyarlılık analizi}
+
+ANOVA kareli sapmalara dayandığı için uç değerlerden etkilenebilir. Tek bir
+puan grup ortalamasını, grup içi kareler toplamını ve dolayısıyla $F$ oranını
+değiştirebilir. Aykırı değer adayı görüldüğünde:
+
+\begin{enumerate}
+  \item veri girişi ve puanlama kontrol edilir,
+  \item gözlemin araştırma bağlamındaki gerçekliği incelenir,
+  \item grup grafikleri ve artıklar değerlendirilir,
+  \item gerekirse gözlem dahil ve hariç duyarlılık analizi yapılır,
+  \item sağlam veya sıralamaya dayalı alternatifler düşünülür.
+\end{enumerate}
+
+Gerçek gözlemi yalnız genel testin $p$-değerini değiştirdiği için silmek
+seçici analizdir. Ana karar ve bütün alternatif analizler gerekçeleriyle
+raporlanmalıdır.
+
+\section{Genel testten sonra hangi gruplar farklı?}
+\index{planlı karşılaştırma}
+\index{post-hoc karşılaştırma}
+\index{Tukey HSD}
+\index{Games--Howell testi}
+
+Anlamlı genel $F$ testi farkın yerini göstermez. İki tür takip yaklaşımı
+vardır:
+
+\begin{description}
+  \item[Planlı karşılaştırma] Kurama dayalı belirli karşılaştırma veri görülmeden önce tanımlanır.
+  \item[Post-hoc karşılaştırma] Bütün veya çok sayıdaki ikili fark, aile düzeyindeki hata denetlenerek araştırılır.
+\end{description}
+
+Planlı karşılaştırma, örneğin ``grup danışmanlığı diğer iki düşük yoğunluklu
+yaklaşımın ortalamasından farklı mı?'' sorusunu doğrudan sınayabilir. Böyle bir
+soru üç ikili karşılaştırmadan daha hedefli olabilir.
+
+Tukey HSD bütün ikili ortalama karşılaştırmalarında aile düzeyindeki Tip I
+hata oranını denetler ve klasik ANOVA'nın varyans varsayımıyla uyumludur.
+Varyanslar eşit değilse Games--Howell yöntemi daha uygundur. Bonferroni ve
+Holm yöntemleri daha genel karşılaştırma ailelerine uygulanabilir
+\cite{tukey1953,maxwell2018}.
+
+\begin{table}[htbp]
+\centering
+\caption{Yaygın takip yöntemlerinin kullanım alanları.}
+\begin{tabular}{@{}p{0.22\textwidth}p{0.30\textwidth}p{0.28\textwidth}@{}}
+\toprule
+Yöntem & Uygun durum & Temel özellik \\
+\midrule
+Planlı kontrast & Önceden belirlenmiş kuramsal soru & Hedefli ve yorumlanabilir \\
+Tukey HSD & Bütün ikililer, benzer varyanslar & Aile düzeyi hatayı denetler \\
+Games--Howell & Bütün ikililer, eşit olmayan varyanslar & Welch mantığıyla uyumludur \\
+Holm & Sınırlı ve farklı hipotez ailesi & Bonferroni'den genellikle daha güçlüdür \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Post-hoc sonuçlarının yorumu}
+
+Üç program verisinde Tukey HSD sonuçları şöyledir:
+
+\begin{table}[htbp]
+\centering
+\caption{Programlar için Tukey ikili karşılaştırmaları.}
+\begingroup\scriptsize
+\begin{tabular}{@{}p{0.17\textwidth}p{0.14\textwidth}p{0.22\textwidth}p{0.15\textwidth}p{0.15\textwidth}@{}}
+\toprule
+Karşılaştırma & Ortalama farkı & Yüzde 95 eşzamanlı GA & Düzeltilmiş $p$ & Sonuç \\
+\midrule
+A eksi B & 3,83 & $[-0{,}59;8{,}25]$ & 0,100 & Belirgin değil \\
+A eksi C & 7,33 & $[2{,}91;11{,}75]$ & 0,001 & Belirgin \\
+B eksi C & 3,50 & $[-0{,}92;7{,}92]$ & 0,143 & Belirgin değil \\
+\bottomrule
+\end{tabular}
+\endgroup
+\end{table}
+
+Genel test fark bulunduğunu göstermiş; düzeltilmiş ikili sonuçlar yalnız A ile
+C arasındaki farkı açık biçimde desteklemiştir. A--B ve B--C farklarının
+belirgin olmaması bu grupların eşit olduğunu kanıtlamaz. Aralıklar sıfırı ve
+uygulamada önemli olabilecek bazı farkları içerdiği için sonuçlar belirsizdir.
+
+\begin{mistakebox}
+``A, B'den anlamlı biçimde farklı; B, C'den farklı değil'' sonuçlarından A ile
+C hakkında mantıksal bir çıkarım yapılamaz. Her hedef karşılaştırmanın tahmini,
+güven aralığı ve düzeltilmiş $p$-değeri doğrudan incelenmelidir.
+\end{mistakebox}
+
+\section{Etki büyüklüğü}
+\index{eta-kare@$\eta^2$}
+\index{omega-kare@$\omega^2$}
+\index{etki büyüklüğü!varyans analizi}
+
+Genel $F$ testi farkın varlığına ilişkin kanıtı, etki büyüklüğü ise grup
+üyeliğiyle ilişkili değişkenliğin derecesini özetler. Temel ölçülerden
+eta-kare
+\[
+\eta^2=\frac{SS_A}{SS_T}
+\]
+biçimindedir. Üç program örneğinde
+\[
+\eta^2=\frac{322{,}89}{965{,}56}\approx0{,}334.
+\]
+Örneklemde kaygı puanlarındaki toplam değişkenliğin yaklaşık yüzde 33,4'ü grup
+üyeliğiyle ilişkilidir.
+
+Eta-kare özellikle küçük örneklemde evren etkisini yukarı yönlü tahmin
+edebilir. Daha az yanlı omega-kare
+\[
+\omega^2=
+\frac{SS_A-(k-1)MS_E}{SS_T+MS_E}
+\]
+ile hesaplanır. Örnekte
+\[
+\omega^2\approx0{,}288
+\]
+bulunur.
+
+\begin{researchbox}
+``Varyansın yüzde 33'ü program tarafından açıklanmıştır'' ifadesi gözlemsel
+bir tasarımda nedensel olarak fazla güçlü olabilir. Daha güvenli ifade,
+``örneklemdeki değişkenliğin yüzde 33'ü program gruplarıyla ilişkilidir''
+biçimindedir. Açıklama ile nedensellik araştırma tasarımına bağlıdır.
+\end{researchbox}
+
+Etki büyüklüğü için sabit küçük--orta--büyük eşikleri bağlamın yerine
+geçmemelidir. Ham ortalama farkları ve güven aralıkları, ölçeğin klinik ya da
+eğitsel anlamı ve müdahale maliyetiyle birlikte değerlendirilmelidir.
+
+\section{İstatistiksel ve uygulamalı önem}
+
+Genel test anlamlı olsa bile bütün ikili farklar uygulamada önemli olmayabilir.
+Örneğin kaygı ölçeğinde hizmet kararını değiştiren en küçük fark 5 puan olsun.
+A--C aralığı 2,91 ile 11,75 arasındadır; sıfırı dışlar, fakat 5 puanın hem
+altındaki hem üstündeki değerleri içerir. Farkın istatistiksel kanıtı güçlü
+olsa da uygulamalı büyüklüğü konusunda belirsizlik sürmektedir.
+
+Tersine, genel test anlamlı değilken geniş güven aralıkları önemli farkları
+içerebilir. Bu durumda ``programlar aynıdır'' yerine çalışmanın önemli
+farkları dışlayacak hassasiyete sahip olmadığı belirtilmelidir.
+
+\section{Güç ve örneklem hacmi}
+\index{test gücü}
+\index{örneklem hacmi}
+
+Tek yönlü ANOVA'nın gücü şu etkenlerden etkilenir:
+
+\begin{itemize}
+  \item grup ortalamaları arasındaki gerçek farkların büyüklüğü,
+  \item grup içi standart sapma,
+  \item toplam örneklem ve grup sayısı,
+  \item grupların dengeli dağılımı,
+  \item anlamlılık düzeyi,
+  \item planlı karşılaştırmanın yapısı ve ölçüm güvenirliği.
+\end{itemize}
+
+Aynı toplam örneklemde çok sayıda küçük grup oluşturmak her karşılaştırmanın
+hassasiyetini düşürebilir. Dengeli grup büyüklükleri genellikle en verimli
+tasarımı sağlar. Beklenen kayıp, kümelenme ve çoklu birincil sonuçlar örneklem
+planında hesaba katılmalıdır.
+
+Örneklem hacmi yalnız genel $F$ testine göre değil, araştırmanın asıl kararını
+oluşturacak planlı karşılaştırma ve uygulamada anlamlı en küçük farka göre
+planlanmalıdır.
+
+\section{ANOVA ne zaman yeterli değildir?}
+\index{faktöriyel ANOVA}
+\index{ANCOVA}
+\index{tekrarlı ölçüm}
+\index{çok düzeyli model}
+\index{etkileşim}
+
+Bu bölümdeki tek yönlü ANOVA bir nicel sonuç ve bir kategorik grup değişkeni
+içindir. Daha karmaşık tasarımlar farklı modeller gerektirir:
+
+\begin{itemize}
+  \item iki veya daha fazla grup değişkeni: faktöriyel ANOVA ve etkileşim,
+  \item ön-test puanını denetleyerek son-test karşılaştırması: ANCOVA veya regresyon,
+  \item aynı kişilerin üç veya daha fazla ölçümü: tekrarlı ölçüm veya karma model,
+  \item öğrencilerin sınıf ve okul içinde kümelenmesi: çok düzeyli model,
+  \item sürekli ve kategorik yordayıcıların birlikte kullanılması: doğrusal regresyon.
+\end{itemize}
+
+Özellikle faktöriyel tasarımda ana etkiler, etkileşim varken tek başına
+yorumlanmamalıdır. Bir programın etkisi sınıf düzeyine göre değişiyorsa tek bir
+ortalama program etkisi bu örüntüyü gizleyebilir.
+
+\begin{etkinlik}
+Bir PDR programı, program türü (üç düzey) ve öğrencinin sınıf düzeyi (iki
+düzey) bakımından incelenecek olsun. Tek yönlü ANOVA'nın hangi soruları
+yanıtlayamayacağını ve olası bir etkileşimin ne anlama gelebileceğini yazın.
+\end{etkinlik}
+
+\section{Kruskal--Wallis ve sağlam seçenekler}
+\index{Kruskal--Wallis testi}
+\index{permütasyon testi}
+
+Dağılımlar ağır çarpık, güçlü aykırı değerli veya ölçüm sıralıysa
+Kruskal--Wallis testi düşünülebilir. Bu test ham puanlar yerine sıralara
+dayanır. Dağılım biçimleri benzerse konum farkı olarak yorumlanabilir; genel
+olarak grupların dağılımlarının aynı olup olmadığını değerlendirir.
+
+Kruskal--Wallis testinin anlamlı olması da hangi grupların farklı olduğunu
+göstermez. Dunn gibi düzeltilmiş ikili karşılaştırmalar gerekir. Yöntem
+``varsayımsız ANOVA'' değildir; bağımsızlık ve uygun sıralama gibi kendi
+koşullarına sahiptir.
+
+Sağlam kırpılmış ortalama yöntemleri, permütasyon testleri ve bootstrap güven
+aralıkları da araştırma hedefi ortalama farkı olduğunda yararlı olabilir.
+Alternatif seçim istenen sonucu elde etmek için değil, hedef parametre ve veri
+yapısına göre yapılmalıdır.
+
+\section{Python ile tek yönlü ANOVA}
+
+Aşağıdaki kod genel testi, ANOVA bileşenlerini, etki büyüklüklerini ve Tukey
+karşılaştırmalarını yeniden üretir:
+
+\begin{lstlisting}
+import numpy as np
+from scipy import stats
+from statsmodels.stats.multicomp import pairwise_tukeyhsd
+
+A = np.array([37,49,44,52,41,46,39,50,43,47,42,48])
+B = np.array([35,44,40,47,38,43,36,46,39,42,37,45])
+C = np.array([31,41,36,44,34,39,32,43,35,40,33,42])
+gruplar = [A, B, C]
+
+F, p = stats.f_oneway(*gruplar)
+tum = np.concatenate(gruplar)
+genel = tum.mean()
+
+ss_grup = sum(len(g) * (g.mean() - genel)**2 for g in gruplar)
+ss_hata = sum(((g - g.mean())**2).sum() for g in gruplar)
+ss_toplam = ss_grup + ss_hata
+df_grup = len(gruplar) - 1
+df_hata = len(tum) - len(gruplar)
+ms_hata = ss_hata / df_hata
+
+eta2 = ss_grup / ss_toplam
+omega2 = ((ss_grup - df_grup * ms_hata) /
+          (ss_toplam + ms_hata))
+
+etiket = np.repeat(["A", "B", "C"], [len(A), len(B), len(C)])
+tukey = pairwise_tukeyhsd(tum, etiket)
+
+print("Grup ozetleri:", [(g.mean(), g.std(ddof=1)) for g in gruplar])
+print("ANOVA:", F, p)
+print("Eta-kare ve omega-kare:", eta2, omega2)
+print(tukey)
+\end{lstlisting}
+
+Kod, klasik ANOVA'yı uygular. Varyanslar belirgin farklıysa Welch ANOVA ve
+Games--Howell karşılaştırması için uygun yazılım işlevi seçilmelidir. Sonuçlar
+üretilmeden önce grup kodları, eksik gözlemler ve grafikler kontrol edilmelidir.
+
+\section{SPSS ile ANOVA uygulaması}
+
+\begin{enumerate}
+  \item \textbf{Analyze $>$ Compare Means $>$ One-Way ANOVA} yolunu izleyin.
+  \item Nicel sonucu \textbf{Dependent List}, grup değişkenini \textbf{Factor} alanına taşıyın.
+  \item \textbf{Options} bölümünde betimsel istatistikler, varyans homojenliği ve Welch testini seçin.
+  \item \textbf{Post Hoc} bölümünde benzer varyanslar için Tukey, eşit olmayan varyanslar için Games--Howell seçeneğini değerlendirin.
+  \item Önce grup kodları ve örneklem sayılarını, sonra grafik ve betimsel istatistikleri inceleyin.
+  \item Veri yapısına uygun genel testin ardından etki büyüklüğünü ve düzeltilmiş ikili sonuçları raporlayın.
+\end{enumerate}
+
+SPSS sürümüne ve kullanılan menüye göre etki büyüklüğü doğrudan verilmeyebilir;
+kareler toplamından eta-kare hesaplanabilir. Omega-kare ayrıca formülle
+hesaplanmalı veya uygun yazılım yordamından alınmalıdır.
+
+\begin{outputguidebox}
+Çıktıyı şu sırayla okuyun: (1) grup tanımları, $n$, ortalama ve standart
+sapmalar, (2) kutu grafikleri ve aykırı değerler, (3) varyans yapısı, (4)
+klasik veya Welch genel testi, (5) etki büyüklüğü, (6) yalnız gerekiyorsa
+uygun düzeltilmiş karşılaştırmalar, (7) fark tahminleri ve eşzamanlı güven
+aralıkları. Yalnız ANOVA tablosundaki ``Sig.'' sütununu raporlamayın.
+\end{outputguidebox}
+
+\section{Bilimsel raporlama örneği}
+
+``Son-test kaygı puanları program gruplarına göre farklılaşmıştır,
+$F(2,33)=8{,}29$, $p=0{,}001$, $\eta^2=0{,}334$,
+$\omega^2=0{,}288$. Tukey HSD karşılaştırması A programının ortalamasının C
+programından 7,33 puan yüksek olduğunu göstermiştir (yüzde 95 eşzamanlı GA
+$[2{,}91;11{,}75]$, düzeltilmiş $p=0{,}001$). A--B ve B--C aralıkları sıfırı
+içermiştir. Programlara rastgele atama yapılmadığından sonuçlar nedensel etki
+olarak yorumlanmamıştır.''
+
+Bu rapor genel testi, etki büyüklüğünü, farkın yerini, çoklu karşılaştırma
+düzeltmesini ve tasarım sınırını birlikte gösterir. Grup ortalamaları ve
+standart sapmaları ayrıca tablo veya metinde sunulmalıdır.
+
+\section{Bir ANOVA araştırmasını değerlendirirken}
+
+\begin{enumerate}
+  \item Sonuç değişkeni ve grup düzeyleri açıkça tanımlanmış mı?
+  \item Gruplar bağımsız mı, eşleştirilmiş mi, yoksa kümelenmiş mi?
+  \item Her grubun örneklem büyüklüğü, ortalaması, standart sapması ve grafiği verilmiş mi?
+  \item Klasik veya Welch ANOVA seçimi varyans yapısıyla uyumlu mu?
+  \item Genel testten sonra karşılaştırmalar önceden planlanmış veya çoklu test için düzeltilmiş mi?
+  \item Etki büyüklüğü ve güven aralıkları $p$-değeriyle birlikte sunulmuş mu?
+  \item Anlamlı olmayan ikili sonuçlar eşitlik kanıtı gibi yorumlanmış mı?
+  \item Araştırma tasarımının izin verdiğinden güçlü nedensel sonuç çıkarılmış mı?
+\end{enumerate}
+
+\section{Literatür veri setiyle IBM SPSS laboratuvarı}
+\index{Student Performance veri seti!ANOVA}
+\index{SPSS!tek yönlü ANOVA}
+\index{çalışma süresi!ANOVA uygulaması}
+\index{eta-kare!SPSS uygulaması}
+\index{omega-kare!SPSS uygulaması}
+
+Bu uygulamada \emph{Student Performance} matematik dosyasındaki yıl sonu
+notu \texttt{G3}, öğrencilerin haftalık çalışma süresi gruplarına göre
+karşılaştırılacaktır \cite{cortez2008data,cortezsilva2008}. Veri sözlüğünde
+\texttt{studytime} dört sıralı kategoriyle kodlanmıştır:
+
+\begin{enumerate}
+  \item haftada 2 saatten az,
+  \item haftada 2--5 saat,
+  \item haftada 5--10 saat,
+  \item haftada 10 saatten fazla.
+\end{enumerate}
+
+Araştırma sorusu ``ortalama G3 puanı bu dört çalışma süresi grubunda aynı
+mıdır?'' biçimindedir. Hedef parametreler dört grubun evren ortalamalarıdır:
+\[
+H_0:\mu_1=\mu_2=\mu_3=\mu_4,
+\qquad
+H_1:\text{en az bir grup ortalaması farklıdır}.
+\]
+
+\begin{researchbox}
+Çalışma süresi öğrencinin kendi bildirimine dayalı sıralı bir kategoridir ve
+öğrenciler bu gruplara rastgele atanmamıştır. Ortalama fark bulunsa bile bu
+sonuç daha uzun çalışmanın tek başına daha yüksek nota neden olduğunu
+kanıtlamaz. Önceki başarı, motivasyon, ders desteği ve okul gibi değişkenler
+hem çalışma süresiyle hem notla ilişkili olabilir.
+\end{researchbox}
+
+\subsection{Araştırma görevleri}
+
+\begin{enumerate}
+  \item Dört grubun kodlarını, örneklem sayılarını, ortalamalarını ve grafiklerini denetleyin.
+  \item Klasik tek yönlü ANOVA için bağımsızlık, aykırı değer ve varyans yapısını değerlendirin.
+  \item Klasik $F$ testiyle birlikte Welch sağlam testini de isteyin.
+  \item Eta-kare ve omega-kare etki büyüklüklerini ANOVA tablosundan hesaplayın.
+  \item Genel test anlamlı değilse gerekçesiz post-hoc sonuç aramaktan kaçının.
+  \item Sonucu çalışma süresi gruplarının gözlemsel niteliğini belirterek raporlayın.
+\end{enumerate}
+
+\subsection{SPSS syntax}
+
+Önce grup etiketleri tanımlanır ve her gruptaki dağılım kutu grafikleriyle
+incelenir. \texttt{ONEWAY} komutu betimsel istatistikleri, Levene testini,
+klasik ANOVA tablosunu ve Welch sağlam testini birlikte üretir.
+
+\begin{lstlisting}[language={}]
+DATASET ACTIVATE StudentMath.
+
+VALUE LABELS studytime
+ 1 'Haftada 2 saatten az'
+ 2 'Haftada 2-5 saat'
+ 3 'Haftada 5-10 saat'
+ 4 'Haftada 10 saatten fazla'.
+VARIABLE LEVEL studytime (ORDINAL).
+
+EXAMINE VARIABLES=G3 BY studytime
+ /PLOT BOXPLOT
+ /COMPARE GROUPS
+ /STATISTICS DESCRIPTIVES
+ /CINTERVAL 95
+ /MISSING LISTWISE
+ /NOTOTAL.
+
+ONEWAY G3 BY studytime
+ /STATISTICS DESCRIPTIVES HOMOGENEITY WELCH
+ /PLOT MEANS
+ /MISSING ANALYSIS.
+\end{lstlisting}
+
+Genel test ve veri koşulları ikili karşılaştırmayı gerektirirse eşit
+varyanslarda Tukey, eşit varyans varsayımı uygun değilse Games--Howell
+istenebilir. Bu veri örneğinde genel test anlamlı olmadığı için bütün ikilileri
+yalnız düşük bir $p$-değeri bulmak amacıyla taramak ana analiz planına
+eklenmemiştir. Öğretim amacıyla komut yapısı görülmek istenirse ayrı bir
+duyarlılık çalışmasında
+
+\begin{lstlisting}[language={}]
+ONEWAY G3 BY studytime
+ /STATISTICS DESCRIPTIVES HOMOGENEITY WELCH
+ /POSTHOC=TUKEY GH ALPHA(.05)
+ /MISSING ANALYSIS.
+\end{lstlisting}
+
+kullanılabilir; yorumda genel test, varsayım seçimi ve çoklu karşılaştırma
+düzeltmesi birlikte belirtilmelidir.
+
+Menüyle çalışmak için \textbf{Analyze $>$ Compare Means $>$ One-Way ANOVA}
+yolunda G3 \textbf{Dependent List}, \texttt{studytime} ise \textbf{Factor}
+alanına taşınır. \textbf{Options} penceresinde betimsel istatistikler,
+varyans homojenliği ve Welch; \textbf{Plots} altında grup ortalamaları seçilir.
+Kutu grafikleri için ayrıca \textbf{Analyze $>$ Descriptive Statistics $>$
+Explore} kullanılabilir.
+
+\subsection{Grup özetleri}
+
+\begin{table}[htbp]
+\centering
+\caption{Haftalık çalışma süresine göre G3 grup büyüklükleri ve ortalamaları.}
+\begin{tabular}{@{}p{0.44\textwidth}rr@{}}
+\toprule
+Çalışma süresi grubu & $n$ & Ortalama G3 \\
+\midrule
+2 saatten az & 105 & 10,048 \\
+2--5 saat & 198 & 10,172 \\
+5--10 saat & 65 & 11,400 \\
+10 saatten fazla & 27 & 11,259 \\
+\midrule
+Toplam & 395 & 10,415 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Örneklem ortalamaları çalışma süresi üçüncü düzeye kadar yükselmekte, dördüncü
+düzeyde ise 11,26 civarında kalmaktadır. Ancak dördüncü grupta yalnız 27
+öğrenci vardır. Ortalama çizgisinin görünümü tek başına evren ortalamalarının
+farklı olduğu sonucunu vermez; grup içi değişkenlik ve örneklem büyüklükleri
+genel testte birlikte değerlendirilir.
+
+\subsection{ANOVA çıktısının erişilebilir özeti}
+
+\begin{table}[htbp]
+\centering
+\caption{Çalışma süresi grupları için klasik tek yönlü ANOVA tablosu.}
+\small
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+Kaynak & Kareler toplamı & $sd$ & Ortalama kare & $F$ & $p$ \\
+\midrule
+Gruplar arası & 108,200 & 3 & 36,067 & 1,728 & 0,161 \\
+Grup içi & 8161,709 & 391 & 20,874 & & \\
+Toplam & 8269,909 & 394 & & & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Etki büyüklükleri ANOVA bileşenlerinden
+\[
+\eta^2=\frac{SS_{\mathrm{grup}}}{SS_{\mathrm{toplam}}}
+=\frac{108{,}200}{8269{,}909}\approx0{,}013
+\]
+ve
+\[
+\omega^2=
+\frac{SS_{\mathrm{grup}}-(k-1)MS_{\mathrm{hata}}}
+{SS_{\mathrm{toplam}}+MS_{\mathrm{hata}}}
+\approx0{,}005
+\]
+olarak hesaplanır. SPSS sürümü etki büyüklüğünü doğrudan vermiyorsa aşağıdaki
+syntax hesaplamayı belgeler:
+
+\begin{lstlisting}[language={}]
+COMPUTE ss_grup=108.200.
+COMPUTE ss_toplam=8269.909.
+COMPUTE ms_hata=20.874.
+COMPUTE k=4.
+COMPUTE eta_kare=ss_grup/ss_toplam.
+COMPUTE omega_kare=(ss_grup-(k-1)*ms_hata)
+ /(ss_toplam+ms_hata).
+FORMATS eta_kare omega_kare (F6.3).
+LIST eta_kare omega_kare /CASES=FROM 1 TO 1.
+\end{lstlisting}
+
+\subsection{Çıktının analizi}
+
+Klasik ANOVA sonucu $F(3,391)=1{,}728$ ve $p=0{,}161$'dir. Dolayısıyla yüzde
+5 anlamlılık düzeyinde dört evren ortalamasının eşit olduğu ortak hipoteze
+karşı yeterli istatistiksel kanıt bulunmamıştır. Bu sonuç bütün grup
+ortalamalarının kesin olarak aynı olduğunu kanıtlamaz; gözlenen farkların grup
+içi değişkenliğe göre yeterince belirgin olmadığını gösterir.
+
+Eta-kare yaklaşık 0,013 olduğundan örneklemdeki toplam G3 değişkenliğinin
+yaklaşık yüzde 1,3'ü çalışma süresi grupları arasındaki farklarla ilişkilidir.
+Yanlılık düzeltmeli omega-kare yaklaşık 0,005'tir. Her iki değer de bu
+örneklemde grup ayrımının küçük olduğunu gösterir. Etki büyüklüğü küçük diye
+çalışma alışkanlıklarının eğitimsel olarak önemsiz olduğu sonucu çıkarılmaz;
+ölçümün geniş kategorilere dayanması ve gözlemsel tasarım da dikkate
+alınmalıdır.
+
+Levene ve Welch tabloları varsayım incelemesinin parçalarıdır. Levene sonucu
+mekanik bir geçiş anahtarı gibi kullanılmamalı; grup standart sapmaları, kutu
+grafikleri, örneklem büyüklüklerindeki dengesizlik ve aykırı değerler birlikte
+incelenmelidir. Welch sonucu klasik testten farklı bir karara götürürse,
+eşit varyans varsayımına daha az dayanan sonuç öncelikle raporlanmalı ve
+farklılığın nedeni açıklanmalıdır.
+
+Genel test anlamlı olmadığı için ana analizde ``hangi ikili anlamlı çıkacak?''
+diye altı ayrı karşılaştırma taranmamıştır. Önceden gerekçelendirilmiş belirli
+bir planlı karşılaştırma varsa bu, genel testten ayrı bir araştırma hipotezi
+olarak açıkça tanımlanabilir; sonuç sonradan seçilmiş gibi sunulmamalıdır.
+
+\begin{mistakebox}
+Üçüncü grubun örneklem ortalamasının birinci gruptan yaklaşık 1,35 puan yüksek
+olması, iki evren ortalamasının farklı olduğunu tek başına göstermez. Benzer
+biçimde $p=0{,}161$ de grupların eşit olduğunu kanıtlamaz. Tahminlerin
+belirsizliği, etki büyüklüğü ve çalışma süresinin ölçülme biçimi birlikte
+yorumlanmalıdır.
+\end{mistakebox}
+
+\begin{outputguidebox}
+Çıktıyı şu sırayla okuyun: (1) grup kodları ve geçerli $n$, (2) ortalama,
+standart sapma ve güven aralıkları, (3) kutu grafikleri, (4) varyans yapısı ve
+Levene testi, (5) klasik ve Welch genel testleri, (6) eta-kare ve omega-kare,
+(7) yalnız araştırma planı gerektiriyorsa uygun düzeltilmiş karşılaştırmalar,
+(8) gözlemsel tasarımın nedensel yorum sınırı. Anlamlı olmayan genel testten
+sonra gerekçesiz ikili sonuç aramayın.
+\end{outputguidebox}
+
+\subsection{Örnek bulgu paragrafı}
+
+``Yıl sonu matematik notu ortalamaları haftalık çalışma süresi gruplarında
+sırasıyla 10,05 ($n=105$), 10,17 ($n=198$), 11,40 ($n=65$) ve 11,26
+($n=27$) olarak bulunmuştur. Klasik tek yönlü ANOVA, grup ortalamalarının
+farklı olduğuna ilişkin yeterli kanıt göstermemiştir,
+$F(3,391)=1{,}73$, $p=0{,}161$, $\eta^2=0{,}013$,
+$\omega^2=0{,}005$. Genel test anlamlı olmadığından gerekçesiz post-hoc
+karşılaştırmalar ana analize eklenmemiştir. Çalışma süresi gözlemsel ve geniş
+kategorilerle ölçüldüğünden sonuç nedensel etki olarak yorumlanmamıştır.''
+
+\input{chapter-exercises/09-anova}
+
+\bolumkaynaklari{\cite{maxwell2018,kutner2005,cohen1988,tukey1953,cortez2008data,cortezsilva2008}}
+
+\section*{Hatırla--Uygula--Yansıt}
+
+\begin{enumerate}
+\renewcommand{\labelenumi}{\textbf{\Alph{enumi}.}}
+  \item \textbf{Hatırla:} Tek yönlü ANOVA'nın sıfır ve alternatif hipotezlerini kendi sözlerinizle yazın.
+  \item \textbf{Say:} Dört, beş ve altı grubun bütün ikilileri için kaç karşılaştırma gerektiğini hesaplayın.
+  \item \textbf{Ayır:} Toplam, gruplar arası ve grup içi değişkenliği bir sınıf örneğiyle açıklayın.
+  \item \textbf{Hesapla:} $SS_A=240$, $SS_E=600$, $k=4$, $N=44$ için serbestlik derecelerini, ortalama kareleri ve $F$ değerini bulun.
+  \item \textbf{Yorumla:} $F(3,80)=5{,}20$, $p=0{,}003$ sonucunun neyi gösterdiğini ve hangi grupların farklı olduğunu neden göstermediğini açıklayın.
+  \item \textbf{Etki:} $SS_A=180$ ve $SS_T=900$ için eta-kareyi hesaplayıp nedensellik iddiası kurmadan yorumlayın.
+  \item \textbf{Welch:} Grup büyüklükleri ve standart sapmaları belirgin farklı olduğunda neden Welch ANOVA'nın uygun olabileceğini açıklayın.
+  \item \textbf{Post-hoc:} Tukey ile Games--Howell yöntemlerinin kullanım koşullarını karşılaştırın.
+  \item \textbf{Aralık:} A--B farkı için eşzamanlı güven aralığı $[-2;7]$ ise ``gruplar eşittir'' sonucunun neden yetersiz olduğunu açıklayın.
+  \item \textbf{Eleştir:} Genel test anlamlı çıktıktan sonra düzeltmesiz bütün ikili $t$ testlerini yürütmenin sorununu tartışın.
+  \item \textbf{Tasarım:} Aynı öğrencilerin üç zamanda ölçüldüğü bir araştırmada neden bu bölümdeki bağımsız tek yönlü ANOVA'nın uygun olmadığını açıklayın.
+  \item \textbf{Duyarlılık:} Tek bir uç puanın $SS_E$, $F$ ve eta-kare üzerindeki olası etkilerini tartışın.
+  \item \textbf{Uygula:} Python kodundaki C grubuna iki uç değer ekleyerek genel test, etki büyüklüğü ve Tukey sonuçlarını karşılaştırın.
+  \item \textbf{Planla:} Üç program için birincil planlı karşılaştırmayı ve uygulamada önemli en küçük farkı veri görülmeden önce tanımlayın.
+  \item \textbf{Raporla:} Grup özetleri, genel test, etki büyüklüğü, düzeltilmiş karşılaştırma, güven aralığı ve tasarım sınırı içeren kısa bir bulgu paragrafı yazın.
+\end{enumerate}

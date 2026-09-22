@@ -1,0 +1,21 @@
+{
+  "algorithm": "SHA-256",
+  "files": {
+    "DOGRULAMA.md": "69aeece780f157e317504ccc79801f8cee2f3c5389f80a93cace2b402823b9dc",
+    "README.md": "2ea75c594845dbc64496367f8a12f4c6e2e271a6d2ec78393150a681685c0a99",
+    "alistirmalar.md": "42fd0a4b16393d595943ded96b4cd713b33bcae8575f332dceb063650fa3669f",
+    "cozumler.md": "e8bcff017906026e0fb43cc805135bcfb4c911c0aab634e4d0f02092de1dc939",
+    "ornek-01/README.md": "9a8e4e1a072206896991eb4a1792a944121f7b39cccaf0bbed875cc3be080d8b",
+    "ornek-01/analiz.sps": "0fb166ef26d70d2562573c8c5b49f565588aae6b248ffc3b5a24e62ee34d396c",
+    "ornek-01/analiz.sps.txt": "0fb166ef26d70d2562573c8c5b49f565588aae6b248ffc3b5a24e62ee34d396c",
+    "ornek-01/beklenen-sonuclar.csv": "ce3c66f1e1a6381762fb61f3253c02a03aeedf214e0a64d4f55a3b515f6b0089",
+    "ornek-01/ciktilar/python/regresyon-tani.png": "95a5157ae21b0abeca62ccc88635dea8240fcb2bdb0418baadc337050717331a",
+    "ornek-01/cozum.R": "d5390a52b900aa5f9d952e855377c7ff9becfc0a502cdf403ef6055252fa11f6",
+    "ornek-01/cozum.md": "846946d1d54900c789cd5a99da69e7247205bdd569bc1069bfbb7400878ba7ce",
+    "ornek-01/cozum.py": "58fdcb31772e13ffd30a2c9ba142fd06f1f2346c06c30f4376aae423754fbac8",
+    "ornek-01/grafik-aciklamasi.md": "5af6b4a5fab34e4719efd7726d6d0160849ba41a1d368ccdcb6337c87bca5a97",
+    "ornek-01/kaynak-kaydi.json": "7802e21fd873824bdeccc0528a904bf7f062250f687066680fddb6896c7cdbcd",
+    "ornek-01/veri-sozlugu.csv": "27b5aeeab982b39d65d3a8c50eb45d0407cb79b1b61ece0c52072d6248a99b95",
+    "ornek-01/veri.csv": "0ccad982ba1ce76a65b39bdf3d07b3efb6d1c7115eaf454e45e12b083ebce8b4"
+  }
+}

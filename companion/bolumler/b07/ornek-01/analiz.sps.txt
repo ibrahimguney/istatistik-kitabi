@@ -1,0 +1,54 @@
+GET DATA /TYPE=TXT /FILE='veri.csv' /ENCODING='UTF8'
+ /ARRANGEMENT=DELIMITED /DELCASE=LINE /DELIMITERS="," /QUALIFIER='"'
+ /FIRSTCASE=2 /VARIABLES=yanit F8.0.
+DATASET NAME B07Yanit.
+FILTER OFF.
+USE ALL.
+WEIGHT OFF.
+SPLIT FILE OFF.
+VARIABLE LEVEL yanit (NOMINAL).
+VALUE LABELS yanit 0 'Olumsuz' 1 'Olumlu'.
+FREQUENCIES VARIABLES=yanit.
+AGGREGATE /OUTFILE=* MODE=ADDVARIABLES /BREAK=
+ /ornek_n=N /olumlu=SUM(yanit) /p_hat=MEAN(yanit).
+COMPUTE olumsuz=ornek_n-olumlu.
+COMPUTE varyans_hat=p_hat*(1-p_hat)/ornek_n.
+COMPUTE se_hat=SQRT(varyans_hat).
+COMPUTE se25=SQRT(.60*.40/25).
+COMPUTE se400=SQRT(.60*.40/400).
+FORMATS p_hat varyans_hat se_hat se25 se400 (F14.10).
+EXECUTE.
+TEMPORARY.
+SELECT IF ($CASENUM=1).
+LIST VARIABLES=ornek_n olumlu olumsuz p_hat se_hat varyans_hat se25 se400.
+GET DATA /TYPE=TXT /FILE='benzetim.csv' /ENCODING='UTF8'
+ /ARRANGEMENT=DELIMITED /DELCASE=LINE /DELIMITERS="," /QUALIFIER='"'
+ /FIRSTCASE=2 /VARIABLES=tekrar F12.0 basari F8.0.
+DATASET NAME B07Benzetim.
+FILTER OFF.
+USE ALL.
+WEIGHT OFF.
+SPLIT FILE OFF.
+VARIABLE LEVEL tekrar (NOMINAL) basari (SCALE).
+COMPUTE tahmin=basari/50.
+AGGREGATE /OUTFILE=* MODE=ADDVARIABLES /BREAK=
+ /tekrar_sayisi=N /merkez=MEAN(tahmin).
+COMPUTE kare_hata=(tahmin-.40)**2.
+COMPUTE kare_merkez=(tahmin-merkez)**2.
+AGGREGATE /OUTFILE=* MODE=ADDVARIABLES /BREAK=
+ /mse=MEAN(kare_hata) /varyans_b=MEAN(kare_merkez).
+COMPUTE yanlilik=merkez-.40.
+COMPUTE varyans_beksi1=varyans_b*tekrar_sayisi/(tekrar_sayisi-1).
+COMPUTE ampirik_se=SQRT(varyans_beksi1).
+COMPUTE mse_ayrisimi=varyans_b+yanlilik**2.
+COMPUTE kuramsal_se=SQRT(.40*.60/50).
+COMPUTE kuramsal_mse=.40*.60/50.
+FORMATS merkez yanlilik varyans_b varyans_beksi1 ampirik_se mse mse_ayrisimi
+ kuramsal_se kuramsal_mse (F14.10).
+EXECUTE.
+TEMPORARY.
+SELECT IF ($CASENUM=1).
+LIST VARIABLES=tekrar_sayisi merkez yanlilik varyans_b varyans_beksi1 ampirik_se
+ mse mse_ayrisimi kuramsal_se kuramsal_mse.
+DESCRIPTIVES VARIABLES=tahmin /STATISTICS=MEAN STDDEV MIN MAX.
+GRAPH /HISTOGRAM=tahmin.

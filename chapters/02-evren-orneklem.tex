@@ -1,0 +1,373 @@
+\chapter{Evren, Örneklem, Parametre, İstatistik ve Veri Türleri}
+\label{ch:population-data}
+
+\begin{prismbox}[PrismLight]{Öğrenme çıktıları}
+Bu bölümün sonunda hedef evren ile erişilebilir evreni, parametre ile
+istatistiği ve kategorik veri ile nicel veriyi birbirinden ayırabilecek;
+araştırma sorusunu uygun analiz birimi ve değişkenlerle ifade edebileceksiniz.
+\end{prismbox}
+
+\begin{prerequisitebox}
+Bölüm 1'deki araştırma sorusu, gözlem birimi ve değişken kavramlarının
+bilinmesi beklenir. Oran ve ortalama kavramlarına giriş düzeyinde aşinalık
+yeterlidir.
+\end{prerequisitebox}
+
+Araştırma sorusunun değişkenlere dönüştürülmesi ve veri üretim zinciri için
+Bölüm~\ref{ch:research}, özellikle Bölüm~\ref{sec:research-cycle} temel alınır.
+
+\section{Araştırmanın birimi ve hedef evren}
+\label{sec:population-target}
+
+İstatistiksel bir araştırma önce \emph{kimin} veya \emph{neyin} incelendiğini
+belirler. Üzerinde ölçüm yapılan her öğrenci, sınıf, okul ya da deney birimi
+bir \textbf{gözlem birimi}dir. Sonucun genellenmek istendiği bütün birimler
+\textbf{hedef evreni}, araştırmacının fiilen ulaşabildiği bölüm ise
+\textbf{erişilebilir evreni} oluşturur.
+
+Örneğin Türkiye'deki bütün ortaokul öğrencileri hedeflenirken veri yalnız bir
+ildeki devlet okullarından toplanmışsa erişilebilir evren hedef evrenden daha
+dardır. Bu ayrım, sonuçların hangi topluluğa genellenebileceğini belirler.
+
+\section{Evren ve örneklem}
+
+Evrenin tamamına ilişkin ölçüm yapılmasına \textbf{tam sayım} denir. Zaman,
+maliyet ve erişim sınırlılıkları nedeniyle çoğu araştırmada evrenden bir
+\textbf{örneklem} seçilir. Örneklemin amacı yalnız daha az birim incelemek
+değil, seçilen birimlerden hareketle hedef evren hakkında ölçülebilir
+belirsizlik altında bilgi üretmektir.
+Örnekleme çerçevesi, seçilme olasılığı ve tasarımın genellemeye etkisi için
+temel başvuru kaynakları arasında \citet{cochran1977} ile \citet{lohr2021}
+yer alır.
+
+\begin{mistakebox}
+Örneklemin evrene benzemesi yalnız örneklem büyüklüğüne bağlı değildir.
+Seçim mekanizması bazı grupları sistematik olarak dışlıyorsa çok büyük bir
+örneklem de yanıltıcı olabilir.
+\end{mistakebox}
+
+Şekil~\ref{fig:population-nesting}'de örneklem, erişilebilir evrenin;
+erişilebilir evren ise hedef evrenin içinde gösterilir. Örnekte seçilen
+öğrenci sayısını artırmak, kapsanmayan illeri veya özel okulları kendiliğinden
+temsil edilir hâle getirmez. Alanların büyüklüğü öğrenci sayısıyla orantılı
+değildir.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[font=\small]
+  \draw[PrismBlue,fill=PrismLight,rounded corners=2mm]
+    (-5.25,0) rectangle (5.25,4.9);
+  \node[align=center] at (0,4.35)
+    {\textbf{Hedef evren}\\Türkiye'deki bütün ortaokul öğrencileri};
+  \draw[PrismBlue,dashed,fill=white,rounded corners=2mm]
+    (-4.6,0.35) rectangle (4.6,3.7);
+  \node[align=center] at (0,3.1)
+    {\textbf{Erişilebilir evren}\\Bir ildeki devlet ortaokullarının öğrencileri};
+  \draw[PrismBlue,line width=1pt,fill=PrismNoteBlue,rounded corners=2mm]
+    (-3.7,0.75) rectangle (3.7,2.45);
+  \node[align=center] at (0,1.9)
+    {\textbf{Örneklem}\\Bu okullardan seçilen öğrenciler};
+  \foreach \x in {-2.4,-1.6,-0.8,0,0.8,1.6,2.4}
+    \fill[PrismBlue] (\x,1.12) circle (2.3pt);
+\end{tikzpicture}
+\caption{Hedef evren, erişilebilir evren ve örneklem: bir kapsam sınırlılığı
+örneği. Noktalar seçilen öğrencileri simgeler.}
+\label{fig:population-nesting}
+\end{figure}
+
+\section{Parametre ve istatistik}
+\label{sec:population-parameter}
+
+Evrene ait sayısal özellik \textbf{parametre}, örneklemden hesaplanan karşılığı
+ise \textbf{istatistik} olarak adlandırılır. Parametre sabit fakat çoğu zaman
+bilinmeyendir; istatistik seçilen örnekleme göre değişir.
+
+\begin{table}[H]
+\centering
+\caption{Evren büyüklükleri ve örneklem karşılıkları.}
+\label{tab:population-sample-examples}
+\begin{tabular}{lll}
+\toprule
+Araştırma büyüklüğü & Parametre & İstatistik \\
+\midrule
+Ortalama & $\mu$ & $\bar x$ \\
+Oran & $p$ & $\hat p$ \\
+Varyans & $\sigma^2$ & $s^2$ \\
+Korelasyon & $\rho$ & $r$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Bir fakültedeki bütün öğrencilerin haftalık çalışma süresi ortalaması $\mu$
+ile gösterilen bir parametredir. Rastgele seçilen 120 öğrencinin ortalaması
+$\bar x=6{,}4$ saat ise bu değer bir istatistiktir ve $\mu$ hakkında tahmin
+üretmek için kullanılır.
+
+\section{Veri türleri}
+\label{sec:population-data-types}
+
+\textbf{Kategorik değişkenler} birimleri sınıflara ayırır. Nominal değişkende
+kategorilerin doğal sırası yoktur; sıralı değişkende ise sıra vardır fakat
+kategoriler arasındaki uzaklık zorunlu olarak eşit değildir.
+\textbf{Nicel değişkenler} sayısal miktar bildirir. Sayım sonucu elde edilen
+değerler genellikle kesikli, ölçüm sonucu elde edilenler sürekli kabul edilir.
+
+\begin{table}[H]
+\centering
+\caption{Veri türleri için eğitim araştırması örnekleri.}
+\label{tab:data-type-examples}
+\begin{tabularx}{\textwidth}{@{}p{0.24\textwidth}XX@{}}
+\toprule
+Tür & Örnek & Uygun ilk özet \\
+\midrule
+Nominal & Okul türü & Frekans ve yüzde \\
+Sıralı & Memnuniyet düzeyi & Frekans, medyan, yüzdelik \\
+Kesikli nicel & Doğru yanıt sayısı & Ortalama, medyan, dağılım \\
+Sürekli nicel & Tamamlama süresi & Ortalama, standart sapma, histogram \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Sayısal kod kullanılması bir değişkeni kendiliğinden nicel yapmaz. Okul
+türlerinin 1, 2 ve 3 ile kodlanması yalnız veri girişini kolaylaştırır; bu
+kodların ortalaması anlamlı bir okul türü ölçüsü değildir.
+
+\section{Örnekleme yöntemlerine ilk bakış}
+\label{sec:population-sampling-intro}
+
+Örneklem yalnız kaç birimden oluştuğuyla değil, birimlerin nasıl seçildiğiyle
+de tanımlanır. \textbf{Basit rastgele örneklemede} her birimin bilinen bir
+seçilme olasılığı vardır. \textbf{Tabakalı örneklemede} fakülte, sınıf düzeyi
+veya okul türü gibi önemli alt gruplardan ayrı seçim yapılarak temsil
+güçlendirilir. \textbf{Küme örneklemesinde} bireyler yerine sınıf veya okul
+gibi doğal gruplar seçilir. \textbf{Kolayda} ve \textbf{gönüllü}
+örneklemelerde ise ulaşılabilen ya da katılmayı seçen bireyler kullanılır.
+
+Olasılıklı yöntemler örnekleme belirsizliğinin hesaplanmasına ve hedef evrene
+genelleme yapılmasına daha güçlü bir temel sağlar. Olasılıksız yöntemler bazı
+araştırma koşullarında gerekli olabilir; ancak genelleme sınırları açıkça
+belirtilmelidir. Bu yöntemlerin tasarım ayrıntıları Bölüm 6'da ele alınacaktır.
+
+\section{Temsil, kapsam ve yanlılık}
+\label{sec:population-coverage}
+
+Örnekleme çerçevesi, birimlerin seçildiği fiilî listedir. Çerçevenin hedef
+evreni eksik kapsaması \textbf{kapsam yanlılığına}; seçilen kişilerin önemli
+bir bölümünün yanıt vermemesi \textbf{yanıtlamama yanlılığına}; yalnız
+isteklilerin katılması ise \textbf{gönüllülük yanlılığına} yol açabilir.
+
+Örneğin bütün üniversite öğrencileri hedeflenirken anketin yalnız mezuniyet
+aşamasındaki öğrencilere e-posta ile gönderilmesi, örneklem büyüklüğü yüksek
+olsa bile alt sınıfları dışarıda bırakır. İstatistiksel belirsizlik ile
+sistematik yanlılık ayrı sorunlardır: daha büyük örneklem rastgele
+dalgalanmayı azaltabilir, fakat kapsam hatasını kendiliğinden düzeltemez.
+
+\begin{researchbox}
+Bir sonuç raporlanırken örneklem hacminin yanında örnekleme çerçevesi, seçim
+yöntemi, katılım oranı ve hedef evrenden olası sapmalar da belirtilmelidir.
+``Katılımcılar'' ile ``bütün öğrenciler'' aynı topluluk değildir.
+\end{researchbox}
+
+\section{Çözümlü sınıflandırma örneği}
+
+Bir araştırmada öğrencinin programı, sınıf düzeyi, sınav puanı ve sınavı
+tamamlama süresi kaydedilsin. Program nominal kategorik, sınıf düzeyi sıralı
+kategorik, sınav puanı kesikli nicel ve süre sürekli nicel değişkendir. Bütün
+öğrencilerin ortalama sınav puanı parametre; seçilen öğrencilerin ortalaması
+istatistiktir.
+
+\section{Yazılım uygulaması: kategorik ve nicel değişkenler}
+
+\begin{softwarebox}
+\begin{lstlisting}
+import pandas as pd
+
+data = pd.DataFrame({
+    "okul_turu": ["Devlet", "Ozel", "Devlet", "Devlet"],
+    "sinif": [1, 2, 1, 3],
+    "puan": [72, 81, 68, 77]
+})
+data["okul_turu"] = data["okul_turu"].astype("category")
+data["sinif"] = pd.Categorical(
+    data["sinif"], categories=[1, 2, 3], ordered=True)
+
+print(data.dtypes)
+print(data["okul_turu"].value_counts(normalize=True))
+print(data["puan"].mean())
+\end{lstlisting}
+Kodlama, okul türü ile puanı aynı sayısal işlem türüne zorlamak yerine her
+değişkenin yapısını korur.
+\end{softwarebox}
+
+\begin{assumptionbox}
+Veri türü yalnız dosyadaki teknik biçimden belirlenmez. Bir değişken yazılımda
+sayısal görünse bile araştırmadaki anlamı kimlik, kategori veya sıralama
+olabilir. Analiz kararı kavramsal tanıma dayanmalıdır.
+\end{assumptionbox}
+
+\section{Çözümlü problemler}
+
+\subsection*{Problem 1: Hedef ve erişilebilir evren}
+
+Bir araştırmacı Türkiye'deki lise öğrencilerinin çevrim içi öğrenmeye yönelik
+tutumlarını incelemek istemekte, ancak veriyi yalnız İstanbul'daki devlet
+liselerinden toplamaktadır. Hedef evreni, erişilebilir evreni, örnekleme
+çerçevesini ve güvenli genelleme sınırını belirleyin.
+
+\textbf{Çözüm.} Araştırma sorusunda belirtilen hedef evren Türkiye'deki bütün
+lise öğrencileridir. Araştırmacının fiilen ulaşabildiği evren İstanbul'daki
+devlet liselerinde öğrenim gören öğrencilerdir. Öğrencilerin seçildiği güncel
+okul veya öğrenci listesi örnekleme çerçevesidir. Özel lise öğrencileri,
+diğer illerdeki öğrenciler ve okul dışında kalan gençler bu çerçevede
+bulunmamaktadır.
+
+Bu nedenle sonuçların doğrudan Türkiye'deki bütün lise öğrencilerine
+genellenmesi desteklenmez. Seçim İstanbul'daki devlet liselerini temsil edecek
+biçimde yapılmışsa en güvenli çıkarım bu toplulukla sınırlıdır. Daha geniş
+genelleme için bölge, okul türü ve sosyoekonomik yapı bakımından daha kapsamlı
+bir örnekleme çerçevesi gerekir.
+
+\textbf{Raporlama örneği.} ``Örneklem İstanbul'daki devlet liselerinden
+seçilmiştir; bu nedenle bulguların özel liselere ve diğer illerdeki öğrencilere
+genellenmesi sınırlıdır.''
+
+\subsection*{Problem 2: Gözlem birimi ile analiz birimi}
+
+Yirmi okuldan seçilen 60 sınıfta toplam 1.800 öğrencinin matematik puanı
+ölçülmüştür. Bir satır bir öğrenciyi göstermektedir. Gözlem birimi ve analiz
+birimi nedir? Öğrencilerin tamamen bağımsız kabul edilmesi neden sorunlu
+olabilir?
+
+\textbf{Çözüm.} Ölçüm doğrudan öğrenciler üzerinde yapıldığı için gözlem
+birimi öğrencidir. Öğrenci puanları karşılaştırılıyorsa temel analiz birimi de
+öğrencidir. Bununla birlikte öğrenciler sınıfların, sınıflar da okulların
+içinde kümelenmiştir. Aynı sınıftaki öğrenciler ortak öğretmen, ders ortamı ve
+akran etkileri nedeniyle farklı sınıflardaki öğrencilerden daha çok
+birbirlerine benzeyebilir.
+
+Bu yapı gözlem sayısını değiştirmez; veri setinde yine 1.800 öğrenci vardır.
+Ancak 1.800 tamamen bağımsız öğrenciden elde edilecek bilgiyle aynı miktarda
+bilgi bulunduğu varsayımı aşırı iyimser standart hatalara yol açabilir.
+Analizde sınıf ve okul kümelenmesini dikkate alan yöntemler gerekebilir.
+
+\textbf{Sık hata.} Veri dosyasındaki satır sayısını doğrudan bağımsız örneklem
+hacmi kabul etmek, çok düzeyli veya tekrarlı ölçümlü yapılarda yanıltıcıdır.
+
+\subsection*{Problem 3: Parametre, istatistik ve tahmin hedefi}
+
+Bir ilçedeki 8. sınıf öğrencilerinin liseye geçiş sınavında başarı oranı
+araştırılmaktadır. İlçede 4.200 öğrenci vardır. Rastgele seçilen 300 öğrencinin
+198'i belirlenen başarı ölçütünü karşılamıştır. Parametreyi, istatistiği ve
+örneklem oranını bulun.
+
+\textbf{Çözüm.} İlçedeki 4.200 öğrencinin başarı ölçütünü karşılama oranı
+bilinmeyen evren parametresi $p$'dir. Örneklemde başarılı olan öğrenci sayısı
+198, örneklem hacmi 300'dür. Örneklem oranı
+\[
+\hat p=\frac{198}{300}=0{,}66
+\]
+olur. Dolayısıyla öğrencilerin yüzde 66'sı örneklemde başarı ölçütünü
+karşılamıştır. Bu yüzde, evrendeki gerçek oran $p$ için bir tahmindir; $p$'nin
+kesin olarak yüzde 66 olduğunu göstermez.
+
+\textbf{Raporlama örneği.} ``Rastgele seçilen 300 öğrencinin 198'i başarı
+ölçütünü karşılamış, örneklem başarı oranı yüzde 66 bulunmuştur. Bu değer
+ilçedeki 8. sınıf öğrencilerinin başarı oranı için bir nokta tahminidir.''
+
+\subsection*{Problem 4: Değişken türü ve veri sözlüğü}
+
+Bir araştırma dosyasında şu sütunlar bulunmaktadır: öğrenci kodu, okul türü
+(1=devlet, 2=özel), devamsızlık günü, sınıf başarı sırası ve sınavı tamamlama
+süresi. Her değişkeni sınıflandırın ve uygun bir veri doğrulama kuralı yazın.
+
+\textbf{Çözüm.}
+
+\begin{center}
+\small
+\begin{tabularx}{\textwidth}{@{}p{0.22\textwidth}p{0.23\textwidth}X@{}}
+\toprule
+Değişken & Tür & Örnek doğrulama kuralı \\
+\midrule
+Öğrenci kodu & Nominal kimlik & Her öğrenci için benzersiz olmalı \\
+Okul türü & Nominal kategorik & Yalnız 1 veya 2 değerini almalı \\
+Devamsızlık günü & Kesikli nicel & Negatif olmamalı; dönem gününü aşmamalı \\
+Başarı sırası & Sıralı & 1 ile öğrenci sayısı arasında olmalı \\
+Tamamlama süresi & Sürekli nicel & Pozitif ve sınav süresiyle uyumlu olmalı \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+Öğrenci kodunun ve okul türünün rakamla yazılması bunları nicel değişken
+yapmaz. Kod ortalaması veya okul türü kodlarının standart sapması anlamlı bir
+araştırma özeti değildir. Devamsızlık ve süre için merkezi eğilim ile yayılım
+özetleri kullanılabilir; fakat önce olanaksız değerler araştırılmalıdır.
+
+\subsection*{Problem 5: Örnekleme yöntemi seçimi}
+
+Bir üniversite, öğrencilerin kütüphane kullanım süresini tahmin etmek
+istemektedir. Öğrencilerin yüzde 60'ı lisans, yüzde 25'i yüksek lisans ve
+yüzde 15'i doktora öğrencisidir. Toplam 400 öğrenci seçilecektir. Her öğrenim
+düzeyinin temsili isteniyorsa hangi yöntem uygundur ve orantılı seçimde her
+gruptan kaç öğrenci alınmalıdır?
+
+\textbf{Çözüm.} Öğrenim düzeylerinin ayrı ayrı temsil edilmesi istendiği için
+tabakalı örnekleme uygundur. Öğrenim düzeyi tabaka değişkeni olarak kullanılır.
+Orantılı dağılımda
+\[
+400(0{,}60)=240,\qquad
+400(0{,}25)=100,\qquad
+400(0{,}15)=60
+\]
+olduğundan 240 lisans, 100 yüksek lisans ve 60 doktora öğrencisi seçilir.
+Her tabakanın içinde öğrenciler rastgele seçilmelidir.
+
+Doktora öğrencileri için ayrıca ayrıntılı analiz yapılacaksa orantısız biçimde
+daha fazla doktora öğrencisi seçilebilir. Bu durumda üniversitenin tamamına
+ilişkin bir ortalama hesaplanırken farklı seçilme olasılıklarını yansıtan
+ağırlıklar gerekebilir.
+
+\begin{outputguidebox}
+Bir veri çıktısını yorumlamadan önce değişken etiketleri, kategori kodları,
+eksik değer tanımları ve analiz birimi kontrol edilmelidir. ``1'' değerinin
+bir puan mı, kategori mi yoksa eksik veri kodu mu olduğu bilinmeden doğru
+istatistik üretilemez.
+\end{outputguidebox}
+
+\input{chapters/spss/b02}
+
+\input{chapters/r/b02}
+
+\section{Bölüm özeti}
+
+\begin{itemize}
+  \item Hedef evren, erişilebilir evren ve örneklem farklı kümeler olabilir.
+  \item Parametre evrene, istatistik örnekleme ait sayısal özettir.
+  \item Kategorik ve nicel değişkenler farklı özet ve grafikler gerektirir.
+  \item Sayısal kod, değişkenin ölçme düzeyini kendiliğinden değiştirmez.
+  \item Örnekleme yöntemi ve örnekleme çerçevesi genelleme sınırını belirler.
+  \item Büyük örneklem sistematik kapsam, gönüllülük veya yanıtlamama
+  yanlılığını kendiliğinden gidermez.
+\end{itemize}
+
+\section*{Alıştırmalar}
+
+\begin{enumerate}
+  \item Hedef evren ile erişilebilir evrenin farklı olduğu bir araştırma örneği yazın.
+  \item Parametre ve istatistiği aynı araştırma sorusu üzerinde gösterin.
+  \item Nominal, sıralı, kesikli ve sürekli değişkenlere birer örnek verin.
+  \item Sayısal kodlanmış her değişkenin neden nicel olmadığını açıklayın.
+  \item Büyük örneklemin temsil gücünü tek başına neden garanti etmediğini tartışın.
+  \item Hedef evren, erişilebilir evren ve örnekleme çerçevesini aynı eğitim
+  araştırması üzerinde birbirinden ayırın.
+  \item Öğrencilerin sınıflar içinde kümelendiği bir çalışmada gözlem
+  bağımsızlığı varsayımının neden zayıflayabileceğini açıklayın.
+  \item 250 öğrencinin 145'inin bir uygulamayı başarılı bulduğu örneklemde
+  örneklem oranını hesaplayın ve parametreyi tanımlayın.
+  \item Basit rastgele, tabakalı ve küme örneklemesini seçim birimi ve kullanım
+  amacı bakımından karşılaştırın.
+  \item Lisans, yüksek lisans ve doktora öğrencilerinin ayrı temsil edilmesi
+  gereken bir araştırma için tabakalı örnekleme planı hazırlayın.
+  \item Bir veri sözlüğünde bulunması gereken en az beş bilgi türünü yazın.
+  \item Eksik değer için 99 kodunun kullanılmasının analizde doğurabileceği
+  sorunu ve çözümünü açıklayın.
+\end{enumerate}

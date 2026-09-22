@@ -1,0 +1,489 @@
+\chapter{Ölçek Puanlarının Güvenirliği}
+\label{ch:reliability}
+\index{güvenirlik}
+\index{ölçek!güvenirlik}
+
+\begin{hedefler}
+Bu bölümün sonunda okuyucu:
+\begin{itemize}
+  \item güvenirliği bir ölçeğin değişmez özelliği değil, belirli bir örneklemde
+  ve uygulama koşulunda elde edilen puanlara ilişkin kanıt olarak açıklayabilecek,
+  \item güvenirlik ile geçerliği birbirinden ayırabilecek,
+  \item iç tutarlılık, test--tekrar test ve değerlendiriciler arası güvenirlik
+  sorularını uygun katsayılarla eşleştirebilecek,
+  \item ters maddeleri ve eksik veriyi analizden önce denetleyebilecek,
+  \item Cronbach alfa katsayısını hesaplayıp varsayımları ve sınırlılıklarıyla
+  yorumlayabilecek,
+  \item düzeltilmiş madde--toplam korelasyonu ile ``madde silinirse alfa''
+  çıktısını mekanik karar vermeden değerlendirebilecek,
+  \item omega katsayısının alfa karşısındaki temel gerekçesini açıklayabilecek,
+  \item Python, R ve SPSS çıktılarından ölçülü bir güvenirlik paragrafı
+  yazabilecektir.
+\end{itemize}
+\end{hedefler}
+
+\begin{hazirlik}
+Beş maddelik bir ölçeğin alfa katsayısı 0,92 bulunmuştur. Bu sayı ölçeğin tek
+boyutlu, geçerli ve her grupta güvenilir olduğunu tek başına gösterir mi?
+Gerekçenizi üç ayrı cümleyle yazın.
+\end{hazirlik}
+
+\section{PDR vakası: Yardım arama tutumu ölçeği}
+
+Bir psikolojik danışma merkezi, öğrencilerin profesyonel yardım aramaya yönelik
+tutumlarını beş maddelik bir ölçekle değerlendirmektedir. Maddeler 1
+(``Kesinlikle katılmıyorum'') ile 5 (``Kesinlikle katılıyorum'') arasında
+puanlanmıştır. Dördüncü madde olumsuz yöndedir:
+
+\begin{quote}
+``Sorunlarımı bir uzmana anlatmanın yararlı olacağını düşünmem.''
+\end{quote}
+
+Bu madde ters puanlanmadan toplam puana eklenirse yüksek yardım arama tutumu
+gösteren öğrenciler dördüncü maddede düşük puan alacaktır. Böylece aynı yapıyı
+ölçmesi amaçlanan maddeler yapay biçimde ters yönde ilişkilendirilebilir.
+Güvenirlik analizi bu nedenle bir menü komutuyla değil; madde yönü, puanlama
+anahtarı, hedef grup ve ölçüm amacı incelenerek başlar.
+
+\begin{researchbox}
+``Ölçeğin güvenirliği 0,80'dir'' cümlesi eksiktir. Katsayı; hangi puanın,
+hangi örneklemde, hangi uygulama koşulunda ve hangi yöntemle değerlendirildiği
+belirtilerek raporlanmalıdır.
+\end{researchbox}
+
+\section{Gözlenen puan, hedef puan ve ölçme hatası}
+\index{klasik test kuramı}
+\index{ölçme hatası}
+
+Klasik test kuramının temel gösterimi
+\[
+X=T+E
+\]
+biçimindedir. Burada $X$ gözlenen puan, $T$ belirli ölçme koşullarında hedeflenen
+puan bileşeni ve $E$ ölçme hatasıdır. Aynı bireyin gözlenen puanı; madde
+örneklemi, uygulama ortamı, zaman, değerlendirici veya geçici durumlar nedeniyle
+değişebilir.
+
+\begin{definitionbox}
+\textbf{Güvenirlik}, belirli bir puan yorumunda gözlenen farklılıkların ne
+ölçüde hedeflenen puan farklılıklarını yansıttığına ilişkin kanıttır. Katsayı,
+ölçeğin değişmez etiketi değil; puanların belirli kullanımına ilişkin bir
+özettir.
+\end{definitionbox}
+
+Basitleştirilmiş klasik gösterimde güvenirlik
+\[
+\rho_{XX'}=\frac{\Var(T)}{\Var(X)}
+=1-\frac{\Var(E)}{\Var(X)}
+\]
+olarak yazılır. Hata değişkenliği büyüdükçe aynı gözlenen puan farkının hedef
+puan farkını temsil etme derecesi azalır. Bu formül her hata kaynağını tek tek
+tanımlamaz; hangi kaynakların hata sayılacağı ölçüm tasarımına bağlıdır.
+
+\section{Güvenirlik ve geçerlik aynı soru değildir}
+\index{geçerlik}
+
+Güvenirlik puanların tutarlılığı ve ölçme hatasıyla, geçerlik ise puanlardan
+yapılan yorum ve kullanımların dayanaklarıyla ilgilidir. Bir ölçüm tutarlı
+biçimde yanlış yapılıyorsa yüksek güvenirlik gösterebilir; ancak amaçlanan
+yapıyı doğru temsil etmeyebilir.
+
+\begin{table}[htbp]
+\centering
+\caption{Güvenirlik ve geçerlik sorularının ayrımı}
+\label{tab:reliability-validity}
+\begin{tabular}{@{}p{0.23\textwidth}p{0.32\textwidth}p{0.32\textwidth}@{}}
+\toprule
+ & Güvenirlik & Geçerlik \\
+\midrule
+Temel soru & Puan ne kadar tutarlı ve hassastır? & Puanın amaçlanan yorumu ne ölçüde desteklenir? \\
+Kanıt örneği & İç tutarlılık, zaman içi kararlılık, değerlendirici uyumu & İçerik, yapı, ölçüt ve sonuçlara ilişkin kanıtlar \\
+Yanlış çıkarım & ``Alfa yüksekse ölçek geçerlidir.'' & ``Geçerli bir ölçek her grupta aynı güvenirliği verir.'' \\
+Raporlama & Katsayı, örneklem, puanlama ve belirsizlik & Amaç, hedef grup ve çoklu kanıt kaynakları \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{mistakebox}
+Yüksek alfa tek boyutluluk kanıtı değildir. Birden fazla ilişkili alt boyut,
+çok benzer maddeler veya yalnız madde sayısının artması da alfayı yükseltebilir
+\citep{sijtsma2009,mcneish2018}.
+\end{mistakebox}
+
+\section{Hangi güvenirlik sorusu soruluyor?}
+
+``Güvenirlik'' tek bir yöntem değildir. Katsayı, araştırmanın hata kaynağına
+göre seçilmelidir.
+
+\begin{figure}[htbp]
+\centering
+\resizebox{0.98\linewidth}{!}{%
+\begin{tikzpicture}[>=stealth,
+  box/.style={draw=PrismBlue!70,fill=PrismLight,rounded corners,align=center,
+    minimum width=3.8cm,minimum height=1.05cm,font=\small},
+  note/.style={font=\scriptsize,align=center,text=PrismGray}]
+\node[box] (q) at (0,2.2) {Başlıca hata kaynağı nedir?};
+\node[box] (items) at (-5,0) {Madde örneklemi\\İç tutarlılık};
+\node[box] (time) at (0,0) {Zaman ve uygulama\\Test--tekrar test};
+\node[box] (rater) at (5,0) {Değerlendirici\\Kappa veya ICC};
+\draw[->,thick,PrismBlue] (q) -- (items);
+\draw[->,thick,PrismBlue] (q) -- (time);
+\draw[->,thick,PrismBlue] (q) -- (rater);
+\node[note] at (-5,-1.25) {alfa, omega,\\madde analizi};
+\node[note] at (0,-1.25) {kararlılık ve\\sistematik değişim};
+\node[note] at (5,-1.25) {kategorik veya\\sürekli puanlama};
+\end{tikzpicture}%
+}
+\caption{Araştırma sorusuna göre temel güvenirlik kanıtı seçimi.}
+\label{fig:reliability-selection}
+\end{figure}
+
+\subsection{İç tutarlılık}
+
+Aynı uygulamada, aynı puanı oluşturmak üzere birleştirilen maddelerin birlikte
+değişimini inceler. Alfa ve omega bu başlık altında değerlendirilir. İç
+tutarlılık, zaman içindeki kararlılığı veya değerlendiriciler arası uyumu
+göstermez.
+
+\subsection{Test--tekrar test güvenirliği}
+
+Aynı ölçümün uygun bir zaman aralığıyla yeniden uygulanmasında puanların
+kararlılığını inceler. Basit Pearson korelasyonu bireylerin sırasını özetler;
+bütün puanların ikinci uygulamada sistematik olarak yükselmesini tek başına
+yakalamayabilir. Amaç mutlak uyumsa uygun sınıf içi korelasyon katsayısı (ICC),
+ortalama değişim ve fark grafikleri birlikte düşünülmelidir.
+
+\subsection{Değerlendiriciler arası güvenirlik}
+
+Kategorik kararlar için kappa ailesi, sürekli puanlar için uygun ICC modeli
+kullanılabilir. Katsayı seçimi; değerlendiricilerin sabit mi rastgele mi
+olduğu, tek değerlendirici mi ortalama puan mı kullanılacağı ve mutlak uyum mu
+tutarlılık mı hedeflendiğine bağlıdır.
+
+\section{Analizden önce veri ve puanlama denetimi}
+
+Güvenirlik katsayısı hesaplanmadan önce şu kontroller yapılmalıdır:
+
+\begin{enumerate}
+  \item Her madde için geçerli puan aralığı ve eksik değer kodları doğrulanır.
+  \item Olumsuz maddeler puanlama anahtarına göre ters çevrilir.
+  \item Toplam veya ortalama puanın kaç geçerli maddeyle hesaplanacağı belirlenir.
+  \item Maddelerin aynı hedef puanda birleştirilmesinin kuramsal gerekçesi incelenir.
+  \item Madde dağılımları, tavan--taban yığılmaları ve olağandışı örüntüler görülür.
+  \item Alt boyutlu bir yapı varsa bütün maddeler için tek katsayı vermek yerine
+  alt boyutlar ayrı değerlendirilir.
+\end{enumerate}
+
+Beşli bir maddede ters puanlama
+\[
+X_{\text{ters}}=6-X
+\]
+ile yapılır. Genel olarak en küçük değer $L$, en büyük değer $U$ ise
+\[
+X_{\text{ters}}=L+U-X
+\]
+kullanılır.
+
+\begin{mistakebox}
+Madde metni olumsuz diye otomatik ters puanlama yapılmaz. Ölçeğin özgün
+puanlama anahtarı incelenmelidir. Bazı olumsuz ifadeler zaten yüksek yapı
+düzeyini gösterebilir veya farklı bir alt boyuta ait olabilir.
+\end{mistakebox}
+
+\section{Cronbach alfa katsayısı}
+\index{Cronbach alfa}
+
+$k$ maddelik bir toplam puan için alfa
+\[
+\alpha=\frac{k}{k-1}
+\left(1-\frac{\sum_{j=1}^{k}s_j^2}{s_X^2}\right)
+\]
+biçiminde hesaplanır. Burada $s_j^2$ her maddenin varyansı, $s_X^2$ ise madde
+toplamının varyansıdır. Standartlaştırılmış maddelerde ortalama maddeler arası
+korelasyon $\bar r$ kullanılarak
+\[
+\alpha_{\text{std}}=\frac{k\bar r}{1+(k-1)\bar r}
+\]
+elde edilir \citep{cronbach1951}.
+
+Formül iki önemli özelliği görünür kılar: Maddeler birlikte değiştikçe alfa
+yükselir; aynı ortalama ilişki düzeyinde madde sayısı arttıkça da alfa
+yükselme eğilimindedir. Bu nedenle farklı uzunluktaki ölçeklerin alfalarını
+yalnız sayısal büyüklükle karşılaştırmak yanıltıcı olabilir.
+
+\begin{assumptionbox}
+Alfanın güvenirliğe yakın yorumlanması; maddelerin aynı yapıyı uygun biçimde
+temsil etmesi, hata yapısının sorunlu olmaması ve maddelerin hedef puana
+katkılarının aşırı farklılaşmaması gibi koşullara dayanır. Alfa bu koşulları
+kendi başına sınamaz.
+\end{assumptionbox}
+
+\section{Adım adım ters madde örneği}
+
+Tablo~\ref{tab:reliability-small-data}, yalnız hesaplama mantığını göstermek
+için hazırlanmış 12 kişilik küçük bir öğretim verisidir. Gerçek bir ölçek
+çalışması için bu örneklem yeterli değildir.
+
+\begin{table}[htbp]
+\centering
+\caption{Beş maddelik öğretim verisi; M4 ters yönde yazılmıştır}
+\label{tab:reliability-small-data}
+\small
+\begin{tabular}{@{}crrrrr@{}}
+\toprule
+Kişi & M1 & M2 & M3 & M4 & M5 \\
+\midrule
+1 & 1 & 2 & 1 & 5 & 2 \\
+2 & 2 & 2 & 2 & 4 & 2 \\
+3 & 2 & 3 & 2 & 4 & 3 \\
+4 & 3 & 2 & 3 & 3 & 3 \\
+5 & 3 & 3 & 4 & 2 & 3 \\
+6 & 4 & 3 & 4 & 2 & 4 \\
+7 & 4 & 4 & 3 & 2 & 4 \\
+8 & 5 & 4 & 5 & 1 & 4 \\
+9 & 4 & 5 & 4 & 1 & 5 \\
+10 & 5 & 5 & 5 & 1 & 5 \\
+11 & 3 & 4 & 3 & 2 & 4 \\
+12 & 2 & 3 & 3 & 3 & 2 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+M4 değiştirilmeden hesaplanan alfa $0{,}294$'tür. Madde
+$M4_{\text{ters}}=6-M4$ biçiminde düzeltildiğinde alfa $0{,}964$ olur. Büyük
+değişim, ilk sonucun ölçeğin niteliğinden çok puanlama hatasını yansıttığını
+gösterir.
+
+\begin{table}[htbp]
+\centering
+\caption{Ters puanlama sonrasında madde tanıları}
+\label{tab:reliability-item-diagnostics}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Madde & Ortalama & Düzeltilmiş madde--toplam $r$ & Madde silinirse $\alpha$ \\
+\midrule
+M1 & 3,17 & 0,934 & 0,949 \\
+M2 & 3,33 & 0,831 & 0,966 \\
+M3 & 3,25 & 0,880 & 0,958 \\
+M4 ters & 3,50 & 0,965 & 0,944 \\
+M5 & 3,42 & 0,890 & 0,957 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Örnekte bütün düzeltilmiş madde--toplam korelasyonları pozitiftir. M2
+silindiğinde alfa çok küçük bir miktar yükselmektedir. Bu fark M2'yi otomatik
+olarak silmek için yeterli değildir. Maddenin kuramsal kapsamı, anlaşılabilirliği,
+benzer maddelerle fazlalığı ve başka örneklemlerdeki davranışı incelenmelidir.
+Ayrıca $\alpha\approx0{,}96$ maddelerin aşırı benzer olabileceği olasılığını da
+gündeme getirir.
+
+\section{Madde--toplam korelasyonu nasıl okunur?}
+\index{madde--toplam korelasyonu}
+
+Düzeltilmiş madde--toplam korelasyonu, bir madde ile o madde çıkarılarak
+hesaplanan kalan toplam arasındaki ilişkiyi özetler. Maddenin kendi toplamına
+dahil edildiği düzeltilmemiş korelasyon yapay olarak yüksek olabilir.
+
+Negatif bir değer şu olasılıkları düşündürür:
+
+\begin{itemize}
+  \item ters maddenin yanlış kodlanması,
+  \item veri giriş veya eksik değer kodlama hatası,
+  \item maddenin farklı bir yapıyı ölçmesi,
+  \item belirsiz veya çift anlamlı madde ifadesi,
+  \item çok küçük ve kararsız örneklem.
+\end{itemize}
+
+Tek bir eşik bütün ölçekler için karar kuralı değildir. Madde istatistiği,
+içerik geçerliği ve ölçeğin hedeflediği kapsamla birlikte değerlendirilmelidir.
+
+\section{Omega neden raporlanabilir?}
+\index{omega katsayısı}
+
+Alfa maddelerin ortak yapıya katkılarının benzer olmasına güçlü biçimde
+dayanabilir. Tek faktörlü eşlenik bir modelde yükler $\lambda_j$ ve özgül hata
+varyansları $\theta_j$ ise toplam omega basitleştirilmiş olarak
+\[
+\omega=\frac{\left(\sum_{j=1}^{k}\lambda_j\right)^2}
+{\left(\sum_{j=1}^{k}\lambda_j\right)^2+\sum_{j=1}^{k}\theta_j}
+\]
+biçiminde ifade edilir. Omega, maddelerin faktör yüklerinin eşit olmasını
+gerektirmeyen model temelli bir yaklaşım sunar \citep{dunn2014,mcneish2018}.
+
+\begin{sezgibox}
+Alfa gözlenen madde varyans ve kovaryanslarından tek bir özet üretir. Omega
+ise maddelerin ortak yapıya farklı güçlerde bağlanabileceğini açıkça modele
+katar. Bununla birlikte yanlış faktör modeliyle hesaplanan omega da güvenilir
+bir sonuç garanti etmez.
+\end{sezgibox}
+
+Alfa ile omega birbirine yakınsa bu, her varsayımın doğrulandığı anlamına
+gelmez; çok farklıysa puan yapısı, madde yükleri ve hata ilişkileri daha
+dikkatle incelenmelidir. Alt boyutlu ölçeklerde toplam omega yanında alt ölçek
+puanlarının anlamlılığı da değerlendirilir.
+
+\section{Sık kullanılan eşikler neden yeterli değildir?}
+
+``0,70'in üzeri kabul edilir'' gibi sabit kurallar araştırma kararının yerini
+tutmaz. Katsayının yeterliliği en az şu unsurlara bağlıdır:
+
+\begin{itemize}
+  \item kararın bireysel mi grup düzeyinde mi olduğu,
+  \item yanlış kararın uygulamadaki sonucu,
+  \item ölçeğin uzunluğu ve kapsamı,
+  \item örneklemin heterojenliği,
+  \item katsayının belirsizliği,
+  \item başka güvenirlik ve geçerlik kanıtları.
+\end{itemize}
+
+Araştırma gruplarını betimlemek için kullanılan bir puan ile bireysel klinik
+karara temel olacak puanın gerektirdiği hassasiyet aynı değildir. Katsayı
+yorumunda kullanım amacı mutlaka belirtilmelidir.
+
+\section{Eksik veri, uç yanıt ve örneklem etkisi}
+
+Liste bazında silme, yalnız bütün maddeleri yanıtlayan kişileri analize alır ve
+yanıtlamama sistematikse sonucu yanlılaştırabilir. Çift bazında kovaryans
+hesapları ise farklı hücrelerin farklı katılımcılara dayanmasına yol açabilir.
+Kullanılan eksik veri kuralı ve analize giren kişi sayısı raporlanmalıdır.
+
+Örneklem çok homojense gerçek puan değişkenliği azalabilir ve güvenirlik
+katsayısı düşebilir. Aşırı heterojen örneklem katsayıyı yükseltebilir. Bu
+nedenle başka bir çalışmada bulunan alfa, yeni örneklem için otomatik olarak
+aktarılmaz.
+
+\section{Python ile alfa ve madde tanıları}
+
+\begin{lstlisting}[style=prismPython,caption={Cronbach alfa ve madde tanıları için Python kodu}]
+import numpy as np
+import pandas as pd
+
+def cronbach_alpha(frame):
+    x = frame.to_numpy(dtype=float)
+    k = x.shape[1]
+    item_variances = x.var(axis=0, ddof=1).sum()
+    total_variance = x.sum(axis=1).var(ddof=1)
+    return k / (k - 1) * (1 - item_variances / total_variance)
+
+items = ["M1", "M2", "M3", "M4", "M5"]
+df = pd.read_csv("guvenirlik.csv")
+
+# Besli maddede ters puanlama
+df["M4_t"] = 6 - df["M4"]
+scored = df[["M1", "M2", "M3", "M4_t", "M5"]]
+
+print("alpha =", cronbach_alpha(scored))
+
+for item in scored.columns:
+    remaining = scored.drop(columns=item)
+    corrected_total = remaining.sum(axis=1)
+    item_total = scored[item].corr(corrected_total)
+    alpha_deleted = cronbach_alpha(remaining)
+    print(item, item_total, alpha_deleted)
+\end{lstlisting}
+
+Kod küçük öğretim verisinde $\alpha=0{,}963643$ üretir. Gerçek analizde
+eksik değer işlemi, madde aralığı ve ters puanlama koddan önce belgelenmelidir.
+
+\section{R ile alfa ve omega}
+
+Temel alfa hesabı ek paket olmadan yapılabilir:
+
+\begin{lstlisting}[style=prismR,caption={R ile alfa hesabı ve omega için model temelli seçenek}]
+cronbach_alpha <- function(x) {
+  x <- as.data.frame(x)
+  k <- ncol(x)
+  k / (k - 1) *
+    (1 - sum(sapply(x, var, na.rm = TRUE)) /
+       var(rowSums(x), na.rm = TRUE))
+}
+
+d <- read.csv("guvenirlik.csv")
+d$M4_t <- 6 - d$M4
+puanlanan <- d[c("M1", "M2", "M3", "M4_t", "M5")]
+cronbach_alpha(puanlanan)
+
+# psych paketi kuruluysa ayrintili alfa ve omega:
+# psych::alpha(puanlanan, check.keys = FALSE)
+# psych::omega(puanlanan, nfactors = 1)
+\end{lstlisting}
+
+Otomatik anahtar düzeltme seçenekleri öğretim amacıyla yararlı görünse de,
+ters maddelerin yazılım tarafından tahmin edilmesi özgün puanlama anahtarının
+yerini tutmaz.
+
+\section{SPSS ile uygulama ve çıktı okuma}
+
+\begin{lstlisting}[style=prismSPSS,caption={SPSS ile ters puanlama ve alfa analizi}]
+RECODE M4 (1=5) (2=4) (3=3) (4=2) (5=1) INTO M4_T.
+EXECUTE.
+
+RELIABILITY
+  /VARIABLES=M1 M2 M3 M4_T M5
+  /SCALE('Yardim arama tutumu') ALL
+  /MODEL=ALPHA
+  /STATISTICS=DESCRIPTIVE SCALE CORR.
+\end{lstlisting}
+
+\begin{outputguidebox}
+SPSS çıktısında en az şu bölümler okunmalıdır: (1) analize giren ve dışlanan
+kişi sayısı, (2) ölçek için alfa, (3) madde ortalama ve standart sapmaları,
+(4) düzeltilmiş madde--toplam korelasyonları, (5) madde silinirse alfa.
+Yalnız ``Reliability Statistics'' tablosundaki tek katsayıyı raporlamak
+yeterli değildir.
+\end{outputguidebox}
+
+SPSS'in standart \texttt{RELIABILITY} komutu alfa verir; omega için faktör
+modeli kurabilen ek yazılım veya uygun bir R/Python uygulaması gerekir.
+
+\section{Bilimsel raporlama örneği}
+
+Güvenirlik paragrafı; örneklemi, madde sayısını, puanlama işlemini, katsayıyı,
+madde tanılarını ve yorum sınırını birlikte vermelidir:
+
+\begin{quote}
+``Beş maddelik yardım arama tutumu puanı 120 üniversite öğrencisinde
+incelenmiştir. Olumsuz yöndeki dördüncü madde özgün anahtara göre ters
+puanlanmıştır. İç tutarlılık için Cronbach alfa $0{,}84$ ve tek faktörlü
+modelden toplam omega $0{,}86$ bulunmuştur. Düzeltilmiş madde--toplam
+korelasyonları $0{,}46$ ile $0{,}71$ arasındadır. Sonuçlar bu örneklemdeki
+toplam puanın iç tutarlılığını desteklemektedir; tek boyutluluk, zaman içi
+kararlılık veya geçerlik kanıtı olarak yorumlanmamıştır.''
+\end{quote}
+
+Katsayı için güven aralığı elde edilebiliyorsa nokta tahminiyle birlikte
+verilmelidir. Örneklem küçükse katsayının kararsızlığı özellikle belirtilir.
+
+\section{Bir güvenirlik araştırmasını değerlendirirken}
+
+\begin{enumerate}
+  \item Puanın hangi amaç ve hedef grup için kullanılacağı açık mı?
+  \item Maddelerin aynı toplamda birleştirilmesi kuramsal ve ampirik olarak savunulmuş mu?
+  \item Ters maddeler ve eksik değerler doğru işlenmiş mi?
+  \item Katsayı araştırma sorusundaki hata kaynağına uygun mu?
+  \item Alfa tek boyutluluk veya geçerlik kanıtı gibi sunulmuş mu?
+  \item Madde silme kararları yalnız katsayı artışına mı dayanıyor?
+  \item Katsayının örnekleme bağlı olduğu ve belirsizliği tartışılmış mı?
+  \item İç tutarlılığın yanında gerekliyse zaman veya değerlendirici kanıtı verilmiş mi?
+\end{enumerate}
+
+\input{chapter-exercises/15-guvenirlik}
+
+\bolumkaynaklari{\cite{cronbach1951,sijtsma2009,dunn2014,mcneish2018,appelbaum2018}}
+
+\section*{Hatırla--Uygula--Yansıt}
+
+\begin{enumerate}
+\renewcommand{\labelenumi}{\textbf{\Alph{enumi}.}}
+  \item \textbf{Hatırla:} Güvenirliği neden ölçeğin değişmez özelliği olarak tanımlamamak gerekir?
+  \item \textbf{Ayır:} İç tutarlılık, test--tekrar test ve değerlendiriciler arası güvenirliğe birer araştırma sorusu yazın.
+  \item \textbf{Kodla:} 0--4 aralığındaki ters bir madde için dönüşüm formülünü yazın.
+  \item \textbf{Hesapla:} $k=6$ ve ortalama maddeler arası korelasyon $0{,}30$ ise standartlaştırılmış alfayı bulun.
+  \item \textbf{Eleştir:} ``Alfa 0,91 olduğu için ölçek tek boyutlu ve geçerlidir'' cümlesini düzeltin.
+  \item \textbf{Tanıla:} Bir maddenin düzeltilmiş madde--toplam korelasyonu negatifse hangi kontrolleri yaparsınız?
+  \item \textbf{Karar ver:} Bir madde silindiğinde alfa 0,80'den 0,81'e çıkıyorsa hangi ek kanıtları incelersiniz?
+  \item \textbf{Karşılaştır:} Alfa ile omega arasındaki temel model farkını açıklayın.
+  \item \textbf{Uygula:} Kendi veri setinizde madde dağılımlarını, alfa ve madde tanılarını Python, R veya SPSS ile üretin.
+  \item \textbf{Raporla:} Örneklem, madde sayısı, puanlama, katsayı, madde aralığı ve yorum sınırı içeren kısa paragraf yazın.
+\end{enumerate}

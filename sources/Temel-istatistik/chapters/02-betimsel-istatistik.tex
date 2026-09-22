@@ -1,0 +1,665 @@
+\chapter{Verilerin Grafiksel ve Sayısal Betimlenmesi}
+\index{betimsel istatistik}
+
+\begin{hedefler}
+Bu bölümde frekans dağılımları, temel grafikler, merkezi eğilim ve yayılım
+ölçüleri birlikte ele alınır. Amaç yalnız sayı hesaplamak değil, dağılımın
+merkezini, değişkenliğini, biçimini ve olağandışı gözlemlerini açıklamaktır.
+\end{hedefler}
+
+\begin{hazirlik}
+$(2,3,3,4,18)$ veri dizisinde ortalama ile medyandan hangisinin tipik değeri
+daha iyi temsil edeceğini hesaplamadan önce tahmin edin ve gerekçelendirin.
+\end{hazirlik}
+
+\section{PDR vakası: Akademik kaygı verisini ilk kez görmek}
+
+Bir psikolojik danışma birimi, sınav döneminde öğrencilerin akademik kaygı
+puanlarını incelemek istemektedir. Araştırmacının ilk sorusu ``Hangi test
+kullanılmalı?'' değildir. Önce verinin kimlerden ve nasıl toplandığı, hangi
+değişkenlerin bulunduğu, eksik veya olanaksız değer olup olmadığı ve puanların
+nasıl dağıldığı anlaşılmalıdır.
+
+Bu bölüm boyunca aşağıdaki sorulara yanıt aranacaktır:
+
+\begin{enumerate}
+  \item Kaygı puanlarının tipik düzeyi nedir?
+  \item Öğrenciler birbirine ne kadar benzemekte veya birbirinden ne kadar ayrılmaktadır?
+  \item Dağılım simetrik midir; aykırı değer adayı var mıdır?
+  \item Hangi grafik ve sayısal özet araştırma sorusuna en açık yanıtı verir?
+\end{enumerate}
+
+Betimsel analiz yalnız çıkarımsal analize hazırlık değildir. Örneklemde ne
+gözlendiğini dürüst ve anlaşılır biçimde açıklayan başlı başına bir araştırma
+sonucudur.
+
+\section{Önce veri yapısını tanımak}
+\index{veri yapısı}
+
+Kategorik değişkenler frekans ve yüzdelerle; nicel değişkenler ise sıralı veri,
+grafikler ve sayısal özetlerle incelenir. Bir grafik seçilirken değişkenin
+ölçme düzeyi belirleyicidir. Aynı sayısal özetlerin çok farklı veri
+örüntülerini gizleyebilmesi nedeniyle grafiksel ve sayısal inceleme birlikte
+yürütülmelidir \cite{anscombe1973}.
+
+\subsection{Analiz birimi ve kod kitabı}
+\index{analiz birimi}
+\index{kod kitabı}
+
+Her satırın kimi veya neyi temsil ettiği \emph{analiz birimi} olarak açıkça
+belirlenmelidir. Bir satır öğrenci, görüşme, okul ya da ölçüm zamanı olabilir.
+Aynı öğrencinin ön-test ve son-test ölçümleri iki bağımsız öğrenci gibi
+yorumlanamaz.
+
+Analize başlamadan önce kısa bir kod kitabı hazırlanması yararlıdır:
+
+\begin{table}[htbp]
+\centering
+\caption{Örnek PDR veri dosyası için kod kitabı.}
+\begin{tabular}{@{}p{0.20\textwidth}p{0.24\textwidth}p{0.17\textwidth}p{0.23\textwidth}@{}}
+\toprule
+Değişken & Açıklama & Tür/düzey & Olası değerler \\
+\midrule
+\texttt{id} & Katılımcı kodu & Kimlik & 1, 2, $\ldots$, 120 \\
+\texttt{sinif} & Sınıf düzeyi & Sıralı kategorik & 1, 2, 3, 4 \\
+\texttt{kaygi} & Akademik kaygı toplam puanı & Nicel & 20--100 \\
+\texttt{basvuru} & Danışmanlığa başvuru & İkili kategorik & 0: Hayır, 1: Evet \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Kod kitabındaki olası değer aralığı veri temizliğini de yönlendirir. Kaygı
+puanı için 140 görülmesi, doğrudan aykırı değer analizi yapılmasından önce bir
+veri giriş veya puanlama hatası olasılığını düşündürmelidir.
+
+\section{Frekans, oran ve yüzde}
+\index{frekans}
+\index{oran}
+\index{yüzde}
+\index{frekans tablosu}
+
+Bir kategorinin frekansı $f_j$, o kategoriye düşen gözlem sayısıdır. Göreli
+frekans ve yüzde
+\[
+r_j=\frac{f_j}{n},\qquad \%_j=100\frac{f_j}{n}
+\]
+biçiminde hesaplanır. Örneğin 80 öğrencinin 28'i danışmanlık hizmetine
+başvurmuşsa başvuru yüzdesi $100(28/80)=\%35$ olur.
+
+Paydanın açık olması önemlidir. Beş öğrencinin başvuru bilgisi eksikse yüzde
+toplam 80 öğrenciye göre mi, yoksa geçerli 75 yanıta göre mi hesaplanmıştır?
+Rapor bunu belirtmelidir. Frekans tablosunda sayı ve yüzdeyi birlikte vermek,
+özellikle grupların büyüklükleri farklı olduğunda yanlış yorum riskini azaltır.
+
+\begin{mistakebox}
+Yüzdeleri küçük örneklemlerde bağlamdan koparmayın. Dört kişilik bir grupta
+tek katılımcı yüzde 25'e karşılık gelir. ``Katılımcıların yüzde 25'i'' ifadesi,
+``dört katılımcıdan biri'' bilgisiyle birlikte verilmelidir.
+\end{mistakebox}
+
+\begin{table}[htbp]
+\centering
+\caption{Değişken türüne göre grafik seçimi.}
+\begin{tabular}{p{0.27\textwidth}p{0.57\textwidth}}
+\toprule
+Veri yapısı & Önerilen grafik \\
+\midrule
+Tek kategorik değişken & Çubuk grafiği, Pareto grafiği \\
+Tek nicel değişken & Histogram, nokta grafiği, kutu grafiği \\
+İki nicel değişken & Saçılım grafiği \\
+Nicel sonuç ve kategorik grup & Yan yana kutu grafikleri \\
+İki kategorik değişken & Çapraz tablo, yığılmış çubuk veya mozaik grafiği \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{etkinlik}
+Bir PDR araştırmasında şu değişkenler ölçülsün: cinsiyet, sınıf düzeyi, kaygı
+puanı, haftalık uyku süresi ve danışmanlığa başvuru durumu. Her değişken için
+uygun bir grafik seçin. Seçiminizi ölçme düzeyi ve araştırma sorusuyla
+gerekçelendirin.
+\end{etkinlik}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[alt={Yaklaşık simetrik bir puan dağılımını gösteren histogram},x=0.72cm,y=0.55cm]
+  \draw[->,PrismGray] (0,0) -- (8.7,0) node[right,font=\scriptsize]{puan};
+  \draw[->,PrismGray] (0,0) -- (0,5.2) node[above,font=\scriptsize]{frekans};
+  \foreach \x/\h in {0.4/1.0,1.2/2.1,2.0/3.8,2.8/4.7,3.6/4.0,4.4/2.7,5.2/1.5,6.0/0.8}
+    \filldraw[fill=PrismSubheadingBlue!42,draw=PrismBlue] (\x,0) rectangle +(0.72,\h);
+  \draw[PrismWarnOrange!85!black,very thick] (7.7,0) -- (7.7,1.0);
+  \fill[PrismWarnOrange!85!black] (7.7,1.0) circle (2pt);
+  \node[font=\scriptsize,align=center,text=PrismGray] at (7.55,1.65) {aykırı değer\\adayı};
+  \draw[PrismBlue,dashed] (3.15,0) -- (3.15,4.95);
+  \node[font=\scriptsize,text=PrismBlue] at (3.15,5.25) {merkez};
+\end{tikzpicture}
+\caption{Dağılımı merkez, yayılım, biçim ve aykırı değerlerle birlikte okuma.}
+\end{figure}
+
+\section{Merkezi eğilim ölçüleri}
+\index{merkezi eğilim}
+\index{ortalama}
+\index{medyan}
+\index{mod}
+
+$x_1,\ldots,x_n$ gözlemleri için aritmetik ortalama
+\[
+\bar{x}=\frac{1}{n}\sum_{i=1}^{n}x_i
+\]
+olarak tanımlanır. Medyan, sıralanmış veriyi iki eşit parçaya ayıran değerdir.
+Mod en sık gözlenen değer veya kategoridir.
+
+Medyan hesaplanırken veriler önce küçükten büyüğe sıralanır. $n$ tek ise
+ortadaki değer, $n$ çift ise ortadaki iki değerin ortalaması alınır. Modun
+birden fazla olması mümkündür; hiçbir değer tekrar etmiyorsa belirgin bir mod
+bulunmayabilir.
+
+\subsection{Hangi merkez ölçüsü?}
+
+\begin{description}
+  \item[Ortalama] Nicel, yaklaşık simetrik ve ciddi aykırı değeri olmayan veride etkilidir.
+  \item[Medyan] Çarpık dağılımda, aykırı değer varlığında veya sıralı veride daha sağlamdır.
+  \item[Mod] En yaygın kategori ya da puanın araştırma açısından anlamlı olduğu durumda kullanılır.
+\end{description}
+
+Ortalama bütün gözlemleri kullandığı için aykırı değerlerden etkilenir. Medyan
+ise sıralamaya dayandığı için daha sağlamdır. Sağa çarpık bir bekleme süresi
+dağılımında medyan, tipik katılımcının deneyimini ortalamadan daha iyi
+yansıtabilir.
+
+\section{Yayılım ölçüleri}
+\index{yayılım}
+\index{değişim aralığı}
+\index{varyans}
+\index{standart sapma}
+\index{çeyrekler arası aralık}
+
+Örneklem varyansı ve standart sapması
+\[
+s^2=\frac{1}{n-1}\sum_{i=1}^{n}(x_i-\bar{x})^2,
+\qquad s=\sqrt{s^2}
+\]
+biçimindedir. Açıklık $\max(x)-\min(x)$ ile, çeyrekler arası açıklık ise
+$IQR=Q_3-Q_1$ ile hesaplanır.
+
+Standart sapma ortalamayla birlikte, IQR ise çoğunlukla medyanla birlikte
+raporlanır. Dağılım yaklaşık simetrik ve aykırı değerlerden uzaksa
+$\bar{x}\pm s$; belirgin biçimde çarpıksa medyan ve IQR daha bilgilendirici bir
+ikili oluşturur.
+
+\subsection{Yayılım neden merkez kadar önemlidir?}
+
+İki danışmanlık grubunun kaygı ortalaması 50 olabilir. Birinci grupta puanlar
+48--52 arasında toplanırken ikinci grupta 25--75 arasında yayılabilir. Yalnız
+ortalamayı raporlamak bu önemli farkı gizler.
+
+Standart sapma gözlemlerin ortalamadan tipik uzaklığını aynı ölçü biriminde
+özetler. Varyans hesaplama açısından yararlı olsa da puanın karesi biriminde
+olduğu için doğrudan yorumlanması daha güçtür. Açıklık yalnız iki uç değere
+dayanır; IQR ise ortadaki yüzde 50'nin yayıldığı alanı gösterdiğinden uç
+değerlere karşı daha sağlamdır.
+
+\begin{sezgibox}
+Merkez ``veri nerede toplanıyor?'', yayılım ise ``gözlemler birbirinden ne
+kadar farklı?'' sorusunu yanıtlar. Aynı ortalamaya sahip iki grup çok farklı
+standart sapmalara sahip olabilir.
+\end{sezgibox}
+
+\section{Sınıflandırılmış verilerde yer ve yayılma ölçüleri}
+\index{sınıflandırılmış veri}
+\index{gruplandırılmış veri}
+\index{sınıf orta noktası}
+\index{kümülatif frekans}
+
+Gözlem sayısı fazla olduğunda nicel değerler sınıf aralıklarında özetlenebilir.
+Bu durumda ham puanların tek tek değerleri değil, her aralığa düşen gözlem
+sayısı bilinir. Hesaplamalarda sınıftaki bütün gözlemlerin sınıf orta
+noktasında bulunduğu varsayıldığı için elde edilen yer ve yayılma ölçüleri
+\emph{yaklaşıktır}. Ham veri mevcutsa temel analiz ham değerlerden yapılmalıdır.
+
+$j$'inci sınıfın alt ve üst sınırları $a_j$ ve $b_j$, frekansı $f_j$ olsun.
+Sınıf orta noktası ve toplam gözlem sayısı
+\[
+m_j=\frac{a_j+b_j}{2},
+\qquad
+n=\sum_{j=1}^{k}f_j
+\]
+ile bulunur. Kesintisiz sınıflarda aralıkların boşluk bırakmaması gerekir.
+Tam sayı puanlarda 20--29 ve 30--39 sınıflarının gerçek sınırları sırasıyla
+19,5--29,5 ve 29,5--39,5 olarak düşünülebilir.
+
+\subsection{Sınıflandırılmış ortalama, varyans ve standart sapma}
+
+Sınıflandırılmış verinin yaklaşık ortalaması ağırlıklı ortalamadır:
+\[
+\bar{x}_g=\frac{\sum_{j=1}^{k}f_jm_j}{n}.
+\]
+Yaklaşık örneklem varyansı ve standart sapması
+\[
+s_g^2=\frac{\sum_{j=1}^{k}f_j(m_j-\bar{x}_g)^2}{n-1}
+=\frac{\sum f_jm_j^2-n\bar{x}_g^2}{n-1},
+\qquad
+s_g=\sqrt{s_g^2}
+\]
+biçiminde hesaplanır. Frekansı yüksek sınıflar ortalama ve varyans hesabına
+daha fazla ağırlık verir.
+
+\subsection{Sınıflandırılmış medyan, çeyrekler ve mod}
+
+Önce kümülatif frekanslar hesaplanır. $n/2$'inci gözlemi içeren aralık
+\emph{medyan sınıfıdır}. Sınıf içinde gözlemlerin yaklaşık eşit dağıldığı
+varsayımıyla
+\[
+Md_g=L+\left(\frac{n/2-F_{\mathrm{önce}}}{f_{Md}}\right)h
+\]
+kullanılır. Burada $L$ medyan sınıfının gerçek alt sınırı,
+$F_{\mathrm{önce}}$ önceki sınıfın kümülatif frekansı, $f_{Md}$ medyan
+sınıfının frekansı ve $h$ sınıf genişliğidir. Aynı formülde $n/2$ yerine
+$n/4$ ve $3n/4$ kullanılarak $Q_1$ ve $Q_3$ yaklaşık bulunur.
+
+En yüksek frekanslı aralık mod sınıfıdır. Komşu sınıflar dikkate alınarak
+yaklaşık mod
+\[
+Mo_g=L+\frac{d_1}{d_1+d_2}h,
+\qquad
+d_1=f_m-f_{m-1},\quad d_2=f_m-f_{m+1}
+\]
+ile hesaplanabilir. Açıklık için en üst gerçek sınıf sınırından en alt gerçek
+sınıf sınırı çıkarılabilir; ancak ilk veya son sınıf açık uçluysa açıklık ve
+orta nokta temelli ölçüler hesaplanamaz.
+
+\subsection{Adım adım çözümlü sınıflandırılmış veri örneği}
+
+Elli öğrencinin akademik kaygı puanları aşağıdaki frekans dağılımıyla
+özetlenmiş olsun:
+
+\begin{table}[htbp]
+\centering
+\caption{Akademik kaygı puanlarının sınıflandırılmış frekans dağılımı.}
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+Puan sınıfı & Gerçek sınırlar & $m_j$ & $f_j$ & $F_j$ & $f_jm_j$ \\
+\midrule
+20--29 & 19,5--29,5 & 24,5 & 3  & 3  & 73,5 \\
+30--39 & 29,5--39,5 & 34,5 & 7  & 10 & 241,5 \\
+40--49 & 39,5--49,5 & 44,5 & 12 & 22 & 534,0 \\
+50--59 & 49,5--59,5 & 54,5 & 15 & 37 & 817,5 \\
+60--69 & 59,5--69,5 & 64,5 & 9  & 46 & 580,5 \\
+70--79 & 69,5--79,5 & 74,5 & 4  & 50 & 298,0 \\
+\midrule
+Toplam & & & 50 & & 2545,0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\adimbaslik{1. Yaklaşık ortalama}
+
+\[
+\bar{x}_g=\frac{2545}{50}=50{,}90.
+\]
+
+\adimbaslik{2. Yaklaşık varyans ve standart sapma}
+
+Orta noktaların frekanslarla ağırlıklandırılmış kareli sapmaları toplamı
+$8552$'dir. Buna göre
+\[
+s_g^2=\frac{8552}{49}\approx174{,}53,
+\qquad
+s_g\approx13{,}21.
+\]
+
+\adimbaslik{3. Yaklaşık medyan ve çeyrekler}
+
+$n/2=25$'inci gözlem, kümülatif frekansı 22'den 37'ye çıkaran 50--59
+sınıfındadır. Dolayısıyla
+\[
+Md_g=49{,}5+\left(\frac{25-22}{15}\right)10=51{,}50.
+\]
+$n/4=12{,}5$'inci gözlem 40--49 sınıfında,
+$3n/4=37{,}5$'inci gözlem 60--69 sınıfındadır:
+\[
+Q_{1g}\approx39{,}5+\left(\frac{12{,}5-10}{12}\right)10=41{,}58,
+\]
+\[
+Q_{3g}\approx59{,}5+\left(\frac{37{,}5-37}{9}\right)10=60{,}06.
+\]
+Böylece $IQR_g\approx60{,}06-41{,}58=18{,}48$ olur.
+
+\adimbaslik{4. Yaklaşık mod ve açıklık}
+
+Mod sınıfı 50--59'dur. $d_1=15-12=3$ ve $d_2=15-9=6$ olduğundan
+\[
+Mo_g=49{,}5+\frac{3}{3+6}(10)\approx52{,}83.
+\]
+Gerçek sınıf sınırlarına dayalı yaklaşık açıklık $79{,}5-19{,}5=60$'tır.
+
+\begin{mistakebox}
+Sınıflandırılmış ortalama, standart sapma ve yüzdelikler ham veriden elde
+edilmiş kesin değerler gibi raporlanmamalıdır. Sınıf aralıkları genişledikçe
+orta nokta ve sınıf içi doğrusal ara değerleme varsayımlarından kaynaklanan
+bilgi kaybı büyür.
+\end{mistakebox}
+
+\subsection{Python ve SPSS ile hesaplama}
+
+Orta noktaların frekans kadar tekrarlandığı varsayımıyla yaklaşık özetler
+Python'da şöyle hesaplanabilir:
+
+\begin{lstlisting}
+import numpy as np
+
+orta = np.array([24.5, 34.5, 44.5, 54.5, 64.5, 74.5])
+frekans = np.array([3, 7, 12, 15, 9, 4])
+n = frekans.sum()
+
+ortalama = np.average(orta, weights=frekans)
+varyans = np.sum(frekans * (orta - ortalama)**2) / (n - 1)
+standart_sapma = np.sqrt(varyans)
+
+print(ortalama, varyans, standart_sapma)
+\end{lstlisting}
+
+SPSS'te bir sütuna sınıf orta noktaları, ikinci sütuna frekanslar girilir;
+\textbf{Data $>$ Weight Cases} menüsünde frekans değişkeniyle ağırlıklandırma
+yapıldıktan sonra \textbf{Analyze $>$ Descriptive Statistics $>$ Descriptives}
+kullanılabilir. Bu işlem yaklaşık ortalama ve standart sapmayı verir. Medyan
+ve çeyreklerde sınıf içi ara değerleme gerektiğinden yukarıdaki formüller veya
+ham veri kullanılmalıdır. İşlem tamamlandığında sonraki analizleri yanlışlıkla
+ağırlıklandırmamak için \textbf{Weight Cases} seçeneği kapatılmalıdır.
+
+\section{Dağılım biçimi ve aykırı değerler}
+\index{dağılım biçimi}
+\index{çarpıklık}
+\index{aykırı değer}
+\index{kutu grafiği}
+\index{histogram}
+
+Simetrik dağılımda iki kuyruk yaklaşık dengelidir. Sağa çarpık dağılımda uzun
+kuyruk büyük değerlere, sola çarpık dağılımda küçük değerlere uzanır. Kutu
+grafiğinde
+\[
+x<Q_1-1.5IQR \quad\text{veya}\quad x>Q_3+1.5IQR
+\]
+koşulunu sağlayan gözlemler aykırı değer adayı olarak işaretlenebilir.
+
+Kutu grafiği kuralı mekanik bir silme kuralı değil, inceleme sinyalidir.
+Araştırmacı aykırı değer adayının özgün forma, ölçüm zamanına ve katılımcı
+bağlamına dönmelidir. Analiz sonucu bu gözleme duyarlıysa, gerekçeli biçimde
+hem gözlem dahil hem hariç sonuçların gösterildiği bir duyarlılık analizi
+yapılabilir.
+
+\begin{mistakebox}
+Aykırı değer etiketi, gözlemin yanlış olduğu anlamına gelmez. Veri giriş
+hatası, farklı bir alt grup veya gerçek fakat seyrek bir durum söz konusu
+olabilir. İnceleme yapılmadan gözlem silinmemelidir.
+\end{mistakebox}
+
+\section{Adım adım çözümlü PDR örneği}
+
+On iki öğrencinin akademik kaygı puanları küçükten büyüğe
+\[
+42,48,50,51,52,53,54,55,57,60,62,85
+\]
+olarak sıralanmıştır.
+
+\subsection*{1. Merkez}
+
+Toplam $669$ olduğundan
+\[
+\bar{x}=\frac{669}{12}=55{,}75.
+\]
+Ortadaki iki değer 53 ve 54 olduğu için medyan
+\[
+\widetilde{x}=\frac{53+54}{2}=53{,}5
+\]
+olur. Ortalama medyandan büyüktür; büyük uçtaki 85 puanı ortalamayı yukarı
+çekmektedir.
+
+\subsection*{2. Yayılım}
+
+Örneklem standart sapması $s\approx10{,}64$, açıklık $85-42=43$'tür.
+Veriyi alt ve üst altışarlı yarıya ayıran yöntemle $Q_1=50{,}5$,
+$Q_3=58{,}5$ ve $IQR=8$ bulunur. Üst aykırı değer sınırı
+\[
+Q_3+1{,}5IQR=58{,}5+1{,}5(8)=70{,}5
+\]
+olduğundan 85 puanı aykırı değer adayıdır.
+
+\subsection*{3. Duyarlılık analizi}
+
+85 puanı çıkarıldığında ortalama yaklaşık $53{,}09$, medyan 53 ve standart
+sapma yaklaşık $5{,}58$ olur. Medyan çok az değişirken ortalama ve standart
+sapma belirgin biçimde değişmiştir. Bu karşılaştırma 85'in mutlaka silinmesi
+gerektiğini değil, sonucun bu gözleme duyarlı olduğunu gösterir.
+
+\begin{researchbox}
+PDR açısından 85 puanı yalnız istatistiksel bir sorun değildir. Puan gerçekse
+yüksek kaygı yaşayan bir öğrenciyi temsil ediyor olabilir. Gözlemi sessizce
+silmek hem bilimsel sonucu hem de mesleki açıdan önemli bir durumu görünmez
+kılabilir.
+\end{researchbox}
+
+\section{Python ile yeniden üretilebilir analiz}
+
+\begin{lstlisting}
+import pandas as pd
+import matplotlib.pyplot as plt
+
+kaygi = pd.Series([42, 48, 50, 51, 52, 53,
+                   54, 55, 57, 60, 62, 85], name="kaygi")
+
+print(kaygi.describe())
+print("Medyan:", kaygi.median())
+print("IQR:", kaygi.quantile(.75) - kaygi.quantile(.25))
+
+fig, ax = plt.subplots(1, 2, figsize=(8, 3))
+kaygi.plot.hist(bins=6, edgecolor="black", ax=ax[0])
+kaygi.plot.box(vert=False, ax=ax[1])
+plt.tight_layout()
+plt.show()
+\end{lstlisting}
+
+Yazılımın çeyrek hesaplama yöntemi elle kullanılan yöntemden küçük farklar
+gösterebilir. Bu bir hata olmak zorunda değildir; farklı yazılımlar yüzdelik
+değerler arasında farklı ara değerleme kuralları kullanabilir. Raporlanacak
+yöntem analiz boyunca tutarlı olmalıdır.
+
+\section{SPSS ile uygulama adımları}
+
+\begin{enumerate}
+  \item \textbf{Variable View} bölümünde \texttt{kaygi} değişkenini sayısal ve ölçek düzeyinde tanımlayın.
+  \item \textbf{Analyze $>$ Descriptive Statistics $>$ Explore} yolunu izleyin.
+  \item \texttt{kaygi} değişkenini \textbf{Dependent List} alanına taşıyın.
+  \item \textbf{Statistics} altında betimsel istatistikleri; \textbf{Plots} altında histogram ve kutu grafiğini seçin.
+  \item Çıktıda önce geçerli ve eksik $n$ değerlerini, sonra merkez, yayılım ve grafikleri inceleyin.
+\end{enumerate}
+
+\begin{outputguidebox}
+Bir betimsel istatistik çıktısını şu sırayla okuyun: (1) geçerli ve eksik
+gözlem sayısı, (2) minimum--maksimum ve olanaksız değerler, (3) ortalama ile
+medyanın yakınlığı, (4) standart sapma ve IQR, (5) histogram ile kutu
+grafiğinin sayısal özetlerle tutarlılığı. Yazılım tablosundaki tek bir sütuna
+bakarak dağılım hakkında karar vermeyin.
+\end{outputguidebox}
+
+\section{Yanıltıcı grafiklerden kaçınma}
+\index{yanıltıcı grafik}
+\index{grafik!eksen ölçeği}
+
+Grafiğin dikey eksenini sıfırdan başlatmamak küçük farkları olduğundan büyük
+gösterebilir. Üç boyutlu sütunlar alan ve derinlik algısını bozabilir. Eşit
+olmayan histogram sınıf aralıklarında yalnız sütun yüksekliğini karşılaştırmak
+yanlıştır; alanın frekansı temsil etmesi gerekir. Grafik başlığı, eksen adları,
+ölçü birimi, örneklem büyüklüğü ve veri kaynağı açıkça belirtilmelidir.
+
+\begin{etkinlik}
+Aynı iki grup ortalamasını gösteren iki çubuk grafiği hazırlayın: ilkinde
+dikey eksen 0'dan, ikincisinde gözlenen en küçük değere yakın bir noktadan
+başlasın. Grafiklerin okuyucuda oluşturduğu izlenimi karşılaştırın ve hangi
+sunumun hangi durumda savunulabilir olduğunu tartışın.
+\end{etkinlik}
+
+\section{Bilimsel raporlama örneği}
+
+``Öğrencilerin akademik kaygı puanlarının medyanı 53{,}5
+($Q_1=50{,}5$, $Q_3=58{,}5$) olarak bulunmuştur. Dağılım büyük değerlere doğru
+çarpıktır ve 85 puanı kutu grafiği kuralına göre aykırı değer adayıdır.
+Ortalama $55{,}75$ ($SS=10{,}64$) olmakla birlikte bu değer uç gözleme
+duyarlıdır. Veri kaydı doğrulandıktan sonra gözlem korunmuş ve sağlam özet
+olarak medyan ile IQR öncelikle raporlanmıştır.''
+
+Bu paragraf sayıların yanında dağılım biçimini, veri kontrolünü ve alınan
+analiz kararını da görünür kılar.
+
+\section{Literatür veri setiyle IBM SPSS laboratuvarı}
+\index{Student Performance veri seti!betimsel istatistik}
+\index{SPSS!Explore komutu}
+\index{SPSS!Frequencies komutu}
+\index{uç değer!SPSS incelemesi}
+
+Bu uygulamada \emph{Student Performance} matematik dosyasındaki yıl sonu notu
+\texttt{G3} ile devamsızlık sayısı \texttt{absences} betimlenecektir
+\cite{cortez2008data,cortezsilva2008}. Aynı örneklemde yer alan bu iki nicel
+değişken farklı dağılım özellikleri gösterdiğinden, merkez ve yayılım ölçüsü
+seçimini karşılaştırmak için uygundur.
+
+\begin{researchbox}
+G3 puanı 0--20 aralığındaki yıl sonu notudur. Devamsızlık ise sıfırdan
+başlayan bir sayım değişkenidir. İki değişken nicel olsa da aynı dağılım
+biçimine sahip olmak veya aynı özetlerle raporlanmak zorunda değildir.
+\end{researchbox}
+
+\subsection{Araştırma görevi}
+
+\begin{enumerate}
+  \item Her değişken için geçerli ve eksik gözlem sayısını denetleyin.
+  \item Ortalama, medyan, standart sapma, çeyrekler ve açıklığı karşılaştırın.
+  \item Histogram ile kutu grafiğini sayısal özetlerle birlikte okuyun.
+  \item Aşırı görünen değerleri otomatik olarak silmeden önce veri sözlüğünü inceleyin.
+  \item G3 dağılımını okul gruplarına göre ayrı nokta veya kutu grafikleriyle karşılaştırın.
+\end{enumerate}
+
+\subsection{SPSS syntax}
+
+Birinci bölümde içe aktarılan \texttt{StudentMath} veri seti açıkken aşağıdaki
+syntax çalıştırılır. \textbf{Frequencies} kesin yer ve yayılım özetlerini,
+\textbf{Explore} ise histogram, kutu grafiği, normal Q--Q grafiği ve en uç
+gözlem listesini üretir.
+
+\begin{lstlisting}[language={}]
+DATASET ACTIVATE StudentMath.
+
+FREQUENCIES VARIABLES=G3 absences
+ /STATISTICS=MEAN MEDIAN STDDEV QUARTILES MINIMUM MAXIMUM
+ /HISTOGRAM NORMAL
+ /ORDER=ANALYSIS.
+
+EXAMINE VARIABLES=G3 absences
+ /PLOT BOXPLOT HISTOGRAM NPPLOT
+ /STATISTICS DESCRIPTIVES EXTREME(5)
+ /CINTERVAL 95
+ /MISSING LISTWISE.
+
+EXAMINE VARIABLES=G3 BY school
+ /PLOT BOXPLOT
+ /COMPARE GROUPS
+ /STATISTICS DESCRIPTIVES
+ /CINTERVAL 95
+ /MISSING LISTWISE
+ /NOTOTAL.
+\end{lstlisting}
+
+Menüyle çalışmak için \textbf{Analyze $>$ Descriptive Statistics $>$
+Frequencies} yolunda ortalama, medyan, standart sapma ve çeyrekler;
+\textbf{Charts} altında histogram seçilir. Daha ayrıntılı incelemede
+\textbf{Analyze $>$ Descriptive Statistics $>$ Explore} penceresinde G3 ve
+devamsızlık \textbf{Dependent List} alanına taşınır. Okula göre ayrı sonuç
+istenirse \texttt{school}, \textbf{Factor List} alanına eklenir.
+
+\subsection{SPSS çıktısının erişilebilir özeti}
+
+\begin{table}[htbp]
+\centering
+\caption{G3 ve devamsızlık değişkenleri için SPSS betimsel özetleri.}
+\begin{tabular}{@{}lrrrrrrrr@{}}
+\toprule
+Değişken & $n$ & Ort. & Md & SS & $Q_1$ & $Q_3$ & Min. & Maks. \\
+\midrule
+Yıl sonu notu (G3) & 395 & 10,42 & 11 & 4,58 & 8 & 14 & 0 & 20 \\
+Devamsızlık & 395 & 5,71 & 4 & 8,00 & 0 & 8 & 0 & 75 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+G3 için çeyrekler arası açıklık
+\[
+IQR=14-8=6
+\]
+ve devamsızlık için
+\[
+IQR=8-0=8
+\]
+olarak hesaplanır. SPSS sürümü ve yüzdelik ara değerleme yöntemi belirtilirse
+çeyreklerde görülebilecek küçük yazılım farkları doğru biçimde belgelenmiş
+olur.
+
+\subsection{Çıktının analizi}
+
+G3 ortalaması 10,42, medyanı 11'dir. İki merkez ölçüsünün yakın olması tek
+başına normalliği kanıtlamaz. Histogramda 0 puanındaki yığılma ve puanların
+0--20 ile sınırlı olması ayrıca görülmelidir. Tukey kutu grafiği sınırları
+yaklaşık $8-1{,}5(6)=-1$ ile $14+1{,}5(6)=23$ olduğundan 0 ve 20 puanları
+yalnız bu kurala göre aykırı değer sayılmaz. Bununla birlikte 0 puanlarının
+başarısızlık, sınava girmeme veya başka bir süreçle ilişkili olup olmadığı veri
+sözlüğü ve araştırma bağlamıyla açıklanmalıdır.
+
+Devamsızlıkta ortalamanın 5,71, medyanın 4 olması ve maksimumun 75'e ulaşması
+sağa çarpık bir dağılıma işaret eder. Kutu grafiğinin üst inceleme sınırı
+\[
+Q_3+1{,}5IQR=8+1{,}5(8)=20
+\]
+olduğundan 20'nin üzerindeki değerler aykırı değer adayı olarak işaretlenebilir.
+Bu değerler olanaksız değildir; öğrencinin gerçekten uzun süre devamsızlık
+yapmış olması mümkündür. Bu nedenle silme yerine önce kayıt doğrulama ve
+duyarlılık incelemesi gerekir.
+
+G3 için ortalama ve standart sapma, medyan ve IQR ile birlikte verilebilir.
+Devamsızlık için ise medyan ve IQR dağılımın tipik düzeyini daha sağlam biçimde
+özetler; ortalama ve standart sapma karşılaştırma amacıyla ikincil olarak
+sunulabilir. Böylece iki değişken için yazılımın aynı tabloyu üretmesi,
+araştırmacının aynı raporlama kararını vermesini zorunlu kılmaz.
+
+\begin{outputguidebox}
+Explore çıktısını şu sırayla okuyun: (1) geçerli ve eksik $n$, (2) minimum ve
+maksimumun veri sözlüğüyle uyumu, (3) ortalama--medyan karşılaştırması,
+(4) standart sapma ve IQR, (5) histogram, (6) kutu grafiğindeki gözlem
+numaraları, (7) Q--Q grafiği. Yalnız Shapiro--Wilk tablosuna bakarak betimsel
+yorum yapılmamalıdır.
+\end{outputguidebox}
+
+\subsection{Örnek bulgu paragrafı}
+
+``Matematik yıl sonu notlarının ortalaması 10,42 ($SS=4{,}58$), medyanı
+11'dir ($Q_1=8$, $Q_3=14$, $n=395$). Puanlar 0--20 aralığındadır ve
+histogramda 0 puanında yığılma görülmüştür. Devamsızlığın medyanı 4'tür
+($Q_1=0$, $Q_3=8$); ortalama 5,71 ($SS=8{,}00$) ve aralık 0--75'tir.
+Devamsızlık dağılımı sağa çarpık olduğundan merkez ve yayılım için medyan ile
+IQR öncelikle yorumlanmış, 20'nin üzerindeki gözlemler silinmeden önce kayıt
+ve bağlam açısından incelemeye alınmıştır.''
+
+\input{chapter-exercises/03-betimsel-istatistik}
+
+\bolumkaynaklari{\cite{anscombe1973,degroot2012,wasserman2004,cortez2008data,cortezsilva2008}}
+
+\section*{Hatırla--Uygula--Yansıt}
+
+\begin{enumerate}
+\renewcommand{\labelenumi}{\textbf{\Alph{enumi}.}}
+  \item \textbf{Hatırla:} Ortalama, medyan ve modun güçlü ve sınırlı yönlerini karşılaştırın.
+  \item \textbf{Hesapla:} $4,5,5,6,10$ verisi için ortalama, medyan, açıklık ve örneklem standart sapmasını bulun.
+  \item \textbf{Sınıflandırılmış veri:} Bir frekans tablosunda sınıf orta noktalarını kullanarak yaklaşık ortalama ve standart sapmanın nasıl hesaplandığını açıklayın; medyan sınıfını kümülatif frekanstan belirleyin.
+  \item \textbf{Seç:} Sağa çarpık danışma bekleme süreleri için uygun merkez, yayılım ve grafik üçlüsünü gerekçelendirin.
+  \item \textbf{Eleştir:} Y ekseni 48'den başlayan ve grup ortalamaları 50 ile 52 olan bir çubuk grafiğin oluşturabileceği yanıltıcı izlenimi açıklayın.
+  \item \textbf{Uygula:} En az 15 gözlemden oluşan küçük bir veri setini Python veya SPSS ile özetleyip bir tablo ve bir grafik üretin.
+  \item \textbf{Yansıt:} PDR verilerinde aykırı bir gözlemi silmenin bilimsel ve mesleki sonuçlarını tartışın.
+\end{enumerate}

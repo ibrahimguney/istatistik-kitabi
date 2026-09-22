@@ -1,0 +1,45 @@
+\section{R ile çözümlü uygulama}
+\label{sec:r-b13}
+
+\textbf{Soru.} Bölümdeki 16 gözlemlik çalışma saati--son test örneğini
+R'ye aktarın. Pearson korelasyonunu, regresyon doğrusunu, $R^2$'yi ve altı
+saat için öngörüyü bulun; artık grafiklerini inceleyin.
+
+\begin{lstlisting}[style=prismR]
+veri <- data.frame(
+  saat = c(5, 3, 7, 6, 6, 2, 8, 4, 4, 5, 3, 7, 3, 5, 2, 6),
+  puan = c(60, 54, 68, 63, 65, 52, 70, 58,
+           57, 61, 52, 64, 55, 60, 50, 63)
+)
+cor.test(veri$saat, veri$puan, method = "pearson")
+model <- lm(puan ~ saat, data = veri)
+summary(model)
+confint(model)
+yeni <- data.frame(saat = 6)
+predict(model, newdata = yeni, interval = "confidence")
+predict(model, newdata = yeni, interval = "prediction")
+plot(puan ~ saat, data = veri)
+abline(model, col = "blue")
+plot(fitted(model), resid(model),
+     xlab = "Uydurulan deger", ylab = "Artik")
+abline(h = 0, lty = 2)
+qqnorm(resid(model))
+qqline(resid(model))
+\end{lstlisting}
+
+\begin{outputguidebox}
+\textbf{Çözüm ve kontrol değerleri.} $r=0{,}9806$ ve
+$R^2=0{,}9616$'dır. Regresyon doğrusu
+$\hat y=44{,}5980+3{,}1373\,\text{saat}$ olur. Altı saat için nokta
+öngörüsü 63,4216 puandır. Eğimin sıfır olduğu hipotezinin çift yönlü
+\pval-değeri yaklaşık $2{,}62\times10^{-11}$'dir; bu sayı sıfır değildir.
+\end{outputguidebox}
+
+\textbf{Yorum.} \texttt{confidence} aynı saatteki evren ortalaması için,
+\texttt{prediction} ise yeni bir bireyin puanı için aralık verir. İkincisi
+bireysel değişkenliği de içerdiğinden daha geniştir. Doğrusallık, sabit hata
+varyansı, bağımsızlık ve çıkarım için hata dağılımı değerlendirilmelidir.
+
+\textbf{Pekiştirme ve yanıt.} Altı saat gözlenen 2--8 saat aralığındadır;
+20 saat için öngörü dışa taşırmadır. Güçlü korelasyon, ek bir saat çalışmanın
+her öğrencinin puanını nedensel olarak 3,1373 artırdığını göstermez.

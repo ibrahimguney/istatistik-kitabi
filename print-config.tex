@@ -1,0 +1,33 @@
+% Kitabın baskı ve yayın bilgileri için tek düzenleme noktası.
+% ISBN, yayın numarası ve sırt genişliği kesinleştiğinde yalnız bu dosyayı
+% güncellemek yeterlidir.
+\newcommand{\BookTitle}{İstatistik}
+\newcommand{\BookSubtitle}{Veri Okuryazarlığından İstatistiksel Çıkarıma}
+\newcommand{\BookAuthor}{İbrahim Güney}
+\newcommand{\BookPublisher}{İstanbul Sabahattin Zaim Üniversitesi Yayınları}
+\newcommand{\BookInstitution}{İstanbul Sabahattin Zaim Üniversitesi}
+\newcommand{\BookCity}{İstanbul}
+\newcommand{\BookYear}{2026}
+
+% Yayınevi tarafından verilecek değerler. Bilinmiyorsa boş bırakılır.
+\newcommand{\BookISBN}{}
+\newcommand{\BookPublicationNumber}{}
+
+% Mevcut iç blok için yalnız geçici değerdir. Matbaanın kâğıt
+% kalınlığı ve cilt hesabına göre kesinleştirilmelidir.
+\providecommand{\SpineWidth}{18mm}
+
+\newcommand{\BookISBNDisplay}{%
+  \if\relax\detokenize\expandafter{\BookISBN}\relax
+    yayınevi tarafından atanacak%
+  \else
+    \BookISBN%
+  \fi
+}
+\newcommand{\BookPublicationNumberDisplay}{%
+  \if\relax\detokenize\expandafter{\BookPublicationNumber}\relax
+    yayınevi tarafından atanacak%
+  \else
+    \BookPublicationNumber%
+  \fi
+}

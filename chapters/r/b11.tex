@@ -1,0 +1,50 @@
+\section{R ile çözümlü uygulama}
+\label{sec:r-b11}
+
+\textbf{Soru.} Bölümdeki bağımsız grupların özetlerinden Welch testini;
+yirmi öğrencinin fark puanlarının özetinden eşleştirilmiş testi hesaplayın.
+Ham veriler verilmediğinden aşağıdaki çözümler özet istatistik formüllerini kullanır.
+
+\begin{lstlisting}[style=prismR]
+hacim <- c(30, 28)
+ortalama <- c(78, 72)
+standart_sapma <- c(8, 10)
+katki <- standart_sapma^2 / hacim
+standart_hata <- sqrt(sum(katki))
+fark <- ortalama[1] - ortalama[2]
+serbestlik <- sum(katki)^2 / sum(katki^2 / (hacim - 1))
+t_degeri <- fark / standart_hata
+c(t = t_degeri, sd = serbestlik,
+  p = 2 * pt(abs(t_degeri), df = serbestlik,
+             lower.tail = FALSE))
+fark + c(-1, 1) * qt(0.975, df = serbestlik) * standart_hata
+cift_sayisi <- 20
+ortalama_fark <- 4.2
+fark_sapmasi <- 5
+es_se <- fark_sapmasi / sqrt(cift_sayisi)
+es_t <- ortalama_fark / es_se
+c(t = es_t, sd = cift_sayisi - 1,
+  p = 2 * pt(abs(es_t), df = cift_sayisi - 1,
+             lower.tail = FALSE),
+  dz = ortalama_fark / fark_sapmasi)
+ortalama_fark + c(-1, 1) *
+  qt(0.975, df = cift_sayisi - 1) * es_se
+\end{lstlisting}
+
+\begin{outputguidebox}
+\textbf{Çözüm ve kontrol değerleri.} Welch testinde fark 6 puan,
+$t=2{,}5121$, serbestlik derecesi 51,7113, $p=0{,}01516$ ve yüzde 95
+fark aralığı $[1{,}2066;10{,}7934]$'tür. Eşleştirilmiş testte
+$t(19)=3{,}7566$, $p=0{,}001336$, aralık $[1{,}8599;6{,}5401]$ ve
+$d_z=0{,}84$ bulunur.
+\end{outputguidebox}
+
+\textbf{Yorum.} Ham veriyle \texttt{t.test} kullanılırken bağımsız gruplar
+için \texttt{var.equal = FALSE}, eşleşmiş son ve ön ölçüm vektörleri için
+\texttt{paired = TRUE} seçilir. Eşleştirilmiş testte aynı
+konumdaki iki değer aynı kişiye ait olmalıdır. Özetleri ham gözlem gibi bu
+komutlara vermeyin; 51,7113 serbestlik derecesini de tam sayıya yuvarlamayın.
+
+\textbf{Pekiştirme ve yanıt.} Fark tanımı ``ön--son'' yapılırsa eşleştirilmiş
+$t$ ve $d_z$ işaret değiştirir; çift yönlü \pval-değeri değişmez ve güven
+aralığı $[-6{,}5401;-1{,}8599]$ olur.

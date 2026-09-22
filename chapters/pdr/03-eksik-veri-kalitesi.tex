@@ -1,0 +1,511 @@
+\chapter{Eksik Veri ve Veri Kalitesi}
+\label{ch:missing-data-quality}
+\index{eksik veri}
+\index{veri kalitesi}
+\index{veri temizleme}
+
+\begin{hedefler}
+Bu bölümün sonunda okuyucu:
+\begin{itemize}
+  \item gerçek sıfır, geçersiz kod, yapısal eksiklik ve yanıtlanmamış değeri ayırt edebilecek,
+  \item eksik gözlem oranını değişken, kişi, grup ve örüntü düzeyinde özetleyebilecek,
+  \item MCAR, MAR ve MNAR mekanizmalarının varsayımlarını ve sınırlarını açıklayabilecek,
+  \item tam gözlem, mevcut çift, tekli atama, model temelli yöntem ve çoklu atamayı karşılaştırabilecek,
+  \item eksik veri kararının tahmin, standart hata ve genellenebilirlik üzerindeki etkisini değerlendirebilecek,
+  \item duyarlılık analizi ile ana sonucun eksik veri varsayımına bağımlılığını inceleyebilecek,
+  \item Python, SPSS ve R ile veri kalite denetimi yapabilecek,
+  \item eksik veri yöntemini şeffaf ve yeniden üretilebilir biçimde raporlayabilecektir.
+\end{itemize}
+\end{hedefler}
+
+\begin{hazirlik}
+Bir öğrenci veri setinde sınav puanı için boş hücre, 0, 99 ve ``girmedi''
+değerleri görülmektedir. Bu dört gösterimin neden doğrudan aynı işleme tabi
+tutulamayacağını açıklayın.
+\end{hazirlik}
+
+\section{PDR vakası: İzlem ölçümünü kimler tamamlamadı?}
+
+Bir psikolojik danışma merkezi, altı haftalık sınav kaygısı programının
+sonunda öğrencilerin kaygı puanlarını yeniden ölçmektedir. Programa başlayan
+120 öğrencinin 18'i son ölçümü tamamlamamıştır. Yalnız ``102 geçerli, 18 eksik''
+demek yeterli değildir. İzlemi tamamlamayan öğrenciler başlangıçta daha yüksek
+kaygı puanına sahipse veya programdan yarar görmediği için ayrılmışsa, kalan
+102 öğrencinin ortalaması program sonucunu gereğinden olumlu gösterebilir.
+
+Eksik veri yalnız hücre sayısını azaltmaz. Hangi öğrencilerin, hangi
+değişkenlerde ve hangi nedenle eksik kaldığı; hedeflenen bilimsel sonucu ve
+uygun analiz yöntemini değiştirebilir \cite{little2019,rubin1976}.
+
+\begin{researchbox}
+Eksiklik oranı küçük olsa bile kritik bir alt grupta yoğunlaşabilir. Yüzde 5
+eksiklik bütün gruplara dağılmışsa etkisi sınırlı olabilir; aynı yüzde 5 yalnız
+yüksek risk grubunda oluşmuşsa hizmet gereksinimi tahmini ciddi biçimde
+yanlılaşabilir.
+\end{researchbox}
+
+\section{Önce veri kalitesini tanımlamak}
+\index{veri kalitesi!boyutları}
+
+Veri kalitesi yalnız eksik hücre bulunmaması değildir. Analizden önce en az şu
+boyutlar incelenmelidir:
+
+\begin{description}
+  \item[Doğruluk] Değer özgün kayıt ve ölçme süreciyle uyuşuyor mu?
+  \item[Tamlık] Gerekli değişken ve zaman noktalarının ne kadarı gözlenmiş?
+  \item[Tutarlılık] Birbiriyle ilişkili alanlar mantıksal olarak uyumlu mu?
+  \item[Geçerlilik] Değer, veri sözlüğündeki tür, aralık ve kodlara uyuyor mu?
+  \item[Benzersizlik] Aynı analiz birimi yanlışlıkla birden çok kez kaydedilmiş mi?
+  \item[Güncellik] Ölçüm zamanı araştırma sorusunun dönemini temsil ediyor mu?
+\end{description}
+
+Örneğin yaşın 250 olması geçersiz değer, aynı öğrencinin iki kez kaydedilmesi
+yinelenen kayıt, son-test tarihinin programdan önce olması zaman tutarsızlığı,
+boş son-test hücresi ise eksik veridir. Her sorun farklı bir düzeltme ve kayıt
+gerektirir.
+
+\begin{definitionbox}
+\textbf{Eksik veri}, araştırmada tanımlanan bir değişkenin belirli bir analiz
+birimi için gözlenmemiş olmasıdır. Eksiklik; değerin sıfır, düşük, olumsuz veya
+uygulanamaz olduğu anlamına gelmez.
+\end{definitionbox}
+
+\section{Eksik değer, kod hatası ve yapısal eksiklik}
+\index{yapısal eksiklik}
+\index{eksik değer kodu}
+
+Boş hücrelerin tümü aynı anlamı taşımaz. Tablo~\ref{tab:missing-types}, yaygın
+durumları ayırır.
+
+\begin{table}[htbp]
+\centering
+\caption{Eksiklik ve veri kalitesi durumlarının ayrımı.}
+\label{tab:missing-types}
+\begin{tabular}{@{}p{0.21\textwidth}p{0.33\textwidth}p{0.30\textwidth}@{}}
+\toprule
+Durum & Örnek & Uygun ilk işlem \\
+\midrule
+Yanıtlanmamış değer & Öğrenci son-test formunu doldurmamış & Eksik olarak tanımla; neden ve örüntüyü incele \\
+Yapısal eksiklik & Çocuğu olmayan kişiye ebeveynlik sorusu uygulanmamış & ``Uygulanamaz'' durumunu gerçek eksiklikten ayır \\
+Geçersiz kod & 1--5 maddesinde 9 değeri & Özgün formu kontrol et; doğrulanamıyorsa eksik yap \\
+Gerçek sıfır & Öğrencinin devamsızlık günü 0 & Geçerli değer olarak koru \\
+Ölçüm sınırı & Süre cihazın alt sınırının altında & Sansürlü/ölçüm sınırlı veri olarak belgele \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+``99'', ``999'' veya $-1$ gibi özel kodlar analize girmeden önce yazılımın
+gerçek eksik değer gösterimine dönüştürülmelidir. Ancak bu dönüşüm özgün
+değişken üzerine yazılmamalı; ham veri korunmalı ve temizleme betiğinde yeni
+analiz değişkeni üretilmelidir.
+
+\begin{mistakebox}
+Eksik puanı 0 yapmak, ``yanıt yok'' bilgisini gerçek ve en düşük puan gibi
+yorumlar. Bu işlem ortalamayı, varyansı, korelasyonu ve grup farklarını
+sistematik biçimde değiştirebilir.
+\end{mistakebox}
+
+\section{Eksikliğin miktarı ve örüntüsü}
+\index{eksik veri örüntüsü}
+
+Tek bir genel eksiklik yüzdesi yerine dört düzey birlikte incelenir:
+
+\begin{enumerate}
+  \item her değişkendeki eksik sayı ve oran,
+  \item her kişideki eksik değişken sayısı,
+  \item gruplara ve önemli başlangıç özelliklerine göre eksiklik oranı,
+  \item değişkenlerin birlikte eksik kaldığı örüntüler.
+\end{enumerate}
+
+Bir değişken için eksiklik göstergesi
+\[
+R_i=
+\begin{cases}
+1, & \text{değer gözlenmişse},\\
+0, & \text{değer eksikse}
+\end{cases}
+\]
+biçiminde tanımlanabilir. $R$ göstergesinin grup, başlangıç puanı veya başka
+gözlenen değişkenlerle ilişkisi, eksikliğin rastgele dağılmadığını gösterebilir.
+Bu inceleme eksiklik mekanizmasını kesin olarak kanıtlamaz; yalnız makul ve
+makul olmayan varsayımları ayırmaya yardım eder.
+
+\section{MCAR, MAR ve MNAR mekanizmaları}
+\index{MCAR}
+\index{MAR}
+\index{MNAR}
+
+Eksik veri mekanizmaları, eksik kalma olasılığının hangi bilgilere bağlı
+olduğunu ifade eder \cite{rubin1976,little2019,vanbuuren2018}.
+
+\begin{description}
+  \item[MCAR: tamamen rassal eksiklik] Eksik kalma olasılığı gözlenen ve
+  gözlenmeyen değerlerle ilişkili değildir. Örneğin bazı formların taşıma
+  sırasında rastgele kaybolması bu varsayıma yaklaşabilir.
+  \item[MAR: gözlenen bilgiye koşullu rassal eksiklik] Eksiklik, gözlenen
+  değişkenlerle açıklanabilir; aynı gözlenen bilgilere sahip kişiler arasında
+  eksiklik gözlenmeyen değere ayrıca bağlı değildir. Son-test eksikliğinin
+  gözlenen başlangıç puanı ve program grubuyla açıklanması buna örnektir.
+  \item[MNAR: rassal olmayan eksiklik] Gözlenen değişkenler hesaba katıldıktan
+  sonra bile eksiklik gözlenmeyen değerin kendisiyle ilişkilidir. İyileşmeyen
+  öğrencilerin tam da iyileşmedikleri için izlemi bırakması olası bir örnektir.
+\end{description}
+
+\begin{table}[htbp]
+\centering
+\caption{Eksik veri mekanizmalarının pratik anlamı.}
+\begin{tabular}{@{}p{0.14\textwidth}p{0.30\textwidth}p{0.38\textwidth}@{}}
+\toprule
+Mekanizma & Eksiklik neye bağlı olabilir? & Analiz açısından temel sonuç \\
+\midrule
+MCAR & Ne gözlenen ne gözlenmeyen değerlere & Tam gözlem analizi yansız olabilir; hassasiyet azalır \\
+MAR & Analize alınan gözlenen bilgilere & Uygun model veya çoklu atama gözlenen bilgiyi kullanabilir \\
+MNAR & Gözlenmeyen değere veya kaydedilmemiş nedene & Ek varsayım ve duyarlılık analizi gerekir \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+MCAR veriden bütünüyle doğrulanamaz. MAR ve MNAR ayrımı ise yalnız gözlenen
+veriyle kesinleştirilemez; araştırma süreci, ayrılma nedenleri ve alan bilgisi
+gerekir. ``Little testi anlamlı değil, dolayısıyla MCAR kanıtlandı'' biçiminde
+kesin sonuç verilmemelidir.
+
+\section{Eksik verinin sonuçları}
+
+Eksiklik üç temel yoldan zarar verebilir:
+
+\begin{itemize}
+  \item geçerli gözlem sayısı ve test gücü azalır,
+  \item standart hatalar büyür veya yanlış hesaplanır,
+  \item eksik kalan kişiler sistematik farklıysa tahminler yanlılaşır.
+\end{itemize}
+
+Her analiz farklı bir gözlem altkümesi kullanırsa tablolar arasında $n$
+değişebilir. Özellikle çift bazında korelasyon matrisi, her hücrede farklı
+öğrencilerden hesaplanan ve birlikte geçerli bir kovaryans yapısı oluşturmayan
+sonuçlar üretebilir.
+
+\section{Tam gözlem ve mevcut gözlem yöntemleri}
+\index{liste bazında silme}
+\index{çift bazında silme}
+
+\textbf{Tam gözlem analizi} veya liste bazında silme, modelde kullanılan bütün
+değişkenleri gözlenen kişileri analize alır. MCAR altında yansız olabilir;
+ancak bilgi kaybeder. Bazı regresyon bağlamlarında eksiklik yalnız açıklayıcı
+değişkenlere ve modeldeki diğer bilgilere bağlıysa daha zayıf koşullarda da
+uygun olabilir; bu sonuç her yöntem için otomatik değildir.
+
+\textbf{Mevcut gözlem} veya çift bazında silme, her özet için o değişken
+çiftinde gözlenen kayıtları kullanır. Daha çok hücreden yararlansa da analizler
+farklı örneklemlere dayanır ve sonuçların birlikte yorumunu güçleştirir.
+
+\begin{sezgibox}
+Silme yöntemi ``veriyi temizlemez''; hedef evreni fiilen bütün değişkenleri
+tamamlayan kişilerle sınırlar. Tamamlayanlar ile tamamlamayanlar farklıysa bu
+yeni hedef, araştırmanın özgün hedefi olmayabilir.
+\end{sezgibox}
+
+\section{Tekli atama neden çoğu zaman yetersizdir?}
+\index{ortalama ile atama}
+\index{son gözlemi taşıma}
+
+Ortalama, medyan, grup ortalaması veya son gözlemi ileri taşıma gibi yöntemler
+her eksik hücreye tek bir değer yerleştirir. Dosya tamamlanmış görünür; fakat
+atama belirsizliği hesaba katılmaz. Ortalama ile atama özellikle:
+
+\begin{itemize}
+  \item değişkenin varyansını küçültür,
+  \item değişkenler arası ilişkileri zayıflatabilir,
+  \item standart hata ve $p$-değerlerini gereğinden iyimser yapabilir,
+  \item gözlenen dağılımı yapay bir yığılmayla bozar.
+\end{itemize}
+
+Tekli atama bazen veri giriş kontrolü, ölçek puanlama kuralı veya açıkça
+tanımlanmış bir duyarlılık senaryosu için kullanılabilir; genel amaçlı çıkarım
+yöntemi olarak savunulmamalıdır.
+
+\section{Model temelli yaklaşım ve çoklu atama}
+\index{çoklu atama}
+\index{multiple imputation@\textit{multiple imputation}}
+
+Çoklu atama, eksik hücreler için tek bir kesin sayı üretmez. Gözlenen veriye ve
+atama modeline dayanarak $m$ farklı tamamlanmış veri seti oluşturur. Her veri
+seti aynı analiz modeliyle çözümlenir; tahminler ve varyanslar Rubin birleştirme
+kurallarıyla bir araya getirilir \cite{rubin1976,little2019,vanbuuren2018}.
+
+Atama $j$ için tahmin $\hat\theta_j$ ve varyans $U_j$ olsun. Birleşik tahmin
+\[
+\bar\theta=\frac{1}{m}\sum_{j=1}^m\hat\theta_j
+\]
+olur. Atama içi ortalama varyans
+\[
+\bar U=\frac{1}{m}\sum_{j=1}^m U_j,
+\]
+atamalar arası varyans ise
+\[
+B=\frac{1}{m-1}\sum_{j=1}^m(\hat\theta_j-\bar\theta)^2
+\]
+biçimindedir. Toplam varyans
+\[
+T=\bar U+\left(1+\frac{1}{m}\right)B
+\]
+ile hem örnekleme hem atama belirsizliğini içerir.
+
+\begin{assumptionbox}
+Atama modeli; analizdeki yanıtı, açıklayıcıları, eksikliği öngören yardımcı
+değişkenleri, grup ve etkileşim yapısını kapsamalıdır. Analiz modelinde bulunan
+önemli bir ilişkiyi atama modelinden çıkarmak yanlı sonuç üretebilir.
+\end{assumptionbox}
+
+Çoklu atama kötü ölçümü, seçici örneklemeyi veya kaydedilmemiş bütün MNAR
+nedenlerini otomatik düzeltmez. Atama sayısı, yakınsama ve dağılım tanıları,
+değişken türüne uygun model ve birleştirme yöntemi ayrıca denetlenmelidir
+\cite{sterne2009}.
+
+\Needspace{30\baselineskip}
+\section{Yöntem seçimi için karar akışı}
+
+Şekil~\ref{fig:missing-data-flow}, eksik hücreyi hemen doldurmak yerine önce
+veri kalitesi, hedef analiz ve mekanizma varsayımını sorgulayan akışı özetler.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  font=\small,
+  decision/.style={diamond,draw=PrismBlue!80!black,fill=PrismBlue!10,
+    align=center,aspect=2.25,inner sep=1pt,text width=3.1cm},
+  result/.style={draw=PrismBlue!70!black,rounded corners=2pt,fill=PrismLight,
+    align=center,minimum height=9mm,text width=3.2cm},
+  arrow/.style={-{Stealth[length=2mm]},thick,draw=PrismBlue!80!black},
+  lab/.style={font=\footnotesize,fill=white,inner sep=1pt},
+  node distance=7mm and 11mm
+]
+\node[decision] (valid) {Değer gerçekten eksik mi?};
+\node[result,right=of valid] (clean) {Kod, aralık, yinelenen kayıt veya yapısal eksikliği düzelt ve belgele};
+\node[decision,below=of valid] (amount) {Eksiklik önemsiz ve MCAR varsayımı makul mü?};
+\node[result,right=of amount] (complete) {Tam gözlem analizi; bilgi kaybını raporla};
+\node[decision,below=of amount] (observed) {Eksikliği açıklayan gözlenen bilgiler var mı?};
+\node[result,right=of observed] (mi) {Model temelli yöntem veya çoklu atama};
+\node[result,below=of observed] (sensitivity) {MNAR senaryoları ve duyarlılık analizi};
+\draw[arrow] (valid) -- node[lab,above]{hayır} (clean);
+\draw[arrow] (valid) -- node[lab,right]{evet} (amount);
+\draw[arrow] (amount) -- node[lab,above]{evet} (complete);
+\draw[arrow] (amount) -- node[lab,right]{hayır} (observed);
+\draw[arrow] (observed) -- node[lab,above]{evet} (mi);
+\draw[arrow] (observed) -- node[lab,right]{yetersiz / hayır} (sensitivity);
+\end{tikzpicture}
+\caption{Eksik veri yöntemini seçmeden önce izlenecek karar akışı.}
+\label{fig:missing-data-flow}
+\end{figure}
+
+Akış mekanik bir reçete değildir. Örnekleme tasarımı, boylamsal yapı,
+kümeleşme, değişken türü ve bilimsel hedef seçimi değiştirebilir.
+
+\section{Çözümlü örnek: Seçici son-test eksikliği}
+
+İki program grubunda başlangıç ve son-test puanları Tablo~\ref{tab:missing-small-data}'de
+verilmiştir. B grubundaki başlangıç puanı en düşük öğrencinin son-testi
+gözlenmemiştir. Öğretim amacıyla parantez içindeki 45 değeri saklanan gerçek
+değer kabul edilecek; gerçek araştırmada bu değer bilinemez.
+
+\begin{table}[htbp]
+\centering
+\caption{Seçici eksiklik içeren küçük öğretim verisi.}
+\label{tab:missing-small-data}
+\begin{tabular}{@{}crrr@{\qquad}crrr@{}}
+\toprule
+No & Grup & Ön & Son & No & Grup & Ön & Son \\
+\midrule
+1&A&42&50 & 7&B&40&eksik (45)\\
+2&A&48&55 & 8&B&44&49\\
+3&A&51&59 & 9&B&49&55\\
+4&A&55&62 &10&B&53&58\\
+5&A&60&68 &11&B&58&64\\
+6&A&63&70 &12&B&62&67\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+A grubunun son-test ortalaması $60{,}67$'dir. B grubunda yalnız gözlenen beş
+puan kullanılırsa ortalama
+\[
+\bar x_{B,\mathrm{gözlenen}}=58{,}60
+\]
+ve A--B farkı $2{,}07$ bulunur. Saklanan 45 bilinseydi B ortalaması $56{,}33$,
+fark ise $4{,}33$ olacaktı. Düşük başlangıç puanlı öğrencinin kaybı B grubunu
+olduğundan başarılı göstermiş ve farkı küçültmüştür.
+
+B grubunun gözlenen ortalaması olan $58{,}60$ eksik hücreye yazılırsa B
+ortalaması değişmez; fakat yapay olarak merkezde bir gözlem eklenir ve
+değişkenlik küçülür. Başlangıç puanını kullanan basit regresyon tahmini ise
+eksik son-test için yaklaşık $46{,}70$ üretir. Bu değer 45'e yakındır; yine de
+kesin gözlem değildir ve tekli regresyon ataması tahmin belirsizliğini hesaba
+katmaz.
+
+\begin{ornek}[Tam gözlem sonucunu yorumlama]
+Tam gözlem analizi ``eksik öğrencinin sonucu 58,60'tır'' demez. O öğrenciyi
+hedef analizden çıkarır ve sonucu son-testi gözlenen öğrenciler için üretir.
+Bu alt grubun başlangıçta farklı olması, özgün hedef evrene genellemeyi
+zayıflatır.
+\end{ornek}
+
+\section{Duyarlılık analizi}
+\index{duyarlılık analizi!eksik veri}
+
+MAR varsayımı gözlenmeyen veriden doğrulanamadığı için ana analiz makul
+alternatiflerle karşılaştırılmalıdır. Basit duyarlılık incelemeleri şunları
+içerebilir:
+
+\begin{itemize}
+  \item tam gözlem ve çoklu atama sonuçlarını karşılaştırmak,
+  \item atanan son-test değerlerini belirli miktarda daha düşük veya yüksek almak,
+  \item kayıp öğrenciler için en iyi ve en kötü makul senaryoları kurmak,
+  \item farklı yardımcı değişken kümeleriyle atama yapmak,
+  \item sonuç yönü, büyüklüğü ve kararının hangi varsayımlarda değiştiğini göstermek.
+\end{itemize}
+
+Amaç en uygun sonucu seçmek değil, sonucun hangi varsayıma ne kadar bağımlı
+olduğunu görünür kılmaktır.
+
+\section{Python ile veri kalite denetimi}
+
+\begin{lstlisting}[style=prismPython]
+import numpy as np
+import pandas as pd
+
+df = pd.DataFrame({
+    "grup": ["A"]*6 + ["B"]*6,
+    "on":   [42,48,51,55,60,63,40,44,49,53,58,62],
+    "son":  [50,55,59,62,68,70,np.nan,49,55,58,64,67]
+})
+
+# Değişken ve kişi düzeyinde eksiklik
+print(df.isna().sum())
+print(df.isna().mean())
+df["eksik_son"] = df["son"].isna().astype(int)
+print(pd.crosstab(df["grup"], df["eksik_son"], margins=True))
+
+# Gözlenen ve eksik son-test gruplarının başlangıç puanları
+print(df.groupby("eksik_son")["on"].agg(["count", "mean", "std"]))
+
+# Tam gözlem özeti
+tam = df.dropna(subset=["son"])
+print(tam.groupby("grup")["son"]
+         .agg(["count", "mean", "std"]))
+\end{lstlisting}
+
+Kod, eksiklik göstergesinin başlangıç puanıyla ilişkisini betimler; tek başına
+MCAR, MAR veya MNAR kanıtı değildir. Çoklu atama gerekiyorsa Python'da
+\texttt{statsmodels.imputation.mice} gibi bir yordam kullanılabilir; atama
+modeli analiz modeliyle uyumlu kurulmalıdır.
+
+\section{R ile veri kalite denetimi ve çoklu atama iskeleti}
+
+\begin{lstlisting}[style=prismR]
+veri <- data.frame(
+  grup = factor(rep(c("A", "B"), each = 6)),
+  on  = c(42,48,51,55,60,63,40,44,49,53,58,62),
+  son = c(50,55,59,62,68,70,NA,49,55,58,64,67)
+)
+
+colSums(is.na(veri))
+colMeans(is.na(veri))
+veri$eksik_son <- as.integer(is.na(veri$son))
+with(veri, table(grup, eksik_son, useNA = "ifany"))
+aggregate(on ~ eksik_son, data = veri,
+          FUN = function(x) c(n=length(x), ort=mean(x), ss=sd(x)))
+
+complete <- subset(veri, !is.na(son))
+aggregate(son ~ grup, data = complete,
+          FUN = function(x) c(n=length(x), ort=mean(x), ss=sd(x)))
+
+# mice paketi kuruluysa örnek çoklu atama akışı:
+# imp <- mice::mice(veri[c("grup","on","son")], m=20,
+#                   method="pmm", seed=2026, printFlag=FALSE)
+# fit <- with(imp, lm(son ~ on + grup))
+# summary(mice::pool(fit), conf.int=TRUE)
+\end{lstlisting}
+
+\texttt{mice} örneğindeki öngörücü ortalama eşleştirmesi, gözlenen değerlere
+benzeyen atamalar üretmeyi amaçlar. Paket adı yazmak yöntem gerekçesinin yerine
+geçmez; değişken türleri, etkileşimler ve tanılar ayrıca incelenir.
+
+\section{SPSS ile eksik veri denetimi}
+
+Önce özel eksik kodlar tanımlanmalı veya sistem eksik değere dönüştürülmelidir.
+Aşağıdaki temel sözdizimi eksiklik göstergesi ve grup tablosu üretir:
+
+\begin{lstlisting}[style=prismSPSS]
+MISSING VALUES son (99, 999).
+COMPUTE eksik_son = MISSING(son).
+VALUE LABELS eksik_son 0 'Gözlendi' 1 'Eksik'.
+EXECUTE.
+
+FREQUENCIES VARIABLES=on son eksik_son.
+CROSSTABS
+ /TABLES=grup BY eksik_son
+ /CELLS=COUNT ROW.
+
+MEANS TABLES=on BY eksik_son
+ /CELLS=COUNT MEAN STDDEV.
+\end{lstlisting}
+
+Menüde temel inceleme için \textbf{Analyze $>$ Descriptive Statistics}, daha
+ayrıntılı örüntü incelemesi için kurulumda varsa \textbf{Analyze $>$ Missing
+Value Analysis} kullanılabilir. Çoklu atama modülü bulunan sürümlerde
+\textbf{Analyze $>$ Multiple Imputation $>$ Impute Missing Data Values}
+yoluyla atama modeli kurulur. Üretilen çoklu dosyalarda analiz sonuçlarının
+birleştirilmiş tablosu kullanılmalı; tek bir atama dosyasının sonucu nihai
+sonuç gibi raporlanmamalıdır.
+
+\begin{outputguidebox}
+Çıktıyı şu sırayla okuyun: (1) özel eksik kodlar doğru tanımlanmış mı,
+(2) her değişken için geçerli ve eksik $n$, (3) kişi ve örüntü düzeyindeki
+eksiklik, (4) gruplara göre eksiklik oranı, (5) eksikliği öngören gözlenen
+değişkenler, (6) kullanılan silme/atama modeli, (7) birleşik tahmin ve standart
+hata, (8) duyarlılık sonucu.
+\end{outputguidebox}
+
+\section{Bilimsel raporlama örneği}
+
+``Son-test puanı 120 öğrencinin 102'sinde gözlenmiş, 18 öğrencide (yüzde 15)
+eksik kalmıştır. Eksiklik program grubu ve başlangıç kaygı puanına göre
+farklılaştığından tamamen rassal eksiklik varsayımı uygun görülmemiştir. Ana
+analizde grup, başlangıç puanı ve devam bilgilerini içeren 20 veri setli çoklu
+atama kullanılmış; tahminler Rubin kurallarıyla birleştirilmiştir. Tam gözlem
+analizi ile son-test puanlarının 3 puan daha düşük olduğu MNAR duyarlılık
+senaryosu ek olarak raporlanmıştır. Sonucun yönü korunmuş, büyüklüğü duyarlılık
+senaryosunda azalmıştır.''
+
+\section{Bir eksik veri analizini değerlendirirken}
+
+\begin{enumerate}
+  \item Eksik, sıfır, uygulanamaz ve geçersiz kodlar ayrılmış mı?
+  \item Değişken, kişi, grup ve örüntü düzeyindeki eksiklik raporlanmış mı?
+  \item Mekanizma varsayımı araştırma süreci ve gözlenen bilgilerle gerekçelendirilmiş mi?
+  \item Silme veya atama yöntemi hedef analizle uyumlu mu?
+  \item Atama modeli sonuç, açıklayıcı ve yardımcı değişkenleri içeriyor mu?
+  \item Atama belirsizliği standart hataya yansıtılmış mı?
+  \item Tam gözlem ve MNAR duyarlılık sonuçları karşılaştırılmış mı?
+  \item Temizleme ve atama kodu yeniden üretilebilir biçimde saklanmış mı?
+\end{enumerate}
+
+\input{chapter-exercises/16-eksik-veri-kalitesi}
+
+\bolumkaynaklari{\cite{rubin1976,little2019,vanbuuren2018,sterne2009}}
+
+\section*{Hatırla--Uygula--Yansıt}
+
+\begin{enumerate}
+\renewcommand{\labelenumi}{\textbf{\Alph{enumi}.}}
+  \item \textbf{Ayır:} Boş hücre, gerçek sıfır, 99 kodu ve yapısal eksiklik için farklı işlem yazın.
+  \item \textbf{Özetle:} 200 kişilik veride bir değişkende 30 eksik varsa oranı bulun; neden genel yüzdeyle yetinilmemesi gerektiğini açıklayın.
+  \item \textbf{Mekanizma:} MCAR, MAR ve MNAR için PDR bağlamında birer örnek verin.
+  \item \textbf{Eleştir:} ``Eksiklik yüzde 5'ten azsa silmek her zaman güvenlidir'' ifadesini düzeltin.
+  \item \textbf{Karşılaştır:} Liste bazında ve çift bazında silmenin temel farkını yazın.
+  \item \textbf{Varyans:} Ortalama ile atamanın neden değişkenliği küçülttüğünü açıklayın.
+  \item \textbf{Birleştir:} Çoklu atamada atama içi ve atamalar arası varyansın rollerini ayırın.
+  \item \textbf{Planla:} Son-test eksikliği için atama modeline alınabilecek dört gözlenen değişken önerin.
+  \item \textbf{Duyarlılık:} MNAR olasılığı için uygulanabilecek bir senaryo analizi tasarlayın.
+  \item \textbf{Raporla:} Eksiklik miktarı, yöntem, varsayım ve duyarlılık sonucunu içeren kısa yöntem paragrafı yazın.
+\end{enumerate}

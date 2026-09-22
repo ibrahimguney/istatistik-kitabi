@@ -1,0 +1,449 @@
+\section{Literatür verisiyle yazılım uygulamaları}
+\label{sec:spss-b13}
+
+\textbf{Amaç ve veri.} \texttt{b13.csv} ile birinci dönem notu
+\texttt{g1} ve yıl sonu notu \texttt{g3} arasındaki doğrusal ilişkiyi
+inceleyin \citep{cortez2008data}. Pearson korelasyonunda
+$H_0:\rho=0$, sabit terimli basit regresyonda $H_0:\beta_1=0$
+sınanır. Alternatifler iki yönlüdür; anlamlılık düzeyi 0,05,
+katsayıların güven düzeyi yüzde 95'tir. Açıklayıcı değişken G1,
+yanıt değişkeni G3'tür; bu yön bir nedensellik iddiası değildir.
+
+\textbf{Ortak veri.} Karşılaştırmanın veri dosyası
+\nolinkurl{companion/spss/csv/b13.csv} olup 395 satır ve 10 sütun
+içerir. Kayıtların tamamı kullanılır; sıfır yıl sonu notu bulunan
+38 kayıt eksik sayılmaz. B06'nın seçim göstergeleri ve ağırlığı
+kullanılmaz. Sayısal uyum Excel içe aktarmanın doğrulandığı anlamına
+gelmez. Kodları \texttt{companion} klasörünü içeren paket kökünden
+çalıştırın; veri sözlüğü için bkz. sayfa~\pageref{sec:spss-guide}.
+
+\subsection{IBM SPSS uygulaması}
+\textbf{Başlamadan önce.} Aşağıdaki veri açma bloğunu
+\texttt{EXECUTE} satırı dahil çalıştırın; sonra menü veya analiz
+komutlarıyla devam edin. Filtre, ağırlık ve dosya bölme kapalı
+olmalıdır. Dosya açılamazsa \texttt{/FILE} yolunu düzeltip yeniden
+açın; önceki bölümden kalan etkin veriyle devam etmeyin.
+
+\begin{spssadimlar}
+\spssadim{Önce \emph{Graphs $\to$ Legacy Dialogs $\to$ Scatter/Dot} yolunda basit saçılım grafiği oluşturun. Yatay eksene \texttt{g1}, dikey eksene \texttt{g3} koyun; doğrusal örüntüyü ve aykırı kayıtları inceleyin.}
+\spssadim{\emph{Analyze $\to$ Correlate $\to$ Bivariate} yolunu açın. \texttt{g1} ve \texttt{g3} değişkenlerini \emph{Variables} alanına taşıyın.}
+\spssadim{Doğrusal ilişkiyi inceleyen bu uygulamada \emph{Pearson} ve \emph{Two-tailed} seçin. \emph{OK} ile tabloyu alın; yöntem seçimini çıkan $p$ değerine göre değiştirmeyin.}
+\spssadim{Regresyon için \emph{Analyze $\to$ Regression $\to$ Linear} yolunu açın. \emph{Dependent} alanına \texttt{g3}, açıklayıcı değişken alanına \texttt{g1} koyun; yöntem \emph{Enter} olsun.}
+\spssadim{\emph{Statistics} içinde \emph{Estimates}, \emph{Model fit} ve yüzde 95 \emph{Confidence intervals} seçin; \emph{Continue} seçin.}
+\spssadim{\emph{Plots} içinde Y alanına \texttt{*ZRESID}, X alanına \texttt{*ZPRED} yerleştirin; standartlaştırılmış artık histogramını da seçin.}
+\spssadim{\emph{Continue $\to$ OK} ile modeli çalıştırın. \emph{Coefficients} tablosunun standartlaştırılmamış B sütununu ve \emph{Model Summary} tablosunun $R^2$ değerini okuyun.}
+\end{spssadimlar}
+
+{\raggedright
+\noindent\textbf{Komutların görevi.} \texttt{CORRELATIONS} Pearson ilişkisini, \texttt{REGRESSION} yıl sonu notunun doğrusal modelini hesaplar. \texttt{SCATTERPLOT} ve \texttt{RESIDUALS} model artıklarını incelemek içindir.\par}
+
+\par\noindent\begin{minipage}{\linewidth}
+\textbf{Uygulama kodu:} \texttt{b13}. Veri açma ve tanımlama:
+
+\begin{lstlisting}[style=prismSPSS]
+SET DECIMAL=DOT.
+GET DATA /TYPE=TXT
+ /FILE='companion/spss/csv/b13.csv'
+ /ENCODING='UTF8'
+ /ARRANGEMENT=DELIMITED /DELCASE=LINE
+ /DELIMITERS="," /QUALIFIER='"'
+ /FIRSTCASE=2
+ /VARIABLES=id F8.0 school F8.0 sex F8.0 age F8.0
+ studytime F8.0 absences F8.0 g1 F8.0 g2 F8.0
+ g3 F8.0 pass10 F8.0.
+FILTER OFF.
+WEIGHT OFF.
+SPLIT FILE OFF.
+VARIABLE LABELS
+ g1 'Ilk donem matematik notu'
+ g3 'Yil sonu matematik notu'.
+VARIABLE LEVEL
+ id school sex pass10 (NOMINAL)
+ studytime (ORDINAL)
+ age absences g1 g2 g3 (SCALE).
+EXECUTE.
+\end{lstlisting}
+\end{minipage}\par
+
+\par\noindent\begin{minipage}{\linewidth}
+\textbf{Korelasyon, model ve grafikler.} Veri açıldıktan sonra çalıştırın.
+
+\begin{lstlisting}[style=prismSPSS]
+DESCRIPTIVES VARIABLES=g1 g3
+ /STATISTICS=MEAN STDDEV MIN MAX.
+GRAPH /SCATTERPLOT(BIVAR)=g1 WITH g3.
+CORRELATIONS /VARIABLES=g1 g3
+ /PRINT=TWOTAIL /MISSING=PAIRWISE.
+REGRESSION /STATISTICS=COEFF R ANOVA CI(95)
+ /DEPENDENT=g3 /METHOD=ENTER g1
+ /SCATTERPLOT=(*ZRESID,*ZPRED)
+ /RESIDUALS=HISTOGRAM(ZRESID).
+\end{lstlisting}
+
+\end{minipage}\par
+
+\begin{outputguidebox}
+\textbf{Paylaşılan SPSS tablolarıyla doğrulanan değerler.}
+\emph{Descriptive Statistics} tablosunda iki değişken için de
+$n=395$ vardır. G1 ortalaması 10,91, standart sapması 3,319;
+G3 ortalaması 10,42, standart sapması 4,581'dir.
+\emph{Correlations} tablosunda $r=0{,}801$ ve iki yönlü
+$p<0{,}001$ görülür. \emph{Model Summary}, $R^2=0{,}642$,
+düzeltilmiş $R^2=0{,}641$ ve tahminin standart hatası 2,743 verir.
+
+\emph{ANOVA} tablosunda $F(1,393)=705{,}842$ ve $p<0{,}001$;
+\emph{Coefficients} tablosunda sabit $-1{,}653$, G1 eğimi
+1,106 ve standartlaştırılmış Beta 0,801'dir. Eğim aralığı
+$[1{,}024;\ 1{,}188]$ olarak gösterilir. B eğimi ile Beta
+aynı sütun değildir. SPSS'in $p<0{,}001$ gösterimi sıfır demek
+değildir; R ve Python daha küçük değerleri bilimsel gösterimle verir.
+
+\emph{Residuals Statistics} tablosunda ham artık standart sapması
+2,740, standartlaştırılmış artık standart sapması 0,999'dur.
+Bunlar modelin 2,743 standart hatasıyla karıştırılmaz: artık
+standart sapmasının böleni 394, model hata varyansının böleni
+393'tür. Burada ZRESID, ham artığın model standart hatasına
+bölünmesidir; standart sapmasının tam 1 olması beklenmez.
+\end{outputguidebox}
+
+
+\par\noindent\begin{minipage}{\linewidth}
+\subsection{R uygulaması}
+\label{sec:r-gercek-b13}
+
+\texttt{lm} sabit terimli modeli kurar. Aşağıdaki blokları sırayla
+çalıştırın; tahmin ve artıklar ham kayıtlardan ayrı nesnelerdir.
+
+\begin{lstlisting}[style=prismR]
+veri <- read.csv("companion/spss/csv/b13.csv")
+stopifnot(nrow(veri) == 395, ncol(veri) == 10,
+  !anyNA(veri), !anyDuplicated(veri$id),
+  all(veri$pass10 == as.integer(veri$g3 >= 10)))
+korelasyon <- cor.test(veri$g1, veri$g3,
+  method="pearson", alternative="two.sided")
+model <- lm(g3 ~ g1, data=veri)
+ozet <- summary(model)
+tahmin <- fitted(model)
+artik <- residuals(model)
+zpred <- as.numeric(scale(tahmin))
+zresid <- artik/sigma(model)
+print(c(satir=nrow(veri), sutun=ncol(veri),
+  eksik=sum(is.na(veri)), sifir_not=sum(veri$g3 == 0)))
+\end{lstlisting}
+\end{minipage}\par
+
+\textbf{Dosya yolu sorunu yaşarsanız.} İlk satır yerine aşağıdaki
+komutla \texttt{b13.csv} dosyasını seçin; ardından kontrol bloğundan
+devam edin.
+\begin{lstlisting}[style=prismR]
+veri <- read.csv(file.choose())
+\end{lstlisting}
+
+\par\noindent\begin{minipage}{\linewidth}
+\textbf{Modelin sayısal özeti.} Küçük $p$ değerlerini sıfıra
+yuvarlamamak için 15 anlamlı basamakla yazdırın.
+
+\begin{lstlisting}[style=prismR]
+print(c(r=unname(korelasyon$estimate),
+  p_korelasyon=korelasyon$p.value,
+  R2=ozet$r.squared, duzeltilmis_R2=ozet$adj.r.squared,
+  model_sh=sigma(model),
+  F=unname(ozet$fstatistic["value"]),
+  df_model=unname(ozet$fstatistic["numdf"]),
+  df_artik=df.residual(model),
+  beta=coef(model)[["g1"]]*sd(veri$g1)/sd(veri$g3),
+  G1_10_tahmin=unname(predict(model, data.frame(g1=10)))
+), digits=15)
+print(cbind(ozet$coefficients,
+            confint(model, level=.95)), digits=15)
+print(anova(model), digits=15)
+\end{lstlisting}
+
+\textbf{Çıktıyı okuma.} Paylaşılan R ekranlarında
+$r=0{,}801467932017414$, $R^2=0{,}642350846052270$ ve
+G1=10 için tahmin 9,40975711892797 bulunmuştur. Katsayı tablosu
+hem sabit hem eğim için standart hata, $t$, $p$ ve güven aralığı
+verir. R burada yeniden çalıştırılmamış; paylaşılan çıktılar incelenmiştir.
+\end{minipage}\par
+
+\par\noindent\begin{minipage}{\linewidth}
+\textbf{Betimsel ve artık özetleri.} SPSS'in artık tablosuyla
+karşılaştırma için aynı ölçeklemeyi koruyun.
+
+\begin{lstlisting}[style=prismR]
+betimsel <- function(degerler) {
+  c(n=length(degerler), minimum=min(degerler),
+    maksimum=max(degerler), ortalama=mean(degerler),
+    ss=sd(degerler))
+}
+print(rbind(G1=betimsel(veri$g1), G3=betimsel(veri$g3)),
+      digits=15)
+print(rbind(tahmin=betimsel(tahmin), artik=betimsel(artik),
+  zpred=betimsel(zpred), zresid=betimsel(zresid)), digits=15)
+\end{lstlisting}
+
+\textbf{Çıktıyı okuma.} R'de ZRESID aralığı yaklaşık
+$[-4{,}236510;\ 1{,}828148]$, standart sapması 0,998730'dur.
+Artık ortalamalarının $10^{-16}$ civarında görünmesi sayısal
+hesap hassasiyetiyle ilgilidir; anlamlı bir ortalama sapması değildir.
+\end{minipage}\par
+
+\par\noindent\begin{minipage}{\linewidth}
+\textbf{Grafikleri üretme.} Paylaşılan R görseli üç paneli de içerir.
+
+\begin{lstlisting}[style=prismR]
+par(mfrow=c(1, 3))
+plot(veri$g1, veri$g3, xlab="G1", ylab="G3",
+     main="G1 - G3", pch=16)
+abline(model, col="blue", lwd=2)
+plot(zpred, zresid, xlab="ZPRED", ylab="ZRESID",
+     main="Artik - Tahmin", pch=16)
+abline(h=0, lty=2)
+hist(zresid, breaks=15, main="Artik histogrami",
+     xlab="ZRESID")
+par(mfrow=c(1, 1))
+\end{lstlisting}
+\end{minipage}\par
+
+\par\noindent\begin{minipage}{\linewidth}
+\subsection{Python uygulaması}
+\label{sec:python-b13}
+
+\texttt{linregress} eğim, sabit ve eğimin standart hatasını verir.
+Eğim aralığında $n-2=393$ serbestlik derecesi kullanılır.
+Blokları sırayla çalıştırın; \texttt{ddof=1} örneklem standart
+sapmasını seçer.
+
+\begin{lstlisting}[style=prismPythonApp]
+import pandas as pd
+import numpy as np
+from scipy import stats
+
+veri = pd.read_csv("companion/spss/csv/b13.csv")
+assert veri.shape == (395, 10)
+assert not veri.isna().any().any()
+assert veri.id.is_unique
+assert veri.pass10.eq((veri.g3 >= 10).astype(int)).all()
+ilk_not = veri.g1.to_numpy()
+son_not = veri.g3.to_numpy()
+korelasyon = stats.pearsonr(ilk_not, son_not)
+model = stats.linregress(ilk_not, son_not)
+serbestlik = len(veri)-2
+kritik = stats.t.ppf(.975, serbestlik)
+egim_araligi = (model.slope
+    + np.array([-1, 1])*kritik*model.stderr)
+tahmin = model.intercept+model.slope*ilk_not
+artik = son_not-tahmin
+model_sh = np.sqrt(np.sum(artik**2)/serbestlik)
+zresid = artik/model_sh
+zpred = (tahmin-tahmin.mean())/tahmin.std(ddof=1)
+\end{lstlisting}
+\end{minipage}\par
+
+\par\noindent\begin{minipage}{\linewidth}
+\textbf{Sayısal çıktı.} Etiketler paylaşılan terminal çıktısıyla aynıdır.
+
+\begin{lstlisting}[style=prismPythonApp]
+print("Satir:", len(veri), "Sutun:", veri.shape[1])
+print("Eksik:", int(veri.isna().sum().sum()))
+print("Sifir not:", int((veri.g3 == 0).sum()))
+ozet = {
+    "Pearson r": korelasyon.statistic,
+    "Korelasyon p": korelasyon.pvalue,
+    "Sabit": model.intercept, "Egim": model.slope,
+    "Egim standart hatasi": model.stderr,
+    "Egim p": model.pvalue,
+    "Egim GA alt": egim_araligi[0],
+    "Egim GA ust": egim_araligi[1],
+    "R2": model.rvalue**2,
+    "Duzeltilmis R2": 1-(1-model.rvalue**2)
+        * (len(veri)-1)/serbestlik,
+    "Model standart hatasi": model_sh,
+    "F": (model.slope/model.stderr)**2,
+    "Artik serbestlik derecesi": serbestlik,
+    "G1=10 ortalama tahmini": model.intercept+10*model.slope}
+for ad, deger in ozet.items():
+    print(f"{ad}: {deger:.15g}")
+\end{lstlisting}
+
+\textbf{Çıktıyı okuma.} Python ekranında 395 satır, 10 sütun,
+sıfır eksik değer ve 38 sıfır not vardır. Korelasyon ve eğim için
+$p\approx9{,}00143\times10^{-90}$ bulunmuştur. \texttt{.15g},
+15 ondalık basamak değil 15 anlamlı basamak ister; çok küçük
+değerleri bilimsel gösterimle korur.
+\end{minipage}\par
+
+\par\noindent\begin{minipage}{\linewidth}
+\textbf{Grafikleri üretme.} Çizgi G1'e göre sıralanarak çizilir.
+
+\begin{lstlisting}[style=prismPythonApp]
+import matplotlib.pyplot as plt
+
+sekil, eksenler = plt.subplots(1, 3, figsize=(15, 4))
+sirali = np.argsort(ilk_not)
+eksenler[0].scatter(ilk_not, son_not, alpha=.6)
+eksenler[0].plot(ilk_not[sirali], tahmin[sirali],
+                 color="red")
+eksenler[0].set(xlabel="G1", ylabel="G3", title="G1 - G3")
+eksenler[1].scatter(zpred, zresid, alpha=.6)
+eksenler[1].axhline(0, color="black", linestyle="--")
+eksenler[1].set(xlabel="ZPRED", ylabel="ZRESID",
+                title="Artik - Tahmin")
+eksenler[2].hist(zresid, bins=15, edgecolor="black")
+eksenler[2].set(xlabel="ZRESID", ylabel="Frekans",
+                title="Artik histogrami")
+plt.tight_layout(); plt.show()
+\end{lstlisting}
+\end{minipage}\par
+
+\Needspace{12\baselineskip}
+\subsection{Sonuçların karşılaştırılması ve ortak rapor}
+13 Eylül 2026'da paylaşılan SPSS tabloları ve grafikleri, R ekranları
+ve Python terminal çıktısı ile üç panelli Python grafiği incelenmiştir.
+Python'un 14 sayısal model özeti R'deki karşılıklarıyla uyumludur:
+$p$ dışındaki değerlerde $10^{-10}$ mutlak, çok küçük $p$ değerlerinde
+$10^{-10}$ bağıl tolerans kullanılmıştır. Bütün basamaklarda eşitlik
+iddia edilmez. Python kodu proje CSV'siyle ayrıca çalıştırılmış;
+SPSS sonuçları gösterilen yuvarlama hassasiyetlerinde uyumlu bulunmuştur.
+Sabitin aralığı ve ayrıntılı ANOVA gibi Python terminalinde ayrıca
+yazdırılmayan değerler için SPSS ve R çıktıları esas alınmıştır.
+Aşağıdaki tablolar bu çıktıların kitap düzenine uyarlanmış özetidir;
+ekran görüntüsü değildir.
+
+\begin{table}[H]
+\centering
+\caption{B13'te korelasyon ve basit regresyonun uyumu}
+\label{tab:b13-dogrulanmis-uyum}
+\begin{tabular}{@{}lr@{}}
+\toprule
+Ölçü & Değer \\
+\midrule
+Gözlem sayısı & 395 \\
+Pearson $r$ & 0,801468 \\
+$R^2$ & 0,642351 \\
+Düzeltilmiş $R^2$ & 0,641441 \\
+Modelin artık standart hatası & 2,743359 \\
+$F(1,393)$ & 705,842247 \\
+Korelasyon ve eğim için $p$ (yaklaşık) & $9{,}00143\times10^{-90}$ \\
+Standartlaştırılmış Beta & 0,801468 \\
+G1=10 için ortalama tahmini & 9,409757 \\
+\bottomrule
+\end{tabular}
+\par\smallskip
+{\footnotesize Sabit terimli, tek açıklayıcılı bu modelde
+$R^2=r^2$, standartlaştırılmış Beta $=r$ ve eğimin $t$ istatistiğinin
+karesi modelin $F$ istatistiğidir. Korelasyon ve eğim testleri
+bağımsız iki kanıt olarak sayılmaz.\par}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{B13'te standartlaştırılmamış regresyon katsayıları}
+\label{tab:b13-dogrulanmis-katsayi}
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Ölçü & Sabit & G1 eğimi \\
+\midrule
+B & $-1{,}652804$ & 1,106256 \\
+Standart hata & 0,474745 & 0,041639 \\
+$t(393)$ & $-3{,}481452$ & 26,567692 \\
+İki yönlü $p$ (yaklaşık) & 0,000555 & $9{,}00143\times10^{-90}$ \\
+\%95 güven aralığı: alt & $-2{,}586162$ & 1,024393 \\
+\%95 güven aralığı: üst & $-0{,}719445$ & 1,188119 \\
+\bottomrule
+\end{tabular}
+\par\smallskip
+{\footnotesize Güven aralıkları klasik regresyon modeline dayanır;
+dayanıklı standart hatalar kullanılmamıştır. Katsayıların yorumunda
+artık grafikleri ve bağımsızlık varsayımı ayrıca değerlendirilir.\par}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{B13'te regresyon varyans çözümlemesi}
+\label{tab:b13-dogrulanmis-anova}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Kaynak & Kareler toplamı & sd & Kareler ortalaması \\
+\midrule
+Regresyon & 5312,182953 & 1 & 5312,182953 \\
+Artık & 2957,725907 & 393 & 7,526020 \\
+Toplam & 8269,908861 & 394 & --- \\
+\bottomrule
+\end{tabular}
+\par\smallskip
+{\footnotesize $F$, regresyon kareler ortalamasının artık kareler
+ortalamasına oranıdır. Artık kareler ortalamasının karekökü 2,743359
+model standart hatasını verir. Ara hesaplar yuvarlanmamış değerlerle
+yapılır; tablolarda çoğu değer altı ondalık basamakla gösterilmiştir.\par}
+\end{table}
+
+\textbf{Grafik kontrolünün kapsamı.} Üç yazılımda da G1--G3
+saçılımı, standartlaştırılmış artık--tahmin grafiği ve artık
+histogramı paylaşılmıştır. Saçılımda pozitif doğrusal örüntü
+görülür; G3=0 satırındaki noktalar ana örüntüden ayrılır.
+Notlar tam sayı olduğundan noktalar üst üste binebilir; grafikteki
+görünür simgelerden 395 kaydın veya sıfır notların sayısı okunmaz.
+
+Artık--tahmin grafiklerinde ayrık bantlar ve yaklaşık $-4{,}24$'e
+uzanan negatif artıklar vardır. Sıfır notlu gözlemlerde
+artık $0-\widehat{G3}$ olduğundan aşağı eğimli bir sıra oluşur.
+Histogramlarda sıfır çevresinde yoğunlaşma ve uzun negatif kuyruk
+görülür. Bu görünüm normalliği ve sabit varyansı doğrulamış sayılmaz;
+bantlar tek başına belirli bir varsayım ihlalinin kanıtı değildir.
+Yazılımların histogram sınıf sınırları aynı olmayabilir; sütunların
+farklı görünmesi sayısal sonuçların çeliştiği anlamına gelmez.
+Aykırı görünen kayıtlar yalnız grafik nedeniyle silinmez.
+
+\Needspace{12\baselineskip}
+\begin{outputguidebox}
+Tablo~\ref{tab:b13-dogrulanmis-katsayi} ile kurulan model
+\[
+\widehat{G3}=-1{,}652804+1{,}106256\,G1
+\]
+biçimindedir. G1'de bir puan daha yüksek değer, modelde ortalama
+G3'ün yaklaşık 1,106 puan daha yüksek olmasıyla ilişkilidir;
+G1'i bir puan artırmanın G3'ü bu miktarda artıracağı söylenmez.
+G1'in gözlenen aralığı 3--19'dur; sabit terim G1=0'a karşılık
+geldiğinden gözlenen aralığın dışındaki bir kesişimdir.
+
+Tablo~\ref{tab:b13-dogrulanmis-uyum} içindeki $R^2=0{,}642351$,
+bu örneklemde G3 değişkenliğinin yaklaşık yüzde 64,24'ünün modelle
+açıklanan payıdır. Öğrencilerin yüzde 64'ünün doğru tahmin edildiği
+veya yeni öğrencilerde aynı başarının elde edileceği anlamına gelmez.
+G1=10 için 9,409757, modelin ortalama tahminidir; bireysel tahmin
+aralığı değildir. Bu değer ara hesaplarda yuvarlanmamış katsayılarla
+hesaplanmıştır.
+
+Küçük $p$ değeri model varsayımlarını doğrulamaz. Negatif artık
+kuyruğu klasik test ve aralıkların sınırlılıklarıyla birlikte
+raporlanmalıdır. Farklı öğrencilerin bağımsızlığı grafiklerden
+anlaşılamaz; okul, önceki koşullar ve diğer karıştırıcılar için
+düzeltme yapılmamıştır. Notlar aynı eğitim sürecinin ilişkili
+ölçümleridir. İki okulla sınırlı bu verideki uyum, nedensel etkiyi,
+temsil gücünü veya yeni bir okulda tahmin başarısını kanıtlamaz.
+\end{outputguidebox}
+
+\Needspace{10\baselineskip}
+\textbf{Raporlama örneği (doğrulanmış çıktılarla).}
+``395 öğrencide birinci dönem ve yıl sonu notları arasında pozitif
+doğrusal ilişki bulunmuştur ($r=0{,}801468$,
+$p\approx9{,}00143\times10^{-90}$). Sabit terimli basit regresyonda
+G1 eğimi 1,106256'dır (\%95 güven aralığı
+$[1{,}024393;\ 1{,}188119]$); $R^2=0{,}642351$ ve
+$F(1,393)=705{,}842247$ elde edilmiştir. Modelin artık standart
+hatası 2,743359 puandır. Sıfır yıl sonu notu bulunan 38 kayıt
+korunmuştur. Artık grafiklerinde negatif kuyruk ve uzak noktalar
+görülmüş; normallik ve sabit varyans doğrulanmış kabul edilmemiştir.
+Klasik test ve güven aralığı bu sınırlılıklarla yorumlanmıştır.
+Okul ve diğer karıştırıcılar için düzeltme yapılmamış; bulgular
+nedensel etki veya yeni öğrencilerde doğrulanmış tahmin başarısı
+olarak sunulmamıştır.''
+
+\textbf{Görev.} Standartlaştırılmış Beta ile B eğimini ayırt edin.
+Yuvarlanmamış sonuçlarla $r^2=R^2$ ve $t^2=F$ eşitliklerini kontrol
+edin. G1=10 için ortalama tahmini ile bireysel tahmin aralığının
+neden farklı olduğunu açıklayın. Artıkların negatif kuyruğunu
+raporlayın; sıfır notları yalnız model uyumunu artırmak için silmeyin.
+Eğitim yılı başlamadan yapılacak bir tahminde henüz oluşmamış \texttt{g1}
+notunu kullanmanın neden uygun olmayacağını açıklayın.

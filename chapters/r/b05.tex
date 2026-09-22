@@ -1,0 +1,44 @@
+\section{R ile çözümlü uygulama}
+\label{sec:r-b05}
+
+\textbf{Soru.} Ortalaması ve standart sapması 10 olan üstel bir evrenden
+$n=1,5,30$ hacimlerinde bağımsız örneklemler üretin. Örneklem ortalamalarının
+merkezini ve standart hatasını karşılaştırın.
+
+\begin{lstlisting}[style=prismR]
+set.seed(2026)
+tekrar <- 10000
+hacimler <- c(1, 5, 30)
+sonuc <- data.frame(n = hacimler,
+                    ortalama = NA_real_,
+                    ampirik_se = NA_real_,
+                    kuramsal_se = 10 / sqrt(hacimler))
+for (sira in seq_along(hacimler)) {
+  hacim <- hacimler[sira]
+  ortalamalar <- replicate(tekrar,
+    mean(rexp(hacim, rate = 1 / 10)))
+  sonuc$ortalama[sira] <- mean(ortalamalar)
+  sonuc$ampirik_se[sira] <- sd(ortalamalar)
+  hist(ortalamalar, breaks = 35, probability = TRUE,
+       main = paste("n =", hacim), xlab = "Ortalama")
+  abline(v = 10, col = "blue", lwd = 2)
+}
+print(sonuc)
+c(se_25 = 10 / sqrt(25), se_100 = 10 / sqrt(100))
+\end{lstlisting}
+
+\begin{outputguidebox}
+\textbf{Çözüm ve kuramsal kontrol.} Üç ortalama da yaklaşık 10 çevresinde
+olmalıdır. Kuramsal standart hatalar sırasıyla 10, 4,4721 ve 1,8257'dir;
+benzetimdeki standart sapmalar bu değerlere yaklaşır, tam eşit olmak zorunda
+değildir. $n=25$ ve $n=100$ için standart hatalar 2 ve 1'dir.
+\end{outputguidebox}
+
+\textbf{Yorum.} R'deki üstel dağılımın \texttt{rate} parametresi ortalamanın
+tersidir. \texttt{rate = 10} yazmak farklı bir evren üretir. Ham evren
+çarpık kalırken ortalamaların dağılımı örneklem hacmi arttıkça daha simetrik
+ve dar hale gelir. $n=30$ her evren için otomatik normallik güvencesi değildir.
+
+\textbf{Pekiştirme ve yanıt.} Standart hatayı yarıya indirmek için hacim
+dört katına çıkarılır. Aynı tohumun R ve Python'da aynı rastgele sayıları
+üretmesi beklenmez; kuramsal hedefleri karşılaştırın.

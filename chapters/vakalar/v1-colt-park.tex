@@ -1,0 +1,127 @@
+\section{Tamamlayıcı vaka: bloklu bir tarla deneyi}
+\label{sec:v1-colt-park}
+
+\textbf{Soru ve kaynak.} Colt Park deneyinde çiftlik gübresi (FYM) ile
+gübresiz kontrolün kuru ot verimleri nasıl karşılaştırılır?
+\citet{villagalaviz2023} çalışmasının S1 Data ve S1 File ekleri kullanılır.
+Bu, makalenin çok göstergeli analizinin tekrarı değil, tek yanıtlı bir
+öğretim uyarlamasıdır. Karşılaştırma ve yanıt bu vaka için belirlenmiştir;
+yayımlanmış sonuçlardan habersiz yapılmış bir önkayıt değildir.
+
+\textbf{Atama ve kayıt kapsamı.} Yöntem ekinin 2. sayfasına göre 72
+parselin tohum eklenmeyen 24'ü incelenir. Her biri 15 m$^2$ olan
+parseller üç blokta yer alır. Her blokta FYM, NPK, NPK+FYM ve gübresiz
+kontrol için ikişer parsel bulunur; gübreleme rejimleri blok içinde
+rastgele atanmıştır. Veri tablosunun blok--rejim sayımları bu açıklamayla
+eşleşir. Burada yalnız FYM ve kontrol seçilerek her bloktan dört,
+toplam 12 parsel kullanılır. Diğer rejimler ham dosyadan silinmez.
+
+\begin{researchbox}
+\textbf{Ölçüm birimi ve izlenebilirlik.} Yanıt, 2011--2014 ortalama kuru
+madde verimidir; yıllar ayrı bağımsız parseller değildir. Excel sözlüğü
+alanı m$^2$, yöntem ekinin hesap açıklaması ağırlığı gram olarak belirtir;
+burada birim g/m$^2$ olarak korunur. Bu değer 15 m$^2$ parselin toplam
+ağırlığı veya 2017'deki besin içeriği ölçümü değildir.
+
+Ek dosyada fiziksel parsel numarası ve yıllık ham ölçümler yoktur.
+Üretilen \texttt{source\_row}, Excel'in DATA sayfasındaki satırdır;
+saha kimliği değildir. Analize giren 12 kayıtta eksik değer yoktur;
+bu kontrol, geçmişte hiç ölçüm kaybı olmadığını kanıtlamaz. Eski Spector
+örneğinden farklı olarak blok içi atama burada yöntem ekiyle desteklenir;
+ancak özgün saha atama tutanağı yeniden denetlenmiş değildir.
+\end{researchbox}
+
+\textbf{Analiz tanımı.} Farkın yönü FYM eksi kontroldür. Her blokta iki
+grup ortalaması çıkarılır; üç blok farkına eşit ağırlık verilir:
+\[
+\widehat{\tau}=\frac{1}{3}\sum_{h=1}^{3}
+\bigl(\overline{Y}_{h,\mathrm{FYM}}-\overline{Y}_{h,\mathrm{kontrol}}\bigr).
+\]
+Her blokta aynı sayıda parsel bulunduğu için bu tahmin, iki grubun genel
+ortalamalarının farkına da eşittir. Eşleştirilmiş öğrenci çiftleri gibi
+parselleri satır sırasıyla eşleştirmek veya blokları yok saymak gerekmez.
+
+\begin{table}[H]
+\centering
+\caption{Colt Park: blok ortalamaları ve FYM--kontrol farkı (g/m$^2$)}
+\label{tab:v1-colt-park}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Blok & Kontrol & FYM & Fark \\
+\midrule
+ONE & 467,563 & 619,629 & 152,066 \\
+TWO & 372,961 & 548,338 & 175,377 \\
+THREE & 376,764 & 563,784 & 187,020 \\
+\midrule
+Eşit ağırlıklı ortalama & 405,763 & 577,250 & 171,488 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Tasarıma dayalı test.} Keskin sıfır hipotezi, seçilen iki rejimin
+ilgili parsellerin hiçbirinin yanıtını değiştirmemesidir. NPK ve NPK+FYM
+parsellerinin yerleri sabit tutulduğunda, kalan dört parselin ikisine FYM
+etiketi vermenin her blokta $\binom{4}{2}=6$ yolu vardır. Bloklar birlikte
+$6^3=216$ eş olasılıklı koşullu atama verir. Bunların tamamında
+$\widehat{\tau}$ yeniden hesaplanır. İki yönlü uçluk
+$|\widehat{\tau}_{\rm atama}|\geq|\widehat{\tau}_{\rm gözlenen}|$
+ile tanımlanır. İki atama bu koşulu sağlar:
+\[
+p_{\rm tam}=\frac{2}{216}=0{,}009259\ldots
+\]
+Bu, Monte Carlo benzetimi değildir; tohum gerekmez ve pay/paydaya bir
+eklenmez. Test, belgelenen atama düzeninin eş olasılıklı koşullu
+dağılımına dayanır; farklı bir atama kuralı için aynı dağılım kullanılamaz.
+
+\textbf{Belirsizliği ayrıca belirtme.} Tam test bir güven aralığı değildir.
+Tamamlayıcı olarak üç sabit blok etkisi ve ortak FYM etkisi içeren
+$Y_{hi}=\alpha_h+\tau Z_{hi}+\varepsilon_{hi}$ modeli kurulmuştur;
+$Z=1$ FYM, $Z=0$ kontroldür. Bağımsız, normal, ortak varyanslı hatalar ve
+bloklar arasında ortak eklemeli etki varsayımı altında klasik yüzde 95
+$t$ aralığı $[106{,}546;\ 236{,}429]$ g/m$^2$'dir. Standart hata 28,162;
+artık serbestlik derecesi $12-4=8$'dir. Bu model aralığı tam
+rastgeleleştirme testinin tersinden elde edilmemiştir; varsayımları yalnız
+küçük $p$ değeriyle doğrulanmaz. Üç blok ve 12 parselde varsayım
+incelemesinin gücü sınırlıdır.
+
+\textbf{Raporlama örneği.} ``FYM ve kontrol için altışar parselin
+2011--2014 ortalama kuru madde verimleri karşılaştırılmıştır.
+Bloklara eşit ağırlıklı fark 171,488 g/m$^2$; blok içi tam
+rastgeleleştirme testinde iki yönlü $p=0{,}009259$ bulunmuştur.
+Eklemeli blok modelinin klasik yüzde 95 güven aralığı
+$[106{,}546;\ 236{,}429]$ g/m$^2$'dir; bu aralık ek model
+varsayımlarına dayanır. Rastgele atama, uygun uygulama ve parseller arası
+etkileşimsizlik koşulları altında bu düzen içindeki nedensel karşılaştırmayı
+destekler. Sonuç tüm çayırlar için bir gübre reçetesi, biyolojik çeşitlilik
+sonucu veya kısa süreli tek gübre uygulamasının etkisi değildir.''
+
+\textbf{Çalıştırma ve doğrulama.} Ham ekler, veri sözlüğü, dönüşüm,
+216 atama ve sayısal çıktılar
+\nolinkurl{companion/vakalar/v1-colt-park/} klasöründedir. Paket kökünde:
+\begin{lstlisting}[style=prismPythonApp,language={}]
+python -B companion/vakalar/v1-colt-park/analyze.py
+\end{lstlisting}
+Yüklenen iki Excel aynı dosyanın kopyasıdır; iki bağımsız veri kaynağı
+sayılmaz. Yazarların R kodu yüklenmediği için özgün R analizi çalıştırılmadı;
+buradaki Python sonuçları ham ekteki tek yanıt üzerinden hesaplandı.
+
+\textbf{Görevler ve gerekçeli yanıtlar.}
+\begin{enumerate}[label=\arabic*.]
+\item \emph{Neden 48 gözlem değil 12 parsel?} Dört yılın ortalaması
+parsel başına tek yanıttır; yıllık ham kayıtlar dosyada yoktur.
+\item \emph{Neden $\binom{12}{6}$ değil $6^3$ atama?} Blok başına iki
+FYM ve iki kontrol korunur; bloklar arasında serbest etiket değişimi
+başka bir atama düzenini temsil eder.
+\item \emph{Satır sırasına göre altı çift kurabilir miyiz?} Hayır;
+belgelenmiş yapı üç bloktur, Excel sırası deneysel eşleştirme değildir.
+\item \emph{Tam $p$ değeri ile model aralığı aynı dayanağa mı sahip?}
+Hayır; aralık ortak eklemeli etki ve hata dağılımı varsayımlarını ekler.
+\item \emph{Spector'dan fark ve genelleme sınırı nedir?} Burada atama
+belgesi vardır; buna rağmen rastgele atama, sahanın bütün çayırlar
+arasından rastgele seçildiğini göstermez.
+\end{enumerate}
+\textbf{Değerlendirme (10 puan).} Her görevde doğru ayrım 1 puan,
+bu vakaya özgü gerekçe 1 puandır. Yalnız doğru sayıyı yazmak gerekçe
+puanını getirmez. Nedensellik ile genellenebilirliği eş tutan son yanıtın
+gerekçe puanı verilmez. Bu ölçütler öğrenciyle yapılmış bir etkililik
+araştırmasının sonucu değildir.

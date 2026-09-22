@@ -1,0 +1,677 @@
+\chapter{Güven Aralıkları ve Belirsizliğin Yorumlanması}
+\label{ch:confidence-intervals}
+\index{güven aralığı}
+\index{belirsizlik}
+
+\begin{hedefler}
+Bu bölümün sonunda okuyucu:
+\begin{itemize}
+  \item güven aralığının tahmin, standart hata, kritik değer ve hata payı bileşenlerini açıklayabilecek,
+  \item güven düzeyi ile gözlenen güven aralığını birbirinden ayırabilecek,
+  \item ortalama, oran ve iki grup farkı için uygun güven aralığını kurup yorumlayabilecek,
+  \item aralık genişliğini örneklem hacmi, değişkenlik, güven düzeyi ve araştırma tasarımıyla ilişkilendirebilecek,
+  \item güven aralığını sıfır değeri ve uygulamada önemli etki sınırlarıyla birlikte değerlendirebilecek,
+  \item örneklem hacmini hedeflenen hata payına göre yaklaşık olarak planlayabilecek,
+  \item güven aralıklarını Python ve SPSS çıktılarında tanıyıp bilimsel biçimde raporlayabilecektir.
+\end{itemize}
+\end{hedefler}
+
+\begin{hazirlik}
+İki araştırma aynı ortalamayı bulduğu hâlde birinin güven aralığı neden daha
+dar olabilir? Örneklem hacmi, değişkenlik ve güven düzeyini düşünerek en az iki
+neden yazın.
+\end{hazirlik}
+
+\section{PDR vakası: Yalnızlık düzeyi ne kadar hassas tahmin edildi?}
+
+Önceki bölümde birinci sınıf öğrencilerinden olasılıklı yöntemle seçilen 120
+kişinin yalnızlık puanı ortalaması 43,6, standart sapması 9,8 bulunmuştu.
+Öğrencilerin 36'sı yüksek risk eşiğinin üzerinde puan almış, dolayısıyla risk
+oranı yüzde 30 olarak tahmin edilmişti.
+
+Bu sonuçlar iki önemli soruyu açık bırakır:
+
+\begin{enumerate}
+  \item Evren ortalaması için 43,6 değerinin çevresinde hangi değerler veriyle makul ölçüde uyumludur?
+  \item Evrenin yüksek risk oranı gerçekten yüzde 30'a ne kadar yakındır?
+\end{enumerate}
+
+Nokta tahmini tek bir sayı verdiği için bu belirsizliği göstermez. Güven
+aralığı, aynı örnekleme sürecinde tahminin ne kadar değişebileceğini dikkate
+alarak parametre için makul değerler kümesi oluşturur. Aralık ne kadar darsa
+tahmin o kadar hassastır; ancak dar bir aralık, örnekleme veya ölçme sürecindeki
+sistematik yanlılıkları ortadan kaldırmaz \cite{casella2002,wasserman2004}.
+
+\begin{researchbox}
+Yalnızlık ölçeğinin yüksek risk eşiği klinik açıdan geçerli değilse oran için
+çok dar bir güven aralığı elde etmek yanlış sınıflandırmayı düzeltmez. Güven
+aralığı yalnız örnekleme belirsizliğini özetler; ölçme aracının geçerliği,
+örneklemin temsili ve veri kalitesi ayrıca değerlendirilmelidir.
+\end{researchbox}
+
+\section{Nokta tahmininden aralık tahminine}
+\index{nokta tahmini}
+\index{kritik değer}
+\index{hata payı}
+\index{standart hata}
+
+Güven aralığının genel yapısı
+\[
+\text{nokta tahmini}\ \pm\
+\text{kritik değer}\times\text{standart hata}
+\]
+biçimindedir. Kritik değer ile standart hatanın çarpımına \emph{hata payı}
+denir. Dolayısıyla
+\[
+\text{güven aralığı}=\text{tahmin}\pm\text{hata payı}
+\]
+olarak da yazılabilir.
+
+\begin{table}[htbp]
+\centering
+\caption{Bir güven aralığının temel bileşenleri.}
+\begin{tabular}{@{}p{0.22\textwidth}p{0.30\textwidth}p{0.31\textwidth}@{}}
+\toprule
+Bileşen & Yanıtladığı soru & Yalnızlık örneği \\
+\midrule
+Nokta tahmini & Örneklemin en iyi tek tahmini nedir? & $\bar x=43{,}6$ \\
+Standart hata & Tahmin örneklemden örnekleme ne kadar değişir? & $s/\sqrt n\approx0{,}89$ \\
+Kritik değer & İstenen güven düzeyi kaç standart hata gerektirir? & Yaklaşık $1{,}98$ \\
+Hata payı & Tahminin iki yanına ne kadar eklenecek? & Yaklaşık $1{,}77$ puan \\
+Alt--üst sınır & Parametre için hangi değerler veriyle uyumludur? & $41{,}83$--$45{,}37$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Standart hata örneklem hacmi arttıkça çoğunlukla küçülür. Kritik değer ise
+seçilen güven düzeyine ve kullanılan dağılıma bağlıdır. Güven aralığının
+genişliği bu iki unsurun ortak sonucudur.
+
+\section{Ortalama için güven aralığı}
+\index{güven aralığı!ortalama}
+\index{t dağılımı@$t$ dağılımı}
+
+Evren standart sapması bilinmediğinde ve koşullar uygun olduğunda ortalama
+için
+\[
+\bar x\pm t_{1-\alpha/2,n-1}\frac{s}{\sqrt n}
+\]
+aralığı kullanılır. Burada $n-1$ serbestlik derecesi, $t$ dağılımından alınan
+kritik değeri belirler. Evren standart sapması uygulamada çoğunlukla
+bilinmediği için temel araştırmalarda $z$ yerine $t$ aralığı olağan seçimdir.
+Örneklem büyüdükçe $t$ dağılımı standart normal dağılıma yaklaşır.
+
+\subsection{Adım adım yalnızlık puanı aralığı}
+
+Yalnızlık verisinde $\bar x=43{,}6$, $s=9{,}8$ ve $n=120$'dir.
+
+\adimbaslik{1. Standart hata}
+\[
+SE(\bar X)=\frac{9{,}8}{\sqrt{120}}\approx0{,}89.
+\]
+
+\adimbaslik{2. Kritik değer}
+
+Yüzde 95 güven düzeyi ve 119 serbestlik derecesi için kritik değer yaklaşık
+$t^*=1{,}98$'dir.
+
+\adimbaslik{3. Hata payı}
+\[
+ME=1{,}98(0{,}89)\approx1{,}77.
+\]
+
+\adimbaslik{4. Güven aralığı}
+\[
+43{,}6\pm1{,}77=[41{,}83;\ 45{,}37].
+\]
+
+Veri ve yöntem varsayımları altında evren ortalaması için yaklaşık 41,83 ile
+45,37 puan arasındaki değerler yüzde 95 güven aralığıyla uyumludur. Sonuç
+``ortalama kesin olarak 43,6'dır'' biçiminde değil, tahmin ve belirsizlik
+birlikte verilerek raporlanır.
+
+\section{Güven düzeyinin doğru anlamı}
+\index{güven düzeyi}
+\index{kapsama oranı}
+
+Yüzde 95 güven, hesaplanan belirli aralığın sabit parametreyi yüzde 95
+olasılıkla içerdiği anlamına gelmez. Klasik yaklaşımda parametre sabittir;
+örneklem ve ona bağlı aralık değişkendir. Aynı örnekleme ve aralık kurma
+işlemi çok kez yinelendiğinde kurulan aralıkların yaklaşık yüzde 95'i gerçek
+parametreyi kapsar.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[alt={Tekrarlı örneklemlerde güven aralıklarının çoğunun gerçek ortalamayı kapsadığını, bir aralığın ise kapsamadığını gösteren çizim},x=0.9cm,y=0.52cm]
+  \draw[PrismBlue,very thick] (5,0.25) -- (5,10.55);
+  \node[above,font=\scriptsize,text=PrismBlue] at (5,10.55) {gerçek $\mu$};
+  \foreach \y/\lo/\hi/\m in {
+    1/3.7/5.8/4.75,2/4.1/6.0/5.05,3/3.9/5.5/4.70,4/4.4/6.3/5.35,
+    5/3.5/4.8/4.15,6/4.3/5.7/5.00,7/3.8/5.3/4.55,8/4.5/6.1/5.30,
+    9/3.6/5.4/4.50,10/5.2/6.7/5.95}
+    {\draw[PrismBlue,line width=1.2pt] (\lo,\y)--(\hi,\y); \fill[PrismBlue] (\m,\y) circle (1.7pt);}
+  \draw[PrismWarnOrange!90!black,line width=1.6pt] (5.2,10)--(6.7,10);
+  \fill[PrismWarnOrange!90!black] (5.95,10) circle (1.9pt);
+  \node[right,font=\scriptsize,text=PrismWarnOrange!80!black] at (6.75,10) {kapsamıyor};
+\end{tikzpicture}
+\caption{Tekrarlı örneklemlerde güven aralıklarının kapsama mantığı.}
+\end{figure}
+
+Gözlenen aralık için uygulamada ``evren ortalamasının 41,83 ile 45,37
+arasında olduğuna yüzde 95 güveniyoruz'' denebilir. Bu kısa ifade, güvenin
+parametreye ilişkin öznel olasılık değil, kullanılan yöntemin uzun dönemli
+kapsama başarısına dayandığı bilinerek kullanılmalıdır.
+
+\begin{mistakebox}
+Yüzde 95 güven aralığı, bireysel öğrencilerin yüzde 95'inin bu sınırlar içinde
+olduğu anlamına gelmez. Aralık evren \emph{ortalamasının} belirsizliğine
+ilişkindir. Bireysel puanların yayılımı standart sapma veya yüzdeliklerle
+betimlenir ve çoğunlukla çok daha geniştir.
+\end{mistakebox}
+
+\section{Güven düzeyi ve aralık genişliği}
+\index{güven aralığı!genişlik}
+
+Aynı veri için güven düzeyi yükseltildiğinde daha yüksek kapsama hedeflenir ve
+kritik değer büyür. Bu nedenle yüzde 99 güven aralığı yüzde 95 aralığından,
+yüzde 95 aralığı da yüzde 90 aralığından geniştir.
+
+\begin{table}[htbp]
+\centering
+\caption{Büyük örneklemde yaygın güven düzeyleri ve yaklaşık kritik değerler.}
+\begin{tabular}{@{}ccc@{}}
+\toprule
+Güven düzeyi & $\alpha$ & Yaklaşık $z^*$ \\
+\midrule
+Yüzde 90 & 0,10 & 1,645 \\
+Yüzde 95 & 0,05 & 1,960 \\
+Yüzde 99 & 0,01 & 2,576 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Daha yüksek güven ücretsiz değildir: kapsama olasılığı artarken aralık
+genişler ve tahmin daha az keskin görünür. Güven düzeyi sonuçlara bakıldıktan
+sonra istenen yorumu elde etmek için değiştirilmemeli; araştırma planında
+belirlenmelidir.
+
+\begin{etkinlik}
+Bir tahminin standart hatası 2 olsun. Yüzde 90, 95 ve 99 güven düzeylerinde
+yaklaşık hata paylarını hesaplayın. Kapsama ile hassasiyet arasındaki
+ödünleşimi kendi sözlerinizle açıklayın.
+\end{etkinlik}
+
+\section{Ortalama aralığının dayandığı koşullar}
+\index{güven aralığı!varsayımlar}
+\index{bağımsızlık}
+
+Bir formülü uygulamak, aralığın geçerli olmasını tek başına sağlamaz. Ortalama
+için klasik $t$ aralığında şu noktalar değerlendirilmelidir:
+
+\begin{itemize}
+  \item Örneklem hedef evrenden uygun bir seçim süreciyle elde edilmiş olmalıdır.
+  \item Gözlemler bağımsız olmalı veya sınıf, okul ve tekrarlı ölçüm gibi bağımlılıklar analizde dikkate alınmalıdır.
+  \item Küçük örneklemde dağılım güçlü çarpıklık ve ağır aykırı değer göstermemelidir.
+  \item Büyük örneklem ortalamanın dağılımını daha kararlı yapar; fakat yanlı örneklemeyi düzeltmez.
+  \item Ölçme aracının puanları karşılaştırılabilir ve anlamlı bir nicel ölçek oluşturmalıdır.
+\end{itemize}
+
+Örneklem küçük ve dağılım belirgin biçimde çarpıksa dönüştürme, sağlam yöntem
+veya yeniden örnekleme seçenekleri düşünülebilir. Karar yalnız bir normallik
+testinin $p$-değerine dayandırılmamalıdır.
+
+\begin{assumptionbox}
+Önce araştırma tasarımını ve analiz birimini doğrulayın. Aynı danışmandan
+hizmet alan öğrenciler ya da aynı öğrencinin tekrarlı ölçümleri bağımsız kabul
+edilirse standart hata gereğinden küçük, güven aralığı gereğinden dar olabilir.
+\end{assumptionbox}
+
+\section{Bir oran için güven aralığı}
+\index{güven aralığı!oran}
+\index{Wilson aralığı}
+\index{kesin binom aralığı}
+
+Örneklem oranı $\hat p=x/n$ için temel standart hata
+\[
+SE(\hat p)=\sqrt{\frac{\hat p(1-\hat p)}{n}}
+\]
+biçimindedir. Büyük örneklemde yaklaşık aralık $\hat p\pm z^*SE(\hat p)$
+olarak yazılabilir. Ancak örneklem küçükse veya oran 0 ya da 1'e yakınsa bu
+basit aralık kötü kapsama gösterebilir ve $[0,1]$ sınırlarının dışına taşabilir.
+Bu durumlarda Wilson aralığı veya kesin binom aralığı tercih edilebilir.
+
+Yalnızlık araştırmasında 120 öğrencinin 36'sı yüksek risk grubundadır:
+\[
+\hat p=0{,}30.
+\]
+Wilson yöntemiyle yüzde 95 güven aralığı yaklaşık
+\[
+[0{,}225;\ 0{,}387]
+\]
+bulunur. Başka bir deyişle evrendeki yüksek risk oranı için veriyle uyumlu
+değerler yaklaşık yüzde 22,5 ile yüzde 38,7 arasındadır. Nokta tahmini yüzde
+30 olsa da hizmet planlamasında bu belirsizlik göz önünde bulundurulmalıdır.
+
+\begin{mistakebox}
+``Örneklemin yüzde 30'u yüksek risk grubundadır'' gözlenen veriyi betimler.
+``Evrende oran tam yüzde 30'dur'' ise belirsizliği yok sayar. Ayrıca güven
+aralığı, eşik üzerindeki her öğrencinin gerçekten klinik risk taşıdığını
+kanıtlamaz.
+\end{mistakebox}
+
+\section{İki grup veya iki zaman arasındaki fark}
+\index{güven aralığı!ortalama farkı}
+\index{eşleştirilmiş fark}
+
+Karşılaştırma sorusunda ayrı grupların güven aralıklarına bakmak yerine
+doğrudan fark için aralık kurulmalıdır. Bağımsız iki ortalamanın farkı genel
+olarak
+\[
+(\bar x_1-\bar x_2)\pm t^*SE(\bar X_1-\bar X_2)
+\]
+biçimindedir. Eşleştirilmiş ön-test--son-test tasarımında ise her katılımcının
+fark puanı $d_i$ hesaplanır ve tek örneklem yaklaşımıyla
+\[
+\bar d\pm t^*\frac{s_d}{\sqrt n}
+\]
+aralığı kurulur. Bağımsız ve eşleştirilmiş veriler aynı standart hata
+formülünü kullanmaz.
+
+\begin{ornek}[Danışmanlık programı için ortalama fark]
+Program grubunun yalnızlık puanı karşılaştırma grubundan ortalama 4,2 puan
+düşük olsun. Fark ``program eksi karşılaştırma'' olarak tanımlandığında nokta
+tahmini $-4{,}2$, tahmini standart hata 1,7'dir. Büyük örneklem yaklaşımıyla
+\[
+-4{,}2\pm1{,}96(1{,}7)=[-7{,}53;\ -0{,}87]
+\]
+elde edilir. Aralığın tamamı sıfırın altındadır; veriler program grubunda daha
+düşük ortalamayla uyumludur. Makul farklar yaklaşık 0,9 ile 7,5 puanlık azalma
+arasındadır. Fark ters yönde tanımlansaydı işaretler de ters dönerdi.
+\end{ornek}
+
+\section{Sıfır değeri, etki büyüklüğü ve uygulamalı önem}
+\index{uygulamalı önem}
+\index{etki büyüklüğü}
+
+Fark, korelasyon veya regresyon katsayısı için güven aralığı özel bir
+referans değerle karşılaştırılır. Ortalama ve oran farkında bu değer 0, oran
+biçimindeki ölçülerde çoğunlukla 1'dir. Aralığın sıfırı dışlaması, seçilen
+güven düzeyine karşılık gelen iki yönlü testte istatistiksel kanıt bulunduğunu
+gösterir.
+
+Ancak araştırma kararı yalnız sıfırı içerip içermemeye indirgenmemelidir.
+Uygulamada anlamlı en küçük farkın 3 puan olduğu varsayılsın:
+
+\begin{itemize}
+  \item Aralık bütünüyle $-3$'ün altındaysa uygulamada önemli bir azalmayı destekler.
+  \item Aralık 0'ı dışlayıp $-3$ ile 0 arasında kalıyorsa fark istatistiksel olarak belirgin, fakat küçük olabilir.
+  \item Aralık hem 0'ı hem önemli büyüklükte değerleri içeriyorsa sonuç belirsizdir; ``etki yoktur'' denemez.
+  \item Dar bir aralık 0 çevresinde kalıyorsa uygulamada önemli etkinin olmadığı daha güçlü biçimde savunulabilir.
+\end{itemize}
+
+\begin{mistakebox}
+Güven aralığının 0'ı içermesi grupların eşit olduğunu kanıtlamaz. Veri sıfır
+farkıyla uyumludur; fakat geniş bir aralık önemli olumlu ve olumsuz etkileri
+de kapsayabilir. Kanıt yokluğu, yokluğun kanıtı değildir.
+\end{mistakebox}
+
+\section{Aralık genişliğini belirleyen etkenler}
+
+Yaklaşık toplam genişlik $2\times\text{kritik değer}\times SE$ olduğundan
+aralığı şu etkenler belirler:
+
+\begin{itemize}
+  \item Güven düzeyi yükseldikçe kritik değer ve aralık genişliği artar.
+  \item Örneklem hacmi arttıkça standart hata ve aralık genişliği azalır.
+  \item Verideki değişkenlik arttıkça aralık genişler.
+  \item Grupların çok dengesiz olması fark tahminini daha az hassas yapabilir.
+  \item Kümeleme, ağırlıklandırma ve bağımlı gözlemler standart hata hesabını değiştirir.
+  \item Eksik veri nedeniyle etkin örneklem hacminin azalması aralığı genişletebilir.
+\end{itemize}
+
+Örneklem hacmi dört katına çıktığında standart hata yaklaşık yarıya düşer.
+Fakat aynı kişiden çok sayıda ölçüm almak, aynı sayıda bağımsız kişiden veri
+toplamakla eşdeğer değildir. Etkin bilgi miktarı araştırma tasarımına bağlıdır.
+
+\begin{sezgibox}
+Güven aralığı bir fotoğrafın netliği gibidir. Daha büyük ve iyi seçilmiş bir
+örneklem görüntüyü keskinleştirir; fakat kamera yanlış yöne çevrilmişse yüksek
+çözünürlük hedef evren hakkındaki yanlılığı gidermez.
+\end{sezgibox}
+
+\section{Hedeflenen hata payına göre örneklem hacmi}
+\index{örneklem hacmi!hata payına göre}
+
+Basit rastgele örneklemede, ortalama için beklenen standart sapma $\sigma$ ve
+hedef hata payı $E$ biliniyorsa yaklaşık örneklem hacmi
+\[
+n=\left(\frac{z^*\sigma}{E}\right)^2
+\]
+ile planlanabilir. Standart sapmanın yaklaşık 10 puan olduğu ve yüzde 95
+güvenle hata payının en çok 2 puan olması istendiği durumda
+\[
+n=\left(\frac{1{,}96(10)}{2}\right)^2=96{,}04
+\]
+bulunur ve yukarı yuvarlanarak en az 97 tamamlanmış gözlem hedeflenir.
+
+Bir oran için yaklaşık planlama
+\[
+n=\frac{(z^*)^2p(1-p)}{E^2}
+\]
+biçimindedir. Ön bilgi yoksa $p=0{,}50$ en koruyucu seçimi verir. Yüzde 95
+güven ve en çok 5 yüzde puanlık hata payı için
+\[
+n=\frac{1{,}96^2(0{,}50)(0{,}50)}{0{,}05^2}=384{,}16
+\]
+olduğundan en az 385 tamamlanmış yanıt gerekir.
+
+Bu sayılar başlangıçtır. Beklenen yanıtlamama, kümeleme, alt grup analizleri,
+sonlu evren düzeltmesi ve bütçe planlamada ayrıca dikkate alınmalıdır. Örneğin
+385 tamamlanmış yanıt hedefleniyor ve yüzde 80 yanıt bekleniyorsa yaklaşık
+$385/0{,}80=481{,}25$, yani en az 482 kişi davet edilmelidir.
+
+\section{Bootstrap güven aralığı}
+\index{bootstrap}
+\index{güven aralığı!bootstrap}
+
+Kuramsal standart hata formülü zor olduğunda veya medyan gibi bir istatistiğin
+örnekleme dağılımı incelendiğinde bootstrap kullanılabilir. Gözlenen
+örneklemden yerine koyarak çok sayıda yeni örneklem seçilir, her birinde hedef
+istatistik hesaplanır ve bu değerlerin yüzdelikleri aralık oluşturmak için
+kullanılır \cite{efron1993}.
+
+\begin{lstlisting}
+import numpy as np
+
+kaygi = np.array([42, 48, 50, 51, 52, 53,
+                  54, 55, 57, 60, 62, 85])
+rng = np.random.default_rng(209)
+
+bootstrap_medyan = np.array([
+    np.median(rng.choice(kaygi, size=len(kaygi), replace=True))
+    for _ in range(10000)
+])
+
+alt, ust = np.quantile(bootstrap_medyan, [0.025, 0.975])
+print("Medyan:", np.median(kaygi))
+print("Yuzde 95 bootstrap araligi:", alt, ust)
+\end{lstlisting}
+
+Yüzdelik bootstrap aralığı öğretim açısından anlaşılırdır; ancak her durumda
+en iyi yöntem değildir. Çok küçük veya temsil gücü zayıf bir örneklemden
+yeniden örnekleme yapmak eksik bilgiyi tamamlamaz. Bootstrap da bağımsızlık,
+örnekleme tasarımı ve gözlenen örneklemin evreni temsil etmesi gibi koşullara
+dayanır.
+
+\section{Kapsama oranını benzetimle görmek}
+
+Aşağıdaki kod, ortalaması 50 ve standart sapması 10 olan bir evrenden 25
+kişilik 5.000 örneklem seçer. Her örneklem için yaklaşık yüzde 95 güven aralığı
+kurulur ve gerçek ortalama 50'yi kapsayan aralıkların oranı hesaplanır.
+
+\begin{lstlisting}
+import numpy as np
+from scipy.stats import t
+
+rng = np.random.default_rng(209)
+mu = 50
+n = 25
+tekrar = 5000
+kritik = t.ppf(0.975, df=n - 1)
+kapsadi = []
+
+for _ in range(tekrar):
+    x = rng.normal(loc=mu, scale=10, size=n)
+    hata_payi = kritik * x.std(ddof=1) / np.sqrt(n)
+    alt, ust = x.mean() - hata_payi, x.mean() + hata_payi
+    kapsadi.append(alt <= mu <= ust)
+
+print("Kapsama orani:", np.mean(kapsadi))
+\end{lstlisting}
+
+Elde edilen oran her çalıştırmada küçük ölçüde değişmekle birlikte yaklaşık
+0,95 olur. Kapsamayan aralıklar hesaplama hatası değildir; yüzde 95 yönteminin
+uzun dönemde yaklaşık yüzde 5 aralığı kaçırması beklenir.
+
+\section{SPSS ile güven aralıkları}
+
+\begin{enumerate}
+  \item Bir ortalamanın aralığı için \textbf{Analyze $>$ Descriptive Statistics $>$ Explore} yolunu izleyin ve istenen güven düzeyini seçin.
+  \item Bir ortalamayı sabit değerle karşılaştırmak için \textbf{Analyze $>$ Compare Means $>$ One-Sample T Test} menüsünü kullanın.
+  \item Bağımsız iki grup için \textbf{Independent-Samples T Test}, aynı katılımcıların iki ölçümü için \textbf{Paired-Samples T Test} seçin.
+  \item Çıktıda tahminin ve farkın yönünü, güven düzeyini, alt--üst sınırları ve geçerli örneklem sayılarını kontrol edin.
+  \item Eksik gözlemler nedeniyle analizlerde farklı katılımcıların kullanılıp kullanılmadığını inceleyin.
+\end{enumerate}
+
+SPSS'nin tek örneklem $t$ testi tablosundaki güven aralığı çoğunlukla
+ortalamanın değil, örneklem ortalaması ile girilen test değeri arasındaki
+farkın aralığıdır. Test değeri 40 ve fark aralığı $[1{,}83;5{,}37]$ ise
+ortalama için karşılık gelen sınırlar $[41{,}83;45{,}37]$ olur.
+
+\begin{outputguidebox}
+Çıktıyı şu sırayla okuyun: (1) hedef parametre ve farkın yönü, (2) geçerli
+$n$, (3) nokta tahmini, (4) standart hata, (5) güven düzeyi ile alt--üst
+sınırlar, (6) aralığın sıfır veya uygulamalı önem sınırlarıyla ilişkisi.
+Yalnız $p$-değerini okuyup aralığın genişliğini gözden kaçırmayın.
+\end{outputguidebox}
+
+\section{Bilimsel raporlama örneği}
+
+``Olasılıklı yöntemle seçilen 120 birinci sınıf öğrencisinin yalnızlık puanı
+ortalaması 43,6'dır ($SS=9{,}8$). Ortalama için yüzde 95 güven aralığı
+41,83--45,37 puandır. Yüksek risk eşiğinin üzerinde puan alan 36 öğrencinin
+örneklem oranı yüzde 30,0; Wilson yüzde 95 güven aralığı yüzde 22,5--38,7'dir.
+Aralıklar örnekleme belirsizliğini göstermekte olup örneklemin temsili ve risk
+eşiğinin geçerliği ayrıca değerlendirilmiştir.''
+
+Bu rapor nokta tahminlerini, belirsizliği, kullanılan oran aralığı yöntemini
+ve yorumun sınırlarını birlikte görünür kılar. Ondalık basamak sayısı ölçme
+aracının duyarlılığıyla uyumlu ve metin boyunca tutarlı olmalıdır.
+
+\section{Bir güven aralığını değerlendirirken}
+
+\begin{enumerate}
+  \item Aralık hangi parametre için kurulmuştur?
+  \item Örnekleme ve araştırma tasarımı kullanılan standart hatayla uyumlu mudur?
+  \item Güven düzeyi ve aralık yöntemi belirtilmiş midir?
+  \item Aralık yalnız sıfır değeriyle değil, uygulamada önemli değerlerle de karşılaştırılmış mıdır?
+  \item Aralığın genişliği güçlü bir karar vermeye yetecek kadar hassas mıdır?
+  \item Ölçüm, kapsam, yanıtlamama ve eksik veri yanlılıkları ayrıca tartışılmış mıdır?
+\end{enumerate}
+
+\section{Literatür veri setiyle IBM SPSS laboratuvarı}
+\index{Student Performance veri seti!güven aralığı}
+\index{SPSS!güven aralığı}
+\index{güven aralığı!ortalama}
+\index{güven aralığı!oran}
+\index{Wilson aralığı!SPSS uygulaması}
+
+Bu uygulamada \emph{Student Performance} matematik dosyasından iki güven
+aralığı kurulacaktır \cite{cortez2008data,cortezsilva2008}:
+
+\begin{enumerate}
+  \item ortalama yıl sonu matematik notu (\texttt{G3}) için yüzde 95 $t$ güven aralığı,
+  \item yıl sonu notu en az 10 olan öğrencilerin oranı için yüzde 95 Wilson güven aralığı.
+\end{enumerate}
+
+Bir önceki bölümde elde edilen nokta tahminleri böylece örnekleme
+belirsizliğiyle birlikte sunulacaktır. Ortalama ve oran farklı parametrelerdir;
+bu nedenle aralıklarının hesaplama yöntemleri ve ölçü birimleri de farklıdır.
+
+\begin{researchbox}
+Veri setindeki 395 öğrenci iki okuldan gözlenmiştir. Güven aralıkları,
+öğrenciler uygun bir örneklem gibi ele alındığında oluşacak örnekleme
+değişkenliğini nicelendirir. Okul ve öğrenci seçiminden kaynaklanabilecek
+kapsam ya da seçim yanlılığını içermez ve bütün ülkeye otomatik genelleme
+sağlamaz.
+\end{researchbox}
+
+\subsection{Araştırma görevleri}
+
+\begin{enumerate}
+  \item G3 ortalaması için nokta tahminini, standart hatayı ve yüzde 95 $t$ aralığını bulun.
+  \item G3 puanı en az 10 olan öğrenciler için 0--1 başarı göstergesi üretin.
+  \item Başarı oranı için Wilson yüzde 95 güven aralığını hesaplayın.
+  \item İki aralığın genişliğini kendi ölçü birimlerinde yorumlayın.
+  \item Güven aralıklarının örnekleme tasarımına ilişkin sınırlılığını açıklayın.
+\end{enumerate}
+
+\subsection{SPSS syntax}
+
+\textbf{Explore} yordamı G3 ortalaması için güven aralığını doğrudan verir.
+Tek örneklem $t$ testinde test değeri 0 seçildiğinde ``ortalama farkı'' G3
+ortalamasına eşit olduğundan, farkın güven aralığı da ortalamanın aralığıdır.
+
+\begin{lstlisting}[language={}]
+DATASET ACTIVATE StudentMath.
+
+COMPUTE basarili=$SYSMIS.
+IF NOT MISSING(G3) basarili=(G3>=10).
+VARIABLE LABELS basarili 'Yıl sonu notu en az 10'.
+VALUE LABELS basarili 0 'Başarısız' 1 'Başarılı'.
+VARIABLE LEVEL basarili (NOMINAL).
+FORMATS basarili (F1.0).
+EXECUTE.
+
+EXAMINE VARIABLES=G3
+ /PLOT NONE
+ /STATISTICS DESCRIPTIVES
+ /CINTERVAL 95
+ /MISSING LISTWISE.
+
+T-TEST
+ /TESTVAL=0
+ /MISSING=ANALYSIS
+ /VARIABLES=G3
+ /CRITERIA=CI(.95).
+\end{lstlisting}
+
+Wilson aralığı, örneklem oranı çevresinde simetrik olmak zorunda değildir ve
+sınırları 0--1 aralığında tutar. Aşağıdaki syntax geçerli gözlem ve başarılı
+öğrenci sayılarını bütün satırlara ekler; ardından Wilson sınırlarını hesaplar.
+\texttt{LIST} komutu yalnız ilk satırı gösterir.
+
+\begin{lstlisting}[language={}]
+AGGREGATE
+ /OUTFILE=* MODE=ADDVARIABLES
+ /BREAK=
+ /n_gecerli=N(basarili)
+ /x_basarili=SUM(basarili).
+
+COMPUTE p_hat=x_basarili/n_gecerli.
+COMPUTE z_crit=1.959964.
+COMPUTE wilson_merkez=(p_hat+z_crit**2/(2*n_gecerli)) /
+ (1+z_crit**2/n_gecerli).
+COMPUTE wilson_yari=z_crit*SQRT(
+ p_hat*(1-p_hat)/n_gecerli+
+ z_crit**2/(4*n_gecerli**2)) /
+ (1+z_crit**2/n_gecerli).
+COMPUTE wilson_alt=wilson_merkez-wilson_yari.
+COMPUTE wilson_ust=wilson_merkez+wilson_yari.
+FORMATS p_hat wilson_alt wilson_ust (F6.3).
+
+LIST VARIABLES=n_gecerli x_basarili p_hat
+ wilson_alt wilson_ust
+ /CASES=FROM 1 TO 1.
+\end{lstlisting}
+
+Menüyle ortalama aralığı için \textbf{Analyze $>$ Descriptive Statistics $>$
+Explore} yolunda G3, \textbf{Dependent List} alanına taşınır ve
+\textbf{Statistics} penceresinde yüzde 95 güven düzeyi korunur. Oran göstergesi
+\textbf{Transform $>$ Compute Variable} ile üretilebilir. Wilson hesabı menüde
+tek bir standart tablo olarak sunulmadığından syntax ile belgelenmesi işlemi
+yeniden üretilebilir kılar.
+
+\subsection{SPSS çıktısının erişilebilir özeti}
+
+\begin{table}[htbp]
+\centering
+\caption{G3 ortalaması ve başarı oranı için yüzde 95 güven aralıkları.}
+\begin{tabular}{@{}p{0.31\textwidth}rrrrr@{}}
+\toprule
+Hedef parametre & $n$ & Tahmin & SH & Alt sınır & Üst sınır \\
+\midrule
+Ortalama G3, $t(394)$ & 395 & 10,415 & 0,231 & 9,962 & 10,868 \\
+Başarı oranı, Wilson & 395 & 0,671 & 0,024 & 0,623 & 0,715 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Başarı göstergesinde 265 öğrenci 1, 130 öğrenci 0 değerini alır. Dolayısıyla
+nokta tahmini
+\[
+\hat p=\frac{265}{395}=0{,}671
+\]
+ve Wilson yüzde 95 güven aralığı yaklaşık $[0{,}623;0{,}715]$ olur. Tablodaki
+0,024 değeri örneklem oranının yaklaşık standart hatasıdır; Wilson sınırları
+bu standart hatayı kullanan basit simetrik Wald aralığından farklı bir
+düzeltmeyle hesaplanmıştır.
+
+\subsection{Çıktının analizi}
+
+G3 ortalaması 10,415 ve standart hatası 0,231'dir. Yüzde 95 $t$ güven aralığı
+$[9{,}962;10{,}868]$ olduğundan yöntem, örnekleme varsayımları altında yaklaşık
+9,96 ile 10,87 arasındaki evren ortalamalarıyla uyumludur. Aralığın genişliği
+yaklaşık 0,91 puan, hata payı ise 0,45 puandır.
+
+Bu sonuç ``evren ortalamasının bu aralıkta bulunma olasılığı yüzde 95'tir''
+biçiminde yorumlanmaz. Sabit olan parametre değil, örneklemden örnekleme
+değişen aralıktır. Aynı yöntem çok sayıda benzer örneklemde uygulandığında
+oluşturulan aralıkların yaklaşık yüzde 95'inin hedef ortalamayı kapsaması
+beklenir.
+
+Başarı oranı yüzde 67,1; Wilson aralığı yüzde 62,3--71,5'tir. Yaklaşık 9,2
+yüzde puan genişliğindeki bu aralık, örneklem oranının tek başına vermediği
+hassasiyet bilgisini gösterir. Wilson aralığının nokta tahmini çevresinde tam
+simetrik olmaması hesaplama hatası değildir.
+
+İki aralığın sayısal genişlikleri doğrudan karşılaştırılmaz: G3 aralığı not
+puanı, başarı aralığı oran ya da yüzde puan birimindedir. Her ikisinde de dar
+bir aralık yalnız rassal örnekleme belirsizliğinin küçük olduğunu gösterebilir;
+ölçüm geçerliğini ve örneklemin hedef evreni temsil ettiğini kanıtlamaz.
+
+\begin{mistakebox}
+Tek örneklem $t$ testinde test değeri 0 değilse SPSS'nin verdiği sınırlar
+ortalamanın değil, ``ortalama eksi test değeri'' farkının aralığıdır. Ortalama
+aralığını bulmak için test değeri alt ve üst sınırlara geri eklenmelidir.
+\end{mistakebox}
+
+\begin{outputguidebox}
+Çıktıyı şu sırayla okuyun: (1) hedef parametre, (2) geçerli $n$ ve başarı
+sayısı, (3) nokta tahmini, (4) kullanılan $t$ veya Wilson yöntemi, (5) güven
+düzeyi, (6) alt--üst sınırlar ve aralık genişliği, (7) örnekleme ve ölçme
+sınırlılıkları. Güven aralığını olasılık ifadesi veya temsil gücü kanıtı gibi
+sunmayın.
+\end{outputguidebox}
+
+\subsection{Örnek bulgu paragrafı}
+
+``İki okuldan gözlenen 395 öğrencinin yıl sonu matematik notu ortalama
+10,42'dir ($SS=4{,}58$, $SH=0{,}23$, yüzde 95 $t$ GA
+$[9{,}96;10{,}87]$). Notu en az 10 olan 265 öğrenci bulunmaktadır; örneklem
+başarı oranı yüzde 67,1 ve Wilson yüzde 95 güven aralığı yüzde
+62,3--71,5'tir. Aralıklar örnekleme belirsizliğini göstermektedir. Öğrenciler
+bütün ülkeyi temsil eden olasılıklı bir tasarımla seçilmediğinden sonuçlar iki
+okul bağlamıyla sınırlı yorumlanmıştır.''
+
+\input{chapters/r/b08}
+\input{chapter-exercises/06-guven-araliklari}
+
+\bolumkaynaklari{\cite{casella2002,efron1993,hogg2019,wasserman2004,cortez2008data,cortezsilva2008}}
+
+\section*{Hatırla--Uygula--Yansıt}
+
+\begin{enumerate}
+\renewcommand{\labelenumi}{\textbf{\Alph{enumi}.}}
+  \item \textbf{Hatırla:} Nokta tahmini, standart hata, kritik değer ve hata payının güven aralığındaki görevlerini açıklayın.
+  \item \textbf{Hesapla:} $\bar x=70$, $s=12$, $n=36$ ve $t^*=2{,}03$ için yüzde 95 güven aralığını bulun.
+  \item \textbf{Karşılaştır:} Aynı veri için yüzde 90, 95 ve 99 güven aralıklarının genişliklerini sıralayın ve nedenini açıklayın.
+  \item \textbf{Yorumla:} Yüzde 95 güven aralığı $[18;26]$ olan bir ortalama için doğru ve yanlış birer yorum yazın.
+  \item \textbf{Oran:} 200 öğrencinin 46'sı bir hizmete başvurmuşsa oranı, yaklaşık standart hatayı ve büyük örneklem yüzde 95 aralığını hesaplayın.
+  \item \textbf{Fark:} Grup farkı için güven aralığı $[-5{,}4;-0{,}6]$ ise farkın yönünü, istatistiksel kanıtı ve olası büyüklüğünü yorumlayın.
+  \item \textbf{Eleştir:} ``Aralık sıfırı içerdiğine göre programın kesinlikle etkisi yoktur'' ifadesini düzeltin.
+  \item \textbf{Planla:} $\sigma=15$ ve hedef hata payı 3 puan olduğunda yüzde 95 güven için yaklaşık örneklem hacmini bulun.
+  \item \textbf{Uygula:} Python benzetimindeki tekrar sayısını ve örneklem hacmini değiştirerek kapsama oranı ile ortalama aralık genişliğini karşılaştırın.
+  \item \textbf{Yansıt:} Dar bir güven aralığının neden geçersiz bir ölçme aracını veya yanlı bir örneklemi telafi edemeyeceğini PDR bağlamında tartışın.
+  \item \textbf{Raporla:} Bir ortalama ve bir oran için tahmin, yüzde 95 güven aralığı, örneklem hacmi ve yorum sınırlarını içeren kısa bir bulgu paragrafı yazın.
+\end{enumerate}

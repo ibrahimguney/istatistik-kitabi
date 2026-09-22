@@ -1,0 +1,125 @@
+\section{Tamamlayıcı vaka: örneklem dosyası çerçeve değildir}
+\label{sec:v2-nhanes}
+
+\textbf{Soru ve hedef.} NHANES 2017--2018 araştırmasında ABD'nin 50
+eyaleti ve Columbia Bölgesi'nde yaşayan, kurumlarda yaşamayan sivil
+nüfus hedeflenir. Bu vaka için sorumuz daha dardır: bu nüfusun 20 yaş
+ve üzerindeki kesiminde, 60 yaş ve üzerindekilerin oranı nedir?
+Dönem ve yaş sınırları analiz tanımının parçasıdır; hedef bugünkü
+nüfus veya Türkiye nüfusu değildir. Bu bir müdahale etkisi sorusu da
+değildir. Veri kaynağı demografi dosyası \texttt{DEMO\_J}'dir
+\citep{nchs2020demoj,nchssampledesign}.
+
+\textbf{Çerçeveden kayda.} Seçim, coğrafi birincil örnekleme
+birimlerinden segmentlere, hanelere ve kişilere ilerleyen çok aşamalı
+bir düzene dayanır. Hane listeleri ve tarama işlemleri, kişilerin
+seçilebilmesini sağlar. Kamuya açık yanıtlayıcı dosyası bu çerçevelerin
+yerine geçmez: seçilmeyen veya yanıt vermeyen bütün birimleri içermez
+\citep{nchssampledesign}. B06'daki yapay çerçeveden bilgisayarla seçim
+yapmak, burada uygulanmış saha tasarımını yeniden gerçekleştirmek değildir.
+
+\textbf{Analiz tanımı.} Gözlem birimi kişidir. Yaş için
+\texttt{RIDAGEYR}, görüşme ağırlığı için \texttt{WTINT2YR}; varyans
+hesabı için \texttt{SDMVSTRA} ve \texttt{SDMVPSU} kullanılacaktır.
+Son iki değişken gizliliği koruyan varyans birimleridir; gerçek coğrafi
+yer adları veya doğrudan saha çerçevesi olarak okunmaz. Yaştaki 80
+kodu 80 ve üzerini birleştirir; seçtiğimiz 60 yaş eşiğini belirsiz
+hale getirmez \citep{nchs2020demoj}.
+
+\begin{definitionbox}
+\textbf{İki farklı özet.} $d_i=\Ind{\text{yaş}_i\geq20}$ ve
+$y_i=\Ind{\text{yaş}_i\geq60}$ olsun. $w_i$ görüşme ağırlığıdır.
+\[
+\widehat p_w=\frac{\sum_i w_i d_i y_i}{\sum_i w_i d_i},
+\qquad
+\widehat p_0=\frac{\sum_i d_i y_i}{\sum_i d_i}.
+\]
+İlk ifade hedef alt nüfusun oranını tahmin etmek için kullanılacak
+ağırlıklı orandır. İkincisi dosyadaki yetişkin yanıtlayıcıların
+bileşimini betimler. İki sonuç karşılaştırılabilir; fakat tercih edilen
+sayısal sonucu verdiği için ağırlık seçilmez veya kaldırılmaz.
+\end{definitionbox}
+
+\textbf{Ağırlık neyi düzeltir?} Nihai ağırlık, temel seçim ağırlığının
+yanı sıra yanıtsızlık ve nüfus toplamlarına uyarlama işlemlerini de
+içerir. Bu nedenle $1/w_i$ değerini özgün seçilme olasılığı diye
+raporlamayız. Yalnız görüşme değişkenlerini kullanan bu soru için
+muayene ağırlığına geçmeyiz. Ağırlıklandırma, çerçeve kapsamı veya
+yanıtsızlıktan doğan her yanlılığın giderildiğini garanti etmez
+\citep{nchsweighting}.
+
+\textbf{Belirsizlik nasıl hesaplanacak?} Tabaka, küme ve ağırlıkları
+birlikte kullanan Taylor doğrusallaştırmasıyla tasarıma uygun standart
+hata hesaplanmalıdır. Yetişkinler bir \emph{alt evren} olarak tanımlanır;
+tasarım kurulmadan çocuk kayıtları silinmez. Yalnız ağırlıklı oranı
+bulmak veya $\sqrt{\widehat p(1-\widehat p)/n}$ kullanmak bu hesabın
+yerine geçmez \citep{nchsvariance}. Tahmin ile güven aralığı, farklı
+tamamlanma kontrolleridir.
+
+\begin{researchbox}
+\textbf{Vakanın mevcut kapsamı.} Kaynak belgelerine dayalı tasarım
+okumasını, görevlerin ardından gelen sayısal uygulama tamamlar.
+Dosya kimliği, yaş kodları, pozitif ağırlıklar, tabaka--PSU yapısı ve
+seçili alanlarda eksiksizlik kontrol edilmiştir. Diğer değişkenlerdeki
+yapısal eksiklikler yüzünden bütün sütunlarda topluca tam kayıt
+seçilmemiştir. Beklenmedik girdide kod otomatik dışlama yerine durur.
+Bu dar yaş oranı uygulaması NHANES'in bütün analizleri için kabul
+veya yayın onayı değildir.
+\end{researchbox}
+
+\subsection{Karar görevleri ve gerekçeli kontrol}
+Önce aşağıdaki beş görevi yanıtlayın; ardından kontrol yanıtlarıyla
+karşılaştırın. Sayısal veri dosyası olmadan da tasarım kararları
+değerlendirilebilir.
+
+\begin{enumerate}
+\item Hedef nüfusu, alt evreni ve dönemi yazın. Kurumlarda yaşayanları
+aynı hedefe dahil etmek neden yalnız ağırlık değişikliği değildir?
+\item Bir öğrenci ``\texttt{DEMO\_J}'den rastgele 200 satır seçersem
+özgün örnekleme çerçevesini elde ederim'' diyor. Yanılgıyı açıklayın.
+\item İki oran formülünün paydalarını yorumlayın. Nihai ağırlığın tersi
+neden tek başına saha seçiminin olasılığını vermez?
+\item ``Çocukları siler, ağırlıklı oranı bulur, bağımsız gözlem
+formülüyle standart hata hesaplarım'' planını düzeltin.
+\item Sonuç raporu için iki kapsam cümlesi yazın: biri kime ve hangi
+döneme ilişkin tahmin yapılacağını, diğeri hangi iddianın
+kurulamayacağını belirtsin. Henüz hesaplanmamış değer yazmayın.
+\end{enumerate}
+
+\textbf{Kontrol yanıtları.}
+\begin{enumerate}
+\item Araştırmanın hedefindeki 20 yaş ve üzeri kişiler alt evrendir;
+dönem 2017--2018'dir. Kurum nüfusunu eklemek, hedefi ve gerekli kapsamı
+değiştirir; mevcut yanıtlayıcılara yeni katsayı vermek yeterli değildir.
+\item Dosya, seçim ve yanıt süreçlerinden sonraki kayıttır. Ondan
+alt örnek seçmek, seçilmeyen haneleri veya yanıt vermeyen kişileri
+geri getirmez; ayrıca yeni bir seçim aşaması yaratır.
+\item Ağırlıklı payda yetişkin alt nüfusun büyüklüğüne ilişkin tahmin;
+ağırlıksız payda yetişkin kayıt sayısıdır. Nihai ağırlıktaki ek
+düzeltmeler nedeniyle temel $1/\pi_i$ ile son ağırlık ayrılmalıdır.
+\item Önce tam tasarım bilgisi korunur, sonra yetişkin alt evreni
+tanımlanır. Varyans hesabı tabaka ve PSU katkılarıyla yapılır; oranı
+ağırlıklandırmak gözlemleri bağımsız hale getirmez.
+\item Örnek: ``Bu plan, belirtilen dönem ve hedef nüfustaki yetişkinler
+için 60 yaş ve üzeri oranını tahmin etmeyi amaçlar. Sonuç, bugünkü
+Türkiye nüfusunun oranı veya yaşın herhangi bir sonuç üzerindeki
+nedensel etkisi olarak yorumlanamaz.'' Sayısal sonuç ayrıca doğrulanmalıdır.
+\end{enumerate}
+
+\textbf{Değerlendirme ölçütleri (10 puan).} Her görev iki ayrı
+bileşenden değerlendirilir; bileşen başına doğru ve gerekçeli yanıt
+1 puan, eksik veya yanlış yanıt 0 puandır.
+\begin{enumerate}
+\item Hedef--alt evren--dönem tanımı (1); kapsam değişikliğinin
+ağırlık değişikliğinden ayrılması (1).
+\item Çerçeve ile yanıtlayıcı dosyasının ayrılması (1); yeniden
+seçimin kayıp kapsamı geri getirmediğinin açıklanması (1).
+\item İki paydanın doğru yorumu (1); temel ve nihai ağırlık ayrımı (1).
+\item Alt evren için tasarım bilgisinin korunması (1); kümeli ve
+tabakalı varyans gereğinin açıklanması (1).
+\item Kapsamı doğru belirten rapor cümlesi (1); desteklenmeyen
+genelleme ve nedensellik iddialarının dışlanması (1).
+\end{enumerate}
+Doğru formülü yazıp yanlış evrene genellemek tam puan getirmez.
+
+\input{chapters/vakalar/v2-nhanes-sonuclar}

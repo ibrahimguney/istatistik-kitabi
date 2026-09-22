@@ -1,0 +1,185 @@
+{
+  "tarih": "2026-09-10",
+  "kapsam": "Yalniz dosya hazirligi; SPSS yorumlayicisi calistirilmadi.",
+  "SPSS_calistirildi": false,
+  "paketler": [
+    {
+      "paket": "b01",
+      "girdi_dosyalari": [
+        "veri.csv"
+      ],
+      "eksik_girdi": [],
+      "spss_sha256": "a71aa1b0fc3dd9060ed6568435d12474be2caf7df79b01c4c3473c9e281c308a",
+      "referans_satiri": 18,
+      "SPSS_durum": "calistirilmadi"
+    },
+    {
+      "paket": "b02",
+      "girdi_dosyalari": [
+        "veri.csv"
+      ],
+      "eksik_girdi": [],
+      "spss_sha256": "1fb022e6774d7c0dd8ad4fec73e99c9fd16db3a7ac3e66df0cd33748033bfcbb",
+      "referans_satiri": 23,
+      "SPSS_durum": "calistirilmadi"
+    },
+    {
+      "paket": "b03",
+      "girdi_dosyalari": [
+        "veri.csv"
+      ],
+      "eksik_girdi": [],
+      "spss_sha256": "a46260736ca3b1945d9ddeb0b4485170fe9dc523f0c8a8077d2aeddb98b25677",
+      "referans_satiri": 26,
+      "SPSS_durum": "calistirilmadi"
+    },
+    {
+      "paket": "b04",
+      "girdi_dosyalari": [
+        "veri.csv"
+      ],
+      "eksik_girdi": [],
+      "spss_sha256": "fbcbf811489dfc6cc40ac6c74ee4692cd84c7b4591305cb929b102dfe71a27d7",
+      "referans_satiri": 28,
+      "SPSS_durum": "calistirilmadi"
+    },
+    {
+      "paket": "b05",
+      "girdi_dosyalari": [
+        "veri.csv"
+      ],
+      "eksik_girdi": [],
+      "spss_sha256": "f1affad38b9373f8c05373948d578e5177a8c97555388375c5a268148b670d01",
+      "referans_satiri": 24,
+      "SPSS_durum": "calistirilmadi"
+    },
+    {
+      "paket": "b06",
+      "girdi_dosyalari": [
+        "veri.csv"
+      ],
+      "eksik_girdi": [],
+      "spss_sha256": "90b55d87d61dfaf021ab235f0d23ff544f47c39e603e62d0a1433b64e9ab9da1",
+      "referans_satiri": 29,
+      "SPSS_durum": "calistirilmadi"
+    },
+    {
+      "paket": "b07",
+      "girdi_dosyalari": [
+        "veri.csv",
+        "benzetim.csv"
+      ],
+      "eksik_girdi": [],
+      "spss_sha256": "237100ac862e6b70b6b1db14c3da907272406ffb775d0cd05edd7be583442424",
+      "referans_satiri": 21,
+      "SPSS_durum": "calistirilmadi"
+    },
+    {
+      "paket": "b08",
+      "girdi_dosyalari": [
+        "veri.csv"
+      ],
+      "eksik_girdi": [],
+      "spss_sha256": "587c523b3e73c3a67be221ea12f28b18c3be3fcbd159f3e5e3f2da4f8e8f78fd",
+      "referans_satiri": 19,
+      "SPSS_durum": "calistirilmadi"
+    },
+    {
+      "paket": "b09",
+      "girdi_dosyalari": [
+        "veri.csv"
+      ],
+      "eksik_girdi": [],
+      "spss_sha256": "f30467dbc81dc129c0e19fe3f18dbb78185449aa41b1bb8292e03d95cad47de1",
+      "referans_satiri": 20,
+      "SPSS_durum": "calistirilmadi"
+    },
+    {
+      "paket": "b10",
+      "girdi_dosyalari": [
+        "veri.csv",
+        "plan.csv"
+      ],
+      "eksik_girdi": [],
+      "spss_sha256": "e10e570f0f90a48f79579af7d275743be501594bf0e5485cc926c5d4d0a49859",
+      "referans_satiri": 30,
+      "SPSS_durum": "calistirilmadi"
+    },
+    {
+      "paket": "b11",
+      "girdi_dosyalari": [
+        "veri.csv"
+      ],
+      "eksik_girdi": [],
+      "spss_sha256": "d458b1fea14ee5a5b1a0adae904e4d6b9ede1b31f785823f5d3cba83f184280e",
+      "referans_satiri": 34,
+      "SPSS_durum": "calistirilmadi"
+    },
+    {
+      "paket": "b12",
+      "girdi_dosyalari": [
+        "veri.csv"
+      ],
+      "eksik_girdi": [],
+      "spss_sha256": "5cbd1cf69c3ea33ebbc5e53831fead2f77737fdc1a59f3de39671681255e25b8",
+      "referans_satiri": 32,
+      "SPSS_durum": "calistirilmadi"
+    },
+    {
+      "paket": "b13",
+      "girdi_dosyalari": [
+        "veri.csv"
+      ],
+      "eksik_girdi": [],
+      "spss_sha256": "0fb166ef26d70d2562573c8c5b49f565588aae6b248ffc3b5a24e62ee34d396c",
+      "referans_satiri": 62,
+      "SPSS_durum": "calistirilmadi"
+    },
+    {
+      "paket": "b14",
+      "girdi_dosyalari": [
+        "veri.csv"
+      ],
+      "eksik_girdi": [],
+      "spss_sha256": "998326e3f7f2616252fdd8c41e3b652cd43773f541b62629aa1c9cd9842b6319",
+      "referans_satiri": 17,
+      "SPSS_durum": "calistirilmadi"
+    },
+    {
+      "paket": "bootstrap",
+      "girdi_dosyalari": [
+        "veri.csv",
+        "bootstrap-plan.csv",
+        "permutasyon.csv",
+        "permutasyon-plan.csv"
+      ],
+      "eksik_girdi": [],
+      "spss_sha256": "2731d20a950cb3fc9f924b3c6e12974e1ab6dbf94a94d2f57c4f9f1c0a9d3b7f",
+      "referans_satiri": 26,
+      "SPSS_durum": "calistirilmadi"
+    },
+    {
+      "paket": "coklu-regresyon",
+      "girdi_dosyalari": [
+        "veri.csv",
+        "yeni.csv"
+      ],
+      "eksik_girdi": [],
+      "spss_sha256": "1e88ae6077bacae565a41eb0e32cdd6960d54d409e5e3e53937746a975270825",
+      "referans_satiri": 66,
+      "SPSS_durum": "calistirilmadi"
+    },
+    {
+      "paket": "anova",
+      "girdi_dosyalari": [
+        "veri.csv",
+        "ciftler.csv",
+        "welch.csv"
+      ],
+      "eksik_girdi": [],
+      "spss_sha256": "d9607430be6463882aad4ac9276bf3988af4438748a10392accebb60407e4173",
+      "referans_satiri": 70,
+      "SPSS_durum": "calistirilmadi"
+    }
+  ]
+}

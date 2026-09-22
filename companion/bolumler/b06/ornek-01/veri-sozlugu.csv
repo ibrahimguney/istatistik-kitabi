@@ -1,0 +1,5 @@
+degisken,aciklama,veri_turu,olcme_duzeyi,gecerli_degerler,eksik_deger_kurali
+id,Yapay ogrenci kimligi,Tam sayi,Nominal,1 ile 12 arasinda benzersiz,Eksik kabul edilmez
+sinif,Tabaka olarak kullanilan sinif duzeyi,Tam sayi,Ordinal,1 < 2 < 3; her birinde dort ogrenci,Eksik kabul edilmez
+basit,Kayitli basit rastgele secimde dahil edilme gostergesi,Tam sayi,Nominal,0 secilmedi; 1 secildi,Eksik kabul edilmez; 0 eksik degildir
+tabakali,Kayitli tabakali secimde dahil edilme gostergesi,Tam sayi,Nominal,0 secilmedi; 1 secildi,Eksik kabul edilmez; 0 eksik degildir

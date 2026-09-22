@@ -1,0 +1,368 @@
+\chapter{Betimsel İstatistiğin Gözden Geçirilmesi: Merkez, Yayılım, Dağılım ve Grafikler}
+\label{ch:descriptive}
+
+\begin{prismbox}[PrismLight]{Öğrenme çıktıları}
+Bu bölümde frekans dağılımları, temel grafikler, merkezi eğilim ve yayılım
+ölçüleri birlikte ele alınır. Amaç yalnız sayı hesaplamak değil, dağılımın
+merkezini, değişkenliğini, biçimini ve olağandışı gözlemlerini açıklamaktır.
+\end{prismbox}
+
+\begin{prerequisitebox}
+Veri türleri ve ölçme düzeyleri ayırt edilebilmelidir. Toplama, bölme,
+karekök ve yüzde hesapları bu bölümde kullanılan temel matematiksel
+işlemlerdir.
+\end{prerequisitebox}
+
+Değişken türleri ve ölçme düzeyleri Bölüm~\ref{sec:population-data-types}'te
+tanımlanmıştır; bu bölümde grafik ve özet seçimi bu sınıflandırmaya dayanır.
+
+\section{Önce veri yapısını tanımak}
+\label{sec:descriptive-graphs}
+
+Kategorik değişkenler frekans ve yüzdelerle; nicel değişkenler ise sıralı veri,
+grafikler ve sayısal özetlerle incelenir. Bir grafik seçilirken değişkenin
+ölçme düzeyi belirleyicidir. Keşfedici veri analizinin grafik ve sağlam
+özetlere verdiği önem için bkz. \citet{tukey1977}.
+Türkçe bir uygulamalı başvuru için ayrıca \citet{koklu2006} incelenebilir.
+
+\begin{table}[H]
+\centering
+\caption{Değişken türüne göre grafik seçimi.}
+\label{tab:graph-choice}
+\begin{tabular}{p{0.27\textwidth}p{0.57\textwidth}}
+\toprule
+Veri yapısı & Önerilen grafik \\
+\midrule
+Tek kategorik değişken & Çubuk grafiği, Pareto grafiği \\
+Tek nicel değişken & Histogram, nokta grafiği, kutu grafiği \\
+İki nicel değişken & Saçılım grafiği \\
+Nicel sonuç ve kategorik grup & Yan yana kutu grafikleri \\
+İki kategorik değişken & Çapraz tablo, yığılmış çubuk veya mozaik grafiği \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Tablo~\ref{tab:graph-choice}, değişken türü ile ilk grafik seçimi arasındaki
+eşleşmeyi özetler; grafik yorumunda dağılımın dört bileşeni
+Şekil~\ref{fig:distribution-reading}'de birlikte gösterilir.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[x=0.72cm,y=0.55cm]
+  \draw[->,PrismGray] (0,0) -- (8.7,0) node[right,font=\scriptsize]{puan};
+  \draw[->,PrismGray] (0,0) -- (0,5.2) node[above,font=\scriptsize]{frekans};
+  \foreach \x/\h in {0.4/1.0,1.2/2.1,2.0/3.8,2.8/4.7,3.6/4.0,4.4/2.7,5.2/1.5,6.0/0.8}
+    \filldraw[fill=PrismSubheadingBlue!42,draw=PrismBlue] (\x,0) rectangle +(0.72,\h);
+  \draw[PrismWarnOrange!85!black,very thick] (7.7,0) -- (7.7,1.0);
+  \fill[PrismWarnOrange!85!black] (7.7,1.0) circle (2pt);
+  \node[font=\scriptsize,align=center,text=PrismGray] at (7.55,1.65) {aykırı değer\\adayı};
+  \draw[PrismBlue,dashed] (3.15,0) -- (3.15,4.95);
+  \node[font=\scriptsize,text=PrismBlue] at (3.15,5.25) {merkez};
+\end{tikzpicture}
+\caption{Dağılımı merkez, yayılım, biçim ve aykırı değerlerle birlikte okuma.}
+\label{fig:distribution-reading}
+\end{figure}
+
+\section{Merkezi eğilim ölçüleri}
+\label{sec:descriptive-center}
+
+$x_1,\ldots,x_n$ gözlemleri için aritmetik ortalama
+\[
+\bar{x}=\frac{1}{n}\sum_{i=1}^{n}x_i
+\]
+olarak tanımlanır. Medyan, sıralanmış veriyi iki eşit parçaya ayıran değerdir.
+Mod en sık gözlenen değer veya kategoridir.
+
+Ortalama bütün gözlemleri kullandığı için aykırı değerlerden etkilenir. Medyan
+ise sıralamaya dayandığı için daha sağlamdır. Sağa çarpık bir bekleme süresi
+dağılımında medyan, tipik katılımcının deneyimini ortalamadan daha iyi
+yansıtabilir.
+
+\section{Yayılım ölçüleri}
+\label{sec:descriptive-spread}
+
+Örneklem varyansı ve standart sapması
+\[
+s^2=\frac{1}{n-1}\sum_{i=1}^{n}(x_i-\bar{x})^2,
+\qquad s=\sqrt{s^2}
+\]
+biçimindedir. Açıklık $\max(x)-\min(x)$ ile, çeyrekler arası açıklık ise
+$\IQR=Q_3-Q_1$ ile hesaplanır.
+
+Standart sapma ortalamayla birlikte, IQR ise çoğunlukla medyanla birlikte
+raporlanır. Dağılım yaklaşık simetrik ve aykırı değerlerden uzaksa
+$\bar{x}\pm s$; belirgin biçimde çarpıksa medyan ve IQR daha bilgilendirici bir
+ikili oluşturur.
+
+\begin{sezgibox}
+Merkez ``veri nerede toplanıyor?'', yayılım ise ``gözlemler birbirinden ne
+kadar farklı?'' sorusunu yanıtlar. Aynı ortalamaya sahip iki grup çok farklı
+standart sapmalara sahip olabilir.
+\end{sezgibox}
+
+\section{Dağılım biçimi ve aykırı değerler}
+\label{sec:descriptive-shape}
+
+Simetrik dağılımda iki kuyruk yaklaşık dengelidir. Sağa çarpık dağılımda uzun
+kuyruk büyük değerlere, sola çarpık dağılımda küçük değerlere uzanır. Kutu
+grafiğinde
+\[
+x<Q_1-1{,}5\IQR \quad\text{veya}\quad x>Q_3+1{,}5\IQR
+\]
+koşulunu sağlayan gözlemler aykırı değer adayı olarak işaretlenebilir.
+
+\begin{mistakebox}
+Aykırı değer etiketi, gözlemin yanlış olduğu anlamına gelmez. Veri giriş
+hatası, farklı bir alt grup veya gerçek fakat seyrek bir durum söz konusu
+olabilir. İnceleme yapılmadan gözlem silinmemelidir.
+\end{mistakebox}
+
+\section{Beş sayı özeti ve yüzdelikler}
+
+Bir nicel dağılımın \textbf{beş sayı özeti}; en küçük değer, birinci çeyrek
+$(Q_1)$, medyan, üçüncü çeyrek $(Q_3)$ ve en büyük değerden oluşur. Bu özet,
+kutu grafiğinin sayısal temelidir. Birinci çeyrek gözlemlerin yaklaşık yüzde
+25'inin, medyan yüzde 50'sinin ve üçüncü çeyrek yüzde 75'inin altında kaldığı
+sınırı gösterir.
+
+Çeyreklerin hesaplanmasında yazılımlar arasında küçük yöntem farkları
+bulunabilir. Bu nedenle özellikle küçük veri setlerinde kullanılan yüzdelik
+yöntemi belirtilmelidir. Yöntem farkı, veri değerlerinin veya sıralamanın
+değiştiği anlamına gelmez; yalnız ara konumların nasıl belirlendiğiyle ilgilidir.
+
+\section{Grafiksel dürüstlük}
+
+Grafikler veriyi görünür kılarken algıyı da yönlendirir. Eksenin sıfırdan
+başlatılmaması, eşit olmayan sınıf aralıklarının eşit genişlikte çizilmesi,
+üç boyutlu biçimlerin kullanılması veya grup büyüklüklerinin gizlenmesi farkları
+olduğundan büyük gösterebilir. Özellikle çubuk grafiklerinde uzunluk doğrudan
+büyüklüğü temsil ettiği için dikey eksenin sıfırdan başlaması çoğu durumda
+gereklidir.
+
+Histogram ile çubuk grafiği aynı değildir. Histogram nicel bir değişkenin
+aralıklar içindeki dağılımını gösterir ve sütunlar bitişiktir. Çubuk grafiği
+ise kategorileri karşılaştırır; kategorilerin doğal sayısal sürekliliği olmak
+zorunda değildir.
+
+\section{Çözümlü kısa örnek}
+
+Beş öğrencinin haftalık çalışma süreleri $2,3,3,4,13$ saat olsun. Ortalama
+$\bar{x}=5$, medyan $3$ saattir. $13$ değeri ortalamayı yukarı çekmiştir;
+medyan tipik çalışma süresini daha iyi temsil eder. Bu sonuç yalnız iki sayı
+verilerek bırakılmamalı, nokta veya kutu grafiğiyle dağılım görünür
+kılınmalıdır.
+
+\section{Yazılım çıktısını okuma}
+
+Bir betimsel istatistik tablosunda en az örneklem hacmi, eksik gözlem sayısı,
+merkez ve yayılım birlikte kontrol edilir. Yazılımın ``geçerli $n$'' değeri
+toplam katılımcı sayısından küçükse eksik verinin hangi değişkende oluştuğu
+araştırılır.
+
+\begin{softwarebox}
+\begin{lstlisting}
+import numpy as np
+import matplotlib.pyplot as plt
+
+hours = np.array([2, 3, 3, 4, 13], dtype=float)
+print("Ortalama:", hours.mean())
+print("Medyan:", np.median(hours))
+print("Standart sapma:", hours.std(ddof=1))
+print("Q1, Q3:", np.quantile(hours, [.25, .75]))
+
+fig, axes = plt.subplots(1, 2, figsize=(8, 3))
+axes[0].hist(hours, bins=[0, 3, 6, 9, 12, 15],
+             edgecolor="white", color="#8FB8D8")
+axes[0].set(xlabel="Calisma suresi", ylabel="Frekans")
+axes[1].boxplot(hours, vert=False)
+axes[1].set(xlabel="Calisma suresi")
+plt.tight_layout()
+plt.show()
+\end{lstlisting}
+\texttt{ddof=1} seçimi örneklem standart sapmasını hesaplar. Çıktı yalnız
+sayısal özetle bırakılmamalı; nokta veya kutu grafiğiyle birlikte
+değerlendirilmelidir. Kullanılan temel sayısal işlemler için NumPy ve pandas
+kaynaklarına başvurulabilir \citep{harris2020,mckinney2022}.
+\end{softwarebox}
+
+\begin{assumptionbox}
+Ortalama ve standart sapma dağılımın merkez ve yayılımını özetler; fakat çok
+çarpık veya aykırı değer içeren verilerde tek başlarına tipik gözlemi iyi
+temsil etmeyebilir. Grafik, medyan ve IQR ile duyarlılık kontrolü yapılmalıdır.
+\end{assumptionbox}
+
+\section{Çözümlü problemler}
+
+\subsection*{Problem 1: Merkez, yayılım ve aykırı değer}
+
+Yedi öğrencinin bir etkinliği tamamlama süreleri dakika olarak
+$4,5,6,6,7,8,20$ biçimindedir. Ortalama, medyan, açıklık, örneklem standart
+sapması ve IQR değerlerini hesaplayarak dağılımı yorumlayın.
+
+\textbf{Çözüm.} Veri zaten sıralıdır. Ortalama
+\[
+\bar{x}=\frac{4+5+6+6+7+8+20}{7}=8
+\]
+ve ortadaki dördüncü değer medyan olduğundan $\widetilde{x}=6$ bulunur.
+Açıklık $20-4=16$ dakikadır. Ortalamadan sapmaların kareleri toplamı 178
+olduğundan örneklem varyansı ve standart sapması
+\[
+s^2=\frac{178}{7-1}=29{,}67,
+\qquad s=\sqrt{29{,}67}\approx5{,}45
+\]
+olur.
+
+Ortanca dışarıda bırakılarak alt yarının medyanı $Q_1=5$, üst yarının medyanı
+$Q_3=8$ bulunur. Böylece $\IQR=8-5=3$ ve üst aykırı değer sınırı
+\[
+Q_3+1{,}5IQR=8+1{,}5(3)=12{,}5
+\]
+olur. 20 dakikalık gözlem bu sınıra göre aykırı değer adayıdır. Sağa çarpık
+dağılımda medyanın 6, ortalamanın 8 olması beklenen bir örüntüdür. Tipik süre
+için medyan ve IQR, ortalama ile standart sapmadan daha sağlam bir özet sunar.
+
+\textbf{Raporlama örneği.} ``Tamamlama süreleri sağa çarpıktı; medyan 6 dakika
+ve IQR 3 dakika olarak bulundu. 20 dakikalık gözlem kutu grafiği ölçütüne göre
+aykırı değer adayıydı ve veri kaynağı incelenmeden analizden çıkarılmadı.''
+
+\subsection*{Problem 2: Aynı ortalama, farklı yayılım}
+
+İki sınıfın beşer öğrenciden oluşan puanları şöyledir:
+\[
+A:48,49,50,51,52,\qquad
+B:30,40,50,60,70.
+\]
+Grupların ortalama ve örneklem standart sapmalarını karşılaştırın.
+
+\textbf{Çözüm.} Her iki grubun toplamı 250 olduğundan ortalamaları 50'dir.
+A grubunda ortalamadan sapmaların kareleri toplamı 10, B grubunda ise
+1000'dir. Buna göre
+\[
+s_A=\sqrt{\frac{10}{4}}\approx1{,}58,
+\qquad
+s_B=\sqrt{\frac{1000}{4}}\approx15{,}81.
+\]
+Grupların merkezleri aynı olmasına rağmen B grubundaki puanlar çok daha geniş
+bir alana yayılmıştır. Yalnız ortalamaları raporlamak, sınıfların başarı
+örüntülerinin benzer olduğu biçiminde yanlış bir izlenim oluşturur. Yan yana
+nokta veya kutu grafikleri bu farkı açıkça gösterir.
+
+\textbf{Yorum.} A sınıfında öğrenciler birbirine oldukça yakın puanlar
+alırken B sınıfında hem düşük hem yüksek puanlar bulunmaktadır. Merkez ve
+yayılım birlikte değerlendirilmelidir.
+
+\subsection*{Problem 3: Frekans ve yüzde tablosu}
+
+Kırk öğrencinin tercih ettiği çalışma biçimi için bireysel çalışma 18, ikili
+çalışma 12, küçük grup 6 ve çevrim içi çalışma 4 kez gözlenmiştir. Yüzdeleri
+hesaplayın, modu belirleyin ve uygun grafiği seçin.
+
+\textbf{Çözüm.} Her frekans 40'a bölünüp 100 ile çarpılır:
+
+\begin{center}
+\small
+\begin{tabular}{lrr}
+\toprule
+Çalışma biçimi & Frekans & Yüzde \\
+\midrule
+Bireysel & 18 & 45 \\
+İkili & 12 & 30 \\
+Küçük grup & 6 & 15 \\
+Çevrim içi & 4 & 10 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+En yüksek frekans bireysel çalışma kategorisinde olduğu için mod bireysel
+çalışmadır. Değişken nominal kategorik olduğundan çubuk grafiği uygundur.
+Kategoriler arasında sayısal süreklilik bulunmadığı için histogram
+kullanılmamalıdır. Yüzdelerin toplamının 100 olması hesap denetimi sağlar.
+
+\subsection*{Problem 4: Bir gözlemin duyarlılık analizi}
+
+$2,3,3,4,13$ veri setindeki 13 değerinin veri giriş hatası olduğu doğrulanmış
+ve doğru değerin 5 olduğu belirlenmiştir. Düzeltmeden önce ve sonra ortalama
+ile medyanı karşılaştırın.
+
+\textbf{Çözüm.} İlk veri setinin toplamı 25 olduğu için ortalama 5, medyan
+3'tür. Düzeltilmiş veri $2,3,3,4,5$ biçimindedir; toplam 17 olduğundan
+\[
+\bar{x}_{\text{düzeltilmiş}}=\frac{17}{5}=3{,}4,
+\qquad \widetilde{x}_{\text{düzeltilmiş}}=3.
+\]
+Tek bir uç değer ortalamayı 1,6 saat azaltacak kadar etkilemiş, medyan ise
+değişmemiştir. Bu karşılaştırma medyanın uç değerlere karşı daha sağlam
+olduğunu gösterir.
+
+Burada 13 değeri yalnız büyük olduğu için değil, kaynak kayıt incelenerek hata
+olduğu doğrulandığı için düzeltilmiştir. Değer gerçekten 13 saat olsaydı
+silinmemeli; sonuçlar hem bu gözlemle hem gözlem olmadan karşılaştırılarak
+duyarlılık analizi yapılmalıydı.
+
+\subsection*{Problem 5: Yanıltıcı grafik ölçeği}
+
+Bir okulda memnuniyet yüzdesi birinci dönemde yüzde 72, ikinci dönemde yüzde
+78 bulunmuştur. Bir çubuk grafiğinin dikey ekseni 70'ten başlatılmıştır. Bu
+grafik nasıl yanıltıcı olabilir ve değişim nasıl raporlanmalıdır?
+
+\textbf{Çözüm.} Mutlak değişim $78-72=6$ yüzde puandır. Birinci döneme göre
+göreli artış
+\[
+\frac{78-72}{72}\times100\approx8{,}3\%
+\]
+olur. Ancak eksen 70'ten başladığında ilk çubuğun görünen yüksekliği 2, ikinci
+çubuğun yüksekliği 8 birimdir. İkinci çubuk görsel olarak ilkinin dört katı
+gibi algılanabilir; oysa memnuniyet oranı dört katına çıkmamıştır.
+
+Çubuk grafiğinde sıfır tabanlı eksen kullanılmalı ve değerler yüzde 72 ile
+yüzde 78 olarak açıkça etiketlenmelidir. Metinde değişimin 6 yüzde puan veya
+birinci döneme göre yaklaşık yüzde 8,3 olduğu belirtilmelidir. ``Yüzde 6
+artış'' ifadesi, yüzde puan ile göreli yüzde değişimini karıştırdığı için
+belirsizdir.
+
+\begin{outputguidebox}
+Betimsel çıktı okunurken önce geçerli ve eksik gözlem sayısını, ardından
+minimum--maksimum değerleri ve dağılım grafiğini kontrol edin. Ortalama ile
+standart sapmayı medyan ve IQR ile karşılaştırın. Büyük ayrılıklar çarpıklık,
+aykırı değer veya kodlama sorunu için inceleme işaretidir.
+\end{outputguidebox}
+
+\input{chapters/spss/b03}
+
+\input{chapters/r/b03}
+
+\section{Bölüm özeti}
+
+\begin{itemize}
+  \item Grafik türü değişkenin ölçme düzeyine ve araştırma sorusuna göre seçilir.
+  \item Ortalama tüm değerlere, medyan sıralamaya dayanır ve aykırı değerlere daha dayanıklıdır.
+  \item Standart sapma ortalama çevresindeki, IQR orta yüzde 50'deki yayılımı özetler.
+  \item Betimsel analiz eksik veri, çarpıklık ve aykırı değer incelemesini de içerir.
+  \item Aynı merkeze sahip dağılımlar çok farklı yayılım ve biçim gösterebilir.
+  \item Grafik eksenleri, sınıf aralıkları ve etiketler görsel yorumu
+  çarpıtmayacak biçimde düzenlenmelidir.
+\end{itemize}
+
+\section*{Alıştırmalar}
+
+\begin{enumerate}
+  \item Ortalama ile medyanın belirgin biçimde ayrıldığı bir veri seti kurun.
+  \item Hangi durumda standart sapma, hangi durumda IQR raporlayacağınızı açıklayın.
+  \item Bir aykırı değeri silmeden önce sorulması gereken üç soruyu yazın.
+  \item $3,4,4,5,9$ verisi için ortalama, medyan ve açıklığı hesaplayın.
+  \item $10,12,12,13,15,28$ verisinin beş sayı özetini ve IQR değerini bulun;
+  aykırı değer sınırlarını hesaplayın.
+  \item Aynı ortalamaya fakat farklı standart sapmaya sahip iki küçük veri
+  seti oluşturun ve dağılımlarını yorumlayın.
+  \item 50 öğrencinin 20'si yüz yüze, 18'i karma ve 12'si çevrim içi eğitimi
+  tercih ediyorsa frekans-yüzde tablosunu oluşturun.
+  \item Histogram ile çubuk grafiği arasındaki üç temel farkı açıklayın.
+  \item Sağa çarpık bir gelir dağılımında ortalama ile medyanın beklenen
+  ilişkisini ve hangi özetin daha uygun olduğunu belirtin.
+  \item Bir yazılım çıktısında toplam örneklem 200, geçerli gözlem sayısı 184
+  ise analizden önce hangi kontrollerin yapılması gerektiğini yazın.
+  \item Dikey ekseni 90'dan başlayan bir başarı yüzdesi grafiğinin oluşturacağı
+  algı sorununu açıklayın ve uygun grafik düzenini önerin.
+  \item Aykırı değer içeren bir veri seti için gözlem dâhil ve hariç betimsel
+  özetleri karşılaştıran kısa bir duyarlılık analizi planlayın.
+\end{enumerate}

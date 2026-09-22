@@ -1,0 +1,11 @@
+dosya,degisken,aciklama,birim,gecerli_degerler,veri_turu,eksik_deger_kurali
+veri.csv,hacim,Gozlenen orneklem hacmi,Kisi,Tam sayi >= 2,Sayisal,Eksik kabul edilmez
+veri.csv,ortalama,Gozlenen orneklem ortalamasi,Puan,Sonlu sayi,Sayisal,Eksik kabul edilmez
+veri.csv,standart_sapma,Gozlenen orneklem standart sapmasi s,Puan,Pozitif sonlu sayi,Sayisal,Eksik kabul edilmez
+veri.csv,referans,Onceden belirlenmis sifir hipotezi ortalamasi,Puan,Sonlu sayi,Sayisal,Eksik kabul edilmez
+veri.csv,alfa,Testin onceden secilen anlamlilik duzeyi,Olasilik,0 < alfa < 1,Sayisal,Eksik kabul edilmez
+plan.csv,hacim,Gucu degerlendirilecek yeni calismanin hacmi,Kisi,Tam sayi >= 2,Sayisal,Eksik kabul edilmez
+plan.csv,fark,Planlanan gercek ortalama ile referans farki,Puan,Sonlu ve sifirdan farkli sayi,Sayisal,Eksik kabul edilmez
+plan.csv,standart_sapma,Planlama icin varsayilan evren standart sapmasi sigma,Puan,Pozitif sonlu sayi,Sayisal,Eksik kabul edilmez
+plan.csv,alfa,Yeni calismanin anlamlilik duzeyi,Olasilik,0 < alfa < 1,Sayisal,Eksik kabul edilmez
+plan.csv,hedef_guc,En kucuk hacim aramasinin hedef gucu,Olasilik,alfa < hedef_guc < 1,Sayisal,Eksik kabul edilmez

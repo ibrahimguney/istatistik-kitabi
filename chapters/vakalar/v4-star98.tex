@@ -1,0 +1,169 @@
+\section{Tamamlayıcı vaka: hangi ortalama, kimin oranı?}
+\label{sec:v4-star98}
+
+\textbf{Soru ve kapsam.} STAR98'in aynı sayımlarıyla iki soru soralım:
+``Dosyadaki bölgelerin oran ortalaması nedir?'' ve ``Bu sayımlarda temsil
+edilen öğrencilerin toplam üst kategori oranı nedir?'' Yeni bir regresyon
+kurmayacağız; özetlenen hedefin neden değiştiğini inceleyeceğiz.
+
+Dağıtıcının açıklaması satırları birleşik okul bölgesi, yanıtı 9. sınıf
+matematik sonuçlarının sayımı olarak tanımlar; dosya özgün kaynağın alt
+kümesidir. Aynı sayfanın notlarında geçen \textit{counties} ifadesiyle
+adlandırma çelişkisi çözülmüş değildir. Burada ``bölge'', açıklamadaki
+tanıma dayanır; gerçek coğrafi kimlikler bağımsız doğrulanmış sayılmaz.\footnote{Dağıtıcı tanımı:
+\url{https://www.statsmodels.org/stable/datasets/generated/star98.html};
+erişim 13 Eylül 2026. Kaynak eser: \citet{gill2001}.}
+
+\textbf{Analiz tanımı.} Yerel 303 satırın tamamı kullanılır. $a_j$, kaynakta
+\texttt{NABOVE}; $b_j$, \texttt{NBELOW}; $n_j=a_j+b_j$ ve $r_j=a_j/n_j$
+olsun. Üst kategori kaynağın ulusal medyan üstü tanımıdır; medyana eşit
+puanların işlemine ilişkin yeni bir kural varsayılmaz. Payda bütün kayıtlı
+öğrenciler değil, bu iki sayımın toplamıdır. Kimlik yerel sıra anahtarıdır.
+Eksik, negatif, kesirli sayım veya sıfır payda varsa işlem durur; otomatik
+silme ya da doldurma yapılmaz. Sıfır üst sayımı ise geçerlidir.
+
+\subsection*{İki hedefi hesaplamadan önce tanımlayın}
+
+$J=303$ için eşit bölge ağırlıklı özet
+\[
+\bar r_{\mathrm{bölge}}=\frac{1}{J}\sum_{j=1}^{J}r_j
+\]
+her satıra $1/J$ ağırlığı verir. Toplam sayım oranı ise
+\[
+r_{\mathrm{toplam}}=\frac{\sum_j a_j}{\sum_j n_j}
+=\sum_j\frac{n_j}{\sum_k n_k}r_j
+\]
+olup satırları sayım büyüklükleriyle ağırlıklandırır. Her iki formül de
+aynı kayıtların betimlemesidir; ikinci formülün ağırlıkları ters dahil
+edilme olasılığı değildir. Büyük bölgeye daha fazla ağırlık vermek,
+kendiliğinden örnekleme yanlılığını düzeltmez.
+
+\begin{table}[H]
+\centering
+\small
+\caption{V4: aynı 303 kayıtta iki farklı hedef}
+\label{tab:v4-hedefler}
+\begin{tabularx}{\linewidth}{@{}Xr@{}}
+\toprule
+Özet & Değer \\
+\midrule
+Üst kategori toplamı & 108\,418 \\
+İki kategorinin toplamı & 267\,611 \\
+Eşit bölge ağırlıklı oran (yüzde) & 43,697840 \\
+Toplam sayım oranı (yüzde) & 40,513282 \\
+Toplam eksi bölge özeti (yüzde puan) & $-3{,}184558$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Kayıt başına toplam 33 ile 38\,852 arasında değişir. Bu veride büyüklükle
+ağırlıklandırılmış oran daha düşüktür. Bu fark bir yazılım uyuşmazlığı
+değildir; hedef değişmiştir. Her büyük bölgenin oranının her küçük
+bölgeden düşük olduğu sonucu da çıkmaz. B11--B12'de soru değişince
+ortalama ve oran ayrılıyordu; burada değişken aynı kalırken ağırlıklandırma
+hedefi değişmektedir.
+
+\noindent\begin{minipage}{\linewidth}
+\textbf{Yeniden üretim.} Proje kökünden, yalnız betimsel iki özeti hesaplayın:
+\begin{lstlisting}[style=prismPythonApp]
+import pandas as pd
+
+data = pd.read_csv(
+    "companion/data/raw/star98_statsmodels.csv")
+counts = data[["NABOVE", "NBELOW"]]
+assert len(data) == 303
+assert data["DISTRICT_ID"].is_unique
+assert counts.notna().all().all()
+assert (counts >= 0).all().all()
+assert (counts % 1 == 0).all().all()
+total = counts.sum(axis=1)
+assert (total > 0).all()
+rate = counts["NABOVE"] / total
+equal_rate = rate.mean()
+pooled_rate = counts["NABOVE"].sum() / total.sum()
+print(100 * equal_rate, 100 * pooled_rate)
+print(100 * (pooled_rate - equal_rate))
+\end{lstlisting}
+\end{minipage}
+
+Kaynak hash'i, yerel anahtar ve ham--temiz aktarım denetimi dahil tam kod
+\path{companion/vakalar/v4-star98/analyze.py} dosyasındadır.
+Bu özetler için güven aralığı veya \pval-değeri üretilmez: dosyanın
+betimlenmesi, özgün örnekleme mekanizmasının ya da öğrencilerin bağımsız
+Bernoulli gözlemleri olduğunun doğrulanması değildir. 267\,611 sayısını
+bağımsız örneklem büyüklüğü sayıp otomatik binom aralığı hesaplamayın.
+
+\subsection*{Toplulaştırma hangi bilgiyi kaybettirir?}
+
+Aşağıdaki iki tablo \textbf{tamamen yapaydır}; STAR98'in bireyleri değildir.
+Her senaryoda 100 kişi, 50 düşük gelirli kişi ve toplam 50 üst kategori
+sonucu vardır. Yine de grup içi ilişkiler ters yöndedir.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Aynı marjinleri veren iki yapay bireysel düzen}
+\label{tab:v4-yapay}
+\begin{tabular}{@{}llrr@{}}
+\toprule
+Senaryo & Grup & Üst & Alt \\
+\midrule
+A & Düşük gelir & 40 & 10 \\
+A & Diğer & 10 & 40 \\
+B & Düşük gelir & 10 & 40 \\
+B & Diğer & 40 & 10 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+İki senaryoda da düşük gelir oranı ve üst kategori oranı \%50'dir. Fakat
+düşük gelir eksi diğer grup oran farkı A'da $0{,}8-0{,}2=0{,}6$,
+B'de $0{,}2-0{,}8=-0{,}6$ olur. Yalnız marjinleri bilmek bireysel
+ilişkiyi belirlemez. Bölümdeki bölgesel regresyon katsayısını bireysel gelir
+etkisi sayamayız. Bu gösterim gerçek STAR98'de bir terslenme kanıtı değildir;
+toplulaştırmanın hangi bilgiyi sakladığını gösterir. B13'ün öğrenci düzeyi
+uygulamasında birim farklıdır; veri dosyaları birleştirilmez.
+
+\subsection{Görevler, kontrol yanıtları ve puanlama}
+
+Her görev iki bileşenlidir; her bileşen 1 puan, toplam \textbf{10 puan}.
+Önce yanıtınızı yazın, sonra aşağıdaki gerekçelerle karşılaştırın.
+\begin{enumerate}
+\item Bir satırın birimini ve toplam sayım oranının paydasını tanımlayın.
+  267\,611 sayısı hangi evreni otomatik olarak temsil etmez?
+\item İki oranın neden farklı olduğunu ağırlıklarıyla açıklayın.
+  ``Büyük olan doğru, küçük olan hatalı'' yorumunu değerlendirin.
+\item $n_j/\sum_k n_k$ ağırlığının örnekleme ağırlığı olup olmadığını
+  tartışın. Toplam sayımdan neden hemen bir binom güven aralığı üretmiyoruz?
+\item Yapay A ve B'de düşük gelir eksi diğer grup oran farkını bulun.
+  Aynı marjinlerden bireysel ilişkinin neden belirlenemediğini açıklayın.
+\item İki gerçek özeti içeren, genelleme ve nedensellik sınırları açık
+  kısa bir rapor yazın. Yapay kişileri gerçek toplamın dışında tutun.
+\end{enumerate}
+
+\textbf{Gerekçeli kontrol yanıtları.}
+\begin{enumerate}
+\item Satır, dağıtıcı açıklamasındaki bölge düzeyi toplulaştırmadır;
+  payda iki kayıtlı sonuç sayısının toplamıdır (1). Kaynak alt kümesi,
+  bütün California/ABD öğrencilerinin evreni değildir; idari adlandırma
+  çelişkisi ayrıca korunur (1).
+\item Birinci özet her satıra $1/303$, ikinci özet sayım büyüklüğüyle
+  orantılı ağırlık verir (1). Hedefler farklı olduğundan fark hata veya
+  üstünlük kanıtı değildir; rapor soruya uygun hedefi belirtmelidir (1).
+\item Bunlar büyüklük ağırlıklarıdır; dahil edilme olasılıkları
+  belgelenmiş değildir (1). Bireysel bağımsızlık ve örnekleme modeli
+  kurulmadığından toplam sayı doğrudan binom belirsizliğini haklı kılmaz (1).
+\item A'da $+0{,}6$, B'de $-0{,}6$ (60 ve eksi 60 yüzde puan) bulunur (1).
+  Aynı marjinlerle zıt ilişkiler mümkün olduğundan bireysel ilişki
+  belirlenemez; bunun gerçek terslenme kanıtı olmadığı belirtilir (1).
+\item Rapor iki özeti doğru adlarıyla verir ve yapay tabloları gerçek
+  hesaplara katmaz (1). Örnekleme kapsamını aşan genelleme ve bireysel
+  nedensellik kurmaz (1); doğru sayılar tek başına tam puan getirmez.
+\end{enumerate}
+
+\textbf{Kısa rapor örneği.} ``Yerel STAR98 dosyasındaki 303 toplulaştırılmış
+kayıtta eşit bölge ağırlıklı üst kategori oranı ortalaması \%43,697840;
+108\,418 üst sayımın 267\,611 toplam sayıma oranı \%40,513282'dir.
+Fark ağırlıklandırma hedefinden kaynaklanır. Sonuçlar bu kayıtları betimler;
+tüm öğrenciler için evren tahmini veya bireysel gelir etkisi değildir.
+Örnekleme belirsizliği bu betimsel karşılaştırmada hesaplanmamıştır.''

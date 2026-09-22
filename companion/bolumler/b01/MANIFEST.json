@@ -1,0 +1,20 @@
+{
+  "algorithm": "SHA-256",
+  "created": "2026-09-10",
+  "note": "Yeni dagitim butunlugu kaydi; onceki B01 dosyalarinin ozgunlugunu geriye donuk kanitlamaz.",
+  "files": {
+    "DOGRULAMA.md": "04358a91fd59d66765d8b96882e0ca4d4564a32c62e6dfc9a745bfa4a988a63a",
+    "README.md": "15670e6561f8d2550ed09161eb16b512e3bdfa53a8ed7fd4b80bf0ae05810b22",
+    "alistirmalar.md": "53146aee107f6e92d1323db0df72faa9dab3920f1f41f3e4c15aac5d8ea021aa",
+    "cozumler.md": "c90207163c3d5dd2e1e0fc69bd7b5db0d481cad38ab23b0fc1a2966a7cf5215e",
+    "ornek-01/README.md": "cb979b9a33692bfff97f26a2a20f1b2fec3bc0b5a7682434baa8b0e8a8aae4cf",
+    "ornek-01/analiz.sps": "a71aa1b0fc3dd9060ed6568435d12474be2caf7df79b01c4c3473c9e281c308a",
+    "ornek-01/analiz.sps.txt": "a71aa1b0fc3dd9060ed6568435d12474be2caf7df79b01c4c3473c9e281c308a",
+    "ornek-01/beklenen-sonuclar.csv": "41e098b11a3cb8531933a7cbeb856b7602015facaec73f213e07753869af54d2",
+    "ornek-01/cozum.R": "ec371ef342789ef430bac9938721d28a0934aef2ece2ed4aad60ef3bf3a7fde1",
+    "ornek-01/cozum.md": "4e547e35c02fbe7b88ef2b522952550c715feff60614684874907499db4cb52e",
+    "ornek-01/cozum.py": "4cab73d5758b6db87ab86bb608eb6cdb41de1ebd8bc7e03dd552be0e6999812c",
+    "ornek-01/veri-sozlugu.csv": "2e238d2b0a2f37da3e8b2f0429fea5e372bda9cdce5d275dc2afe1a81f2280b8",
+    "ornek-01/veri.csv": "99b94973b2fe172449dc4fcf2199b99202cf529df09b1668f612fbbff211290f"
+  }
+}

@@ -1,0 +1,10 @@
+variable,meaning
+district_id,Kaynak hazırlayıcısının eklediği yerel satır anahtarı; özgün coğrafi kimlik değil
+source_line,Ham CSV başlığı dahil kaynak satır numarası
+above,NABOVE; kaynak tanımında matematik ulusal medyanının üstündeki 9. sınıf öğrenci sayısı
+below,NBELOW; kaynak tanımında medyan altındaki sayı; eşik bağları ayrıca açıklanmamış
+total,above + below; yerel iki sayımın toplamı; bütün kayıtlı öğrenciler değil
+rate,above / total
+equal_weight,1 / 303; her toplulaştırılmış satırın eşit ağırlığı
+size_weight,total / sum(total); sayım büyüklüğü ağırlığı; örnekleme ağırlığı değil
+pooled_contribution,size_weight * rate

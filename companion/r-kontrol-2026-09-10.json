@@ -1,0 +1,93 @@
+{
+  "tarih_utc": "2026-09-10T08:46:28.411619+00:00",
+  "Rscript_bulundu": false,
+  "kapsam": "Gercek R ile --check ve degistirilmis referansi reddetme; SPSS calistirilmaz.",
+  "paketler": [
+    {
+      "paket": "b01",
+      "durum": "calistirilmadi",
+      "neden": "Rscript bulunamadi; kaynak incelemesi calistirma testi sayilmaz."
+    },
+    {
+      "paket": "b02",
+      "durum": "calistirilmadi",
+      "neden": "Rscript bulunamadi; kaynak incelemesi calistirma testi sayilmaz."
+    },
+    {
+      "paket": "b03",
+      "durum": "calistirilmadi",
+      "neden": "Rscript bulunamadi; kaynak incelemesi calistirma testi sayilmaz."
+    },
+    {
+      "paket": "b04",
+      "durum": "calistirilmadi",
+      "neden": "Rscript bulunamadi; kaynak incelemesi calistirma testi sayilmaz."
+    },
+    {
+      "paket": "b05",
+      "durum": "calistirilmadi",
+      "neden": "Rscript bulunamadi; kaynak incelemesi calistirma testi sayilmaz."
+    },
+    {
+      "paket": "b06",
+      "durum": "calistirilmadi",
+      "neden": "Rscript bulunamadi; kaynak incelemesi calistirma testi sayilmaz."
+    },
+    {
+      "paket": "b07",
+      "durum": "calistirilmadi",
+      "neden": "Rscript bulunamadi; kaynak incelemesi calistirma testi sayilmaz."
+    },
+    {
+      "paket": "b08",
+      "durum": "calistirilmadi",
+      "neden": "Rscript bulunamadi; kaynak incelemesi calistirma testi sayilmaz."
+    },
+    {
+      "paket": "b09",
+      "durum": "calistirilmadi",
+      "neden": "Rscript bulunamadi; kaynak incelemesi calistirma testi sayilmaz."
+    },
+    {
+      "paket": "b10",
+      "durum": "calistirilmadi",
+      "neden": "Rscript bulunamadi; kaynak incelemesi calistirma testi sayilmaz."
+    },
+    {
+      "paket": "b11",
+      "durum": "calistirilmadi",
+      "neden": "Rscript bulunamadi; kaynak incelemesi calistirma testi sayilmaz."
+    },
+    {
+      "paket": "b12",
+      "durum": "calistirilmadi",
+      "neden": "Rscript bulunamadi; kaynak incelemesi calistirma testi sayilmaz."
+    },
+    {
+      "paket": "b13",
+      "durum": "calistirilmadi",
+      "neden": "Rscript bulunamadi; kaynak incelemesi calistirma testi sayilmaz."
+    },
+    {
+      "paket": "b14",
+      "durum": "calistirilmadi",
+      "neden": "Rscript bulunamadi; kaynak incelemesi calistirma testi sayilmaz."
+    },
+    {
+      "paket": "bootstrap",
+      "durum": "calistirilmadi",
+      "neden": "Rscript bulunamadi; kaynak incelemesi calistirma testi sayilmaz."
+    },
+    {
+      "paket": "coklu-regresyon",
+      "durum": "calistirilmadi",
+      "neden": "Rscript bulunamadi; kaynak incelemesi calistirma testi sayilmaz."
+    },
+    {
+      "paket": "anova",
+      "durum": "calistirilmadi",
+      "neden": "Rscript bulunamadi; kaynak incelemesi calistirma testi sayilmaz."
+    }
+  ],
+  "gecen": 0
+}

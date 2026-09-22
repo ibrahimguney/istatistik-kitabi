@@ -1,0 +1,11 @@
+dosya,degisken,anlam,olcek,eksik_kurali
+veri.csv,id,Benzersiz 1..5 gozlem kimligi,nominal,kabul edilmez
+veri.csv,deger,Bootstrap ogretim degeri,scale,kabul edilmez
+permutasyon.csv,id,Benzersiz 1..6 gozlem kimligi,nominal,kabul edilmez
+permutasyon.csv,grup,A veya B uc gozlemli grup etiketi,nominal,kabul edilmez
+permutasyon.csv,deger,Permutasyon ogretim degeri,scale,kabul edilmez
+bootstrap-plan.csv,sira,Benzersiz 1..3125 sayim kimligi,nominal,kabul edilmez
+bootstrap-plan.csv,ind1..ind5,Geri koymali bes gozlem kimligi,nominal,kabul edilmez
+permutasyon-plan.csv,sira,Benzersiz 1..20 atama kimligi,nominal,kabul edilmez
+permutasyon-plan.csv,ind1..ind3,A grubuna atanan gozlem kimlikleri,nominal,kabul edilmez
+permutasyon-plan.csv,ind4..ind6,B grubuna atanan tamamlayici kimlikler,nominal,kabul edilmez

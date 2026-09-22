@@ -1,0 +1,424 @@
+\chapter{Tip I--Tip II Hata, Test Gücü ve Tek Örneklem t Testi}
+\label{ch:power-one-sample}
+
+\begin{prismbox}[PrismLight]{Öğrenme çıktıları}
+Bu bölümün sonunda:
+\begin{itemize}
+  \item Tip I ve Tip II hatayı araştırma bağlamında ayırt edebilecek,
+  \item güç, $\beta$, etki büyüklüğü ve örneklem hacmi arasındaki ilişkiyi açıklayabilecek,
+  \item tek örneklem \tstat testini tek ve çift yönlü alternatiflerle uygulayabilecek,
+  \item test sonucunu güven aralığı, etki büyüklüğü ve varsayımlarla raporlayabileceksiniz.
+\end{itemize}
+\end{prismbox}
+
+\begin{prerequisitebox}
+$H_0$, $H_1$, anlamlılık düzeyi, \pval-değeri, güven aralığı ve Student $t$
+dağılımının temel rolü bilinmelidir.
+\end{prerequisitebox}
+
+Hipotez, \pval-değeri ve test yönü kavramları için Bölüm~\ref{ch:hypothesis};
+güven aralığı yorumu için Bölüm~\ref{sec:ci-interpretation} temel oluşturur.
+
+\section{Karar ve gerçek durum}
+\label{sec:error-types}
+
+\begin{table}[H]
+\centering
+\caption{Hipotez testinde kararlar ve hata türleri.}
+\label{tab:error-decisions}
+\begin{tabular}{p{0.25\textwidth}p{0.27\textwidth}p{0.27\textwidth}}
+\toprule
+ & $H_0$ doğru & $H_0$ yanlış \\
+\midrule
+$H_0$ reddedilir & Tip I hata ($\alpha$) & Doğru karar (güç) \\
+$H_0$ reddedilmez & Doğru karar & Tip II hata ($\beta$) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Tablo~\ref{tab:error-decisions}'e göre Tip I hata doğru bir sıfır hipotezini
+reddetmek, Tip II hata ise yanlış bir
+sıfır hipotezini reddedememektir.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[x=1.15cm,y=4.2cm]
+  \fill[PrismSoftwarePurple]
+    (0,0)--plot[smooth,domain=0:4.4,samples=80]
+    (\x,{0.78*exp(-((\x-5)^2)/1.7)})--(4.4,0)--cycle;
+  \fill[PrismWarnOrange!80]
+    (4.4,0)--plot[smooth,domain=4.4:7.4,samples=80]
+    (\x,{0.78*exp(-((\x-3)^2)/1.7)})--(7.4,0)--cycle;
+  \draw[PrismBlue,very thick,smooth,domain=0:7.4,samples=100]
+    plot (\x,{0.78*exp(-((\x-3)^2)/1.7)});
+  \draw[PrismSubheadingBlue,very thick,smooth,domain=0:7.4,samples=100]
+    plot (\x,{0.78*exp(-((\x-5)^2)/1.7)});
+  \draw[PrismGray,->] (0,0)--(7.6,0);
+  \draw[PrismGray,dashed] (4.4,0)--(4.4,0.92)
+    node[above,font=\scriptsize]{kritik değer};
+  \node[font=\scriptsize,text=PrismBlue] at (2.7,0.84) {$H_0$ doğru};
+  \node[font=\scriptsize,text=PrismSubheadingBlue] at (5.5,0.84) {$H_1$ doğru};
+  \node[font=\scriptsize] at (5.0,0.18) {Tip I hata $\alpha$};
+  \node[font=\scriptsize] at (3.6,0.25) {Tip II hata $\beta$};
+\end{tikzpicture}
+\caption{Tek yönlü karar kuralında Tip I ve Tip II hata bölgelerinin şematik gösterimi.}
+\label{fig:error-regions}
+\end{figure}
+
+Bir tarama aracının riskli öğrencileri belirlediği düşünülsün. Gerçekte risk
+taşımayan bir öğrenciyi riskli sınıflandırmak Tip I hataya, risk taşıyan bir
+öğrenciyi gözden kaçırmak Tip II hataya benzer. İki hatanın sonuçları aynı
+olmayabilir; bu nedenle $\alpha$ seçimi yalnız geleneksel bir eşik değil,
+yanlış kararların maliyetleriyle ilgili bir araştırma kararıdır.
+
+\section{Test gücü}
+\label{sec:power}
+
+Test gücü $1-\beta$, gerçek bir etki varken $H_0$'ı reddetme olasılığıdır.
+Etki büyüklüğü ve örneklem hacmi arttıkça, değişkenlik azaldıkça güç genellikle
+artar. $\alpha$ düzeyini artırmak gücü yükseltebilir; fakat Tip I hata riskini
+de artırır. Güç analizinin etki büyüklüğü, hata oranları ve örneklem hacmiyle
+ilişkisi için bkz. \citet{cohen1988} ve \citet{lakens2022}.
+
+\begin{table}[H]
+\centering
+\caption{Çift yönlü tek örneklem \tstat testinde $d=0{,}50$ için yaklaşık güç.}
+\label{tab:power-by-n}
+\begin{tabular}{rrrrr}
+\toprule
+Örneklem hacmi $n$ & 10 & 20 & 34 & 50 \\
+\midrule
+Güç & 0,29 & 0,56 & 0,81 & 0,93 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Tablo~\ref{tab:power-by-n}, orta büyüklükte bir etki için küçük örneklemlerin
+gerçek farkı sıklıkla
+kaçırabileceğini gösterir. Hesaplar $\alpha=0{,}05$ ve iki yönlü alternatif
+içindir; beklenen etki veya tasarım değiştiğinde güç de değişir.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[x=0.12cm,y=4.8cm]
+  \draw[->,PrismGray] (0,0)--(64,0) node[right,font=\scriptsize]{$n$};
+  \draw[->,PrismGray] (0,0)--(0,1.05) node[above,font=\scriptsize]{güç};
+  \foreach \x in {10,20,30,40,50,60} {
+    \draw[PrismGray] (\x,-0.015)--(\x,0.015);
+    \node[below,font=\tiny] at (\x,-0.015) {\x};
+  }
+  \foreach \y in {0.2,0.4,0.6,0.8,1.0} {
+    \draw[PrismGray] (-0.8,\y)--(0.8,\y);
+    \node[left,font=\tiny] at (-0.8,\y) {\y};
+  }
+  \draw[PrismWarnOrange!80!black,dashed] (0,0.8)--(60,0.8)
+    node[right,font=\tiny]{0,80};
+  \draw[PrismBlue,very thick,smooth]
+    plot coordinates {(5,.141)(10,.293)(15,.438)(20,.565)(25,.670)
+                      (30,.754)(34,.808)(40,.869)(50,.934)(60,.968)};
+  \foreach \x/\y in {5/.141,10/.293,15/.438,20/.565,25/.670,
+                       30/.754,34/.808,40/.869,50/.934,60/.968}
+    \fill[PrismBlue] (\x,\y) circle (1.6pt);
+\end{tikzpicture}
+\caption{$d=0{,}50$ için örneklem hacmi arttıkça test gücünün değişimi.}
+\label{fig:power-curve}
+\end{figure}
+
+Şekil~\ref{fig:power-curve}, aynı hesapları sürekli bir güç eğrisi üzerinde
+gösterir ve 0,80 hedefinin yaklaşık $n=34$ çevresinde aşıldığını belirtir.
+
+\section{Tek örneklem \tstat testi}
+\label{sec:one-sample-t}
+
+Tek örneklem \tstat testi, bir evren ortalamasını önceden belirlenmiş $\mu_0$
+değeriyle karşılaştırır:
+\[
+t=\frac{\bar x-\mu_0}{s/\sqrt n},\qquad sd=n-1.
+\]
+Testin temel koşulları gözlemlerin bağımsızlığı ve küçük örneklemlerde ciddi
+çarpıklık ya da etkili aykırı değerlerin bulunmamasıdır.
+
+\section{Etki büyüklüğü ve raporlama}
+
+Tek örneklem için standartlaştırılmış fark
+\[
+d=\frac{\bar x-\mu_0}{s}
+\]
+ile özetlenebilir. Test sonucu ortalama, standart sapma, t değeri, serbestlik
+derecesi, \pval-değeri, güven aralığı ve etki büyüklüğüyle birlikte verilmelidir
+\citep{lakens2013}.
+
+\section{Çözümlü örnek}
+
+Bir ölçeğin referans ortalaması 50'dir. $n=25$ öğrenciden elde edilen
+$\bar x=55$ ve $s=10$ değerleri için
+\[
+t=\frac{55-50}{10/\sqrt{25}}=2{,}50,
+\qquad sd=24.
+\]
+Çift yönlü \pval-değeri yaklaşık $0{,}020$'dir. Yüzde 95 güven aralığı
+$[50{,}87;59{,}13]$, standartlaştırılmış fark ise $d=0{,}50$'dir. Sonuç şöyle
+raporlanabilir: ``Örneklem ortalaması ($\bar x=55$, $s=10$) referans
+değerden yüksekti, $t(24)=2{,}50$, $p=0{,}020$, yüzde 95 GA
+$[50{,}87;59{,}13]$, $d=0{,}50$.''
+
+Çözümün karar zinciri şöyledir:
+
+\begin{enumerate}
+  \item Hedef parametre evren ortalaması, karşılaştırma değeri $\mu_0=50$'dir.
+  \item Gözlemler bağımsız kabul edilir; puan dağılımında etkili aykırı değer bulunmadığı doğrulanır.
+  \item Standart hata $10/\sqrt{25}=2$ ve test istatistiği $2{,}50$ hesaplanır.
+  \item $sd=24$ için \pval-değeri $0{,}020$ olduğundan $H_0$ reddedilir.
+  \item Güven aralığı farkın 0,87 ile 9,13 puan arasında olabileceğini gösterir.
+  \item $d=0{,}50$ sonucu bağlama ve ölçme aracının birimine göre değerlendirilir.
+\end{enumerate}
+
+\begin{assumptionbox}
+Tek örneklem \tstat testi için referans değerin bilimsel olarak anlamlı ve bağımsız
+bir kaynaktan belirlenmiş olması gerekir. Örneklem ortalamasına bakıldıktan
+sonra uygun görünen bir $\mu_0$ seçmek testin hata oranını bozar.
+\end{assumptionbox}
+
+\begin{mistakebox}
+``Anlamlı sonuç elde etmek'' amacıyla veri toplama sürecini \pval-değeri
+0,05'in altına düşünce durdurmak Tip I hata oranını artırır. Örneklem hacmi
+ve durdurma kuralı analizden önce belirlenmelidir.
+\end{mistakebox}
+
+\section{Güç için planlama mantığı}
+
+Güç analizi beklenen etki büyüklüğü, seçilen $\alpha$, hedef güç ve test
+yönüne dayanır. Çok iyimser etki varsayımı yetersiz örnekleme yol açabilir.
+Bu nedenle önceki çalışmalar, pilot veri ve bilimsel olarak anlamlı en küçük
+etki birlikte değerlendirilmelidir.
+
+\section{Python ile yeniden üretim}
+
+\begin{softwarebox}
+\begin{lstlisting}
+from scipy import stats
+import numpy as np
+
+n, mean, sd, mu0 = 25, 55, 10, 50
+se = sd / np.sqrt(n)
+t_value = (mean - mu0) / se
+p_value = 2 * stats.t.sf(abs(t_value), df=n-1)
+critical = stats.t.ppf(.975, df=n-1)
+ci = (mean - critical * se, mean + critical * se)
+
+print(t_value, p_value, ci)
+
+alpha, target_n, d = .05, 34, .50
+df = target_n - 1
+critical = stats.t.ppf(1 - alpha / 2, df=df)
+ncp = d * np.sqrt(target_n)
+power = (stats.nct.cdf(-critical, df=df, nc=ncp)
+         + stats.nct.sf(critical, df=df, nc=ncp))
+print("Guc:", power)
+\end{lstlisting}
+Kod çıktısı yaklaşık olarak $t=2{,}50$, $p=0{,}0197$ ve
+$[50{,}87;59{,}13]$ güven aralığını verir. İkinci hesap $d=0{,}50$ için
+$n=34$ durumunda gücün yaklaşık 0,808 olduğunu doğrular. Yuvarlama yalnız
+raporlama aşamasında yapılmalıdır.
+\end{softwarebox}
+
+\section{Çözümlü problemler}
+
+\subsection*{Problem 1: Tip I ve Tip II hatanın bağlamsal anlamı}
+
+Bir üniversite, yeni bir akademik destek programının öğrencilerin ortalama
+başarı puanını değiştirmediği $H_0$ hipotezini sınamaktadır. Bu araştırmada
+Tip I ve Tip II hatayı açıklayın; olası sonuçlarını karşılaştırın.
+
+\textbf{Çözüm.} Tip I hata, programın gerçekte ortalama başarıyı
+değiştirmediği hâlde test sonucunda etkili olduğuna karar vermektir. Üniversite
+bu hata sonucunda etkisiz bir programa bütçe, zaman ve personel ayırabilir.
+
+Tip II hata, programın gerçekte başarı üzerinde etkisi olduğu hâlde testin
+bu etkiyi belirleyememesi ve $H_0$'ın reddedilememesidir. Bu durumda yararlı
+bir program uygulanmadan bırakılabilir. İki hatanın maliyeti bağlama göre
+farklıdır; bu nedenle $\alpha$, hedef güç ve bilimsel olarak önemli en küçük
+etki çalışma başlamadan önce birlikte değerlendirilmelidir.
+
+\textbf{Sık hata.} Tip I hata ``hesaplama hatası'', Tip II hata ise ``veri
+giriş hatası'' değildir. İkisi de belirsizlik altında verilen test kararının
+gerçek durumla uyuşmamasını ifade eder.
+
+\subsection*{Problem 2: Çift yönlü tek örneklem \tstat testi}
+
+Bir ölçeğin referans ortalaması 38'dir. Bağımsız 16 öğrencinin ortalaması 42,
+standart sapması 8 bulunmuştur. Ortalama puanın 38'den farklı olup olmadığını
+yüzde 5 düzeyinde sınayın; yüzde 95 güven aralığını ve Cohen'in $d$ değerini
+hesaplayın.
+
+\textbf{Çözüm.} Hipotezler
+\[
+H_0:\mu=38,
+\qquad H_1:\mu\neq38
+\]
+biçimindedir. Standart hata ve test istatistiği
+\[
+SE=\frac{8}{\sqrt{16}}=2,
+\qquad
+t=\frac{42-38}{2}=2{,}00,
+\qquad sd=15
+\]
+olur. Çift yönlü \pval-değeri yaklaşık 0,064'tür; dolayısıyla $H_0$ yüzde 5
+düzeyinde reddedilemez.
+
+$t_{0{,}975,15}=2{,}131$ kullanıldığında ortalama için güven aralığı
+\[
+42\pm2{,}131(2)=[37{,}74;46{,}26]
+\]
+olur ve referans değer 38'i içerir. Standartlaştırılmış fark
+\[
+d=\frac{42-38}{8}=0{,}50
+\]
+olarak bulunur. Orta büyüklükteki gözlenen etkiye rağmen küçük örneklem
+belirsizliği geniştir.
+
+\textbf{Raporlama örneği.} ``Örneklem ortalaması 42 ($s=8$) olmakla birlikte
+38 referans değerinden fark yüzde 5 düzeyinde belirlenemedi,
+$t(15)=2{,}00$, $p=0{,}064$, yüzde 95 GA $[37{,}74;46{,}26]$,
+$d=0{,}50$.''
+
+\subsection*{Problem 3: Aynı veride tek yönlü test}
+
+Önceki problemde araştırma hipotezinin veri toplanmadan önce
+$H_1:\mu>38$ olarak belirlendiğini varsayın. Kararı yeniden değerlendirin.
+
+\textbf{Çözüm.} Test istatistiği ve serbestlik derecesi değişmez:
+$t(15)=2{,}00$. Üst yönlü \pval-değeri çift yönlü değerin yarısıdır ve yaklaşık
+0,032'dir. Bu nedenle önceden belirlenmiş $\alpha=0{,}05$ düzeyinde $H_0$
+reddedilir; ortalamanın 38'in üzerinde olduğuna ilişkin kanıt vardır.
+
+Bu sonuç, veri görüldükten sonra tek yönlü test seçilebileceği anlamına
+gelmez. Azalma yönündeki bilimsel olarak önemli bir sonuç da araştırma
+sorusunun parçasıysa çift yönlü test korunmalıdır. Tek yönlü kararın güven
+aralığı da yönle uyumlu tek taraflı sınır üzerinden raporlanabilir.
+
+\subsection*{Problem 4: Güç ve beklenen Tip II hata sayısı}
+
+$d=0{,}50$, $\alpha=0{,}05$ ve çift yönlü tek örneklem \tstat testi için $n=34$
+durumunda güç 0,808 olsun. $\beta$ değerini bulun ve aynı gerçek etki altında
+1.000 bağımsız araştırmada beklenen karar sayılarını yorumlayın.
+
+\textbf{Çözüm.} Tip II hata olasılığı
+\[
+\beta=1-\text{güç}=1-0{,}808=0{,}192
+\]
+olur. Aynı koşullarda 1.000 bağımsız çalışma yürütülse uzun dönemde yaklaşık
+808 çalışmanın $H_0$'ı reddederek etkiyi belirlemesi, yaklaşık 192 çalışmanın
+ise gerçek etkiyi kaçırması beklenir.
+
+Bu sayılar belirli 1.000 çalışmada kesin olarak gerçekleşecek frekanslar
+değildir; uzun dönemli beklentilerdir. Yüzde 80 güç, tek bir çalışmanın doğru
+sonuç vereceğini garanti etmez.
+
+\subsection*{Problem 5: Yaklaşık güç temelli örneklem planı}
+
+Çift yönlü yüzde 5 anlamlılık düzeyinde, standartlaştırılmış $d=0{,}50$
+etkisini yüzde 80 güçle belirlemek için normal yaklaşım kullanılsın.
+$z_{0{,}975}=1{,}96$ ve $z_{0{,}80}=0{,}842$ alarak yaklaşık örneklem hacmini
+hesaplayın.
+
+\textbf{Çözüm.} Tek grup ortalaması için yaklaşık formül
+\[
+n\approx\left(\frac{z_{1-\alpha/2}+z_{1-\beta}}{d}\right)^2
+\]
+biçimindedir. Değerler yerine yazılırsa
+\[
+n\approx\left(\frac{1{,}96+0{,}842}{0{,}50}\right)^2
+=31{,}40
+\]
+bulunur ve yukarı yuvarlanarak 32 kişi elde edilir. Ancak bu normal yaklaşım
+$\sigma$ biliniyormuş gibi davranır. Standart sapmanın örneklemden tahmin
+edildiği kesin t hesabı biraz daha büyük bir örneklem gerektirir; bölümdeki
+güç tablosunda yaklaşık yüzde 80 güç için $n=34$ görülmektedir.
+
+Beklenen kayıp veya dışlama varsa başlangıç örneklem hacmi ayrıca
+artırılmalıdır. Güç planı gözlenen etki üzerinden analiz sonrasında
+gerekçelendirilmemelidir.
+
+\subsection*{Problem 6: Büyük örneklemde küçük etki}
+
+Referans ortalama 50 ve örneklem standart sapması 10 olsun. Hem $n=100$ hem
+$n=10\,000$ için örneklem ortalaması 51,5 bulunmuştur. Test istatistiklerini,
+yaklaşık sonuçları ve etki büyüklüğünü karşılaştırın.
+
+\textbf{Çözüm.} Her iki çalışmada standartlaştırılmış fark aynıdır:
+\[
+d=\frac{51{,}5-50}{10}=0{,}15.
+\]
+$n=100$ için $SE=10/\sqrt{100}=1$ ve
+\[
+t=\frac{1{,}5}{1}=1{,}50.
+\]
+Çift yönlü \pval-değeri yaklaşık 0,137'dir; $H_0$ reddedilemez. Yaklaşık yüzde 95
+güven aralığı fark için $1{,}5\pm1{,}984(1)$, yani
+$[-0{,}48;3{,}48]$'dir.
+
+$n=10\,000$ için $SE=10/100=0{,}10$ ve
+\[
+t=\frac{1{,}5}{0{,}10}=15
+\]
+olur; \pval-değeri çok küçüktür. Yaklaşık yüzde 95 fark aralığı
+$1{,}5\pm1{,}96(0{,}10)=[1{,}30;1{,}70]$'tir.
+
+Büyük örneklem aynı küçük etkiyi çok hassas biçimde sıfırdan ayırmıştır;
+ancak etkinin büyüklüğü iki çalışmada da $d=0{,}15$'tir. İstatistiksel kanıt
+güçlenirken uygulamalı önem kendiliğinden büyümemiştir.
+
+\begin{outputguidebox}
+Tek örneklem \tstat testi çıktısında örneklem ortalaması ve standart sapmasını,
+referans değeri, ortalama farkını, t değerini, serbestlik derecesini,
+\pval-değerini ve güven aralığını birlikte okuyun. Güç analizinde kullanılan
+etki, yön, $\alpha$ ve hedef güç değerlerinin çalışma öncesinde belirlendiğini
+doğrulayın.
+\end{outputguidebox}
+
+\input{chapters/spss/b10}
+
+\input{chapters/r/b10}
+
+\section{Bölüm özeti}
+
+\begin{itemize}
+  \item Tip I ve Tip II hata birbirinden farklı karar riskleridir.
+  \item Güç, gerçek bir etkiyi belirleme olasılığıdır ve çalışma öncesinde planlanmalıdır.
+  \item Tek örneklem \tstat testi bir ortalamayı önceden belirlenmiş referans değerle karşılaştırır.
+  \item Test sonucu \pval-değeri, güven aralığı ve etki büyüklüğüyle birlikte raporlanır.
+  \item Tek ve çift yönlü test seçimi veri görülmeden önce araştırma sorusuna
+  göre yapılmalıdır.
+  \item Büyük örneklem küçük etkileri anlamlı kılabilir; etki büyüklüğü ve
+  uygulamalı önem ayrıca değerlendirilmelidir.
+\end{itemize}
+
+\section*{Alıştırmalar}
+
+\begin{enumerate}
+  \item Tip I ve Tip II hataya birer örnek verin.
+  \item Test gücünü etkileyen üç etken yazın.
+  \item Tek örneklem \tstat testinin araştırma sorusunu açıklayın.
+  \item Çözümlü örnekte $n=100$ olsaydı standart hata ve t değeri nasıl değişirdi?
+  \item Güç analizinde yalnız \pval-değerine odaklanmanın neden yetersiz olduğunu açıklayın.
+  \item Güç tablosunda $n=10$ ile $n=50$ sonuçlarını Tip II hata bakımından karşılaştırın.
+  \item $n=16$, $\bar x=42$, $s=8$ ve $\mu_0=38$ için t değerini hesaplayın.
+  \item Referans değerin veri görüldükten sonra seçilmesinin neden sorunlu olduğunu açıklayın.
+  \item Bir tarama testinde yanlış alarm ve gerçek riski gözden kaçırma
+  durumlarını Tip I ve Tip II hatayla eşleştirin.
+  \item Güç 0,90 ise $\beta$ değerini ve 500 gerçek etkili çalışmada beklenen
+  Tip II hata sayısını bulun.
+  \item $n=36$, $\bar x=74$, $s=12$ ve $\mu_0=70$ için t değerini ve
+  Cohen'in $d$ değerini hesaplayın.
+  \item Önceki sorudaki test çift yönlü ve üst yönlü olduğunda \pval-değerlerinin
+  nasıl ilişkileneceğini açıklayın.
+  \item $d=0{,}40$, $\alpha=0{,}05$ ve hedef güç 0,80 için normal yaklaşım
+  formülüyle yaklaşık örneklem hacmini hesaplayın.
+  \item Etki büyüklüğü küçüldükçe aynı gücü korumak için örneklem hacminin
+  neden artması gerektiğini açıklayın.
+  \item Aynı ortalama fark ve standart sapma için $n=25$ ile $n=400$
+  çalışmalarının t değerlerini ve \pval-değerlerini nitel olarak karşılaştırın.
+  \item İstatistiksel olarak anlamlı fakat uygulamada önemsiz bir tek örneklem
+  \tstat testi sonucu tasarlayıp uygun raporlama cümlesi yazın.
+\end{enumerate}

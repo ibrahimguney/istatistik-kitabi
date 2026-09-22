@@ -1,0 +1,13 @@
+variable,meaning,validation_or_unit
+SEQN,Kamu dosyası kayıt anahtarı,benzersiz ve eksiksiz; kişi kimliği araştırması yapılmaz
+SDDSRVYR,Dönem kodu,10
+RIDAGEYR,Tarama yaş kodu,0–80 tamsayı; 80 üst yaşları birleştirir; 1e-10 tamsayı toleransı
+WTINT2YR,Nihai iki yıllık görüşme ağırlığı,sonlu pozitif; özgün seçim olasılığının salt tersi değildir
+SDMVSTRA,Maskelenmiş varyans tabakası,134–148
+SDMVPSU,Tabaka içi maskelenmiş PSU,1 ve 2; anahtar tabakayla birlikte
+records,PSU içindeki bütün kayıtlar,kişi sayısı; çocuklar korunur
+adults,PSU içindeki 20+ kayıtlar,kişi sayısı
+older,PSU içindeki 60+ kayıtlar,kişi sayısı
+weighted_adult,PSU içindeki ağırlıklı 20+ toplamı,nüfus büyüklüğü tahminine katkı
+weighted_older,PSU içindeki ağırlıklı 60+ toplamı,nüfus büyüklüğü tahminine katkı
+linearized,PSU içindeki doğrusallaştırılmış oran katkısı,boyutsuz; tam alt evren paydasına bölünür

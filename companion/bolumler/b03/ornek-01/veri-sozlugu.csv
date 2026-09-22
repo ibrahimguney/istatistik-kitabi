@@ -1,0 +1,2 @@
+degisken,aciklama,veri_turu,olcme_duzeyi,birim,gecerli_degerler,eksik_deger_kurali
+saat,Bes yapay gozlem icin haftalik calisma suresi,Sayisal,Oran,saat,Sonlu ve sifirdan buyuk veya esit sayi,Eksik deger kabul edilmez; sifir eksik deger degildir

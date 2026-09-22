@@ -1,0 +1,47 @@
+\section{R ile çözümlü uygulama}
+\label{sec:r-b14}
+
+\textbf{Soru.} Aynı 24 kişinin son--ön farkları için $\bar d=-3{,}2$ ve
+$s_d=6$ verilmiştir. Uygun testi seçin, yüzde 95 güven aralığını ve
+standartlaştırılmış değişimi hesaplayıp sonucu raporlayın.
+
+\begin{lstlisting}[style=prismR]
+cift_sayisi <- 24
+ortalama_fark <- -3.2
+fark_sapmasi <- 6
+standart_hata <- fark_sapmasi / sqrt(cift_sayisi)
+serbestlik <- cift_sayisi - 1
+t_degeri <- ortalama_fark / standart_hata
+p_degeri <- 2 * pt(abs(t_degeri), df = serbestlik,
+                   lower.tail = FALSE)
+aralik <- ortalama_fark + c(-1, 1) *
+  qt(0.975, df = serbestlik) * standart_hata
+sonuc <- data.frame(
+  fark = ortalama_fark, se = standart_hata,
+  t = t_degeri, sd = serbestlik, p = p_degeri,
+  alt = aralik[1], ust = aralik[2],
+  dz = ortalama_fark / fark_sapmasi
+)
+print(sonuc, digits = 5)
+stopifnot(p_degeri < 0.05, all(aralik < 0))
+\end{lstlisting}
+
+\begin{outputguidebox}
+\textbf{Çözüm ve kontrol değerleri.} Tasarım eşleştirilmiştir; farklar
+üzerinden tek örneklem $t$ hesabı yapılır. $\SE=1{,}2247$,
+$t(23)=-2{,}6128$, $p=0{,}01556$, yüzde 95 güven aralığı
+$[-5{,}7336;-0{,}6664]$ ve $d_z=-0{,}5333$ bulunur.
+
+\textbf{Örnek rapor.} ``Son ölçümde puanlar ortalama 3,2 puan daha düşüktü;
+$t(23)=-2{,}61$, $p=0{,}016$, yüzde 95 GA $[-5{,}73;-0{,}67]$,
+$d_z=-0{,}53$.''
+\end{outputguidebox}
+
+\textbf{Yorum.} 24 bağımsız kişi çifti vardır; 48 bağımsız kişi yoktur.
+Fark dağılımındaki aykırı değerler ve yaklaşık normallik ham veriden
+incelenmelidir. Azalmanın olumlu mu olumsuz mu olduğu ölçeğin anlamına bağlıdır;
+kontrol grubu yoksa değişim yalnız uygulamaya bağlanamaz.
+
+\textbf{Pekiştirme ve yanıt.} Son ölçümden ön ölçüme geçildiğinde farkın
+ve $t$'nin işareti değişir, çift yönlü $p$ aynı kalır. Sınav yanıtında yöntem,
+işaret, belirsizlik ve bağlam birlikte verilmelidir.

@@ -1,0 +1,463 @@
+\chapter[Korelasyon, Regresyon ve Uygulama]{Korelasyon ve Basit Doğrusal Regresyon; Nedensellik Ayrımı ve Teknoloji Destekli Uygulama}
+\label{ch:correlation-regression}
+
+\begin{prismbox}[PrismLight]{Öğrenme çıktıları}
+Bu bölümün sonunda:
+\begin{itemize}
+  \item iki nicel değişken arasındaki yönü, biçimi, gücü ve olağandışı gözlemleri saçılım grafiğinde değerlendirebilecek,
+  \item Pearson korelasyonunu, regresyon eğimini, $R^2$ ve güven aralıklarını hesaplayıp yorumlayabilecek,
+  \item artık grafiği üzerinden doğrusallık, sabit varyans ve etkili gözlem sorunlarını tanıyabilecek,
+  \item ilişki, öngörü ve nedensel etki iddialarını araştırma tasarımına göre birbirinden ayırabileceksiniz.
+\end{itemize}
+\end{prismbox}
+
+\begin{prerequisitebox}
+İki nicel değişken, ortalama, standart sapma, standartlaştırma, güven aralığı
+ve hipotez testi kavramları bilinmelidir. Koordinat sistemi ve doğru denklemi
+hatırlanmalıdır.
+\end{prerequisitebox}
+
+İki nicel değişken için grafik seçimi Bölüm~\ref{sec:descriptive-graphs}'te,
+güven aralığı ve test yorumu Bölüm~\ref{ch:confidence-intervals} ile
+Bölüm~\ref{ch:hypothesis}'te hazırlanmıştır.
+
+\section{Saçılım grafiği ve korelasyon}
+
+İki nicel değişken arasındaki ilişki önce saçılım grafiğiyle incelenir.
+Pearson örneklem korelasyonu
+\[
+r=\frac{\sum_i(x_i-\bar x)(y_i-\bar y)}
+{\sqrt{\sum_i(x_i-\bar x)^2\sum_i(y_i-\bar y)^2}}
+\]
+olup $-1$ ile $1$ arasındadır. İşaret ilişkinin yönünü, mutlak değer doğrusal
+ilişkinin gücünü gösterir.
+
+Korelasyon birimsizdir ve $X$ ile $Y$ yer değiştirdiğinde değişmez. Ölçüm
+birimlerinin metre yerine santimetreye çevrilmesi de $r$ değerini değiştirmez.
+Buna karşılık regresyon eğimi değişkenlerin birimlerine bağlıdır ve $Y$'nin
+$X$'e göre regresyonuyla $X$'in $Y$'ye göre regresyonu aynı doğru değildir.
+
+\section{Korelasyon ve nedensellik}
+\label{sec:correlation-causality}
+
+Korelasyon tek başına nedensel etki göstermez. Ters nedensellik, ortak neden,
+seçim yanlılığı veya tesadüf gözlenen ilişkiyi açıklayabilir. Nedensel yorum
+araştırma tasarımı, zaman sırası ve karıştırıcı değişkenler hakkında ek kanıt
+gerektirir \citep{shadish2002,gelman2020}.
+
+\begin{mistakebox}
+$r=0{,}70$ değeri, bir değişkenin diğerinin yüzde 70'ini açıkladığı anlamına
+gelmez. Basit doğrusal modelde açıklanan varyans oranı $R^2=r^2=0{,}49$ olur.
+\end{mistakebox}
+
+\section{Basit doğrusal regresyon}
+\label{sec:simple-regression}
+
+Basit doğrusal regresyon
+\[
+Y_i=\beta_0+\beta_1X_i+\varepsilon_i
+\]
+modeliyle $X$ ve $Y$ arasındaki ortalama doğrusal ilişkiyi açıklar. $\beta_1$,
+$X$ bir birim arttığında beklenen $Y$ değerindeki ortalama değişimdir.
+Uydurulan doğru $\hat Y=b_0+b_1X$ biçimindedir.
+
+Basit doğrusal regresyonda eğim ve sabit terim
+\[
+b_1=r\frac{s_Y}{s_X},
+\qquad
+b_0=\bar y-b_1\bar x
+\]
+eşitlikleriyle ilişkilidir. Eğim, $X$'te bir birimlik farkla ilişkili ortalama
+$Y$ farkını gösterir. Sabit terim ise $X=0$ için modelin ortalama yanıtıdır;
+sıfır değeri gözlenen aralıkta değilse çoğu zaman doğrudan bağlamsal anlam
+taşımaz.
+
+Basit doğrusal regresyonda $H_0:\beta_1=0$ testi ile
+$H_0:\rho=0$ Pearson korelasyon testi aynı iki yönlü \pval-değerini verir:
+\[
+t=r\sqrt{\frac{n-2}{1-r^2}},\qquad sd=n-2.
+\]
+Bu eşdeğerlik yalnız aynı gözlemler ve doğrusal model için geçerlidir.
+
+\section{Uyum ve model kontrolü}
+\label{sec:regression-diagnostics}
+
+$R^2$, yanıt değişkenliğinin model tarafından açıklanan oranını özetler.
+Yüksek $R^2$ nedensellik veya doğru model garantisi değildir. Doğrusallık,
+sabit hata varyansı, bağımsızlık, aykırı değerler ve artıkların davranışı
+grafiklerle değerlendirilmelidir.
+
+Artık $e_i=y_i-\hat y_i$ olarak tanımlanır. Artık--uydurulan değer grafiğinde
+sıfır çevresindeki rastgele bant doğrusal ve sabit varyanslı yapıyı destekler.
+Eğri örüntü doğrusal olmayan ilişkiye, giderek açılan huni değişen hata
+varyansına, tek başına uzak bir nokta ise aykırı gözleme işaret edebilir.
+Artıkların normal dağılımı özellikle küçük örneklemde katsayı testleri ve
+aralıklar için önemlidir; doğrusallığı değerlendirmek için yalnız normal
+olasılık grafiğine bakmak yeterli değildir.
+
+Uç bir $X$ değerine sahip gözlem yüksek kaldıraçlıdır. Böyle bir gözlem aynı
+zamanda regresyon çizgisinden uzaksa eğimi ve diğer katsayıları belirgin
+biçimde değiştirebilir. Cook uzaklığı gibi ölçüler etkili gözlemleri tanımaya
+yardım eder; ancak yüksek değer gözlemin yanlış olduğunu kanıtlamaz.
+
+\section{Gerçek eğitim verisi üzerinde uygulama}
+
+On altı öğrenciden oluşan öğretim amaçlı veri setinde haftalık çalışma süresi
+ve son test puanı incelendiğinde
+$r(14)=0{,}981$, $p<0{,}001$ bulunmuştur. Uydurulan regresyon doğrusu
+\[
+\widehat{\text{Son puan}}=44{,}60+3{,}14\times\text{Saat}
+\]
+biçimindedir. Gözlenen aralıkta bir saatlik çalışma süresi artışı, ortalama
+son test puanında yaklaşık $3{,}14$ puanlık artışla ilişkilidir. Gözlemsel
+veri nedeniyle bu katsayı nedensel etki olarak yorumlanmaz.
+Bu öğretim verisinin kaynağı ve kullanım bağlamı için bkz. \citet{gill2001}.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[x=1.12cm,y=0.22cm]
+  \draw[->,PrismGray] (1.5,0)--(8.7,0)
+    node[right,font=\scriptsize]{Çalışma süresi};
+  \draw[->,PrismGray] (1.5,0)--(1.5,23)
+    node[above,font=\scriptsize]{Son puan};
+  \foreach \x in {2,...,8}
+    \node[below,font=\scriptsize] at (\x,0) {\x};
+  \foreach \y/\label in {2/50,7/55,12/60,17/65,22/70} {
+    \draw[PrismGray] (1.43,\y)--(1.57,\y);
+    \node[left,font=\scriptsize] at (1.43,\y) {\label};
+  }
+  \foreach \x/\y in {5/12,3/6,7/20,6/15,6/17,2/4,8/22,4/10,
+                        4/9,5/13,3/4,7/16,3/7,5/12,2/2,6/15}
+    \fill[PrismSubheadingBlue!85!black] (\x,\y) circle (2.1pt);
+  \draw[PrismBlue,very thick] (2,2.87)--(8,21.70);
+\end{tikzpicture}
+\caption{Çalışma süresi, son test puanı ve uydurulan regresyon doğrusu.}
+\label{fig:simple-regression-scatter}
+\end{figure}
+
+Şekil~\ref{fig:simple-regression-scatter}'deki doğrusal örüntü için modelin
+$R^2$ değeri $0{,}962$'dir. Bu, gözlenen örneklemde son test
+puanlarındaki değişkenliğin yaklaşık yüzde 96,2'sinin çalışma süresiyle
+kurulan doğrusal model tarafından açıklandığını gösterir. Küçük ve seçilmiş
+bir örneklemdeki yüksek değer, yeni öğrencilerde aynı başarının elde
+edileceğinin garantisi değildir. Sabit terim 44,60 puandır; ancak sıfır saat
+veri aralığının dışındaysa bu değer bağımsız bir eğitimsel sonuç olarak
+yorumlanmamalıdır.
+
+Eğim tahmininin standart hatası 0,168 ve yüzde 95 güven aralığı yaklaşık
+$[2{,}78;3{,}50]$ puandır. Bu aralık, gözlenen veri ve model koşulları altında
+bir saatlik çalışma süresi artışıyla ilişkili ortalama puan değişimi için
+makul değerleri gösterir. Korelasyonun yüzde 95 güven aralığı da yaklaşık
+$[0{,}944;0{,}993]$'tür; küçük örnekleme rağmen doğrusal ilişkinin güçlü
+olduğuna işaret eder.
+
+\section{Çözümlü öngörü ve artık hesabı}
+
+Altı saat çalışan bir öğrenci için modelin öngördüğü puan
+\[
+\hat y=44{,}60+3{,}14(6)=63{,}44
+\]
+olarak bulunur. Veri setinde altı saat çalışan ve 65 puan alan bir öğrenci
+için artık
+\[
+e=y-\hat y=65-63{,}44=1{,}56
+\]
+puandır. Pozitif artık, öğrencinin modelin öngördüğünden daha yüksek puan
+aldığını gösterir. Yuvarlanmamış katsayılarla hesaplandığında değerler
+sırasıyla 63,42 ve 1,58'dir.
+
+Tek bir öğrenci için 63,44 puan ``kesin sonuç'' değildir. Regresyon doğrusu
+ortalama ilişkiyi verir; bireysel öngörüde artık değişkenliği de bulunduğu
+için öngörü aralığı kullanılmalıdır.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[x=0.38cm,y=0.85cm]
+  \draw[->,PrismGray] (0,-3.2)--(0,3.2) node[above,font=\scriptsize]{artık};
+  \draw[->,PrismGray] (0,0)--(22.5,0)
+    node[above left,font=\scriptsize]{uydurulan değer};
+  \foreach \x/\label in {1/50,6/55,11/60,16/65,21/70} {
+    \draw[PrismGray] (\x,-0.08)--(\x,0.08);
+    \node[below,font=\tiny] at (\x,-0.08) {\label};
+  }
+  \foreach \y in {-3,-2,-1,1,2,3} {
+    \draw[PrismGray] (-0.18,\y)--(0.18,\y);
+    \node[left,font=\tiny] at (-0.18,\y) {\y};
+  }
+  \draw[PrismWarnOrange!85!black,dashed] (0,0)--(22,0);
+  \foreach \x/\y in {11.28/-.28,5.01/-.01,17.56/1.44,14.42/-.42,
+    14.42/1.58,1.87/1.13,20.70/.30,8.15/.85,8.15/-.15,11.28/.72,
+    5.01/-2.01,17.56/-2.56,5.01/.99,11.28/-.28,1.87/-.87,14.42/-.42}
+    \fill[PrismSubheadingBlue!85!black] (\x,\y) circle (2.0pt);
+\end{tikzpicture}
+\caption{Uydurulan değerlere karşı artıklar.}
+\label{fig:simple-regression-residuals}
+\end{figure}
+
+Şekil~\ref{fig:simple-regression-residuals}'de artıkların sıfır çevresinde
+belirgin bir eğri veya huni oluşturmadan
+dağılması doğrusal biçim ve sabit varyans varsayımlarını destekler.
+
+\section{Yazılım uygulaması: korelasyon, regresyon ve tanı grafikleri}
+
+\begin{softwarebox}
+\begin{lstlisting}
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import stats
+
+hours = np.array([5,3,7,6,6,2,8,4,4,5,3,7,3,5,2,6])
+post = np.array([60,54,68,63,65,52,70,58,
+                 57,61,52,64,55,60,50,63])
+
+print(stats.pearsonr(hours, post))
+fit = stats.linregress(hours, post)
+print(fit)
+print("R-kare:", fit.rvalue**2)
+print("6 saat icin ongoru:", fit.intercept + fit.slope * 6)
+
+fitted = fit.intercept + fit.slope * hours
+residuals = post - fitted
+
+fig, axes = plt.subplots(1, 2, figsize=(8, 3))
+axes[0].scatter(hours, post)
+axes[0].plot(hours, fitted, color="#1F4E79")
+axes[0].set(xlabel="Calisma suresi", ylabel="Son test puani")
+axes[1].scatter(fitted, residuals)
+axes[1].axhline(0, color="#1F4E79", linestyle="--")
+axes[1].set(xlabel="Uydurulan deger", ylabel="Artik")
+plt.tight_layout()
+plt.show()
+\end{lstlisting}
+SPSS'te önce \emph{Graphs $>$ Chart Builder} ile saçılım grafiği, ardından
+\emph{Analyze $>$ Correlate $>$ Bivariate} ve
+\emph{Analyze $>$ Regression $>$ Linear} yolları izlenebilir. R'de
+\texttt{cor.test(hours, post)} ve \texttt{lm(post \textasciitilde{} hours)}
+aynı temel soruları yanıtlar. Her ortamda artık grafikleri ayrıca
+incelenmelidir. Python hesaplarının dayandığı temel bilimsel yazılım
+altyapıları için bkz. \citet{harris2020} ve \citet{virtanen2020}.
+\end{softwarebox}
+
+\begin{assumptionbox}
+Korelasyon ve eğim aykırı ya da yüksek etkili bir gözlemden güçlü biçimde
+etkilenebilir. Saçılım grafiği incelenmeden yalnız katsayıya bakılmamalıdır.
+Doğrusal olmayan belirgin bir ilişki varsa $r$ sıfıra yakın olsa bile iki
+değişken arasında güçlü bir örüntü bulunabilir.
+\end{assumptionbox}
+
+\section{Öngörü ve dışa taşırma}
+\label{sec:extrapolation}
+
+Regresyon doğrusu, veri aralığı içindeki yeni bir $X$ değeri için ortalama
+yanıtı veya tek bir gözlemi öngörmede kullanılabilir. Tek gözlem için öngörü
+aralığı, ortalama yanıtın güven aralığından daha geniştir. Gözlenen çalışma
+süresi aralığının çok dışına taşırma yapmak, doğrusal ilişkinin o bölgede de
+sürdüğü varsayımına dayanır ve çoğu zaman güvenilir değildir.
+
+\section{Raporlama}
+
+İyi bir rapor araştırma sorusunu, veri kaynağını, saçılım grafiğini,
+korelasyon katsayısını, regresyon eğimini, güven aralığını, \pval-değerini,
+$R^2$ değerini, varsayım kontrollerini ve nedensellik sınırlılığını birlikte
+verir.
+
+\section{Uygulama kontrol listesi}
+
+\begin{enumerate}
+  \item Her iki değişkenin nicel ve ölçümlerin bağımsız olduğunu doğrulayın.
+  \item Saçılım grafiğinde yönü, biçimi, gücü ve aykırı değerleri inceleyin.
+  \item Korelasyon katsayısını güven aralığı ve örneklem hacmiyle raporlayın.
+  \item Regresyon eğimini değişkenlerin birimleriyle yorumlayın.
+  \item Artık grafiğinde eğrilik, değişen yayılım ve etkili gözlemleri araştırın.
+  \item Nedensel yorumun araştırma tasarımı tarafından desteklenip desteklenmediğini belirtin.
+\end{enumerate}
+
+\begin{outputguidebox}
+Regresyon çıktısında ``Model Summary'' bölümündeki $R^2$ ile katsayılar
+tablosundaki eğimi birbirine karıştırmayın. Eğim, $X$'teki bir birim değişimle
+ilişkili $Y$ değişimini; $R^2$ ise örneklemde açıklanan değişkenlik oranını
+gösterir. Katsayının standart hatası, güven aralığı ve \pval-değeri aynı satırda
+birlikte okunmalıdır.
+\end{outputguidebox}
+
+\section{Çözümlü problemler}
+
+\subsection*{Problem 1: Saçılım grafiğini sistematik okuma}
+
+Bir saçılım grafiğinde çalışma süresi arttıkça başarı puanları genel olarak
+artmakta; noktalar yaklaşık bir doğru çevresinde toplanmakta, ancak en yüksek
+çalışma süresine sahip bir öğrenci çizginin oldukça altında kalmaktadır.
+Grafiği yön, biçim, güç ve olağandışı gözlem bakımından yorumlayın.
+
+\textbf{Çözüm.} Genel eğilim pozitif yönlüdür: yüksek çalışma süreleri daha
+yüksek puanlarla birliktedir. Noktaların doğru çevresinde toplanması ilişkinin
+yaklaşık doğrusal olduğunu, çizgi çevresindeki saçılmanın sınırlı olması ise
+doğrusal ilişkinin görece güçlü olabileceğini düşündürür. Bununla birlikte en
+yüksek $X$ değerindeki öğrenci hem yüksek kaldıraçlı hem de büyük negatif
+artıklı olabilir. Bu gözlem eğimi ve korelasyonu belirgin etkileyebilir.
+
+Gözlem yalnız sıra dışı olduğu için silinmez. Veri giriş doğruluğu, öğrencinin
+araştırma evrenine ait olup olmadığı ve ölçüm koşulları incelenir. Analiz
+gözlem dâhil ve hariç yinelenerek duyarlılık değerlendirilir; iki sonuç
+belirgin farklıysa her ikisi ve gerekçesi raporlanır.
+
+\subsection*{Problem 2: Özetlerden regresyon doğrusunu kurma}
+
+Bir araştırmada $\bar x=5$, $s_X=2$, $\bar y=70$, $s_Y=10$ ve $r=0{,}60$
+bulunmuştur. $Y$'nin $X$'e göre regresyon doğrusunu kurun, $X=7$ için öngörü
+yapın ve gözlenen $Y=79$ ise artığı hesaplayın.
+
+\textbf{Çözüm.} Eğim
+\[
+b_1=r\frac{s_Y}{s_X}=0{,}60\frac{10}{2}=3
+\]
+ve sabit terim
+\[
+b_0=\bar y-b_1\bar x=70-3(5)=55
+\]
+olur. Uydurulan doğru
+\[
+\hat Y=55+3X
+\]
+biçimindedir. $X=7$ için öngörü $\hat y=55+3(7)=76$'dır. Gözlenen değer 79
+ise artık
+\[
+e=y-\hat y=79-76=3
+\]
+olur; öğrenci modelin ortalama öngörüsünden üç puan daha yüksek sonuç
+almıştır. Modelin açıklanan varyans oranı $R^2=0{,}60^2=0{,}36$'dır.
+
+\subsection*{Problem 3: Korelasyon testi ve güven aralığı}
+
+Yirmi beş öğrencide iki nicel değişken arasındaki Pearson korelasyonu
+$r=0{,}40$ bulunmuştur. Sıfır korelasyon hipotezini sınayın ve Fisher
+dönüşümüyle elde edilmiş yüzde 95 güven aralığı $[0{,}006;0{,}687]$ ise
+sonucu yorumlayın.
+
+\textbf{Çözüm.} Test istatistiği
+\[
+t=0{,}40\sqrt{\frac{25-2}{1-0{,}40^2}}
+=0{,}40\sqrt{\frac{23}{0{,}84}}\approx2{,}09
+\]
+ve serbestlik derecesi 23'tür. Çift yönlü \pval-değeri yaklaşık 0,048'dir.
+Yüzde 5 düzeyinde sıfır doğrusal korelasyona karşı sınırda kanıt vardır.
+
+Güven aralığı sıfırın hemen üzerindeki çok zayıf ilişkilerden yaklaşık 0,69
+düzeyindeki güçlü ilişkilere kadar geniş bir değer kümesini kapsamaktadır.
+Dolayısıyla yalnız ``anlamlı korelasyon'' demek tahmin belirsizliğini gizler.
+Korelasyonun pozitif görünmesi nedensel etkiyi kanıtlamaz.
+
+\subsection*{Problem 4: Etkili gözlemin korelasyon ve eğime etkisi}
+
+$X=(1,2,3,4,5)$ ve $Y=(2,4,6,8,20)$ verileri için yazılım
+$r=0{,}894$ ve $\hat Y=-4+4X$ sonuçlarını vermektedir. Son gözlem olmadan ilk
+dört nokta için $r=1$ ve $\hat Y=2X$ elde edilmektedir. Sonuçları açıklayın.
+
+\textbf{Çözüm.} İlk dört gözlem kusursuz biçimde $Y=2X$ doğrusu üzerindedir.
+$(5,20)$ noktası $X$ bakımından veri aralığının ucunda ve bu örüntünün
+oldukça üzerindedir. Bu nedenle hem yüksek kaldıraçlı hem de etkili bir
+gözlemdir. Tek bir nokta eğimi 2'den 4'e, sabit terimi 0'dan $-4$'e
+değiştirmiş ve korelasyonu 1'den 0,894'e düşürmüştür.
+
+Her iki korelasyon da güçlü görünmesine rağmen öngörü denklemleri önemli
+ölçüde farklıdır. Bu örnek, katsayıların saçılım grafiği ve etki tanıları
+olmadan yorumlanmaması gerektiğini gösterir. Son gözlemin doğruluğu
+incelenmeli; geçerliyse keyfî olarak çıkarılmamalıdır.
+
+\subsection*{Problem 5: Artık grafiğinde sorun tanıma}
+
+Üç ayrı artık grafiğinde sırasıyla şu örüntüler gözlenmiştir: (a) belirgin U
+biçimi, (b) uydurulan değer büyüdükçe açılan huni ve (c) sıfır çevresinde
+rastgele bant içinde tek bir çok uzak nokta. Her örüntünün olası anlamını ve
+ilk inceleme adımını yazın.
+
+\textbf{Çözüm.}
+
+\begin{enumerate}[label=\alph*)]
+  \item U biçimi, ortalama ilişkinin doğrusal olmadığını düşündürür. İlk olarak
+  özgün saçılım grafiği incelenmeli; kuramsal olarak anlamlıysa eğrisel terim
+  veya uygun dönüşüm değerlendirilmelidir.
+  \item Huni biçimi hata varyansının $X$ ya da uydurulan değer boyunca sabit
+  olmadığını gösterir. Ölçek, alt gruplar ve veri toplama süreci incelenmeli;
+  sağlam standart hatalar veya uygun modelleme seçenekleri düşünülmelidir.
+  \item Tek uzak artık aykırı bir $Y$ gözlemine işaret eder. Kaldıraç ve Cook
+  uzaklığıyla etkisi, kaynak kayıtla da ölçüm doğruluğu kontrol edilmelidir.
+\end{enumerate}
+
+Bu tanılar otomatik silme veya dönüşüm kuralları değildir. Model değişikliği
+araştırma sorusu, ölçüm ölçeği ve veri üretim süreciyle gerekçelendirilmelidir.
+
+\subsection*{Problem 6: Regresyon çıktısını bütüncül yorumlama}
+
+Bir gözlemsel araştırmada çalışma süresinin başarı puanını açıklamasına yönelik
+model için $n=80$, $b_1=1{,}80$, $\SE(b_1)=0{,}55$,
+$t(78)=3{,}27$, $p=0{,}002$, yüzde 95 GA $[0{,}71;2{,}89]$ ve
+$R^2=0{,}12$ verilmiştir. Artık grafiğinde hafif huni biçimi vardır. Sonucu
+raporlayın.
+
+\textbf{Çözüm.} Gözlenen veri aralığında çalışma süresindeki bir saatlik
+artış, ortalama başarı puanında 1,80 puanlık artışla ilişkilidir. Güven
+aralığı, model koşulları altında ilişkinin yaklaşık 0,71 ile 2,89 puan
+arasında olabileceğini gösterir. Eğim sıfırdan farklıdır,
+$t(78)=3{,}27$, $p=0{,}002$; ancak model başarı puanlarındaki örneklem
+değişkenliğinin yalnız yüzde 12'sini açıklamaktadır.
+
+Huni biçimi sabit varyans varsayımının zayıflayabileceğini gösterdiğinden
+klasik standart hata ve aralıkların duyarlılığı incelenmelidir. Çalışma
+gözlemsel olduğu için katsayı ``bir saat daha çalışmak başarıyı 1,80 puan
+artırır'' biçiminde nedensel yorumlanamaz. Önceki başarı, motivasyon veya ders
+desteği gibi karıştırıcılar ilişkiyi açıklayabilir.
+
+\begin{outputguidebox}
+Bir regresyon çıktısını okurken katsayının işaretini ve birimini, standart
+hatasını, güven aralığını ve \pval-değerini aynı satırda değerlendirin. Ardından
+$R^2$, örneklem hacmi, artık grafikleri ve etkili gözlem ölçülerini inceleyin.
+Yazılımın katsayı üretmesi doğrusal biçimi, nedenselliği veya dışa taşırmanın
+geçerliliğini kendiliğinden doğrulamaz.
+\end{outputguidebox}
+
+\input{chapters/spss/b13}
+
+\input{chapters/r/b13}
+
+\section{Bölüm özeti}
+
+\begin{itemize}
+  \item Saçılım grafiği ilişki analizinin ilk ve vazgeçilmez adımıdır.
+  \item Korelasyon doğrusal ilişkinin yönünü ve gücünü, regresyon eğimi ise birimli ortalama değişimi gösterir.
+  \item Artıklar gözlenen değerlerle model öngörüleri arasındaki farklardır.
+  \item Güçlü ilişki veya yüksek $R^2$, tek başına nedensellik ve dış örneklem başarısı göstermez.
+  \item Eğrilik, huni örüntüsü ve etkili gözlemler katsayıların ve klasik
+  standart hataların yorumunu değiştirebilir.
+  \item Ortalama yanıt aralığı ile bireysel öngörü aralığı farklı hedeflere
+  yönelir; bireysel öngörü aralığı daha geniştir.
+\end{itemize}
+
+\section*{Alıştırmalar}
+
+\begin{enumerate}
+  \item Korelasyonun neden nedensellik göstermediğini açıklayın.
+  \item Regresyon eğimini birimiyle yorumlayın.
+  \item Bir teknoloji destekli analiz raporunda bulunması gereken öğeleri yazın.
+  \item $R^2=0{,}962$ değerini doğru biçimde yorumlayın.
+  \item Regresyon doğrusunu gözlenen veri aralığının dışında kullanmanın riskini açıklayın.
+  \item Altı saat için hesaplanan pozitif artığın anlamını açıklayın.
+  \item Eğim güven aralığı $[2{,}78;3{,}50]$ değerini çalışma süresi bağlamında yorumlayın.
+  \item Eğrisel bir ilişkide Pearson korelasyonunun neden yanıltıcı olabileceğini tartışın.
+  \item Ortalama yanıt güven aralığı ile bireysel öngörü aralığını karşılaştırın.
+  \item $r=-0{,}60$ değerinin yönünü ve $R^2$ karşılığını yorumlayın.
+  \item $r=0{,}50$, $s_X=4$ ve $s_Y=12$ ise regresyon eğimini hesaplayın.
+  \item $\bar x=10$, $\bar y=40$ ve $b_1=2$ için sabit terimi ve regresyon
+  doğrusunu bulun.
+  \item $\hat Y=30+4X$ modelinde $X=6$ ve gözlenen $Y=57$ için öngörü ve
+  artığı hesaplayın.
+  \item $n=30$ ve $r=0{,}35$ için korelasyon test istatistiğini hesaplayın.
+  \item Artık grafiğindeki U biçimi ile huni biçiminin işaret ettiği sorunları
+  karşılaştırın.
+  \item Yüksek kaldıraçlı bir gözlemin neden mutlaka etkili veya hatalı
+  olmayabileceğini açıklayın.
+  \item $R^2=0{,}08$ ve çok küçük \pval-değeri bulunan büyük bir örneklemi
+  istatistiksel kanıt ve öngörü başarısı bakımından yorumlayın.
+  \item Çalışma süresi 2--8 saat aralığında gözlenmiş bir modelle 20 saat için
+  öngörü yapmanın sakıncasını açıklayın.
+\end{enumerate}

@@ -1,0 +1,22 @@
+{
+  "source_shape": [
+    24,
+    14
+  ],
+  "analysis_n": 12,
+  "blocks": 3,
+  "control_mean": 405.76274931666666,
+  "fym_mean": 577.2502600333333,
+  "difference_g_m2": 171.48751071666663,
+  "assignments": 216,
+  "extreme_assignments": 2,
+  "exact_two_sided_p": 0.009259259259259259,
+  "model_standard_error": 28.161873048519563,
+  "model_residual_df": 8,
+  "model_ci95_low": 106.54611501168594,
+  "model_ci95_high": 236.42890642164767,
+  "model_residual_sd": 48.77779495634051,
+  "unit": "g/m2",
+  "outcome_period": "2011-2014 mean",
+  "original_R_executed": false
+}

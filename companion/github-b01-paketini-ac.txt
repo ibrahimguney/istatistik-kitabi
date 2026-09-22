@@ -1,0 +1,25 @@
+import hashlib
+import json
+from pathlib import Path, PurePosixPath
+import zipfile
+
+paket = json.loads(Path(__file__).with_name("github-b01-paket.json").read_text(encoding="utf-8"))
+hedef = Path("github-b01-hazir")
+arsiv = Path("github-b01-hazir.zip")
+if hedef.exists() or arsiv.exists():
+    raise SystemExit("Hedef klasor veya ZIP zaten var; var olan dosyalara dokunulmadi.")
+for ad, metin in paket["files"].items():
+    yol = PurePosixPath(ad)
+    if yol.is_absolute() or ".." in yol.parts or "\\" in ad or ":" in ad:
+        raise SystemExit("Gecersiz paket yolu.")
+    if hashlib.sha256(metin.encode("utf-8")).hexdigest() != paket["sha256"][ad]:
+        raise SystemExit("Paket butunluk kontrolu basarisiz.")
+hedef.mkdir()
+with zipfile.ZipFile(arsiv, "x", zipfile.ZIP_DEFLATED) as zip_dosyasi:
+    for ad, metin in paket["files"].items():
+        yol = hedef / ad
+        yol.parent.mkdir(parents=True, exist_ok=True)
+        yol.write_bytes(metin.encode("utf-8"))
+        zip_dosyasi.writestr(ad, metin.encode("utf-8"))
+print("Hazir:", hedef, "ve", arsiv)
+print("GitHub'a yukleme yapilmadi. README.md ve bolumler klasorunu depoya aktarabilirsiniz.")

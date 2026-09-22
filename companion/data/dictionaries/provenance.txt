@@ -1,0 +1,17 @@
+[STAR98]
+title: Star98 Educational Dataset
+source: Jeff Gill's `Generalized Linear Models: A Unified Approach`
+
+http://jgill.wustl.edu/research/books.html
+copyright: Used with express permission from the original author,
+who retains all rights.
+
+[SPECTOR]
+title: Spector and Mazzeo (1980) - Program Effectiveness Data
+source: http://pages.stern.nyu.edu/~wgreene/Text/econometricanalysis.htm
+
+The raw data was downloaded from Bill Greene's Econometric Analysis web site,
+though permission was obtained from the original researcher, Dr. Lee Spector,
+Professor of Economics, Ball State University.
+copyright: Used with express permission of the original author, who
+retains all rights.

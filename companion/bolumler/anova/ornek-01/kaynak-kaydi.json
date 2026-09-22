@@ -1,0 +1,85 @@
+{
+  "date": "2026-09-09",
+  "chapter": 16,
+  "edition": "kapsamli",
+  "data_kind": "Kitaptaki iki ayri ogretim ozeti; bireysel ham veri yok",
+  "sources": {
+    "chapters/r/anova.tex": "05176ac71d9f6405e76ab87d6f8371fb02fdbe9ccde7ffbca47460f027c03af3",
+    "chapters/16-anova.tex": "5c5bf809ab2a056af37717f63cdeea9cf799c41ad0696aa018f6cd654d8fc89f"
+  },
+  "classical": {
+    "n": [
+      10,
+      10,
+      10
+    ],
+    "mean": [
+      70,
+      75,
+      82
+    ],
+    "sd": [
+      6,
+      7,
+      5
+    ]
+  },
+  "welch": {
+    "n": [
+      12,
+      20,
+      8
+    ],
+    "mean": [
+      70,
+      76,
+      84
+    ],
+    "sd": [
+      3,
+      10,
+      5
+    ]
+  },
+  "seed": null,
+  "data_generated": false,
+  "sha256": {
+    "veri.csv": "f94f15d5fcc2e0bd1b9fdabc5fc62187b079a00c41529ebe7a921dd6601f69c0",
+    "welch.csv": "562ca1ed5aa7f9c3ac2d60b5471f158412549685799a84563589d4d22c87f826",
+    "ciftler.csv": "d79b7d8cafd990e243aaed5665b8555c51649ea62bd29a5c177e12d8ea798a75"
+  },
+  "runtime": {
+    "python": "3.13.15",
+    "numpy": "2.4.1",
+    "pandas": "2.3.3",
+    "scipy": "1.17.0",
+    "statsmodels": "0.14.6"
+  },
+  "R_executed": false,
+  "SPSS_executed": false,
+  "pairs": [
+    [
+      1,
+      1,
+      2
+    ],
+    [
+      2,
+      1,
+      3
+    ],
+    [
+      3,
+      2,
+      3
+    ]
+  ],
+  "reference_validation": {
+    "classical_and_welch": "Fraction tabanli ozet hesaplari ve statsmodels anova_generic",
+    "tukey": "Studentized range CDF icin ayri Gauss-Hermite/Gauss-Laguerre integrali (160 nokta); brentq kok aramasi",
+    "critical_q": 3.5064261233541694,
+    "cdf_at_critical_96_nodes": 0.95,
+    "cdf_at_critical_160_nodes": 0.9499999999999983,
+    "raw_observations_synthesized": false
+  }
+}

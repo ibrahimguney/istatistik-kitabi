@@ -1,0 +1,41 @@
+\section{R ile çözümlü uygulama}
+\label{sec:r-b03}
+
+\textbf{Soru.} Çalışma süreleri 2, 3, 3, 4 ve 13 saat olan örnekte merkez,
+yayılım ve aykırı değer sınırlarını bulun. Bölümde kullanılan doğrusal
+enterpolasyonla uyum için yüzdelik hesabında \texttt{type = 7} seçin.
+
+\begin{lstlisting}[style=prismR]
+saat <- c(2, 3, 3, 4, 13)
+ceyrek <- quantile(saat, c(0.25, 0.75), type = 7)
+ceyrek_acikligi <- IQR(saat, type = 7)
+c(ortalama = mean(saat), medyan = median(saat),
+  varyans = var(saat), standart_sapma = sd(saat))
+quantile(saat, c(0, 0.25, 0.5, 0.75, 1), type = 7)
+sinir <- c(ceyrek[1] - 1.5 * ceyrek_acikligi,
+           ceyrek[2] + 1.5 * ceyrek_acikligi)
+sinir
+saat[saat < sinir[1] | saat > sinir[2]]
+hist(saat, breaks = c(0, 3, 6, 9, 12, 15), right = FALSE,
+     main = "Calisma suresi", xlab = "Saat")
+boxplot(saat, horizontal = TRUE, xlab = "Saat")
+c(ortalama_13_haric = mean(saat[saat != 13]),
+  medyan_13_haric = median(saat[saat != 13]))
+\end{lstlisting}
+
+\begin{outputguidebox}
+\textbf{Çözüm ve kontrol değerleri.} Ortalama 5, medyan 3, örneklem
+varyansı 20,5 ve örneklem standart sapması 4,5277'dir. Beş sayı özeti
+$(2;3;3;4;13)$; çeyrekler açıklığı 1; alt ve üst sınırlar 1,5 ve 5,5'tir.
+13 saat üst sınırı aşar. Bu değer çıkarıldığında ortalama 3'e iner;
+medyan 3 olarak kalır.
+\end{outputguidebox}
+
+\textbf{Yorum.} \texttt{sd} ve \texttt{var} örneklem hesabında $n-1$
+bölenini kullanır. \texttt{boxplot} kutu sınırları için Tukey menteşelerini
+kullanır; bunlar bu örnekte seçilen çeyreklerle aynıdır, her örneklemde aynı
+olmak zorunda değildir. Aykırı değer işareti otomatik silme gerekçesi değildir.
+
+\textbf{Pekiştirme ve yanıt.} 13'ü çıkarma işlemi yalnız duyarlılık
+karşılaştırmasıdır. Ortalama iki saat değişirken medyanın değişmemesi,
+medyanın bu uç değere karşı daha sağlam olduğunu gösterir.

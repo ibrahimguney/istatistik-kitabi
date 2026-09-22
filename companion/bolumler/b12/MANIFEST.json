@@ -1,0 +1,21 @@
+{
+  "algorithm": "SHA-256",
+  "files": {
+    "DOGRULAMA.md": "45e59bf1fdfa4cce4f4a0b1678245e071217cd0f7a076d3570b9333130a4e124",
+    "README.md": "9d3b5ae7980802a568c06ed33d36efa29ee1397775aa6468ea5adead06ec145f",
+    "alistirmalar.md": "6d7ba4b85e3ae44a54c82540d3e6ef1eebcd7afdc431ff6de422a73361f003dc",
+    "cozumler.md": "12e111e64ce3eaa35150e68809a510402922381f59eb13bae750debded4bb984",
+    "ornek-01/README.md": "1cb1ed40e5fd02278484270b0eadfbe32938aa7a8068c9a3007227d73ab2b06f",
+    "ornek-01/analiz.sps": "5cbd1cf69c3ea33ebbc5e53831fead2f77737fdc1a59f3de39671681255e25b8",
+    "ornek-01/analiz.sps.txt": "5cbd1cf69c3ea33ebbc5e53831fead2f77737fdc1a59f3de39671681255e25b8",
+    "ornek-01/beklenen-sonuclar.csv": "e24d443f58bffaedbad271153293aa2dbdb08107701007a039cd40f6a67edbcb",
+    "ornek-01/ciktilar/python/oranlar-artiklar.png": "05dbf0a9c4dc1f5d747fbf525dee8e23001026944e4d25f7859c176f421c2d26",
+    "ornek-01/cozum.R": "c1dee4b943cf647ea21094c7ed6482cc3427bdb5a5d55fb13b21ef4850d0c48a",
+    "ornek-01/cozum.md": "f01d48e9260ddeaca1842ac68c992d71d65672f01142539ccffdc837b11b7486",
+    "ornek-01/cozum.py": "60635e2f7fcb2c882f7502d01afffe35eb086c73a717e81fafbd1074858695c3",
+    "ornek-01/grafik-aciklamasi.md": "a6cecd8e99a691186c02e901c1e60759dd201ecf98860e04204ef7e0f1858efe",
+    "ornek-01/kaynak-kaydi.json": "d023bd9207c382deaf80e3229b119c0acce25fb25c5df28ec0ee5ca169bd4de3",
+    "ornek-01/veri-sozlugu.csv": "5d17d80d302b4efe9ab435a339614e649ee6f964738e0bd543ddcb35cf4aa7b3",
+    "ornek-01/veri.csv": "10a13d969233a008bd891f23d5b7fcb69dfa3ec79050bbd13e9a56c1e90badf9"
+  }
+}

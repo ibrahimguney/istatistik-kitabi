@@ -1,0 +1,87 @@
+\section{R ile çözümlü uygulama}
+\label{sec:r-anova}
+
+\textbf{Soru.} Bölümdeki üç grubun $n=(10,10,10)$,
+$\bar x=(70,75,82)$ ve $s=(6,7,5)$ özetlerinden klasik ANOVA'yı,
+etki büyüklüklerini ve Tukey eşzamanlı fark aralıklarını hesaplayın.
+Özetleri ham veri gibi \texttt{aov} komutuna vermeyin.
+
+\begin{lstlisting}[style=prismR]
+hacim <- c(10, 10, 10)
+ortalama <- c(70, 75, 82)
+standart_sapma <- c(6, 7, 5)
+grup_sayisi <- length(hacim)
+genel <- weighted.mean(ortalama, hacim)
+ss_grup <- sum(hacim * (ortalama - genel)^2)
+ss_hata <- sum((hacim - 1) * standart_sapma^2)
+sd_grup <- grup_sayisi - 1
+sd_hata <- sum(hacim) - grup_sayisi
+mse <- ss_hata / sd_hata
+f_degeri <- (ss_grup / sd_grup) / mse
+c(F = f_degeri,
+  p = pf(f_degeri, sd_grup, sd_hata, lower.tail = FALSE),
+  eta2 = ss_grup / (ss_grup + ss_hata),
+  omega2 = (ss_grup - sd_grup * mse) /
+    (ss_grup + ss_hata + mse))
+ciftler <- combn(seq_along(hacim), 2)
+kritik <- qtukey(0.95, nmeans = grup_sayisi, df = sd_hata)
+tukey <- t(apply(ciftler, 2, function(cift) {
+  fark <- ortalama[cift[1]] - ortalama[cift[2]]
+  se <- sqrt(mse / 2 * sum(1 / hacim[cift]))
+  c(fark = fark, alt = fark - kritik * se,
+    ust = fark + kritik * se,
+    p_duzeltilmis = ptukey(abs(fark) / se,
+      nmeans = grup_sayisi, df = sd_hata, lower.tail = FALSE))
+}))
+rownames(tukey) <- c("A-B", "A-C", "B-C")
+tukey
+\end{lstlisting}
+
+\begin{outputguidebox}
+\textbf{Çözüm ve kontrol değerleri.} Genel ortalama 75,6667;
+$SS_{\text{grup}}=726{,}6667$, $SS_{\text{hata}}=990$ ve
+$MSE=36{,}6667$'dir. $F(2,27)=9{,}9091$, $p=0{,}0005927$,
+$\eta^2=0{,}4233$, $\omega^2=0{,}3726$ bulunur. Tukey aralıklarının
+yarı genişliği 6,7143'tür. A--B aralığı $[-11{,}7143;1{,}7143]$,
+A--C aralığı $[-18{,}7143;-5{,}2857]$, B--C aralığı
+$[-13{,}7143;-0{,}2857]$'dir. Son iki aralık sıfırı dışlar.
+\end{outputguidebox}
+
+\textbf{Yorum.} Klasik ANOVA ve bu Tukey karşılaştırmaları bağımsız
+gözlemler, grup içi yaklaşık normallik ve ortak hata varyansı modeline dayanır.
+Genel testin anlamlılığı, üç çiftin hepsinin farklı olduğunu söylemez.
+Ham veri bulunduğunda \texttt{aov(puan \textasciitilde{} grup, data = veri)}
+ve ardından \texttt{TukeyHSD} kullanılabilir; grup değişkeni faktör olmalıdır.
+
+\subsection*{Eşit olmayan varyanslarda ek çözüm}
+Bölümdeki Welch örneğinin özetleriyle aynı düzeltmeyi doğrudan hesaplayın.
+
+\begin{lstlisting}[style=prismR]
+hacim <- c(12, 20, 8)
+ortalama <- c(70, 76, 84)
+varyans <- c(3, 10, 5)^2
+grup_sayisi <- length(hacim)
+agirlik <- hacim / varyans
+pay <- agirlik / sum(agirlik)
+merkez <- sum(pay * ortalama)
+duzeltme <- sum((1 - pay)^2 / (hacim - 1))
+f_welch <- (sum(agirlik * (ortalama - merkez)^2) /
+  (grup_sayisi - 1)) /
+  (1 + 2 * (grup_sayisi - 2) * duzeltme /
+     (grup_sayisi^2 - 1))
+sd_payda <- (grup_sayisi^2 - 1) / (3 * duzeltme)
+c(F = f_welch, sd_pay = grup_sayisi - 1,
+  sd_payda = sd_payda,
+  p = pf(f_welch, grup_sayisi - 1, sd_payda,
+         lower.tail = FALSE))
+\end{lstlisting}
+
+\textbf{Çözüm.} Yaklaşık $F=25{,}3265$, pay serbestlik derecesi 2 ve
+payda serbestlik derecesi 18,1621 bulunur; $p=0{,}000005578$'dir. Ham veride
+\texttt{oneway.test(puan \textasciitilde{} grup, data = veri, var.equal = FALSE)}
+aynı yöntemi uygular. Klasik ANOVA'nın ortak MSE'siyle hesaplanan Tukey
+aralıklarını bu eşit olmayan varyans örneğine taşımayın.
+
+\textbf{Pekiştirme ve yanıt.} Klasik örnekte A--B farkı $-5$ olsa da
+aralık sıfırı içerir. Bu, iki yöntemin eşdeğer olduğunun kanıtı değildir;
+yüzde 5 aile düzeyinde fark gösterilemediğini söyler.

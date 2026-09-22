@@ -1,0 +1,799 @@
+\chapter{Varsayımlar ve Parametrik Olmayan Alternatifler}
+\index{parametrik olmayan yöntem}
+\index{varsayım kontrolü}
+
+\begin{hedefler}
+Bu bölümün sonunda okuyucu:
+\begin{itemize}
+  \item varsayım kontrolünü tek bir normallik testine indirgemeden araştırma tasarımıyla birlikte değerlendirebilecek,
+  \item parametrik olmayan yöntemlerin hedefini ve varsayımlarını açıklayabilecek,
+  \item bağımsız iki grup için Mann--Whitney testini uygulayıp doğru yorumlayabilecek,
+  \item eşleştirilmiş veride işaret testi ile Wilcoxon işaretli sıra testini ayırabilecek,
+  \item üç veya daha fazla bağımsız grup için Kruskal--Wallis testini ve düzeltilmiş takip analizlerini kullanabilecek,
+  \item kesin ve asimptotik $p$-değerleri ile bağlı sıraların rolünü tanıyabilecek,
+  \item sıra tabanlı sonuçları medyan farkı gibi aşırı yorumlamadan uygun etki büyüklüğüyle raporlayabilecek,
+  \item dönüşüm, sağlam yöntem, permütasyon ve bootstrap seçeneklerini araştırma hedefine göre karşılaştırabilecektir.
+\end{itemize}
+\end{hedefler}
+
+\begin{hazirlik}
+``Veri normal değilse her zaman parametrik olmayan test kullanılır'' önermesini
+örneklem hacmi, aykırı değer, bağımsızlık ve araştırmanın ortalama mı yoksa
+sıralama mı hedeflediği açısından değerlendirin.
+\end{hazirlik}
+
+\section{PDR vakası: Yardım aramaya hazır oluş puanları}
+
+Bir psikolojik danışma merkezi, iki bilgilendirme yönteminin öğrencilerin
+yardım aramaya hazır oluş düzeyiyle ilişkisini incelemektedir. Ölçüm 1 ile 10
+arasında sıralı bir derecelendirmedir. Yüz yüze bilgilendirme grubunun puanları
+\[
+7,8,6,9,7,8,10,6,9,8
+\]
+ve çevrim içi bilgilendirme grubunun puanları
+\[
+4,6,5,7,5,6,4,8,5,6
+\]
+olarak gözlenmiştir.
+
+Ölçek yalnız sıralı yorumlanabiliyorsa ortalama farkı yerine öğrencilerin
+göreli sıralarını karşılaştırmak daha uygun olabilir. Bununla birlikte
+``normal değil, o hâlde Mann--Whitney'' biçimindeki otomatik karar yeterli
+değildir. Önce şu sorular sorulmalıdır:
+
+\begin{enumerate}
+  \item Gruplar gerçekten bağımsız mıdır?
+  \item Puanların büyüklükleri mi, sıraları mı bilimsel olarak anlamlıdır?
+  \item Dağılımların biçimleri benzer midir?
+  \item Çok sayıda eşit puan, yani bağlı sıra var mıdır?
+  \item Araştırma hedefi dağılım, konum, medyan veya üstünlük olasılığından hangisidir?
+\end{enumerate}
+
+Bu bölümde parametrik olmayan testler, ``kolay yedek yöntem'' olarak değil,
+belirli hedef büyüklüklere ve varsayımlara sahip istatistiksel araçlar olarak
+ele alınacaktır.
+
+\begin{researchbox}
+Hazır oluş puanı sıralı olsa bile kategoriler arası psikolojik mesafe eşit
+olmayabilir. 3'ten 4'e geçiş ile 8'den 9'a geçiş aynı değişimi temsil etmiyorsa
+ortalama farkının yorumu tartışmalıdır. Yöntem seçimi yazılımın değişkeni
+``scale'' olarak işaretlemesine değil, ölçme kuramına dayanmalıdır.
+\end{researchbox}
+
+\section{Yöntem adı değil araştırma hedefi}
+\index{hedef büyüklük}
+\index{ölçme düzeyi}
+
+Parametrik ve parametrik olmayan yöntemler aynı sorunun her koşulda birbiriyle
+değiştirilebilir iki sürümü değildir. Hedefledikleri nicelikler farklı olabilir
+\cite{hollander2013,lehmann2006,wasserman2006}.
+
+\begin{table}[htbp]
+\centering
+\caption{Araştırma yapısı ve yaygın analiz seçenekleri.}
+\begin{tabular}{@{}p{0.27\textwidth}p{0.25\textwidth}p{0.29\textwidth}@{}}
+\toprule
+Araştırma yapısı & Ortalama temelli yöntem & Sıra veya işaret temelli seçenek \\
+\midrule
+Tek ya da eşleştirilmiş fark & Tek veya eşleştirilmiş $t$ testi & İşaret veya Wilcoxon testi \\
+İki bağımsız grup & Welch $t$ testi & Mann--Whitney testi \\
+Üçten fazla bağımsız grup & Welch/klasik ANOVA & Kruskal--Wallis testi \\
+İki değişkenin ilişkisi & Pearson korelasyonu & Spearman korelasyonu \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Araştırma sorusu ``ortalama kaç puan değişti?'' ise sıra testi doğrudan aynı
+hedefi sınamayabilir. Ağır çarpıklık durumunda ortalama için sağlam standart
+hata, permütasyon testi veya bootstrap güven aralığı hedefi daha iyi
+koruyabilir. Sıralama davranışı araştırma açısından anlamlıysa sıra tabanlı
+yöntem doğal seçimdir.
+
+\begin{mistakebox}
+Parametrik olmayan test ``varsayımsız test'' demek değildir. Bağımsızlık,
+eşleştirme yapısı, ölçme düzeyi, dağılım biçimi ve bağlı sıralar yine önemlidir.
+Yalnız normal dağılım varsayımı farklılaştırılmış olur.
+\end{mistakebox}
+
+\section{Varsayım kontrolünde dengeli yaklaşım}
+\index{varsayım kontrolü}
+\index{Shapiro--Wilk testi}
+\index{Q--Q grafiği}
+
+Bir yöntemin uygunluğu şu sırayla değerlendirilmelidir:
+
+\begin{enumerate}
+  \item Araştırma tasarımı ve analiz birimi doğru mu?
+  \item Hedef parametre veya karşılaştırma açık mı?
+  \item Ölçme düzeyi yapılan işlemleri destekliyor mu?
+  \item Grafiklerde çarpıklık, ağır kuyruk, kümelenme ve aykırı değer var mı?
+  \item Örneklem hacmi ve grup dengesi ne düzeyde?
+  \item Seçilen yöntemin sonuç yorumu araştırma sorusuyla uyumlu mu?
+\end{enumerate}
+
+Shapiro--Wilk gibi normallik testleri bu değerlendirmenin yalnız küçük bir
+parçasıdır. Büyük örneklemde önemsiz sapmalar düşük $p$-değeri, küçük örneklemde
+ciddi sapmalar yüksek $p$-değeri üretebilir. Histogram ve Q--Q grafiği de tek
+başına kesin karar vermez; örneklem büyüklüğü ve yöntemin sağlamlığıyla birlikte
+okunur.
+
+\begin{assumptionbox}
+Bağımsızlık ihlali dağılım dönüşümüyle veya sıra testine geçerek düzelmez.
+Aynı öğrencinin iki ölçümü, öğrencilerin sınıflar içinde kümelenmesi veya
+eşleştirilmiş çiftler tasarıma uygun yöntem gerektirir.
+\end{assumptionbox}
+
+\section{Parametrik yöntemler ne zaman sağlamdır?}
+\index{sağlamlık}
+\index{Welch t testi@Welch $t$ testi}
+
+$t$ testi ve ANOVA, özellikle gruplar dengeli ve örneklemler yeterince büyükse
+ılımlı normallik sapmalarına dayanıklı olabilir. Buna karşılık küçük örneklem,
+güçlü çarpıklık, ağır kuyruk ve etkili aykırı değer birlikte bulunduğunda
+ortalama ile standart hata kararsızlaşabilir.
+
+Varyans eşitsizliği normal olmama ile aynı sorun değildir. Bağımsız iki grupta
+Welch testi, çok grupta Welch ANOVA değişen varyansa doğrudan çözüm sunar.
+Yalnız Levene testi anlamlı diye sıra testine geçmek hedefi gereksiz biçimde
+değiştirebilir.
+
+\begin{sezgibox}
+Varsayım kontrolünün amacı ``parametrik testi geçmek'' değildir. Amaç,
+hesaplanan tahminin ve belirsizliğin araştırma sorusunu güvenilir biçimde
+temsil edip etmediğini anlamaktır.
+\end{sezgibox}
+
+\section{Sıralama mantığı ve bağlı sıralar}
+\index{sıra}
+\index{bağlı sıra}
+
+Sıra tabanlı yöntemlerde bütün gözlemler küçükten büyüğe dizilir. En küçük
+değere 1, sonraki değere 2 sırası verilir. Eşit değerler aynı sıraları
+paylaşır ve hak edecekleri sıraların ortalamasını alır.
+
+Örneğin sıralı değerler $2,4,4,7$ ise sıralar
+\[
+1,\ 2{,}5,\ 2{,}5,\ 4
+\]
+olur. Çok sayıda bağlı sıra test istatistiğinin varyansını etkiler; yazılımlar
+bağ düzeltmesi uygular. El hesabındaki basit formüller bağlı sıra yokmuş gibi
+kullanılmamalıdır.
+
+Sıralama uç değerlerin büyüklük etkisini azaltır. 20 yerine 200 gözlenmesi en
+büyük sıra konumunu değiştirmiyorsa sıra testi aynı veya benzer sonuç verebilir.
+Bu sağlamlık, değerler arasındaki mesafe bilgisinin kullanılmaması karşılığında
+elde edilir.
+
+\section{Mann--Whitney testi}
+\index{Mann--Whitney testi}
+\index{üstünlük olasılığı}
+\index{sıra-biserial korelasyon}
+
+Mann--Whitney testi iki bağımsız grubun gözlemlerini birlikte sıralar ve sıra
+toplamlarını karşılaştırır. Sıfır hipotezi genel biçimde iki grubun dağılımının
+aynı olmasıdır. Test istatistiği, gruplar arası bütün gözlem çiftlerindeki
+üstünlük sayısıyla ilişkilidir.
+
+Birinci gruptaki $X$, ikinci gruptaki $Y$ gözlemi için
+\[
+\theta=P(X>Y)+\frac12P(X=Y)
+\]
+olasılığı düşünülebilir. Sıfır altında $\theta=0{,}50$'dir. Bir grubun rastgele
+seçilen üyesinin diğer gruptakinden daha yüksek puan alma eğilimi testin doğal
+yorumlarından biridir.
+
+\subsection{Adım adım bağımsız grup örneği}
+
+Hazır oluş verisinde medyan ve çeyrekler şöyledir:
+
+\begin{table}[htbp]
+\centering
+\caption{İki bilgilendirme grubunun betimsel özetleri.}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Grup & $n$ & Medyan & $Q_1$--$Q_3$ \\
+\midrule
+Yüz yüze & 10 & 8,0 & 7,0--8,75 \\
+Çevrim içi & 10 & 5,5 & 5,0--6,0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Yazılımın birinci grup için verdiği istatistik $U=88{,}5$ ve iki yönlü
+$p=0{,}004$'tür. $U$'nun hangi grup için ve büyük ya da küçük sürüm olarak
+raporlandığı yazılıma göre değişebilir; $p$-değeri ve grup sıralarıyla birlikte
+okunmalıdır.
+
+Üstünlük olasılığı tahmini
+\[
+\hat\theta=\frac{U}{n_1n_2}
+=\frac{88{,}5}{100}=0{,}885
+\]
+olur. Bağların yarısı paylaştırıldığında yüz yüze gruptan rastgele seçilen bir
+öğrencinin çevrim içi gruptakinden daha yüksek hazır oluş puanı alma olasılığı
+yaklaşık yüzde 88,5'tir.
+
+Sıra-biserial etki büyüklüğü
+\[
+r_{rb}=2\hat\theta-1=0{,}77
+\]
+olarak hesaplanabilir. İşaret grup sırasına bağlıdır; kullanılan yön açıkça
+belirtilmelidir.
+
+\begin{mistakebox}
+Mann--Whitney testi her durumda ``iki medyan eşit mi?'' testi değildir.
+Dağılım biçimleri ve yayılımları farklıysa anlamlı sonuç konum, yayılım veya
+genel dağılım farkından kaynaklanabilir. Medyan farkı yorumu benzer dağılım
+biçimi gibi ek koşullar gerektirir.
+\end{mistakebox}
+
+\section{Mann--Whitney için koşullar ve grafikler}
+
+Mann--Whitney testinde:
+
+\begin{itemize}
+  \item iki grup birbirinden bağımsızdır,
+  \item gözlemler grup içinde bağımsızdır,
+  \item sonuç en az sıralı ölçektedir,
+  \item üstünlük yorumu için gözlemler ortak bir anlamlı sıralamada karşılaştırılabilir,
+  \item yalnız konum veya medyan farkı yorumu yapılacaksa dağılım biçimleri yeterince benzerdir.
+\end{itemize}
+
+Yan yana kutu, nokta veya violin grafikleri yalnız medyanı değil yayılımı,
+çarpıklığı ve bağlı puanları da göstermelidir. Aynı medyana sahip iki grup çok
+farklı dağılımlar nedeniyle anlamlı Mann--Whitney sonucu verebilir.
+
+\section{İşaret testi}
+\index{işaret testi}
+\index{binom testi}
+
+Tek örneklem veya eşleştirilmiş veride işaret testi yalnız farkların yönünü
+kullanır. Sıfır farklar analizden çıkarıldıktan sonra pozitif fark sayısı,
+$H_0$ altında başarı olasılığı 0,5 olan binom dağılımıyla karşılaştırılır.
+
+On iki öğrencinin son-test eksi ön-test farkları
+\[
+-4,-1,-4,-2,-3,-1,-3,-4,1,-5,-2,-4
+\]
+olsun. On bir negatif ve bir pozitif fark vardır. İki yönlü kesin işaret testi
+$p\approx0{,}006$ verir.
+
+İşaret testi fark büyüklüklerini kullanmadığı için aykırı büyüklüklere çok
+dayanıklıdır; ancak bilgi kaybı nedeniyle Wilcoxon testinden daha düşük güce
+sahip olabilir. Doğal hedef eşleştirilmiş farkların medyanı veya pozitif fark
+olasılığıdır.
+
+\section{Wilcoxon işaretli sıra testi}
+\index{Wilcoxon işaretli sıra testi}
+\index{fark dağılımı!simetri}
+
+Wilcoxon testi sıfır olmayan farkların mutlak değerlerini sıralar, sonra
+sıralara fark işaretlerini geri verir. Pozitif ve negatif sıra toplamları
+karşılaştırılır. Sıfır hipotezi, fark dağılımının sıfır çevresinde simetrik
+olmasıdır.
+
+Örnekte fark medyanı $-3$'tür. Pozitif sıra toplamı 2, negatif sıra toplamı
+76 ve yazılımın küçük toplam olarak verdiği istatistik $W=2$'dir. İki yönlü
+kesin sonuç
+\[
+p=0{,}002
+\]
+olarak bulunur. Son-test puanları çoğunlukla ön-testten düşüktür.
+
+Eşleştirilmiş sıra-biserial etki büyüklüğü
+\[
+r_{rb}=\frac{W_+-W_-}{W_++W_-}
+=\frac{2-76}{78}\approx-0{,}949
+\]
+olur. Negatif yön, farkın ``sonra eksi önce'' tanımına bağlıdır.
+
+\begin{mistakebox}
+Wilcoxon testi farkların normal olmasını gerektirmez; ancak konum değişimi
+yorumu için fark dağılımının yaklaşık simetrik olması önemlidir. Güçlü
+asimetrik farklarda işaret testi veya başka sağlam yöntem daha uygun olabilir.
+\end{mistakebox}
+
+\section{Sıfır farklar ve yazılım seçenekleri}
+\index{sıfır fark}
+\index{Pratt yöntemi}
+
+Eşleştirilmiş ölçümler aynıysa fark sıfırdır. Klasik Wilcoxon uygulaması sıfır
+farkları çıkarabilir; Pratt gibi yaklaşımlar sıralama sürecinde farklı biçimde
+ele alır. Yazılımın varsayılanı sonuçları, özellikle küçük örneklemde,
+değiştirebilir.
+
+Rapor geçerli çift sayısını, sıfır fark sayısını, kesin veya asimptotik
+$p$-değerini ve kullanılan yöntemi belirtmelidir. Çok sayıda sıfır fark,
+ölçeğin değişime duyarlılığı veya taban--tavan etkisi hakkında da bilgi verir.
+
+\section{Kruskal--Wallis testi}
+\index{Kruskal--Wallis testi}
+\index{sıra ortalaması}
+
+Kruskal--Wallis testi üç veya daha fazla bağımsız grubun ortak sıra
+dağılımını karşılaştırır. Bütün gözlemler birlikte sıralanır ve grup sıra
+ortalamalarının genel sıra ortalamasından uzaklığı ölçülür.
+
+Bağ düzeltmesi bulunmayan temel istatistik
+\[
+H=\frac{12}{N(N+1)}
+\sum_{j=1}^k\frac{R_j^2}{n_j}-3(N+1)
+\]
+biçimindedir. Burada $R_j$ grup sıra toplamıdır. Büyük örneklemde $H$ yaklaşık
+$k-1$ serbestlik dereceli ki-kare dağılımıyla karşılaştırılır.
+
+\subsection{Üç program örneği}
+
+Üç bağımsız program grubunun 1--10 arası hazır oluş puanlarında medyanlar
+sırasıyla 8, 6 ve 4,5 olsun. Test sonucu
+\[
+H(2)=21{,}91,
+\qquad p<0{,}001
+\]
+olarak bulunur. En az bir grubun sıra dağılımı farklıdır; hangi grupların
+farklı olduğu henüz bilinmez.
+
+Kruskal--Wallis için epsilon-kare etki büyüklüğünün bir sürümü
+\[
+\varepsilon^2=\frac{H-k+1}{N-k}
+\]
+olup bu örnekte
+\[
+\varepsilon^2
+=\frac{21{,}91-3+1}{30-3}
+\approx0{,}737
+\]
+bulunur. Ölçü örneklemde güçlü sıra ayrışmasına işaret eder; evrensel eşik
+yerine bağlam ve güven aralığı tercih edilmelidir.
+
+\section{Genel testten sonra ikili karşılaştırmalar}
+\index{Dunn testi}
+\index{Holm düzeltmesi}
+
+Anlamlı Kruskal--Wallis sonucu farkın yerini göstermez. Dunn testi veya ikili
+Mann--Whitney testleri çoklu karşılaştırma düzeltmesiyle kullanılabilir.
+Örnekte ham ikili $p$-değerleri yaklaşık 0,0010, 0,0002 ve 0,0029'dur. Holm
+düzeltmesinden sonra üç fark da yüzde 5 aile düzeyinde belirgin kalmaktadır.
+
+Yalnız genel test anlamlı diye düzeltmesiz bütün ikilileri sınamak yanlış
+pozitif oranını yükseltir. Karşılaştırmalar veri görülmeden önce planlanmışsa
+hedefli kontrast yaklaşımı daha verimli olabilir.
+
+\begin{mistakebox}
+Bir çiftin anlamlı, diğerinin anlamsız olması bu iki etkinin birbirinden
+anlamlı biçimde farklı olduğunu kanıtlamaz. Her hedef farkın doğrudan tahmini
+ve düzeltilmiş karşılaştırması incelenmelidir.
+\end{mistakebox}
+
+\section{Kesin ve asimptotik p-değerleri}
+\index{kesin p-değeri}
+\index{asimptotik p-değeri}
+\index{Monte Carlo yöntemi}
+
+Küçük örneklemde test istatistiğinin olası bütün değerleri sayılarak kesin
+$p$-değeri hesaplanabilir. Büyük örneklemde normal veya ki-kare yaklaşımıyla
+asimptotik sonuç elde edilir. Bağlı sıralar ve sıfır farklar kesin dağılımı
+karmaşıklaştırabilir; yazılım koşullu kesin, Monte Carlo veya düzeltilmiş
+asimptotik yöntem kullanabilir.
+
+Kesin ve asimptotik sonuçlar küçük farklılık gösterebilir. Araştırmacı yalnız
+daha düşük olanı seçmemeli; örneklem yapısına uygun yöntemi önceden belirleyip
+raporlamalıdır.
+
+\section{Etki büyüklüğü ve güven aralığı}
+\index{epsilon-kare@$\varepsilon^2$}
+\index{Hodges--Lehmann tahmini}
+
+Parametrik olmayan testte $p$-değeri örneklem büyüklüğünden etkilenir. Etki
+büyüklüğü ilişkinin derecesini görünür kılar. Yaygın seçenekler:
+
+\begin{itemize}
+  \item Mann--Whitney için üstünlük olasılığı, Cliff deltası veya sıra-biserial korelasyon,
+  \item Wilcoxon için eşleştirilmiş sıra-biserial korelasyon,
+  \item Kruskal--Wallis için epsilon-kare,
+  \item medyan ya da konum farkı için Hodges--Lehmann tahmini ve güven aralığı.
+\end{itemize}
+
+Sıra-biserial korelasyon Pearson korelasyonuyla aynı bilimsel nicelik değildir;
+yalnız ölçeği $-1$ ile 1 arasındadır. Etki ölçüsünün adı ve yön tanımı açıkça
+verilmelidir.
+
+\section{Parametrik ve parametrik olmayan sonuçlar farklıysa}
+
+İki yöntem farklı hedefleri ve veri özelliklerini ağırlıklandırdığı için
+farklı sonuç verebilir. Olası nedenler:
+
+\begin{itemize}
+  \item aykırı değerlerin ortalamayı güçlü etkilemesi,
+  \item grupların farklı yayılım veya biçime sahip olması,
+  \item sıra testinin değerler arasındaki mesafeyi kullanmaması,
+  \item küçük örneklem ve düşük güç,
+  \item bağlı sıralar veya tavan--taban etkileri.
+\end{itemize}
+
+Araştırmacı istenen sonucu veren testi seçmemelidir. Ana hedef ve yöntem
+önceden belirlenmeli; alternatif analiz duyarlılık incelemesi olarak ve neden
+farklılaştığı açıklanarak sunulmalıdır.
+
+\section{Dönüşüm, sağlam yöntem, permütasyon ve bootstrap}
+\index{dönüşüm}
+\index{sağlam yöntem}
+\index{permütasyon testi}
+\index{bootstrap}
+
+Sıra testine geçmek tek seçenek değildir.
+
+\begin{description}
+  \item[Dönüşüm] Sağa çarpık sürelerde logaritma gibi dönüşüm model yapısını iyileştirebilir; yorum dönüştürülmüş ölçektedir.
+  \item[Sağlam yöntem] Kırpılmış ortalama ve sağlam standart hatalar aykırı değer etkisini azaltabilir.
+  \item[Permütasyon] Grup etiketlerinin değiştirilebilirliği altında hedef istatistiğin sıfır dağılımını üretir.
+  \item[Bootstrap] Gözlenen örneklemden yeniden örnekleyerek tahminin belirsizliğini değerlendirir.
+\end{description}
+
+Permütasyon ve bootstrap ``varsayımsız'' değildir. Değiştirilebilirlik,
+bağımsızlık ve örneklemin hedef evreni temsil etmesi gibi koşullar sürer.
+Kötü örnekleme tasarımı yeniden örneklemeyle düzelmez
+\cite{efron1993,wasserman2006}.
+
+\begin{researchbox}
+PDR araştırmasında yöntem seçimi yalnız istatistiksel uygunluk değildir.
+Medyan değişim, öğrencilerin çoğunun yönü, klinik eşik aşımı veya ortalama
+puan değişimi farklı hizmet sorularını yanıtlar. Önce kararın hangi niceliğe
+dayanacağı belirlenmelidir.
+\end{researchbox}
+
+\section{Aykırı değerleri silmek yerine anlamak}
+
+Parametrik olmayan teste geçmek aykırı gözlemi araştırma sorumluluğunu ortadan
+kaldırmaz. Uç değer veri girişi hatası, farklı bir alt grup veya gerçek ve
+önemli bir danışan durumu olabilir. İnceleme sırası:
+
+\begin{enumerate}
+  \item özgün kayıt ve ölçü birimi doğrulanır,
+  \item katılımcının uygunluk ölçütleri kontrol edilir,
+  \item sonuç ortalama, medyan ve sıra yöntemleriyle karşılaştırılır,
+  \item silme kararı sonuçtan bağımsız gerekçelendirilir,
+  \item duyarlılık sonuçları şeffaf biçimde raporlanır.
+\end{enumerate}
+
+\section{Python ile parametrik olmayan testler}
+
+\begin{lstlisting}
+import numpy as np
+from scipy import stats
+
+# Iki bagimsiz grup
+yuz_yuze = np.array([7,8,6,9,7,8,10,6,9,8])
+cevrim_ici = np.array([4,6,5,7,5,6,4,8,5,6])
+mw = stats.mannwhitneyu(
+    yuz_yuze, cevrim_ici, alternative="two-sided"
+)
+ustunluk = mw.statistic / (len(yuz_yuze) * len(cevrim_ici))
+rank_biserial = 2 * ustunluk - 1
+
+# Eslestirilmis farklar
+fark = np.array([-4,-1,-4,-2,-3,-1,-3,-4,1,-5,-2,-4])
+wilcoxon = stats.wilcoxon(fark, alternative="two-sided")
+isaret = stats.binomtest(
+    k=(fark > 0).sum(), n=(fark != 0).sum(), p=0.5
+)
+
+# Uc bagimsiz grup
+A = np.array([8,9,7,8,10,9,8,7,9,8])
+B = np.array([6,7,5,8,6,7,6,5,7,6])
+C = np.array([4,5,6,3,5,4,6,4,5,3])
+kw = stats.kruskal(A, B, C)
+epsilon2 = (kw.statistic - 3 + 1) / (30 - 3)
+
+print("Mann-Whitney:", mw)
+print("Ustunluk ve sıra-biserial:", ustunluk, rank_biserial)
+print("Wilcoxon:", wilcoxon)
+print("Isaret testi:", isaret)
+print("Kruskal-Wallis:", kw)
+print("Epsilon-kare:", epsilon2)
+\end{lstlisting}
+
+Yazılım sürümüne göre kesin ve asimptotik yöntemin varsayılanı değişebilir.
+Bağlı sıralar, sıfır farklar ve alternatif hipotez seçeneği kontrol edilmelidir.
+İkili Kruskal--Wallis takipleri için düzeltilmiş $p$-değerleri ayrıca
+hesaplanmalıdır.
+
+\section{SPSS ile uygulama ve çıktı okuma}
+
+\begin{enumerate}
+  \item Bağımsız gruplar için \textbf{Analyze $>$ Nonparametric Tests $>$ Independent Samples} yolunu izleyin.
+  \item Eşleştirilmiş ölçümler için \textbf{Related Samples} bölümünde Wilcoxon veya işaret testini seçin.
+  \item Üç veya daha fazla bağımsız grup için Kruskal--Wallis testini ve gerekiyorsa ikili karşılaştırmaları etkinleştirin.
+  \item Değişkenlerin grup kodlarını, ölçüm çiftlerini ve kategori sırasını doğrulayın.
+  \item Exact veya Monte Carlo seçeneği kullanıldıysa yöntemi ve rassal ayarları kaydedin.
+  \item Test istatistiği yanında grup medyanları, IQR, sıra ortalamaları ve etki büyüklüğünü raporlayın.
+\end{enumerate}
+
+\begin{outputguidebox}
+Çıktıyı şu sırayla okuyun: (1) testin veri yapısına uygunluğu, (2) geçerli grup
+veya çift sayıları, (3) medyan, IQR ve grafikler, (4) sıra toplamları veya sıra
+ortalamaları, (5) test istatistiği, kesin/asimptotik yöntem ve $p$-değeri,
+(6) uygun etki büyüklüğü, (7) genel testten sonra düzeltilmiş karşılaştırmalar.
+Yalnız ``Sig.'' hücresini raporlamayın.
+\end{outputguidebox}
+
+\section{Üç raporlama örneği}
+
+\subsection*{Mann--Whitney}
+
+``Yardım aramaya hazır oluş puanı yüz yüze grupta daha yüksektir
+($Md=8{,}0$, $IQR=7{,}0$--$8{,}75$) ve çevrim içi grupta daha düşüktür
+($Md=5{,}5$, $IQR=5{,}0$--$6{,}0$), $U=88{,}5$, $p=0{,}004$.
+Üstünlük olasılığı 0,885 ve sıra-biserial etki $r_{rb}=0{,}77$'dir.''
+
+\subsection*{Wilcoxon}
+
+``Son-test eksi ön-test farklarının medyanı $-3$ puandır. Son-test puanları
+çoğunlukla daha düşüktür, $W=2$, kesin $p=0{,}002$,
+$r_{rb}=-0{,}949$. Fark yönü sonra eksi önce olarak tanımlanmıştır.''
+
+\subsection*{Kruskal--Wallis}
+
+``Üç programın hazır oluş sıra dağılımları farklıdır,
+$H(2)=21{,}91$, $p<0{,}001$, $\varepsilon^2=0{,}737$. Holm düzeltmeli ikili
+karşılaştırmalar bütün grup çiftlerinde fark göstermiştir. Medyan ve IQR
+değerleri her grup için ayrıca sunulmuştur.''
+
+Bu ifadeler nedensellik iddiası taşımaz. Gruplara rastgele atama yapılmadıysa
+gözlenen sıra farkları başlangıç özellikleriyle açıklanabilir.
+
+\section{Bir parametrik olmayan analizi değerlendirirken}
+
+\begin{enumerate}
+  \item Test araştırma hedefi ve veri yapısıyla mı, yalnız normallik $p$-değeriyle mi seçilmiş?
+  \item Bağımsız veya eşleştirilmiş yapı doğru tanımlanmış mı?
+  \item Grafikler dağılım biçimi, yayılım ve aykırı değerleri gösteriyor mu?
+  \item Mann--Whitney sonucu gerekçesiz biçimde medyan farkı olarak mı yorumlanmış?
+  \item Wilcoxon için farkların simetrisi, sıfırlar ve bağlı sıralar incelenmiş mi?
+  \item Kruskal--Wallis sonrası karşılaştırmalar çoklu test için düzeltilmiş mi?
+  \item Kesin veya asimptotik yöntemin hangisi olduğu belirtilmiş mi?
+  \item Etki büyüklüğü, medyan ve IQR $p$-değeriyle birlikte verilmiş mi?
+  \item Alternatif analizler istenen sonucu seçmek için mi kullanılmış?
+\end{enumerate}
+
+\section{Literatür veri setiyle IBM SPSS laboratuvarı}
+\index{PlantGrowth veri seti}
+\index{SPSS!Kruskal--Wallis testi}
+\index{Dunn--Bonferroni karşılaştırması}
+\index{epsilon-kare@$\varepsilon^2$!SPSS uygulaması}
+
+Bu laboratuvarda R'nin \texttt{datasets} paketinde bulunan klasik
+\emph{PlantGrowth} verisi kullanılacaktır \cite{dobson1983}. Veri seti,
+kontrol koşulu ile iki farklı uygulama koşulunda yetiştirilen bitkilerin kuru
+ağırlıklarını içerir. Her grupta 10 olmak üzere toplam 30 bağımsız gözlem
+vardır. Özgün değişken adları \texttt{weight} ve \texttt{group} korunmuştur.
+
+Uygulamanın araştırma sorusu ``Üç koşuldaki kuru ağırlıkların sıra dağılımları
+aynı mıdır?'' biçimindedir. Hipotezler
+\[
+H_0:\text{üç grubun kuru ağırlık dağılımları aynıdır},
+\]
+\[
+H_1:\text{en az bir grubun dağılımı farklıdır}
+\]
+olarak kurulacaktır. Grupların yalnız konum bakımından karşılaştırıldığı bir
+yorum yapılacaksa dağılım biçimlerinin de yeterince benzer olduğu grafiklerle
+değerlendirilmelidir.
+
+\begin{researchbox}
+Bu veri PDR alanından değil, istatistik öğretiminde kullanılan deneysel bir
+örnektir. Buradaki amaç bağlamlar arasında bilimsel genelleme yapmak değil;
+bağımsız üç grubun sıra temelli karşılaştırmasını gerçek ve yayımlanmış küçük
+bir veri seti üzerinde yeniden üretmektir. Bitki kuru ağırlığı yerine PDR
+araştırmasında sıralı hazır oluş, memnuniyet veya belirgin biçimde çarpık bir
+süre değişkeni aynı analiz yapısına sahip olabilir.
+\end{researchbox}
+
+\subsection{Verinin SPSS'e girilmesi}
+
+Aşağıdaki syntax 30 gözlemi uzun veri biçiminde oluşturur. Her satır tek bir
+bitkiyi, \texttt{group} değişkeni ise kontrol, tedavi 1 veya tedavi 2 koşulunu
+gösterir.
+
+\begin{lstlisting}[language={}]
+DATA LIST LIST /weight (F4.2) group (F1.0).
+BEGIN DATA
+4.17 1
+5.58 1
+5.18 1
+6.11 1
+4.50 1
+4.61 1
+5.17 1
+4.53 1
+5.33 1
+5.14 1
+4.81 2
+4.17 2
+4.41 2
+3.59 2
+5.87 2
+3.83 2
+6.03 2
+4.89 2
+4.32 2
+4.69 2
+6.31 3
+5.12 3
+5.54 3
+5.50 3
+5.37 3
+5.29 3
+4.92 3
+6.15 3
+5.80 3
+5.26 3
+END DATA.
+
+DATASET NAME PlantGrowth WINDOW=FRONT.
+VARIABLE LABELS
+ weight 'Bitkinin kuru ağırlığı'
+ group  'Deney koşulu'.
+VALUE LABELS group
+ 1 'Kontrol' 2 'Tedavi 1' 3 'Tedavi 2'.
+VARIABLE LEVEL weight (SCALE) group (NOMINAL).
+EXECUTE.
+\end{lstlisting}
+
+\subsection{Betimsel inceleme ve genel test}
+
+Önce grup büyüklükleri, medyanlar ve kutu grafikleri incelenir. Ardından
+Kruskal--Wallis testi yürütülür. İlk komut eski diyaloglarla uyumlu genel
+testi; ikinci komut yeni parametrik olmayan testler yordamında Bonferroni
+düzeltmeli Dunn ikili karşılaştırmalarını üretir.
+
+\begin{lstlisting}[language={}]
+EXAMINE VARIABLES=weight BY group
+ /PLOT BOXPLOT
+ /STATISTICS DESCRIPTIVES
+ /PERCENTILES(25,50,75)
+ /MISSING LISTWISE
+ /NOTOTAL.
+
+NPAR TESTS
+ /K-W=weight BY group(1 3)
+ /MISSING ANALYSIS.
+
+NPTESTS
+ /INDEPENDENT TEST (weight) GROUP (group)
+  KRUSKAL_WALLIS(COMPARE=PAIRWISE)
+ /MISSING SCOPE=ANALYSIS USERMISSING=EXCLUDE
+ /CRITERIA ALPHA=0.05 CILEVEL=95.
+\end{lstlisting}
+
+Menüyle çalışmak için \textbf{Analyze $>$ Nonparametric Tests $>$ Independent
+Samples} yolu izlenir. \textbf{Fields} sekmesinde \texttt{weight} test,
+\texttt{group} grup değişkeni olarak tanımlanır. \textbf{Settings} altında
+testler özelleştirilerek Kruskal--Wallis ve bütün ikili karşılaştırmalar
+seçilir. SPSS sürümüne göre karşılaştırma ayarlarının adı ve çıktının görünümü
+değişebileceğinden üretilen syntax analiz dosyasıyla birlikte saklanmalıdır.
+
+\subsection{Grup özetleri ve sıra ortalamaları}
+
+\begin{table}[htbp]
+\centering
+\caption{PlantGrowth gruplarının betimsel ve sıra temelli özetleri.}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Grup & $n$ & Medyan & Ortalama & Sıra ortalaması \\
+\midrule
+Kontrol & 10 & 5,155 & 5,032 & 14,75 \\
+Tedavi 1 & 10 & 4,550 & 4,661 & 10,35 \\
+Tedavi 2 & 10 & 5,435 & 5,526 & 21,40 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Örneklemde en düşük medyan ve sıra ortalaması tedavi 1, en yüksek değerler
+tedavi 2 grubundadır. Kontrol grubu ikisinin arasında yer alır. Bununla
+birlikte bu sıralama tek başına evren dağılımlarının farklı olduğunu
+göstermez; grup içi örtüşme genel testte dikkate alınmalıdır.
+
+Kutu grafiklerinde yalnız merkez değil, yayılım ve dağılım biçimi de
+karşılaştırılır. Örneklem küçük olduğundan grafiklerdeki benzerlik veya
+farklılık kesin bir varsayım kanıtı olarak değil, test sonucunun hangi tür
+dağılım ayrışmasını temsil ettiğini anlamaya yardımcı bilgi olarak kullanılır.
+
+\subsection{Kruskal--Wallis çıktısının analizi}
+
+SPSS çıktısında Kruskal--Wallis istatistiği
+\[
+H(2)=7{,}988,
+\qquad p=0{,}018
+\]
+olarak bulunur. Yüzde 5 anlamlılık düzeyinde üç grubun ortak sıra dağılımının
+aynı olduğu hipoteze karşı kanıt vardır. Sonuç bütün grup çiftlerinin farklı
+olduğunu göstermez; farkın yeri düzeltilmiş ikili karşılaştırmalarla
+incelenmelidir.
+
+Bu uygulamada epsilon-kare
+\[
+\varepsilon^2
+=\frac{H-k+1}{N-k}
+=\frac{7{,}988-3+1}{30-3}
+\approx0{,}222
+\]
+olarak hesaplanır. Bu değer örneklemde gruplar arasında dikkate değer bir sıra
+ayrışması bulunduğunu gösterir; evrensel ``küçük--orta--büyük'' eşikleriyle
+mekanik biçimde sınıflandırılmamalıdır.
+
+\subsection{Dunn--Bonferroni ikili karşılaştırmaları}
+
+\begin{table}[htbp]
+\centering
+\caption{Kruskal--Wallis sonrası Dunn ikili karşılaştırmaları.}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Karşılaştırma & Sıra ortalaması farkı & Ham $p$ & Düzeltilmiş $p$ \\
+\midrule
+Kontrol--Tedavi 1 & 4,40 & 0,264 & 0,791 \\
+Kontrol--Tedavi 2 & $-6{,}65$ & 0,091 & 0,273 \\
+Tedavi 1--Tedavi 2 & $-11{,}05$ & 0,005 & 0,015 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Bonferroni düzeltmesinden sonra yalnız tedavi 1 ile tedavi 2 arasındaki
+karşılaştırma yüzde 5 düzeyinde belirgindir. Negatif sıra farkı, tablo yönü
+``tedavi 1 eksi tedavi 2'' olduğu için tedavi 1 grubunun daha düşük sıralara
+sahip olduğunu gösterir. Kontrol grubunun iki tedavi grubuyla ayrı ayrı
+karşılaştırmalarında yeterli kanıt bulunmamıştır.
+
+\begin{mistakebox}
+Genel $p=0{,}018$ sonucu üç grubun da birbirinden farklı olduğu anlamına
+gelmez. Ayrıca medyanların 4,55, 5,16 ve 5,44 olması Kruskal--Wallis testinin
+doğrudan bu üç medyanı sınadığı anlamına gelmez. Test bütün sıra dağılımlarını
+kullanır; yalnız konum farkı yorumu dağılım biçimlerinin benzerliğiyle
+desteklenmelidir.
+\end{mistakebox}
+
+\begin{outputguidebox}
+Çıktıyı şu sırayla okuyun: (1) bağımsız grup yapısı, (2) her grubun geçerli
+$n$ değeri, medyanı ve kutu grafiği, (3) sıra ortalamaları, (4) genel
+Kruskal--Wallis $H$, serbestlik derecesi ve $p$-değeri, (5) epsilon-kare,
+(6) yalnız genel sonuç destekliyorsa düzeltilmiş ikili karşılaştırmalar,
+(7) karşılaştırma yönü ve dağılım biçimleri. Ham ikili $p$-değerlerini çoklu
+test düzeltmesi yapılmadan raporlamayın.
+\end{outputguidebox}
+
+\subsection{Örnek bulgu paragrafı}
+
+``Bitki kuru ağırlıklarının sıra dağılımları kontrol ($Md=5{,}16$), tedavi 1
+($Md=4{,}55$) ve tedavi 2 ($Md=5{,}44$) gruplarında farklılık göstermiştir,
+$H(2)=7{,}99$, $p=0{,}018$, $\varepsilon^2=0{,}222$. Bonferroni düzeltmeli
+Dunn karşılaştırmalarında tedavi 2 grubunun sıraları tedavi 1 grubundan daha
+yüksektir ($p_{\text{düz.}}=0{,}015$). Kontrol--tedavi 1
+($p_{\text{düz.}}=0{,}791$) ve kontrol--tedavi 2
+($p_{\text{düz.}}=0{,}273$)
+karşılaştırmaları belirgin değildir. Sonuç bütün medyanların birbirinden
+farklı olduğu biçiminde yorumlanmamıştır.''
+
+\input{chapter-exercises/13-nonparametrik}
+
+\bolumkaynaklari{\cite{conover1999,hollander2013,lehmann2006,wasserman2006,efron1993,dobson1983}}
+
+\section*{Hatırla--Uygula--Yansıt}
+
+\begin{enumerate}
+\renewcommand{\labelenumi}{\textbf{\Alph{enumi}.}}
+  \item \textbf{Hatırla:} Parametrik olmayan yöntemlerin de gerektirdiği dört koşul yazın.
+  \item \textbf{Seç:} İki bağımsız sıralı grup, aynı kişilerin iki ölçümü ve üç bağımsız grup için uygun testleri belirleyin.
+  \item \textbf{Sırala:} $2,4,4,7,9$ değerlerine bağlı sıraları dikkate alarak sıra verin.
+  \item \textbf{Yorumla:} Mann--Whitney için üstünlük olasılığı 0,70 ne anlama gelir?
+  \item \textbf{Eleştir:} Mann--Whitney testini her zaman medyan testi saymanın sorununu açıklayın.
+  \item \textbf{Ayır:} İşaret testi ile Wilcoxon testinin kullandığı bilgileri ve varsayımları karşılaştırın.
+  \item \textbf{Yön:} Fark ``sonra eksi önce'' ve sıra-biserial etki negatifse sonucu yorumlayın.
+  \item \textbf{Genel test:} Anlamlı Kruskal--Wallis sonucunun hangi grupların farklı olduğunu neden göstermediğini açıklayın.
+  \item \textbf{Etki:} $H=12$, $k=3$, $N=36$ için epsilon-kareyi hesaplayın.
+  \item \textbf{Kesinlik:} Kesin ve asimptotik $p$-değerlerinin neden farklılaşabileceğini belirtin.
+  \item \textbf{Varsayım:} Bağımsızlık ihlalinin neden sıra testine geçerek çözülmediğini açıklayın.
+  \item \textbf{Alternatif:} Ortalama farkı hedefleniyorsa sıra testi dışında üç sağlam yaklaşım önerin.
+  \item \textbf{Uygula:} Python verisine aykırı bir değer ekleyerek Welch ve Mann--Whitney sonuçlarını karşılaştırın.
+  \item \textbf{Çoklu test:} Kruskal--Wallis sonrası altı ikili karşılaştırmanın neden düzeltme gerektirdiğini açıklayın.
+  \item \textbf{Raporla:} Betimsel özet, test istatistiği, yöntem türü, $p$-değeri, etki büyüklüğü ve yorum sınırı içeren paragraf yazın.
+\end{enumerate}

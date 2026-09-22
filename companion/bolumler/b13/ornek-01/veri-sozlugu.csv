@@ -1,0 +1,3 @@
+degisken,aciklama,veri_turu,birim,gecerli_degerler,eksik_deger_kurali
+saat,Ayni satirdaki ogrencinin calisma suresi,Sayisal,Saat,Sonlu ve negatif olmayan sayi,Eksik kabul edilmez
+puan,Ayni satirdaki ogrencinin son test puani,Sayisal,Puan,Sonlu sayi; bu pilot puan araligi siniri dayatmaz,Eksik kabul edilmez

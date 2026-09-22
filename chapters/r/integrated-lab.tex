@@ -1,0 +1,53 @@
+\section{R ile bütünleştirici analiz akışı}
+\label{sec:r-integrated-lab}
+
+\textbf{Soru.} Küçük öğretim verisinde veri denetimi, betimsel özet,
+eşleştirilmiş değişim, bağımsız grup karşılaştırması, korelasyon ve başlangıç
+puanı ayarlı modeli tek bir R akışında üretin.
+
+\begin{lstlisting}[style=prismR]
+veri <- data.frame(
+  id = 1:12,
+  grup = factor(rep(c("A", "B"), each = 6)),
+  on = c(40,45,50,55,60,65, 42,47,52,57,62,67),
+  son = c(46,49,55,62,63,71, 43,47,54,58,61,67)
+)
+stopifnot(anyDuplicated(veri$id) == 0)
+stopifnot(all(complete.cases(veri)))
+veri$degisim <- veri$son - veri$on
+
+summary(veri)
+aggregate(cbind(on, son, degisim) ~ grup,
+          data = veri, FUN = mean)
+
+t.test(veri$son, veri$on, paired = TRUE)
+t.test(son ~ grup, data = veri, var.equal = FALSE)
+cor.test(veri$on, veri$son)
+
+ayarlanmis <- lm(son ~ on + grup, data = veri)
+summary(ayarlanmis)
+confint(ayarlanmis)
+plot(ayarlanmis)
+
+write.csv(veri, "analiz-verisi.csv", row.names = FALSE)
+capture.output(sessionInfo(), file = "session-info.txt")
+\end{lstlisting}
+
+\begin{outputguidebox}
+\textbf{Çözüm ve kontrol değerleri.} Ortalama değişim 2,833 puandır;
+eşleştirilmiş test $t(11)=3{,}602$, $p=0{,}00415$ verir. Son-test için
+Welch grup karşılaştırması $t\approx0{,}504$, $p\approx0{,}626$'dır.
+Ön-test ile son-test korelasyonu $r=0{,}953$'tür. Başlangıç ayarlı modelde
+grup katsayısının işareti, referans grubun düzeyine bağlıdır; katsayı adı ve
+faktör kodlaması görülmeden yorum yapılmamalıdır.
+\end{outputguidebox}
+
+\textbf{Yorum.} Eşleştirilmiş değişim, son-test grup farkı ve başlangıç ayarlı
+model aynı soruyu yanıtlamaz. Kodun tek dosyada çalışması yöntem seçimini
+otomatik olarak doğrulamaz. Veri sözlüğü, dışlama kuralları, eksik veri kararı
+ve analiz planı kodla birlikte saklanmalıdır.
+
+\textbf{Pekiştirme ve yanıt.} Grup etiketlerinin sırasını değiştirerek modeli
+yeniden kurun. Uydurulan değerler değişmez; kesme ve grup katsayısının
+parametreleştirilmesi değişir. Raporlamada hangi grubun referans olduğu açıkça
+belirtilmelidir.

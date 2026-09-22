@@ -1,0 +1,86 @@
+\chapter{Formül Özeti ve Hızlı Başvuru}
+Bu ek, kitap boyunca kullanılan temel formülleri hızlı başvuru amacıyla bir araya getirir. Dağılım kritik değerleri ve olasılık tabloları Ek~B altında ayrı bir başvuru bölümü olarak verilmiştir.
+
+
+\section{Olasılık Kuralları}
+\begin{align*}
+P(A^c) &= 1-P(A), \\
+P(A\cup B) &= P(A)+P(B)-P(A\cap B), \\
+P(A\mid B) &= \frac{P(A\cap B)}{P(B)}, \qquad P(B)>0, \\
+P(A) &= \sum_i P(A\mid B_i)P(B_i), \\
+P(B_k\mid A) &= \frac{P(A\mid B_k)P(B_k)}{\sum_i P(A\mid B_i)P(B_i)}.
+\end{align*}
+
+
+\section{Betimsel İstatistik ve Sağlam Ölçüler}
+\begin{align*}
+\bar{x} &= \frac{1}{n}\sum_{i=1}^{n}x_i, \\
+s^2 &= \frac{1}{n-1}\sum_{i=1}^{n}(x_i-\bar{x})^2, \\
+\mathrm{IQR} &= Q_3-Q_1, \\
+\text{Aykırı değer adayları} &: \quad x<Q_1-1.5\mathrm{IQR}\; \text{veya}\; x>Q_3+1.5\mathrm{IQR}, \\
+\gamma_1 &= \frac{E[(X-\mu)^3]}{\sigma^3}, \\
+\beta_2 &= \frac{E[(X-\mu)^4]}{\sigma^4}, \qquad \text{excess}=\beta_2-3.
+\end{align*}
+
+\section{Beklenen Değer, Varyans ve Kovaryans}
+\begin{align*}
+E[aX+b] &= aE[X]+b, \\
+\operatorname{Var}(X) &= E[X^2]-\{E[X]\}^2, \\
+\operatorname{Var}(aX+b) &= a^2\operatorname{Var}(X), \\
+\operatorname{Cov}(X,Y) &= E[XY]-E[X]E[Y], \\
+\rho_{XY} &= \frac{\operatorname{Cov}(X,Y)}{\sigma_X\sigma_Y}.
+\end{align*}
+
+
+\section{Temel Kesikli Dağılımlar}
+\begin{align*}
+X\sim\mathrm{Bernoulli}(p) &: \quad P(X=1)=p, \quad E[X]=p, \quad Var(X)=p(1-p), \\
+X\sim\mathrm{Binom}(n,p) &: \quad P(X=k)=\binom{n}{k}p^k(1-p)^{n-k}, \\
+&\quad E[X]=np, \quad Var(X)=np(1-p), \\
+X\sim\mathrm{Geom}(p) &: \quad P(X=k)=(1-p)^{k-1}p, \quad E[X]=1/p, \\
+X\sim\mathrm{Poisson}(\lambda) &: \quad P(X=k)=e^{-\lambda}\frac{\lambda^k}{k!}, \quad E[X]=Var(X)=\lambda, \\
+X\sim\mathrm{Hipergeom}(N,K,n) &: \quad P(X=k)=\frac{\binom{K}{k}\binom{N-K}{n-k}}{\binom{N}{n}}.
+\end{align*}
+
+\section{Moment Üreten Fonksiyonlar}
+\begin{align*}
+M_X(t) &= E[e^{tX}], \qquad E[X^r]=M_X^{(r)}(0), \\
+M_{aX+b}(t) &= e^{bt}M_X(at), \\
+X,Y\; \text{bağımsız} &: \quad M_{X+Y}(t)=M_X(t)M_Y(t), \\
+\mathrm{Bernoulli}(p) &: \quad M(t)=1-p+pe^t, \\
+\mathrm{Binom}(n,p) &: \quad M(t)=(1-p+pe^t)^n, \\
+\mathrm{Poisson}(\lambda) &: \quad M(t)=\exp\{\lambda(e^t-1)\}, \\
+\mathrm{Normal}(\mu,\sigma^2) &: \quad M(t)=\exp\{\mu t+\sigma^2t^2/2\}.
+\end{align*}
+
+\section{Sık Kullanılan Güven Aralıkları}
+\begin{align*}
+\mu\; (\sigma \text{ biliniyor}) &: \quad \bar{X} \pm z_{\alpha/2}\frac{\sigma}{\sqrt{n}}, \\
+\mu\; (\sigma \text{ bilinmiyor}) &: \quad \bar{X} \pm t_{\alpha/2,n-1}\frac{S}{\sqrt{n}}, \\
+p &: \quad \hat{p} \pm z_{\alpha/2}\sqrt{\frac{\hat{p}(1-\hat{p})}{n}}, \\
+\sigma^2 &: \quad \left(\frac{(n-1)S^2}{\chi^2_{\alpha/2,n-1}},\; \frac{(n-1)S^2}{\chi^2_{1-\alpha/2,n-1}}\right).
+\end{align*}
+
+\section{Temel Test İstatistikleri}
+\begin{align*}
+Z &= \frac{\bar{X}-\mu_0}{\sigma/\sqrt{n}}, \\
+T &= \frac{\bar{X}-\mu_0}{S/\sqrt{n}}, \\
+\chi^2 &= \sum_i \frac{(O_i-E_i)^2}{E_i}, \\
+F &= \frac{MS_{\text{between}}}{MS_{\text{within}}}, \\
+t_{\text{reg}} &= \frac{\hat{\beta}_j}{SE(\hat{\beta}_j)}.
+\end{align*}
+
+\section{Regresyon ve ANOVA}
+\begin{align*}
+\hat{\beta}_1 &= \frac{\sum_i (x_i-\bar{x})(y_i-\bar{y})}{\sum_i (x_i-\bar{x})^2}, \\
+\hat{\beta}_0 &= \bar{y}-\hat{\beta}_1\bar{x}, \\
+SST &= SSR + SSE, \\
+R^2 &= \frac{SSR}{SST}=1-\frac{SSE}{SST}.
+\end{align*}
+
+\section{Bayesçi Güncelleme}
+\begin{align*}
+\pi(\theta\mid x) &\propto f(x\mid\theta)\pi(\theta), \\
+\theta\mid x &\sim \text{Beta}(\alpha+x,\; \beta+n-x) \quad \text{(Beta-Binom)}, \\
+E[\theta\mid x] &= \frac{\alpha+x}{\alpha+\beta+n}.
+\end{align*}

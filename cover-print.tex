@@ -1,0 +1,179 @@
+% !TEX program = xelatex
+% Basılı kitap için arka kapak + sırt + ön kapak tek sayfa baskı formu.
+% Nihai sırt genişliği matbaanın kâğıt kalınlığına göre güncellenmelidir.
+\documentclass{article}
+\input{print-config}
+\usepackage{fontspec}
+\setmainfont{Libertinus Serif}[
+  Ligatures=TeX,
+  UprightFont=Libertinus Serif Regular,
+  BoldFont=Libertinus Serif Semibold
+]
+\setsansfont{Libertinus Sans}[
+  Ligatures=TeX,
+  UprightFont=Libertinus Sans Regular,
+  BoldFont=Libertinus Sans Bold
+]
+\usepackage[turkish]{babel}
+\AtBeginDocument{%
+  \ifdefined\shorthandoff\shorthandoff{=}\fi
+  \ifdefined\PDFXBuild
+    \special{pdf:minorversion 6}%
+  \fi
+}
+\newlength{\TrimWidth}
+\newlength{\TrimHeight}
+\newlength{\Bleed}
+\newlength{\CoverWidth}
+\newlength{\CoverHeight}
+\setlength{\TrimWidth}{152.4mm}
+\setlength{\TrimHeight}{228.6mm}
+\setlength{\Bleed}{3mm}
+\setlength{\CoverWidth}{\dimexpr 2\TrimWidth+\SpineWidth+2\Bleed\relax}
+\setlength{\CoverHeight}{\dimexpr \TrimHeight+2\Bleed\relax}
+
+\usepackage[
+  paperwidth=\CoverWidth,
+  paperheight=\CoverHeight,
+  margin=0pt,
+  noheadfoot
+]{geometry}
+\ifdefined\PDFXBuild
+  \usepackage[x-4]{pdfx}
+  \ExplSyntaxOn
+  \cs_new:Npn \cover_pdfx_bp:n #1
+    { \dim_to_decimal_in_bp:n {#1} \c_space_tl }
+  \cs_gset:cpx {pdfx@everypage@xetex}{
+    /MediaBox[0\c_space_tl 0\c_space_tl
+      \cover_pdfx_bp:n { \CoverWidth }
+      \cover_pdfx_bp:n { \CoverHeight }]
+    /CropBox[0\c_space_tl 0\c_space_tl
+      \cover_pdfx_bp:n { \CoverWidth }
+      \cover_pdfx_bp:n { \CoverHeight }]
+    /TrimBox[
+      \cover_pdfx_bp:n { \Bleed }
+      \cover_pdfx_bp:n { \Bleed }
+      \cover_pdfx_bp:n { \CoverWidth - \Bleed }
+      \cover_pdfx_bp:n { \CoverHeight - \Bleed }]
+    /BleedBox[0\c_space_tl 0\c_space_tl
+      \cover_pdfx_bp:n { \CoverWidth }
+      \cover_pdfx_bp:n { \CoverHeight }]
+  }
+  \ExplSyntaxOff
+\fi
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\pagestyle{empty}
+
+\definecolor{CoverGreen}{HTML}{087F5B}
+\definecolor{CoverMint}{HTML}{20A878}
+\definecolor{CoverLight}{HTML}{E4F5E9}
+\definecolor{CoverInk}{HTML}{123B31}
+
+\begin{document}
+\begin{tikzpicture}[remember picture,overlay]
+  \coordinate (PageSW) at (current page.south west);
+  \coordinate (PageNE) at (current page.north east);
+  \coordinate (BackRight) at
+    ($(PageSW)+(\dimexpr\Bleed+\TrimWidth\relax,0)$);
+  \coordinate (SpineRight) at
+    ($(BackRight)+(\SpineWidth,0)$);
+  \coordinate (BackCenter) at
+    ($(PageSW)+(\dimexpr\Bleed+.5\TrimWidth\relax,.5\CoverHeight)$);
+  \coordinate (SpineCenter) at
+    ($(BackRight)+(.5\SpineWidth,.5\CoverHeight)$);
+  \coordinate (FrontCenter) at
+    ($(SpineRight)+(.5\TrimWidth,.5\CoverHeight)$);
+
+  % Renkler dış kenarlarda 3 mm taşma payının sonuna kadar sürer.
+  \fill[CoverLight] (PageSW) rectangle (BackRight |- PageNE);
+  \fill[CoverGreen!94!black] (BackRight) rectangle (SpineRight |- PageNE);
+  \fill[CoverGreen!94!black] (SpineRight) rectangle (PageNE);
+  \fill[CoverMint] ($(SpineRight)+(0,67mm)$)
+    rectangle ($(PageNE)+(0,-164mm)$);
+
+  % Arka kapak: metinler kesim çizgisinden en az 12 mm içeridedir.
+  \node[anchor=center,text=CoverInk] at (BackCenter) {%
+    \begin{minipage}{122mm}
+      \raggedright
+      {\fontsize{18}{22}\selectfont\bfseries
+       Veri okuryazarlığından istatistiksel çıkarıma uzanan bütüncül bir yol\par}
+      \vspace{7mm}
+      {\fontsize{10.5}{15}\selectfont
+       Bu kitap; veri üretimi ve betimsel istatistikten örnekleme
+       dağılımlarına, tahmine, hipotez testlerine, etki büyüklüğüne,
+       kategorik veri analizine, ölçek güvenirliğine ve regresyona uzanan
+       konuları sezgi, matematiksel açıklama ve gerçek veri uygulamalarıyla
+       birlikte ele alır.\par
+       \vspace{4mm}
+       Python, R ve SPSS eşlikçi dosyaları; yeniden üretilebilir analiz
+       akışları, yazılım çıktılarının yorumlanması ve bölüm paketleriyle
+       kuramsal anlatımı uygulamayla birleştirir.\par}
+      \vspace{10mm}
+      {\small\bfseries \BookAuthor}\par
+      {\small \BookInstitution}\par
+      \vfill
+      \begin{flushright}
+        \fbox{\begin{minipage}[c][25mm][c]{42mm}
+          \centering\footnotesize
+          YAYINCI BARKODU\par
+          ISBN: \BookISBNDisplay
+        \end{minipage}}
+      \end{flushright}
+    \end{minipage}
+  };
+
+  % Sırt yazısı gerçek sırt genişliğine göre otomatik ortalanır.
+  \node[rotate=90,text=white,font=\sffamily\bfseries\fontsize{10}{12}\selectfont]
+    at (SpineCenter)
+    {\MakeUppercase{\BookTitle}\quad İbrahim Güney\quad \BookYear};
+
+  % Ön kapak.
+  \node[anchor=center,text=white] at ($(FrontCenter)+(0,45mm)$) {%
+    \begin{minipage}{124mm}
+      \centering
+      {\fontsize{31}{36}\selectfont\bfseries \MakeUppercase{\BookTitle}\par}
+      \vspace{5mm}
+      {\fontsize{17}{22}\selectfont
+       \BookSubtitle\par}
+    \end{minipage}
+  };
+
+  % Veri dağılımı, belirsizlik ve ilişkiyi birlikte çağrıştıran kapak görseli.
+  \begin{scope}[shift={($(FrontCenter)+(0,-18mm)$)},x=1cm,y=0.82cm]
+    \foreach \height in {0,1,2,3,4}
+      \draw[white!13,line width=0.3pt] (-5.4,\height)--(5.4,\height);
+    \foreach \position in {-5,-4,...,5}
+      \draw[white!8,line width=0.25pt] (\position,0)--(\position,4.25);
+    \foreach \position/\height in {
+      -4.55/.22,-3.85/.48,-3.15/.95,-2.45/1.62,-1.75/2.55,
+      -1.05/3.15,-.35/3.68,.35/3.40,1.05/2.92,1.75/2.15,
+      2.45/1.32,3.15/.76,3.85/.32}
+      \filldraw[fill=white!13,draw=white!38,line width=0.4pt]
+        (\position,0) rectangle +(0.64,\height);
+    \draw[white,line width=1.6pt,smooth,domain=-5.2:5.2,samples=120]
+      plot (\x,{3.95*exp(-\x*\x/5.8)});
+    \draw[white!60,densely dashed,line width=0.6pt] (0,0)--(0,3.95);
+    \fill[white] (0,3.95) circle (2.6pt);
+    \foreach \x/\y in {
+      -4.6/.42,-4.1/.76,-3.5/.65,-3.0/1.18,-2.6/1.45,-2.1/2.18,
+      -1.6/2.42,-1.1/3.18,-.7/3.02,-.2/3.72,.3/3.50,.8/3.08,
+      1.3/2.76,1.8/2.08,2.3/1.92,2.8/1.12,3.4/.95,4.0/.50,4.6/.34}
+      \fill[CoverMint!60!white] (\x,\y) circle (1.7pt);
+    \draw[CoverMint!70!white,line width=1pt]
+      (-4.7,.35) .. controls (-2.6,.8) and (-1.9,2.5) .. (-.5,2.9)
+      .. controls (1.1,3.2) and (2.1,1.4) .. (4.7,.55);
+  \end{scope}
+
+  \node[anchor=center,text=white] at ($(FrontCenter)+(0,-84mm)$) {%
+    \begin{minipage}{124mm}
+      \centering
+      {\fontsize{16}{20}\selectfont\bfseries \BookAuthor\par}
+      \vspace{2mm}
+      {\small \BookInstitution\par}
+    \end{minipage}
+  };
+\end{tikzpicture}
+\null
+\end{document}

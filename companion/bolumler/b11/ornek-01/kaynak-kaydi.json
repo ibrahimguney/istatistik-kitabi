@@ -1,0 +1,20 @@
+{
+  "tarih": "2026-09-09",
+  "paket": "B11",
+  "ders_bolumu": 11,
+  "kapsamli_bolum": 12,
+  "kaynaklar": [
+    "chapters/11-bagimsiz-eslestirilmis-t.tex",
+    "chapters/r/b11.tex"
+  ],
+  "veri_turu": "İki ayrı öğretim örneğinin özetleri; ham gözlem yok.",
+  "fark_yonleri": {
+    "welch": "Grup 1 eksi Grup 2",
+    "eslesmis": "Son eksi ön"
+  },
+  "sifir_hipotezleri": "İki ayrı evren ortalama farkının sıfır olması; çift yönlü testler.",
+  "veri_sha256": "a4d69cbf8d968f4b204c740020ae39750916642e1c788f501dee7f85c1307785",
+  "kontrol_yontemi": "Welch katkıları ve serbestlik derecesi fractions.Fraction ile kesir aritmetiğinden hesaplandı. p ve kritik değerler açık t yoğunluğu (lgamma/log1p), scipy.integrate.quad ve scipy.optimize.brentq ile üretildi; çözümün stats.t.sf/ppf sonuçları kopyalanmadı.",
+  "kontrol_sayisi": 34,
+  "rastgele_islem": false
+}
