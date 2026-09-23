@@ -1,0 +1,13 @@
+* Set the working directory to this example folder before running.
+GET DATA /TYPE=TXT /FILE='veri.csv' /ENCODING='UTF8'
+ /ARRANGEMENT=DELIMITED /DELCASE=LINE /DELIMITERS="," /FIRSTCASE=2
+ /VARIABLES=
+ grup F8.2
+ on F8.2
+ son F8.2.
+EXECUTE.
+COMPUTE eksik_son = MISSING(son).
+FREQUENCIES VARIABLES=on son eksik_son.
+CROSSTABS /TABLES=grup BY eksik_son /CELLS=COUNT ROW.
+MEANS TABLES=on BY eksik_son /CELLS=COUNT MEAN STDDEV.
+MEANS TABLES=son BY grup /CELLS=COUNT MEAN STDDEV.

@@ -1,0 +1,7 @@
+dosya,degisken,aciklama,eksik_kurali
+veri.csv,grup,1=yüz yüze; 2=çevrim içi,Eksik kabul edilmez
+veri.csv,puan,Memnuniyet öğretim puanı,Eksik kabul edilmez
+esli.csv,fark,Eşleştirilmiş son−ön farkı,Eksik kabul edilmez
+esli.csv,sifir,Karşılaştırma sabiti 0,Eksik kabul edilmez
+uc-grup.csv,grup,1=A; 2=B; 3=C,Eksik kabul edilmez
+uc-grup.csv,puan,Üç bağımsız grubun öğretim puanı,Eksik kabul edilmez

@@ -1,0 +1,16 @@
+olcut,deger
+n_1,10.0
+n_2,10.0
+medyan_1,8.0
+medyan_2,5.5
+U_1,88.5
+U_min,11.5
+p_asimptotik,0.0031256435199753354
+ustunluk,0.885
+sira_biserial,0.77
+wilcoxon_W_min,2.0
+wilcoxon_p_asimptotik,0.0034941744218327706
+isaret_p_kesin,0.00634765625
+kruskal_H,21.908175814165343
+kruskal_p,1.748638627215548e-05
+epsilon_kare,0.7373398449690868
