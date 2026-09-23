@@ -6,6 +6,15 @@
   "python_check": "passed",
   "independent_numeric_checks": "passed",
   "invalid_schema_rejection": "passed",
-  "R": "not run; runtime unavailable",
-  "SPSS": "not run; SPSS unavailable"
+  "R": "passed; user-run RStudio reference check, screenshot evidence",
+  "SPSS": "passed at displayed precision; user-run IBM SPSS 29 output review",
+  "validation_record_updated": "2026-09-23",
+  "R_comparison": {
+    "relative_tolerance": 1e-08,
+    "absolute_tolerance": 1e-10,
+    "method": "source(cozum.R), then stopifnot against beklenen-sonuclar.csv"
+  },
+  "SPSS_comparison": "visual review of shared output tables; not an automated full-precision check",
+  "scope": "original synthetic teaching data only",
+  "spss_decimal_setting": "SET DECIMAL=DOT before GET DATA"
 }

@@ -16,7 +16,7 @@ Bölüm sırası `main.tex`, ders düzeyleri `frontmatter/izlence-rotasi-combine
 ## İçerik sınırları
 
 - Ders seçimi konuları gizlemez; temel, destek, ileri okuma, uygulama ve tekrar düzeylerini gösterir.
-- 3, 16, 17 ve 19. bölümlerin eksik-veri, nonparametrik, guvenirlik ve laboratuvar paketleri eklenmiştir. Python sayısal kontrolleri yapılmıştır; yazılım bazında durum her paketin DOGRULAMA.md dosyasındadır.
+- 3, 16, 17 ve 19. bölümlerin eksik-veri, nonparametrik, guvenirlik ve laboratuvar paketleri eklenmiştir. Python sayısal kontrolleri, kullanıcı ortamındaki R referans karşılaştırmaları ve SPSS 29 çıktılarının görüntülenen hassasiyette kontrolü tamamlanmıştır; yöntem ve kapsam her paketin DOGRULAMA.md dosyasındadır. SPSS dosyaları noktalı ondalık girdi ayarını içerir.
 - 14 ve 15. bölümler aynı korelasyon/regresyon paketini paylaşır. `b10` paketi 10 ve 11. bölümlerde kullanılır.
 - Ayrıntılı uygulama rehberleri ve alıştırmalar GitHub'ın okunabilir dosya görünümünde açılır. Bu sürüm tam metin HTML kitap değildir.
 - Eski paketlerin analiz kodları korunur. Yeni paketlerin doğrulama kayıtları ayrı tutulur.

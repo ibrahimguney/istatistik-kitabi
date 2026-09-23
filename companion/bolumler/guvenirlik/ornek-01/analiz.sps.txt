@@ -1,4 +1,6 @@
 * Set the working directory to this example folder before running.
+* CSV decimal separator is a dot, independently of the display locale.
+SET DECIMAL=DOT.
 GET DATA /TYPE=TXT /FILE='veri.csv' /ENCODING='UTF8'
  /ARRANGEMENT=DELIMITED /DELCASE=LINE /DELIMITERS="," /FIRSTCASE=2
  /VARIABLES=
