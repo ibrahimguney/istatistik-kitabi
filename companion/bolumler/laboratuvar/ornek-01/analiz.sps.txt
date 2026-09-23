@@ -1,0 +1,22 @@
+* Set the working directory to this example folder before running.
+GET DATA /TYPE=TXT /FILE='veri.csv' /ENCODING='UTF8'
+ /ARRANGEMENT=DELIMITED /DELCASE=LINE /DELIMITERS="," /FIRSTCASE=2
+ /VARIABLES=
+ id F8.2
+ grup F8.2
+ on F8.2
+ son F8.2
+ saat F8.2.
+EXECUTE.
+COMPUTE degisim=son-on.
+COMPUTE yuksek_artis=(degisim>=7).
+DESCRIPTIVES VARIABLES=on son saat degisim.
+EXAMINE VARIABLES=son /PLOT=NONE /STATISTICS=DESCRIPTIVES /CINTERVAL=95.
+T-TEST PAIRS=son WITH on (PAIRED) /CRITERIA=CI(.95).
+T-TEST GROUPS=grup(1 2) /VARIABLES=son /CRITERIA=CI(.95).
+CORRELATIONS /VARIABLES=saat son /PRINT=TWOTAIL.
+REGRESSION /DEPENDENT=son /METHOD=ENTER saat.
+COMPUTE grup_B=(grup=2).
+REGRESSION /DEPENDENT=son /METHOD=ENTER on grup_B.
+CROSSTABS /TABLES=grup BY yuksek_artis /STATISTICS=CHISQ /CELLS=COUNT EXPECTED.
+* For 2x2 table compare Fisher exact two-sided significance if available.

@@ -1,0 +1,6 @@
+degisken,aciklama,eksik_kurali
+id,Tekil kişi kimliği,Boş hücre; sıfır ile doldurulmaz
+grup,"1=A (yüz yüze, bölüm 16); 2=B (çevrim içi, bölüm 16)",Boş hücre; sıfır ile doldurulmaz
+on,"Ön-test puanı, 0–100",Boş hücre; sıfır ile doldurulmaz
+son,"Son-test puanı, 0–100; boş hücre sistem eksik",Boş hücre; sıfır ile doldurulmaz
+saat,"Haftalık çalışma süresi, saat",Boş hücre; sıfır ile doldurulmaz

@@ -5,10 +5,25 @@ Content and course levels follow main.tex and izlence-rotasi-combined.tex.
 from pathlib import Path
 from html import escape as e
 import re
+import zipfile
+import hashlib
+import json
 ROOT = Path(__file__).resolve().parents[1]
 GH = 'https://github.com/ibrahimguney/istatistik-kitabi'
 TITLES = ['İstatistiksel düşünme, veri ve araştırma','Grafiksel ve sayısal betimleme','Eksik veri ve veri kalitesi','Örnekleme yöntemleri ve yanlılık','Örnekleme dağılımları','Normal dağılım, standart puanlar ve MLT','Nokta tahmini','Güven aralıkları','Bootstrap ve rastgeleleştirme','Hipotez testleri, hata, güç ve etki','Tek, bağımsız ve eşleştirilmiş t testleri','ANOVA ve grup karşılaştırmaları','Kategorik veri ve ki-kare','Korelasyon','Basit doğrusal regresyon','Parametrik olmayan yöntemler','Ölçek puanlarının güvenirliği','Çoklu doğrusal regresyon','Bütünleştirici veri analizi laboratuvarı','Genel değerlendirme ve yöntem seçimi']
-PACKAGES = [['b01','b02'],['b03'],[],['b06'],['b04'],['b05'],['b07'],['b08'],['bootstrap'],['b09','b10'],['b10','b11'],['anova'],['b12'],['b13'],['b13'],[],[],['coklu-regresyon'],[],['b14']]
+PACKAGES = [['b01','b02'],['b03'],['eksik-veri'],['b06'],['b04'],['b05'],['b07'],['b08'],['bootstrap'],['b09','b10'],['b10','b11'],['anova'],['b12'],['b13'],['b13'],['nonparametrik'],['guvenirlik'],['coklu-regresyon'],['laboratuvar'],['b14']]
+# Portable archives include all inputs and instructions for the four new packages.
+NEW_PACKAGES = ['eksik-veri','nonparametrik','guvenirlik','laboratuvar']
+(ROOT/'downloads').mkdir(exist_ok=True)
+for slug in NEW_PACKAGES:
+    base=ROOT/'companion/bolumler'/slug
+    files=sorted(p for p in base.rglob('*') if p.is_file() and p.name!='MANIFEST.sha256' and not p.name.startswith('sonuclar-') and '__pycache__' not in p.parts)
+    (base/'MANIFEST.sha256').write_text(''.join(hashlib.sha256(p.read_bytes()).hexdigest()+'  '+p.relative_to(base).as_posix()+'\n' for p in files))
+    with zipfile.ZipFile(ROOT/'downloads'/f'{slug}.zip','w',zipfile.ZIP_DEFLATED) as z:
+        for p in files+[base/'MANIFEST.sha256']:
+            info=zipfile.ZipInfo(slug+'/'+p.relative_to(base).as_posix(),date_time=(2026,9,23,0,0,0))
+            info.compress_type=zipfile.ZIP_DEFLATED
+            z.writestr(info,p.read_bytes())
 GROUPS = ['Veri ve betimleme','Örnekleme ve tahmin','İstatistiksel çıkarım','İlişki ve modelleme','Genel değerlendirme']
 SOURCES = re.findall(r'\\input\{(chapters/[^}]+)\}', (ROOT/'main.tex').read_text())
 assert len(SOURCES)==len(TITLES)==20
@@ -49,11 +64,14 @@ for n,title in enumerate(TITLES,1):
     for package in packages:
         base=f'companion/bolumler/{package}'
         example=base+'/ornek-01'
-        content+=f'<section class="panel"><p class="eyebrow">UYGULAMA PAKETİ · {package.upper()}</p><h2>Veriden yoruma</h2><p class="note">Paket içindeki bölüm numaraları önceki kitap düzenine aittir. Bu sayfa birleşik kitabın {n}. bölümüne yönlendirir.'
+        content+=f'<section class="panel"><p class="eyebrow">UYGULAMA PAKETİ · {package.upper()}</p><h2>Veriden yoruma</h2><p class="note">'
+        content+= f'Bu paket birleşik kitabın {n}. bölümündeki öğretim verilerini kullanır.' if package in ['eksik-veri','nonparametrik','guvenirlik','laboratuvar'] else f'Paket içindeki bölüm numaraları önceki kitap düzenine aittir. Bu sayfa birleşik kitabın {n}. bölümüne yönlendirir.'
         if n in [14,15]:content+=' Korelasyon ve basit regresyon aynı uygulama paketini paylaşır.'
         if package=='b10':content+=' Bu paket güç ve tek örneklem t testi çalışmalarında ortak kullanılır.'
-        content+='</p><div class="resources">'
-        for filename,label in [('veri.csv','Veri seti · CSV'),('veri-sozlugu.csv','Değişken sözlüğü · CSV'),('beklenen-sonuclar.csv','Beklenen sonuçlar · CSV'),('cozum.py','Python kodu · .py'),('cozum.R','R kodu · .R'),('analiz.sps.txt','SPSS sözdizimi · .sps.txt')]:
+        content+='</p>'
+        if package in NEW_PACKAGES: content+=filelink(f'downloads/{package}.zip','Tüm paketi indir · ZIP')
+        content+='<div class="resources">'
+        for filename,label in [('veri.csv','Veri seti · CSV'),('esli.csv','Eşleştirilmiş farklar · CSV'),('uc-grup.csv','Üç grup verisi · CSV'),('guvenirlik.csv','Kitap kodu için veri · CSV'),('veri-sozlugu.csv','Değişken sözlüğü · CSV'),('beklenen-sonuclar.csv','Beklenen sonuçlar · CSV'),('cozum.py','Python kodu · .py'),('cozum.R','R kodu · .R'),('analiz.sps.txt','SPSS sözdizimi · .sps.txt')]:
             if (ROOT/example/filename).is_file():content+=filelink(example+'/'+filename,label)
         content+='</div><h3>1. Hazırlan ve çalıştır</h3><p>Veri, sözlük, beklenen sonuçlar ve seçtiğiniz yazılımın kodunu aynı klasöre kaydedin. Ek dosyalar ve gerekli paketler için önce çalıştırma rehberini okuyun. SPSS dosyasını kullanırken uzantısını <code>.sps</code> olarak değiştirin.</p>'
         if (ROOT/example/'README.md').exists():content+=ghlink(example+'/README.md','Örneğin verisi ve çalıştırma rehberi')
