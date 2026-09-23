@@ -3,9 +3,13 @@
 \makeatother
 \edef\uygulamadeposu{\detokenize{https://github.com/ibrahimguney/istatistik-kitabi}}
 
-% Her ana bölümün sonunda, o bölümün GitHub'daki kaynak dosyasına giden
-% tıklanabilir bağlantı ve aynı adresi kodlayan QR yer alır.
+% Ana bölüm sayacı, öğrenci portalındaki b01--b20 sırasıyla eşleşir.
+% URL makro içinde sabitlenir; görünen bağlantı ve QR aynı hedefi kullanır.
+\edef\ogrenciportali{\detokenize{https://ibrahimguney.github.io/istatistik-kitabi}}
+\newcommand{\bolumwebnumarasi}{\ifnum\value{chapter}<10 0\fi\arabic{chapter}}
 \newcommand{\bolumbaglantisi}[1]{%
+  \begingroup
+  \edef\bolumwebadresi{\ogrenciportali/bolumler/b\bolumwebnumarasi/index.html}%
   \par\Needspace{11\baselineskip}\medskip\noindent
   \begin{minipage}{\linewidth}
     {\color{PrismBlue}\hrule height 0.5pt}
@@ -16,27 +20,28 @@
       \begingroup
       \setlength{\fboxsep}{0pt}
       \colorbox{white}{\color{black}%
-        \qrcode[height=25mm,level=M,padding]{\uygulamadeposu/blob/main/#1}}
+        \qrcode[height=25mm,level=M,padding]{\bolumwebadresi}}
       \endgroup
     \end{minipage}\hfill
     \begin{minipage}[c]{0.65\linewidth}
       \small\raggedright
-      {\sffamily\bfseries\color{PrismBlue} Bu bölümün GitHub sayfası\par}
+      {\sffamily\bfseries\color{PrismBlue} Bu bölümün öğrenci çalışma alanı\par}
       \smallskip
-      Bölümün güncel kaynak metnine, düzeltme geçmişine ve ilişkili proje
-      dosyalarına QR kodu okutarak veya aşağıdaki bağlantıya tıklayarak
-      ulaşabilirsiniz.\par
+      Bölümün uygulama rehberlerine, veri ve kod dosyalarına,
+      alıştırmalarına ve çözümlerine QR kodu okutarak veya aşağıdaki
+      bağlantıya tıklayarak ulaşabilirsiniz.\par
       \smallskip
-      \href{\uygulamadeposu/blob/main/#1}{\textbf{Bölümü GitHub'da aç}}\par
-      {\footnotesize\texttt{#1}\par}
+      \href{\bolumwebadresi}{\textbf{Bölüm \arabic{chapter}: Uygulamaları aç}}\par
+      {\scriptsize\expandafter\url\expandafter{\bolumwebadresi}\par}
       \smallskip
       {\footnotesize
-        \href{\uygulamadeposu}{Ana depo: \texttt{ibrahimguney/istatistik-kitabi}}\par}
+        \href{\uygulamadeposu/blob/main/#1}{Bölümün kaynak metni (GitHub)}\par}
     \end{minipage}
     \par\vspace{8pt}
     {\color{PrismBlue}\hrule height 0.5pt}
   \end{minipage}
   \par\medskip
+  \endgroup
 }
 
 \newcommand{\bolumpaketi}[1]{%
