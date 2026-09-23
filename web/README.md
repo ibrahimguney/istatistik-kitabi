@@ -29,4 +29,4 @@ Mevcut Pages yayını `main` dalının kökünden yapılıyorsa bu değişiklikl
 
 ## Dört bağımsız uygulama paketi
 
-`python scripts/check_new_packages.py` Python sayısal kontrollerini ve hatalı girdi denetimini çalıştırır. `python scripts/build_student_site.py` dört ZIP dosyasını ve SHA-256 listelerini de yeniler. Üretilen `downloads/*.zip` dosyaları HTML ile birlikte depoya eklenmelidir. Yeni paketlerin içerikleri `companion/bolumler/{eksik-veri,nonparametrik,guvenirlik,laboratuvar}` altındadır. Kitaptaki QR hedefleri bu güncellemede değiştirilmemiştir.
+`python scripts/check_new_packages.py` Python sayısal kontrollerini ve hatalı girdi denetimini çalıştırır. `python scripts/build_student_site.py` dört ZIP dosyasını ve SHA-256 listelerini de yeniler. Üretilen `downloads/*.zip` dosyaları HTML ile birlikte depoya eklenmelidir. Yeni paketlerin içerikleri `companion/bolumler/{eksik-veri,nonparametrik,guvenirlik,laboratuvar}` altındadır. Kitaptaki bölüm sonu QR hedefleri `frontmatter/bolum-paketleri.tex` üzerinden öğrenci sayfalarına yönlendirilir; ayrıntılar [QR kontrol kaydındadır](QR-KONTROL.md).
