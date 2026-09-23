@@ -1,5 +1,10 @@
 # İstatistik
 
+## Öğrenci çalışma alanı
+
+[Bölümler, ders rotaları ve uygulama dosyaları](https://ibrahimguney.github.io/istatistik-kitabi/) · [Siteyi güncelleme rehberi](web/README.md)
+
+
 ## Veri Okuryazarlığından İstatistiksel Çıkarıma
 
 İbrahim Güney tarafından hazırlanan bu proje, IMO301 İstatistik ve PDR209
